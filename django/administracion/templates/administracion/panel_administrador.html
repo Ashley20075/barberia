@@ -15,13 +15,13 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             background-color: #0B0A08;
             color: #F5EFE6;
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
         }
-
+        
         .navbar-custom {
             background-color: #0B0A08;
             border-bottom: 2px solid #F4C542;
@@ -30,7 +30,7 @@
             top: 0;
             z-index: 1050;
         }
-
+        
         .navbar-brand-custom {
             font-family: 'Playfair Display', 'Georgia', serif;
             font-size: 1.8rem;
@@ -41,18 +41,18 @@
             align-items: center;
             gap: 0.5rem;
         }
-
+        
         .navbar-brand-custom span {
             color: #C9A87C;
         }
-
+        
         .navbar-brand-custom img {
             height: 40px;
             width: 40px;
             object-fit: cover;
             border-radius: 50%;
         }
-
+        
         .nav-btn {
             background: transparent;
             border: 2px solid #3F2E22;
@@ -68,20 +68,20 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
+        
         .nav-btn:hover {
             background-color: #3F2E22;
             border-color: #F4C542;
             transform: scale(1.02);
         }
-
+        
         .nav-btn.active {
             background-color: #F4C542;
             border-color: #F4C542;
             color: #0B0A08 !important;
             box-shadow: 0 0 20px rgba(244, 197, 66, 0.3);
         }
-
+        
         .btn-logout-custom {
             background: transparent;
             border: 2px solid #3F2E22;
@@ -96,13 +96,13 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
+        
         .btn-logout-custom:hover {
             background-color: #dc3545;
             border-color: #dc3545;
             color: white;
         }
-
+        
         .user-info-custom {
             background-color: #2A211B;
             padding: 0.5rem 1rem;
@@ -112,12 +112,12 @@
             gap: 0.8rem;
             color: #F5EFE6;
         }
-
+        
         .user-info-custom i {
             color: #F4C542;
             font-size: 1.2rem;
         }
-
+        
         .action-bar-sticky {
             position: sticky;
             top: 76px;
@@ -128,7 +128,7 @@
             margin-bottom: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-
+        
         .btn-group-modern {
             display: flex;
             flex-wrap: wrap;
@@ -136,7 +136,7 @@
             justify-content: center;
             align-items: center;
         }
-
+        
         .btn-modern {
             background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%);
             border: none;
@@ -159,7 +159,7 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         .btn-modern::before {
             content: '';
             position: absolute;
@@ -170,17 +170,17 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
-
+        
         .btn-modern:hover::before {
             left: 100%;
         }
-
+        
         .btn-modern:hover {
             transform: translateY(-4px) scale(1.02);
             box-shadow: 0 8px 30px rgba(244, 197, 66, 0.5);
             background: linear-gradient(135deg, #FFD966 0%, #F4C542 100%);
         }
-
+        
         .btn-modern-inventario {
             background: linear-gradient(135deg, #F4C542 0%, #FFD966 40%, #F4C542 80%, #FFD966 100%);
             background-size: 300% 300%;
@@ -205,7 +205,7 @@
             overflow: hidden;
             animation: shimmerBtn 3s ease-in-out infinite;
         }
-
+        
         .btn-modern-inventario::before {
             content: '';
             position: absolute;
@@ -216,30 +216,28 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: left 0.6s ease;
         }
-
+        
         .btn-modern-inventario:hover::before {
             left: 100%;
         }
-
+        
         .btn-modern-inventario:hover {
             transform: translateY(-4px) scale(1.02);
             box-shadow: 0 8px 35px rgba(244, 197, 66, 0.6);
         }
-
+        
         @keyframes shimmerBtn {
             0% {
                 background-position: 0% 50%;
             }
-
             50% {
                 background-position: 100% 50%;
             }
-
             100% {
                 background-position: 0% 50%;
             }
         }
-
+        
         .stat-card {
             background: linear-gradient(145deg, #1E1A15, #2A211B);
             border-radius: 20px;
@@ -252,12 +250,12 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         .stat-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 15px 35px rgba(244, 197, 66, 0.15);
         }
-
+        
         .stat-card .icon-wrapper {
             width: 65px;
             height: 65px;
@@ -269,17 +267,17 @@
             margin: 0 auto 1rem;
             transition: all 0.3s ease;
         }
-
+        
         .stat-card:hover .icon-wrapper {
             background: rgba(244, 197, 66, 0.2);
             transform: scale(1.05) rotate(-5deg);
         }
-
+        
         .stat-card i {
             color: #F4C542;
             font-size: 2.2rem;
         }
-
+        
         .stat-card h5 {
             color: #C9A87C;
             font-size: 0.75rem;
@@ -288,62 +286,62 @@
             font-weight: 600;
             margin-top: 0.5rem;
         }
-
+        
         .stat-card h2 {
             color: #F4C542;
             font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 0;
         }
-
+        
         .stat-card.citas {
             border-left-color: #0d6efd;
         }
-
+        
         .stat-card.citas i {
             color: #0d6efd;
         }
-
+        
         .stat-card.citas h2 {
             color: #0d6efd;
         }
-
+        
         .stat-card.barberos {
             border-left-color: #198754;
         }
-
+        
         .stat-card.barberos i {
             color: #198754;
         }
-
+        
         .stat-card.barberos h2 {
             color: #198754;
         }
-
+        
         .stat-card.servicios {
             border-left-color: #ffc107;
         }
-
+        
         .stat-card.servicios i {
             color: #ffc107;
         }
-
+        
         .stat-card.servicios h2 {
             color: #ffc107;
         }
-
+        
         .stat-card.productos {
             border-left-color: #F4C542;
         }
-
+        
         .stat-card.productos i {
             color: #F4C542;
         }
-
+        
         .stat-card.productos h2 {
             color: #F4C542;
         }
-
+        
         .card-custom {
             background-color: #1E1A15 !important;
             border-radius: 20px !important;
@@ -351,7 +349,7 @@
             margin-bottom: 2rem;
             overflow: hidden;
         }
-
+        
         .card-header-custom {
             background-color: #0B0A08 !important;
             border-bottom: 2px solid #F4C542 !important;
@@ -359,12 +357,12 @@
             font-weight: 600;
             color: #FFD966 !important;
         }
-
+        
         .table-custom {
             background-color: #1E1A15 !important;
             margin-bottom: 0;
         }
-
+        
         .table-custom thead th {
             background-color: #0B0A08 !important;
             color: #FFD966 !important;
@@ -372,7 +370,7 @@
             font-weight: 600;
             padding: 0.75rem 1rem;
         }
-
+        
         .table-custom tbody td {
             background-color: #1E1A15 !important;
             color: #F5EFE6 !important;
@@ -380,82 +378,78 @@
             padding: 0.75rem 1rem;
             border-bottom: 1px solid rgba(63, 46, 34, 0.3) !important;
         }
-
+        
         .table-custom tbody tr:hover td {
             background-color: #2A211B !important;
         }
-
+        
         .modal-content-custom {
             background-color: #1E1A15 !important;
             border: 1px solid rgba(244, 197, 66, 0.3) !important;
         }
-
+        
         .modal-header-custom {
             border-bottom: 2px solid #F4C542 !important;
             padding: 1rem 1.5rem;
         }
-
+        
         .modal-footer-custom {
             border-top: 2px solid #F4C542 !important;
             padding: 1rem 1.5rem;
         }
-
+        
         .bg-dark-input {
             background-color: #2A211B !important;
             border: 1px solid #3F2E22 !important;
             color: #F5EFE6 !important;
         }
-
+        
         .bg-dark-input:focus {
             background-color: #352b23 !important;
             border-color: #F4C542 !important;
             box-shadow: 0 0 0 0.2rem rgba(244, 197, 66, 0.25);
         }
-
+        
         .form-label-custom {
             color: #FFD966;
             font-weight: 500;
             margin-bottom: 0.5rem;
         }
-
+        
         .text-yellow {
             color: #F4C542 !important;
         }
-
+        
         .text-light-brown {
             color: #C9A87C !important;
         }
-
+        
         @media (max-width: 768px) {
             .navbar-brand-custom {
                 font-size: 1.3rem;
             }
-
             .nav-btn,
             .btn-logout-custom {
                 font-size: 0.8rem;
                 padding: 0.3rem 0.8rem;
             }
-
             .btn-modern,
             .btn-modern-inventario {
                 font-size: 13px;
                 padding: 11px 18px;
                 min-width: 140px;
             }
-
             .stat-card h2 {
                 font-size: 2rem;
             }
         }
-
+        
         @media (max-width: 576px) {
             .btn-group-modern {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 10px;
             }
-
             .btn-modern,
             .btn-modern-inventario {
                 font-size: 14px;
@@ -463,11 +457,9 @@
                 min-width: unset;
                 width: 100%;
             }
-
             .stat-card {
                 padding: 1.2rem 1rem;
             }
-
             .stat-card h2 {
                 font-size: 1.8rem;
             }
@@ -518,8 +510,7 @@
                 </div>
                 <div class="modal-footer modal-footer-custom">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;"
-                        onclick="window.location.href='{% url 'logout' %}'">
+                    <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;" onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
                 </div>
@@ -534,14 +525,12 @@
             <i class="bi bi-speedometer2"></i> Bienvenido al Panel de Administración
         </h1>
 
-        {% if messages %}
-        {% for message in messages %}
+        {% if messages %} {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             <i class="bi bi-info-circle"></i> {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        {% endfor %}
-        {% endif %}
+        {% endfor %} {% endif %}
 
         <!-- BARRA DE ACCIONES - BOTONES EN LÍNEA -->
         <div class="action-bar-sticky">
@@ -602,73 +591,55 @@
                 <div class="table-responsive">
                     <table class="table table-custom table-hover mb-0">
                         <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Rol</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-    </tr>
-</thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {% for u in usuarios %}
                             <tr>
                                 <td>
-                                    {% if u.first_name %}
-                                        {{ u.first_name }} {{ u.last_name }}
-                                    {% else %}
-                                        {{ u.username }}
-                                    {% endif %}
+                                    {% if u.first_name %} {{ u.first_name }} {{ u.last_name }} {% else %} {{ u.username }} {% endif %}
                                 </td>
                                 <td>{{ u.email }}</td>
                                 <td>
                                     {% if u.groups.all %}
-                                        <span class="badge bg-warning text-dark">Barbero</span>
-                                    {% else %}
-                                        <span class="badge bg-primary">Cliente</span>
-                                    {% endif %}
+                                    <span class="badge bg-warning text-dark">Barbero</span> {% else %}
+                                    <span class="badge bg-primary">Cliente</span> {% endif %}
                                 </td>
                                 <td>
-    {% if u.is_active %}
-        <span class="badge bg-success">Activo</span>
-    {% else %}
-        <span class="badge bg-danger">Inactivo</span>
-    {% endif %}
-</td>
+                                    {% if u.is_active %}
+                                    <span class="badge bg-success">Activo</span> {% else %}
+                                    <span class="badge bg-danger">Inactivo</span> {% endif %}
+                                </td>
                                 <td>
                                     {% if u.groups.all %}
-                                        <a href="{% url 'administracion:quitar_barbero' u.id %}"
-                                           class="btn btn-sm btn-secondary"
-                                           onclick="return confirm('¿Quitar rol de barbero?')">
-                                            <i class="bi bi-person-dash"></i> Quitar barbero
-                                        </a>
+                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
+                                        <i class="bi bi-person-dash"></i> Quitar barbero
+                                    </a>
                                     {% else %}
-                                        <a href="{% url 'administracion:asignar_barbero' u.id %}"
-                                           class="btn btn-sm btn-warning"
-                                           onclick="return confirm('¿Asignar como barbero?')">
-                                            <i class="bi bi-person-badge"></i> Hacer barbero
-                                        </a>
+                                    <a href="{% url 'administracion:asignar_barbero' u.id %}" class="btn btn-sm btn-warning" onclick="return confirm('¿Asignar como barbero?')">
+                                        <i class="bi bi-person-badge"></i> Hacer barbero
+                                    </a>
+                                    {% endif %} {% if u.is_active %}
+                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
+                                        <i class="bi bi-person-x"></i> Desactivar
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
+                                        <i class="bi bi-person-check"></i> Activar
+                                    </a>
                                     {% endif %}
-                                    {% if u.is_active %}
-<a href="{% url 'administracion:desactivar_usuario' u.id %}"
-   class="btn btn-sm btn-danger mt-1"
-   onclick="return confirm('¿Deseas desactivar este usuario?')">
-    <i class="bi bi-person-x"></i> Desactivar
-</a>
-{% else %}
-<a href="{% url 'administracion:activar_usuario' u.id %}"
-   class="btn btn-sm btn-success mt-1"
-   onclick="return confirm('¿Deseas activar este usuario?')">
-    <i class="bi bi-person-check"></i> Activar
-</a>
-{% endif %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
                                 <td colspan="4" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay usuarios registrados.
+                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay usuarios registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -680,7 +651,7 @@
 
         <!-- TABLA DE CITAS -->
         <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
+            <div class="card-header-custom d-flex gap-2 justify-content-between align-items-center">
                 <span><i class="bi bi-calendar-check"></i> Citas</span>
                 <span class="badge bg-warning text-dark">{{ citas|length }}</span>
             </div>
@@ -708,25 +679,18 @@
                                 <td>{{ cita.barbero.nombre }}</td>
                                 <td>
                                     {% if cita.estado == "Confirmada" %}
-                                    <span class="badge bg-success">Confirmada</span>
-                                    {% elif cita.estado == "Pendiente" %}
-                                    <span class="badge bg-warning text-dark">Pendiente</span>
-                                    {% else %}
-                                    <span class="badge bg-danger">Cancelada</span>
-                                    {% endif %}
+                                    <span class="badge bg-success">Confirmada</span> {% elif cita.estado == "Pendiente" %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span> {% else %}
+                                    <span class="badge bg-danger">Cancelada</span> {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#modalEditarCita"data-cliente="{{ cita.cliente.id }}"
-data-servicio="{{ cita.servicio.id }}"
-data-fecha="{{ cita.fecha|date:'Y-m-d' }}"
-data-hora="{{ cita.hora }}"
-data-barbero="{{ cita.barbero.id }}"
-data-estado="{{ cita.estado }}"
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar esta cita?')">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}"
+                                        data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
+
+    <i class="bi bi-pencil"></i>
+
+</button>
+                                    <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta cita?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -734,8 +698,7 @@ data-estado="{{ cita.estado }}"
                             {% empty %}
                             <tr>
                                 <td colspan="7" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay citas registradas.
+                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay citas registradas.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -773,16 +736,11 @@ data-estado="{{ cita.estado }}"
                                 <td>{{ b.telefono }}</td>
                                 <td>{{ b.email }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#modalEditarBarbero" data-id="{{ b.id }}"
-                                        data-nombre="{{ b.nombre }}" data-cedula="{{ b.cedula }}"
-                                        data-especialidad="{{ b.especialidad }}" data-telefono="{{ b.telefono }}"
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarBarbero" data-id="{{ b.id }}" data-nombre="{{ b.nombre }}" data-cedula="{{ b.cedula }}" data-especialidad="{{ b.especialidad }}" data-telefono="{{ b.telefono }}"
                                         data-email="{{ b.email }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" 
-                                       class="btn btn-sm btn-danger"
-                                       onclick="return confirm('¿Eliminar este barbero?')">
+                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este barbero?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -790,8 +748,7 @@ data-estado="{{ cita.estado }}"
                             {% empty %}
                             <tr>
                                 <td colspan="6" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay barberos registrados.
+                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay barberos registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -831,25 +788,16 @@ data-estado="{{ cita.estado }}"
                                 </td>
                                 <td>
                                     {% if producto.stock_actual >= 10 %}
-                                    <span class="badge bg-success">Suficiente</span>
-                                    {% elif producto.stock_actual >= 6 %}
-                                    <span class="badge bg-warning text-dark">Medio</span>
-                                    {% elif producto.stock_actual >= 1 %}
-                                    <span class="badge bg-danger">Bajo</span>
-                                    {% else %}
-                                    <span class="badge bg-danger">Agotado</span>
-                                    {% endif %}
+                                    <span class="badge bg-success">Suficiente</span> {% elif producto.stock_actual >= 6 %}
+                                    <span class="badge bg-warning text-dark">Medio</span> {% elif producto.stock_actual >= 1 %}
+                                    <span class="badge bg-danger">Bajo</span> {% else %}
+                                    <span class="badge bg-danger">Agotado</span> {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#modalEditarProducto" data-id="{{ producto.id }}"
-                                        data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio_unitario }}"
-                                        data-stock="{{ producto.stock_actual }}">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarProducto" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio_unitario }}" data-stock="{{ producto.stock_actual }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_producto_admin' producto.id %}" 
-                                       class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar este producto?')">
+                                    <a href="{% url 'administracion:eliminar_producto_admin' producto.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este producto?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     <a href="{% url 'inventario:dashboard' %}" class="btn btn-sm btn-info">
@@ -860,8 +808,7 @@ data-estado="{{ cita.estado }}"
                             {% empty %}
                             <tr>
                                 <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-box-seam fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay productos registrados.
+                                    <i class="bi bi-box-seam fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay productos registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -897,20 +844,11 @@ data-estado="{{ cita.estado }}"
                                 <td>${{ servicio.precio }}</td>
                                 <td>{{ servicio.duracion }} min</td>
                                 <td>
-                                    <button
-    class="btn btn-sm btn-warning"
-    data-bs-toggle="modal"
-    data-bs-target="#modalEditarServicio"
-    data-url="{% url 'administracion:editar_servicio' servicio.id %}"
-    data-nombre="{{ servicio.nombre }}"
-    data-descripcion="{{ servicio.descripcion }}"
-    data-precio="{{ servicio.precio }}"
-    data-duracion="{{ servicio.duracion }}">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}"
+                                        data-duracion="{{ servicio.duracion }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" 
-                                       class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Eliminar este servicio?')">
+                                    <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este servicio?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -918,8 +856,7 @@ data-estado="{{ cita.estado }}"
                             {% empty %}
                             <tr>
                                 <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay servicios registrados.
+                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay servicios registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -935,57 +872,57 @@ data-estado="{{ cita.estado }}"
 
     <!-- MODAL AGREGAR USUARIO (CON CAMPOS IGUALES AL REGISTRO) -->
     <!-- MODAL AGREGAR USUARIO (CON CÉDULA Y TELÉFONO) -->
-<div class="modal fade" id="modalAgregarUsuario" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header modal-header-custom">
-                <h5 class="modal-title text-yellow"><i class="bi bi-person-plus"></i> Nuevo Usuario</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <form method="POST" action="{% url 'administracion:crear_usuario' %}">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Nombre *</label>
-                            <input type="text" name="nombre" class="form-control bg-dark-input" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Apellido *</label>
-                            <input type="text" name="apellido" class="form-control bg-dark-input" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Cédula *</label>
-                        <input type="text" name="cedula" class="form-control bg-dark-input" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Teléfono *</label>
-                        <input type="text" name="telefono" class="form-control bg-dark-input" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Email *</label>
-                        <input type="email" name="email" class="form-control bg-dark-input" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Contraseña *</label>
-                        <input type="password" name="password" class="form-control bg-dark-input" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Confirmar Contraseña *</label>
-                        <input type="password" name="confirm_password" class="form-control bg-dark-input" required>
-                    </div>
+    <div class="modal fade" id="modalAgregarUsuario" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title text-yellow"><i class="bi bi-person-plus"></i> Nuevo Usuario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-footer modal-footer-custom">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                <form method="POST" action="{% url 'administracion:crear_usuario' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Nombre *</label>
+                                <input type="text" name="nombre" class="form-control bg-dark-input" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Apellido *</label>
+                                <input type="text" name="apellido" class="form-control bg-dark-input" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Cédula *</label>
+                            <input type="text" name="cedula" class="form-control bg-dark-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Teléfono *</label>
+                            <input type="text" name="telefono" class="form-control bg-dark-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Email *</label>
+                            <input type="email" name="email" class="form-control bg-dark-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Contraseña *</label>
+                            <input type="password" name="password" class="form-control bg-dark-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Confirmar Contraseña *</label>
+                            <input type="password" name="confirm_password" class="form-control bg-dark-input" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                         <i class="bi bi-plus-circle"></i> Crear Usuario
                     </button>
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- MODAL EDITAR CITA -->
     <div class="modal fade" id="modalEditarCita" tabindex="-1">
@@ -999,16 +936,17 @@ data-estado="{{ cita.estado }}"
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label-custom">Cliente</label>
-                            <select name="cliente" id="editCitaCliente">
+                            <div class="mb-3">
+                                <label class="form-label-custom">Cliente</label>
 
-{% for cliente in clientes %}
-<option value="{{ cliente.id }}">
-    {{ cliente.nombre }}
-</option>
-{% endfor %}
-
-</select>
+                                <select name="cliente" id="editCitaCliente" class="form-select bg-dark-input">
+        {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">
+                {{ cliente.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-custom">Servicio</label>
@@ -1058,8 +996,7 @@ data-estado="{{ cita.estado }}"
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern"
-                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1081,36 +1018,30 @@ data-estado="{{ cita.estado }}"
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label-custom">Nombre completo</label>
-                            <input type="text" name="nombre" id="editBarberoNombre" class="form-control bg-dark-input"
-                                required>
+                            <input type="text" name="nombre" id="editBarberoNombre" class="form-control bg-dark-input" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-custom">Cédula</label>
-                            <input type="text" name="cedula" id="editBarberoCedula" class="form-control bg-dark-input"
-                                required>
+                            <input type="text" name="cedula" id="editBarberoCedula" class="form-control bg-dark-input" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-custom">Especialidad</label>
-                            <input type="text" name="especialidad" id="editBarberoEspecialidad"
-                                class="form-control bg-dark-input" required>
+                            <input type="text" name="especialidad" id="editBarberoEspecialidad" class="form-control bg-dark-input" required>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Teléfono</label>
-                                <input type="text" name="telefono" id="editBarberoTelefono"
-                                    class="form-control bg-dark-input" required>
+                                <input type="text" name="telefono" id="editBarberoTelefono" class="form-control bg-dark-input" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Email</label>
-                                <input type="email" name="email" id="editBarberoEmail"
-                                    class="form-control bg-dark-input" required>
+                                <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern"
-                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1132,26 +1063,22 @@ data-estado="{{ cita.estado }}"
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label-custom">Nombre</label>
-                            <input type="text" name="nombre" id="editProductoNombre" class="form-control bg-dark-input"
-                                required>
+                            <input type="text" name="nombre" id="editProductoNombre" class="form-control bg-dark-input" required>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Precio</label>
-                                <input type="number" name="precio" id="editProductoPrecio"
-                                    class="form-control bg-dark-input" required step="0.01">
+                                <input type="number" name="precio" id="editProductoPrecio" class="form-control bg-dark-input" required step="0.01">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock</label>
-                                <input type="number" name="stock" id="editProductoStock"
-                                    class="form-control bg-dark-input" required min="0">
+                                <input type="number" name="stock" id="editProductoStock" class="form-control bg-dark-input" required min="0">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern"
-                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1173,31 +1100,26 @@ data-estado="{{ cita.estado }}"
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label-custom">Nombre</label>
-                            <input type="text" name="nombre" id="editServicioNombre" class="form-control bg-dark-input"
-                                required>
+                            <input type="text" name="nombre" id="editServicioNombre" class="form-control bg-dark-input" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-custom">Descripción</label>
-                            <textarea name="descripcion" id="editServicioDescripcion" class="form-control bg-dark-input"
-                                rows="2"></textarea>
+                            <textarea name="descripcion" id="editServicioDescripcion" class="form-control bg-dark-input" rows="2"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Precio</label>
-                                <input type="number" name="precio" id="editServicioPrecio"
-                                    class="form-control bg-dark-input" required step="0.01">
+                                <input type="number" name="precio" id="editServicioPrecio" class="form-control bg-dark-input" required step="0.01">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Duración (min)</label>
-                                <input type="number" name="duracion" id="editServicioDuracion"
-                                    class="form-control bg-dark-input" required min="1">
+                                <input type="number" name="duracion" id="editServicioDuracion" class="form-control bg-dark-input" required min="1">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern"
-                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1228,20 +1150,17 @@ data-estado="{{ cita.estado }}"
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Precio *</label>
-                                <input type="number" name="precio" class="form-control bg-dark-input" required
-                                    step="0.01">
+                                <input type="number" name="precio" class="form-control bg-dark-input" required step="0.01">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Duración (min) *</label>
-                                <input type="number" name="duracion" class="form-control bg-dark-input" required
-                                    min="1">
+                                <input type="number" name="duracion" class="form-control bg-dark-input" required min="1">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern"
-                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-plus-circle"></i> Agregar Servicio
                         </button>
                     </div>
@@ -1253,24 +1172,24 @@ data-estado="{{ cita.estado }}"
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // MODAL EDITAR CITA
-document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function (e) {
+        document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function(e) {
 
-    const btn = e.relatedTarget;
+            const btn = e.relatedTarget;
 
-    document.getElementById('editCitaCliente').value = btn.dataset.cliente;
-    document.getElementById('editCitaServicio').value = btn.dataset.servicio;
-    document.getElementById('editCitaFecha').value = btn.dataset.fecha;
-    document.getElementById('editCitaHora').value = btn.dataset.hora;
-    document.getElementById('editCitaBarbero').value = btn.dataset.barbero;
-    document.getElementById('editCitaEstado').value = btn.dataset.estado;
+            document.getElementById('editCitaCliente').value = btn.dataset.cliente;
+            document.getElementById('editCitaServicio').value = btn.dataset.servicio;
+            document.getElementById('editCitaFecha').value = btn.dataset.fecha;
+            document.getElementById('editCitaHora').value = btn.dataset.hora;
+            document.getElementById('editCitaBarbero').value = btn.dataset.barbero;
+            document.getElementById('editCitaEstado').value = btn.dataset.estado;
 
-    document.getElementById('formEditarCita').action =
-        `/admin-panel/editar-cita/${btn.dataset.id}/`;
+            document.getElementById('formEditarCita').action =
+                `/editar-cita/${btn.dataset.id}/`;
 
-});
+        });
 
         // MODAL EDITAR BARBERO
-        document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function (e) {
+        document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
             document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
@@ -1281,7 +1200,7 @@ document.getElementById('modalEditarCita').addEventListener('show.bs.modal', fun
         });
 
         // MODAL EDITAR PRODUCTO
-        document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function (e) {
+        document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
             document.getElementById('editProductoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editProductoPrecio').value = btn.dataset.precio || 0;
@@ -1290,7 +1209,7 @@ document.getElementById('modalEditarCita').addEventListener('show.bs.modal', fun
         });
 
         // MODAL EDITAR SERVICIO
-        document.getElementById('modalEditarServicio').addEventListener('show.bs.modal', function (e) {
+        document.getElementById('modalEditarServicio').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
             document.getElementById('editServicioNombre').value = btn.dataset.nombre || '';
             document.getElementById('editServicioDescripcion').value = btn.dataset.descripcion || '';

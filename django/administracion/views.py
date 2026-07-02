@@ -55,23 +55,38 @@ def asignar_barbero(request, id):
         )
         return redirect('administracion:panel_admin')
 
-    grupo, _ = Group.objects.get_or_create(
-        name='Barberos'
-    )
-
+    grupo, _ = Group.objects.get_or_create(name='Barberos')
     user.groups.add(grupo)
 
-    cliente = get_object_or_404(
-        Cliente,
-        user=user
-    )
+    cliente = Cliente.objects.filter(user=user).first()
+
+    if cliente is None:
+        messages.error(
+            request,
+            '❌ Este usuario no tiene datos de cliente. Debe completar su registro primero.'
+        )
+        return redirect('administracion:panel_admin')
+
+    if not cliente.cedula:
+        messages.error(
+            request,
+            '❌ El cliente no tiene cédula registrada.'
+        )
+        return redirect('administracion:panel_admin')
+
+    if Barbero.objects.filter(cedula=cliente.cedula).exists():
+        messages.warning(
+            request,
+            '⚠️ Este barbero ya existe.'
+        )
+        return redirect('administracion:panel_admin')
 
     Barbero.objects.create(
         nombre=cliente.nombre,
         cedula=cliente.cedula,
-        telefono=cliente.telefono,
+        telefono=cliente.telefono or '',
         email=cliente.email,
-        especialidad="General",
+        especialidad='General',
         activo=True
     )
 
