@@ -11,7 +11,7 @@ class Producto(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     
-    def __str__(self):
+    def _str_(self):
         return self.nombre
     
     def necesita_reposicion(self):
@@ -48,21 +48,11 @@ class MovimientoInventario(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     nota = models.TextField(blank=True, null=True)
     
-    def __str__(self):
+    def _str_(self):
         return f"{self.get_tipo_display()} - {self.producto.nombre} ({self.cantidad})"
     
     def save(self, *args, **kwargs):
         # Guardar stock anterior y calcular nuevo stock
-        if not self.pk:  # Si es nuevo movimiento
-            self.stock_anterior = self.producto.stock_actual
-            
-            if self.tipo == 'ENTRADA':
-                self.stock_nuevo = self.stock_anterior + self.cantidad
-            elif self.tipo == 'SALIDA':
-                self.stock_nuevo = self.stock_anterior - self.cantidad
-            elif self.tipo == 'AJUSTE':
-                self.stock_nuevo = self.cantidad  # El ajuste establece el stock exacto
-        
         super().save(*args, **kwargs)
     
     class Meta:

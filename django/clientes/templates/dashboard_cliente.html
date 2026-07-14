@@ -33,10 +33,10 @@
     </script>
     <script>
         const preciosServicios = {
-        {% for servicio in servicios %}
-        "{{ servicio.id }}": { { servicio.precio } },
-        {% endfor %}
-       };
+            {% for servicio in servicios %}
+            "{{ servicio.id }}": {{ servicio.precio|floatformat:"0" }},
+            {% endfor %}
+        };
 
 
         const precioAdicional = 5000;
@@ -354,7 +354,7 @@
                                     <strong>{{ cita.servicio }}</strong><br>
                                     <small class="text-light-brown">{{ cita.fecha }} - {{ cita.hora }}</small>
                                 </div>
-                                <span class="badge-completado">✖ Cancelada</span>
+                                <span class="badge-completado">✖️ Cancelada</span>
                             </div>
                         </div>
                         {% empty %}

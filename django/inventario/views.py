@@ -91,12 +91,15 @@ def movimiento_inventario(request, producto_id):
                 messages.success(request, f'✅ Entrada registrada. Nuevo stock: {producto.stock_actual}')
                 
             elif movimiento.tipo == 'SALIDA':
-                if producto.stock_actual >= movimiento.cantidad:
-                    producto.stock_actual -= movimiento.cantidad
-                    movimiento.stock_nuevo = producto.stock_actual
-                    messages.success(request, f'✅ Salida registrada. Nuevo stock: {producto.stock_actual}')
+                # Convertimos a entero para evitar problemas de comparación
+                cantidad_salida = int(movimiento.cantidad) 
+    
+                if producto.stock_actual >= cantidad_salida:
+                    producto.stock_actual -= cantidad_salida
+                    movimiento.stock_nuevo = producto.stock_actual # Asignamos valor concreto
+                    messages.success(request, f'✅ Salida registrada. Stock: {producto.stock_actual}')
                 else:
-                    messages.error(request, f'❌ Stock insuficiente. Stock actual: {producto.stock_actual}')
+                    messages.error(request, 'Stock insuficiente')
                     return redirect('inventario:dashboard')
                     
             elif movimiento.tipo == 'AJUSTE':  # <-- NUEVO TIPO
@@ -104,6 +107,13 @@ def movimiento_inventario(request, producto_id):
                 producto.stock_actual = movimiento.cantidad
                 messages.success(request, f'✅ Ajuste realizado. Nuevo stock: {producto.stock_actual}')
             
+                #PRINTS DIAGNOSTICOS
+
+            print(f"DEBUG - Tipo: {movimiento.tipo}")
+            print(f"DEBUG - Cantidad a mover: {movimiento.cantidad}")
+            print(f"DEBUG - Stock anterior: {movimiento.stock_anterior}")
+            print(f"DEBUG - Stock nuevo a guardar: {movimiento.stock_nuevo}")
+
             producto.save()
             movimiento.save()
             return redirect('inventario:dashboard')
@@ -141,9 +151,9 @@ def historial_movimientos(request):
     if producto_id:
         movimientos = movimientos.filter(producto_id=producto_id)
     if fecha_inicio:
-        movimientos = movimientos.filter(fecha__date__gte=fecha_inicio)
+        movimientos = movimientos.filter(fecha_date_gte=fecha_inicio)
     if fecha_fin:
-        movimientos = movimientos.filter(fecha__date__lte=fecha_fin)
+        movimientos = movimientos.filter(fecha_date_lte=fecha_fin)
     
     productos = Producto.objects.filter(activo=True)
     
