@@ -29,3 +29,16 @@ py manage.py graph_models -a -o modelo_barberia.png
 
 libreria para pdf
 pip install reportlab
+
+
+Entrar a la carpeta donde está el proyecto:
+cd django
+
+Crear un entorno virtual
+py -m venv venv
+
+Activar el entorno virtual:
+.\venv\Scripts\activate
+
+nstalar todo
+pip install -r requirements.txt
