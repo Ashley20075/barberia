@@ -83,8 +83,8 @@
                 </a>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <div class="user-info-custom">
-                        <i class="bi bi-shield-lock"></i>
-                        <span>Administrador</span>
+                        <i class="bi bi-person-circle"></i>
+                        <span>{{ user.username }}</span>
                     </div>
                     <a href="{% url 'administracion:panel_admin' %}" class="nav-btn active">
                         <i class="bi bi-speedometer2"></i> Panel Admin
