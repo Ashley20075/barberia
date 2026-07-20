@@ -10,460 +10,65 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: #0B0A08;
-            color: #F5EFE6;
-            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
-        }
-        
-        .navbar-custom {
-            background-color: #0B0A08;
-            border-bottom: 2px solid #F4C542;
-            padding: 0.8rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1050;
-        }
-        
-        .navbar-brand-custom {
-            font-family: 'Playfair Display', 'Georgia', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #F4C542 !important;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .navbar-brand-custom span {
-            color: #C9A87C;
-        }
-        
-        .navbar-brand-custom img {
-            height: 40px;
-            width: 40px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        
-        .nav-btn {
-            background: transparent;
-            border: 2px solid #3F2E22;
-            color: #F5EFE6 !important;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .nav-btn:hover {
-            background-color: #3F2E22;
-            border-color: #F4C542;
-            transform: scale(1.02);
-        }
-        
-        .nav-btn.active {
-            background-color: #F4C542;
-            border-color: #F4C542;
-            color: #0B0A08 !important;
-            box-shadow: 0 0 20px rgba(244, 197, 66, 0.3);
-        }
-        
-        .btn-logout-custom {
-            background: transparent;
-            border: 2px solid #3F2E22;
-            color: #F5EFE6;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .btn-logout-custom:hover {
-            background-color: #dc3545;
-            border-color: #dc3545;
-            color: white;
-        }
-        
-        .user-info-custom {
-            background-color: #2A211B;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            color: #F5EFE6;
-        }
-        
-        .user-info-custom i {
-            color: #F4C542;
-            font-size: 1.2rem;
-        }
-        
-        .action-bar-sticky {
-            position: sticky;
-            top: 76px;
-            z-index: 1040;
-            background: #0B0A08;
-            padding: 18px 0;
-            border-bottom: 3px solid #F4C542;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-        
-        .btn-group-modern {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .btn-modern {
-            background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 14px 28px;
-            color: #0B0A08;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(244, 197, 66, 0.35);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            min-width: 180px;
-            flex: 1 1 auto;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-modern::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .btn-modern:hover::before {
-            left: 100%;
-        }
-        
-        .btn-modern:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(244, 197, 66, 0.5);
-            background: linear-gradient(135deg, #FFD966 0%, #F4C542 100%);
-        }
-        
-        .btn-modern-inventario {
-            background: linear-gradient(135deg, #F4C542 0%, #FFD966 40%, #F4C542 80%, #FFD966 100%);
-            background-size: 300% 300%;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 28px;
-            color: #0B0A08;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(244, 197, 66, 0.4);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            min-width: 180px;
-            flex: 1 1 auto;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
-            animation: shimmerBtn 3s ease-in-out infinite;
-        }
-        
-        .btn-modern-inventario::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.6s ease;
-        }
-        
-        .btn-modern-inventario:hover::before {
-            left: 100%;
-        }
-        
-        .btn-modern-inventario:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 35px rgba(244, 197, 66, 0.6);
-        }
-        
-        @keyframes shimmerBtn {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
-        .stat-card {
-            background: linear-gradient(145deg, #1E1A15, #2A211B);
-            border-radius: 20px;
-            border-left: 5px solid #F4C542;
-            transition: all 0.3s ease;
-            height: 100%;
-            padding: 1.8rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(244, 197, 66, 0.15);
-        }
-        
-        .stat-card .icon-wrapper {
-            width: 65px;
-            height: 65px;
-            background: rgba(244, 197, 66, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover .icon-wrapper {
-            background: rgba(244, 197, 66, 0.2);
-            transform: scale(1.05) rotate(-5deg);
-        }
-        
-        .stat-card i {
-            color: #F4C542;
-            font-size: 2.2rem;
-        }
-        
-        .stat-card h5 {
-            color: #C9A87C;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-        
-        .stat-card h2 {
-            color: #F4C542;
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 0;
-        }
-        
-        .stat-card.citas {
-            border-left-color: #0d6efd;
-        }
-        
-        .stat-card.citas i {
-            color: #0d6efd;
-        }
-        
-        .stat-card.citas h2 {
-            color: #0d6efd;
-        }
-        
-        .stat-card.barberos {
-            border-left-color: #198754;
-        }
-        
-        .stat-card.barberos i {
-            color: #198754;
-        }
-        
-        .stat-card.barberos h2 {
-            color: #198754;
-        }
-        
-        .stat-card.servicios {
-            border-left-color: #ffc107;
-        }
-        
-        .stat-card.servicios i {
-            color: #ffc107;
-        }
-        
-        .stat-card.servicios h2 {
-            color: #ffc107;
-        }
-        
-        .stat-card.productos {
-            border-left-color: #F4C542;
-        }
-        
-        .stat-card.productos i {
-            color: #F4C542;
-        }
-        
-        .stat-card.productos h2 {
-            color: #F4C542;
-        }
-        
-        .card-custom {
-            background-color: #1E1A15 !important;
-            border-radius: 20px !important;
-            border: 1px solid rgba(244, 197, 66, 0.2) !important;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        
-        .card-header-custom {
-            background-color: #0B0A08 !important;
-            border-bottom: 2px solid #F4C542 !important;
-            padding: 1rem 1.25rem;
-            font-weight: 600;
-            color: #FFD966 !important;
-        }
-        
-        .table-custom {
-            background-color: #1E1A15 !important;
-            margin-bottom: 0;
-        }
-        
-        .table-custom thead th {
-            background-color: #0B0A08 !important;
-            color: #FFD966 !important;
-            border-bottom: 2px solid #F4C542 !important;
-            font-weight: 600;
-            padding: 0.75rem 1rem;
-        }
-        
-        .table-custom tbody td {
-            background-color: #1E1A15 !important;
-            color: #F5EFE6 !important;
-            vertical-align: middle;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(63, 46, 34, 0.3) !important;
-        }
-        
-        .table-custom tbody tr:hover td {
-            background-color: #2A211B !important;
-        }
-        
-        .modal-content-custom {
-            background-color: #1E1A15 !important;
-            border: 1px solid rgba(244, 197, 66, 0.3) !important;
-        }
-        
-        .modal-header-custom {
-            border-bottom: 2px solid #F4C542 !important;
-            padding: 1rem 1.5rem;
-        }
-        
-        .modal-footer-custom {
-            border-top: 2px solid #F4C542 !important;
-            padding: 1rem 1.5rem;
-        }
-        
-        .bg-dark-input {
-            background-color: #2A211B !important;
-            border: 1px solid #3F2E22 !important;
-            color: #F5EFE6 !important;
-        }
-        
-        .bg-dark-input:focus {
-            background-color: #352b23 !important;
-            border-color: #F4C542 !important;
-            box-shadow: 0 0 0 0.2rem rgba(244, 197, 66, 0.25);
-        }
-        
-        .form-label-custom {
-            color: #FFD966;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .text-yellow {
-            color: #F4C542 !important;
-        }
-        
-        .text-light-brown {
-            color: #C9A87C !important;
-        }
-        
-        @media (max-width: 768px) {
-            .navbar-brand-custom {
-                font-size: 1.3rem;
-            }
-            .nav-btn,
-            .btn-logout-custom {
-                font-size: 0.8rem;
-                padding: 0.3rem 0.8rem;
-            }
-            .btn-modern,
-            .btn-modern-inventario {
-                font-size: 13px;
-                padding: 11px 18px;
-                min-width: 140px;
-            }
-            .stat-card h2 {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .btn-group-modern {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .btn-modern,
-            .btn-modern-inventario {
-                font-size: 14px;
-                padding: 13px 20px;
-                min-width: unset;
-                width: 100%;
-            }
-            .stat-card {
-                padding: 1.2rem 1rem;
-            }
-            .stat-card h2 {
-                font-size: 1.8rem;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0B0A08; color: #F5EFE6; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
+        .navbar-custom { background-color: #0B0A08; border-bottom: 2px solid #F4C542; padding: 0.8rem 0; position: sticky; top: 0; z-index: 1050; }
+        .navbar-brand-custom { font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.8rem; font-weight: 700; color: #F4C542 !important; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .navbar-brand-custom span { color: #C9A87C; }
+        .navbar-brand-custom img { height: 40px; width: 40px; object-fit: cover; border-radius: 50%; }
+        .nav-btn { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6 !important; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
+        .nav-btn:hover { background-color: #3F2E22; border-color: #F4C542; transform: scale(1.02); }
+        .nav-btn.active { background-color: #F4C542; border-color: #F4C542; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(244, 197, 66, 0.3); }
+        .btn-logout-custom { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
+        .btn-logout-custom:hover { background-color: #dc3545; border-color: #dc3545; color: white; }
+        .user-info-custom { background-color: #2A211B; padding: 0.5rem 1rem; border-radius: 40px; display: inline-flex; align-items: center; gap: 0.8rem; color: #F5EFE6; }
+        .user-info-custom i { color: #F4C542; font-size: 1.2rem; }
+        .action-bar-sticky { position: sticky; top: 76px; z-index: 1040; background: #0B0A08; padding: 18px 0; border-bottom: 3px solid #F4C542; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .btn-group-modern { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+        .btn-modern { background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%); border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 15px rgba(244,197,66,0.35); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; }
+        .btn-modern::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s ease; }
+        .btn-modern:hover::before { left: 100%; }
+        .btn-modern:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 30px rgba(244,197,66,0.5); background: linear-gradient(135deg, #FFD966 0%, #F4C542 100%); }
+        .btn-modern-inventario { background: linear-gradient(135deg, #F4C542 0%, #FFD966 40%, #F4C542 80%, #FFD966 100%); background-size: 300% 300%; border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 20px rgba(244,197,66,0.4); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; animation: shimmerBtn 3s ease-in-out infinite; }
+        .btn-modern-inventario::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.6s ease; }
+        .btn-modern-inventario:hover::before { left: 100%; }
+        .btn-modern-inventario:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 35px rgba(244,197,66,0.6); }
+        @keyframes shimmerBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .stat-card { background: linear-gradient(145deg, #1E1A15, #2A211B); border-radius: 20px; border-left: 5px solid #F4C542; transition: all 0.3s ease; height: 100%; padding: 1.8rem 1.5rem; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(244,197,66,0.15); }
+        .stat-card .icon-wrapper { width: 65px; height: 65px; background: rgba(244,197,66,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; transition: all 0.3s ease; }
+        .stat-card:hover .icon-wrapper { background: rgba(244,197,66,0.2); transform: scale(1.05) rotate(-5deg); }
+        .stat-card i { color: #F4C542; font-size: 2.2rem; }
+        .stat-card h5 { color: #C9A87C; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-top: 0.5rem; }
+        .stat-card h2 { color: #F4C542; font-size: 2.8rem; font-weight: 800; margin-bottom: 0; }
+        .stat-card.citas { border-left-color: #0d6efd; }
+        .stat-card.citas i { color: #0d6efd; }
+        .stat-card.citas h2 { color: #0d6efd; }
+        .stat-card.barberos { border-left-color: #198754; }
+        .stat-card.barberos i { color: #198754; }
+        .stat-card.barberos h2 { color: #198754; }
+        .stat-card.servicios { border-left-color: #ffc107; }
+        .stat-card.servicios i { color: #ffc107; }
+        .stat-card.servicios h2 { color: #ffc107; }
+        .stat-card.productos { border-left-color: #F4C542; }
+        .stat-card.productos i { color: #F4C542; }
+        .stat-card.productos h2 { color: #F4C542; }
+        .card-custom { background-color: #1E1A15 !important; border-radius: 20px !important; border: 1px solid rgba(244,197,66,0.2) !important; margin-bottom: 2rem; overflow: hidden; }
+        .card-header-custom { background-color: #0B0A08 !important; border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.25rem; font-weight: 600; color: #FFD966 !important; }
+        .table-custom { background-color: #1E1A15 !important; margin-bottom: 0; }
+        .table-custom thead th { background-color: #0B0A08 !important; color: #FFD966 !important; border-bottom: 2px solid #F4C542 !important; font-weight: 600; padding: 0.75rem 1rem; }
+        .table-custom tbody td { background-color: #1E1A15 !important; color: #F5EFE6 !important; vertical-align: middle; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(63,46,34,0.3) !important; }
+        .table-custom tbody tr:hover td { background-color: #2A211B !important; }
+        .modal-content-custom { background-color: #1E1A15 !important; border: 1px solid rgba(244,197,66,0.3) !important; }
+        .modal-header-custom { border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
+        .modal-footer-custom { border-top: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
+        .bg-dark-input { background-color: #2A211B !important; border: 1px solid #3F2E22 !important; color: #F5EFE6 !important; }
+        .bg-dark-input:focus { background-color: #352b23 !important; border-color: #F4C542 !important; box-shadow: 0 0 0 0.2rem rgba(244,197,66,0.25); }
+        .form-label-custom { color: #FFD966; font-weight: 500; margin-bottom: 0.5rem; }
+        .text-yellow { color: #F4C542 !important; }
+        .text-light-brown { color: #C9A87C !important; }
+        @media (max-width: 768px) { .navbar-brand-custom { font-size: 1.3rem; } .nav-btn, .btn-logout-custom { font-size: 0.8rem; padding: 0.3rem 0.8rem; } .btn-modern, .btn-modern-inventario { font-size: 13px; padding: 11px 18px; min-width: 140px; } .stat-card h2 { font-size: 2rem; } }
+        @media (max-width: 576px) { .btn-group-modern { flex-direction: column; align-items: stretch; gap: 10px; } .btn-modern, .btn-modern-inventario { font-size: 14px; padding: 13px 20px; min-width: unset; width: 100%; } .stat-card { padding: 1.2rem 1rem; } .stat-card h2 { font-size: 1.8rem; } }
     </style>
 </head>
 
@@ -525,14 +130,16 @@
             <i class="bi bi-speedometer2"></i> Bienvenido al Panel de Administración
         </h1>
 
-        {% if messages %} {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <i class="bi bi-info-circle"></i> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endfor %} {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
 
-        <!-- BARRA DE ACCIONES - BOTONES EN LÍNEA -->
+        <!-- BARRA DE ACCIONES -->
         <div class="action-bar-sticky">
             <div class="container">
                 <div class="btn-group-modern">
@@ -581,7 +188,7 @@
             </div>
         </div>
 
-        <!-- TABLA DE USUARIOS -->
+        <!-- TABLA DE USUARIOS - SOLO GESTIÓN DE ROLES Y ACTIVAR/DESACTIVAR -->
         <div class="card-custom">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-people"></i> Usuarios Registrados</span>
@@ -603,43 +210,53 @@
                             {% for u in usuarios %}
                             <tr>
                                 <td>
-                                    {% if u.first_name %} {{ u.first_name }} {{ u.last_name }} {% else %} {{ u.username }} {% endif %}
+                                    {% if u.first_name %}
+                                        {{ u.first_name }} {{ u.last_name }}
+                                    {% else %}
+                                        {{ u.username }}
+                                    {% endif %}
                                 </td>
                                 <td>{{ u.email }}</td>
                                 <td>
                                     {% if u.groups.all %}
-                                    <span class="badge bg-warning text-dark">Barbero</span> {% else %}
-                                    <span class="badge bg-primary">Cliente</span> {% endif %}
+                                        <span class="badge bg-warning text-dark">Barbero</span>
+                                    {% else %}
+                                        <span class="badge bg-primary">Cliente</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if u.is_active %}
-                                    <span class="badge bg-success">Activo</span> {% else %}
-                                    <span class="badge bg-danger">Inactivo</span> {% endif %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if u.groups.all %}
-                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
-                                        <i class="bi bi-person-dash"></i> Quitar barbero
-                                    </a>
+                                        <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
+                                            <i class="bi bi-person-dash"></i> Quitar barbero
+                                        </a>
                                     {% else %}
-                                    <a href="{% url 'administracion:asignar_barbero' u.id %}" class="btn btn-sm btn-warning" onclick="return confirm('¿Asignar como barbero?')">
-                                        <i class="bi bi-person-badge"></i> Hacer barbero
-                                    </a>
-                                    {% endif %} {% if u.is_active %}
-                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
-                                        <i class="bi bi-person-x"></i> Desactivar
-                                    </a>
+                                        <a href="{% url 'administracion:asignar_barbero' u.id %}" class="btn btn-sm btn-warning" onclick="return confirm('¿Asignar como barbero?')">
+                                            <i class="bi bi-person-badge"></i> Hacer barbero
+                                        </a>
+                                    {% endif %}
+                                    {% if u.is_active %}
+                                        <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
+                                            <i class="bi bi-person-x"></i> Desactivar
+                                        </a>
                                     {% else %}
-                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
-                                        <i class="bi bi-person-check"></i> Activar
-                                    </a>
+                                        <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
+                                            <i class="bi bi-person-check"></i> Activar
+                                        </a>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay usuarios registrados.
+                                <td colspan="5" class="text-center text-light-brown py-4">
+                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    No hay usuarios registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -651,7 +268,7 @@
 
         <!-- TABLA DE CITAS -->
         <div class="card-custom">
-            <div class="card-header-custom d-flex gap-2 justify-content-between align-items-center">
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-calendar-check"></i> Citas</span>
                 <span class="badge bg-warning text-dark">{{ citas|length }}</span>
             </div>
@@ -679,17 +296,17 @@
                                 <td>{{ cita.barbero.nombre }}</td>
                                 <td>
                                     {% if cita.estado == "Confirmada" %}
-                                    <span class="badge bg-success">Confirmada</span> {% elif cita.estado == "Pendiente" %}
-                                    <span class="badge bg-warning text-dark">Pendiente</span> {% else %}
-                                    <span class="badge bg-danger">Cancelada</span> {% endif %}
+                                        <span class="badge bg-success">Confirmada</span>
+                                    {% elif cita.estado == "Pendiente" %}
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Cancelada</span>
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}"
-                                        data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
-
-    <i class="bi bi-pencil"></i>
-
-</button>
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
                                     <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta cita?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
@@ -698,7 +315,8 @@
                             {% empty %}
                             <tr>
                                 <td colspan="7" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay citas registradas.
+                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    No hay citas registradas.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -724,6 +342,8 @@
                                 <th>Especialidad</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
+                                <th>Jornada</th>
+                                <th>Descanso</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -735,9 +355,10 @@
                                 <td>{{ b.especialidad }}</td>
                                 <td>{{ b.telefono }}</td>
                                 <td>{{ b.email }}</td>
+                                <td>{{ b.jornada_inicio|time:"H:i" }} - {{ b.jornada_fin|time:"H:i" }}</td>
+                                <td>{{ b.get_dia_descanso_display }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarBarbero" data-id="{{ b.id }}" data-nombre="{{ b.nombre }}" data-cedula="{{ b.cedula }}" data-especialidad="{{ b.especialidad }}" data-telefono="{{ b.telefono }}"
-                                        data-email="{{ b.email }}">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarBarbero" data-id="{{ b.id }}" data-nombre="{{ b.nombre }}" data-cedula="{{ b.cedula }}" data-especialidad="{{ b.especialidad }}" data-telefono="{{ b.telefono }}" data-email="{{ b.email }}" data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}" data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}" data-duracion_cita="{{ b.duracion_cita }}" data-dias_laborales="{{ b.dias_laborales }}" data-dia_descanso="{{ b.dia_descanso }}" data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este barbero?')">
@@ -747,8 +368,9 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay barberos registrados.
+                                <td colspan="8" class="text-center text-light-brown py-4">
+                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    No hay barberos registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -788,10 +410,14 @@
                                 </td>
                                 <td>
                                     {% if producto.stock_actual >= 10 %}
-                                    <span class="badge bg-success">Suficiente</span> {% elif producto.stock_actual >= 6 %}
-                                    <span class="badge bg-warning text-dark">Medio</span> {% elif producto.stock_actual >= 1 %}
-                                    <span class="badge bg-danger">Bajo</span> {% else %}
-                                    <span class="badge bg-danger">Agotado</span> {% endif %}
+                                        <span class="badge bg-success">Suficiente</span>
+                                    {% elif producto.stock_actual >= 6 %}
+                                        <span class="badge bg-warning text-dark">Medio</span>
+                                    {% elif producto.stock_actual >= 1 %}
+                                        <span class="badge bg-danger">Bajo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Agotado</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarProducto" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio_unitario }}" data-stock="{{ producto.stock_actual }}">
@@ -808,7 +434,8 @@
                             {% empty %}
                             <tr>
                                 <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-box-seam fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay productos registrados.
+                                    <i class="bi bi-box-seam fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    No hay productos registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -844,8 +471,7 @@
                                 <td>${{ servicio.precio }}</td>
                                 <td>{{ servicio.duracion }} min</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}"
-                                        data-duracion="{{ servicio.duracion }}">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}" data-duracion="{{ servicio.duracion }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este servicio?')">
@@ -856,7 +482,8 @@
                             {% empty %}
                             <tr>
                                 <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:#C9A87C;"></i> No hay servicios registrados.
+                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    No hay servicios registrados.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -870,8 +497,7 @@
 
     <!-- ===== MODALES ===== -->
 
-    <!-- MODAL AGREGAR USUARIO (CON CAMPOS IGUALES AL REGISTRO) -->
-    <!-- MODAL AGREGAR USUARIO (CON CÉDULA Y TELÉFONO) -->
+    <!-- MODAL AGREGAR USUARIO -->
     <div class="modal fade" id="modalAgregarUsuario" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
@@ -916,8 +542,8 @@
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
-                        <i class="bi bi-plus-circle"></i> Crear Usuario
-                    </button>
+                            <i class="bi bi-plus-circle"></i> Crear Usuario
+                        </button>
                     </div>
                 </form>
             </div>
@@ -936,25 +562,18 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="mb-3">
-                            <div class="mb-3">
-                                <label class="form-label-custom">Cliente</label>
-
-                                <select name="cliente" id="editCitaCliente" class="form-select bg-dark-input">
-        {% for cliente in clientes %}
-            <option value="{{ cliente.id }}">
-                {{ cliente.nombre }}
-            </option>
-        {% endfor %}
-    </select>
-                            </div>
+                            <label class="form-label-custom">Cliente</label>
+                            <select name="cliente" id="editCitaCliente" class="form-select bg-dark-input">
+                                {% for cliente in clientes %}
+                                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-custom">Servicio</label>
                             <select name="servicio" id="editCitaServicio" class="form-select bg-dark-input">
                                 {% for servicio in servicios %}
-                                <option value="{{ servicio.id }}">
-    {{ servicio.nombre }}
-</option>
+                                    <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -979,9 +598,7 @@
                             <label class="form-label-custom">Barbero</label>
                             <select name="barbero" id="editCitaBarbero" class="form-select bg-dark-input">
                                 {% for b in barberos %}
-                                <option value="{{ b.id }}">
-    {{ b.nombre }}
-</option>
+                                    <option value="{{ b.id }}">{{ b.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -1005,51 +622,112 @@
         </div>
     </div>
 
-    <!-- MODAL EDITAR BARBERO -->
-    <div class="modal fade" id="modalEditarBarbero" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Barbero</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <form method="POST" id="formEditarBarbero">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label-custom">Nombre completo</label>
+   <!-- MODAL EDITAR BARBERO -->
+<div class="modal fade" id="modalEditarBarbero" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Barbero</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="formEditarBarbero" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Datos personales -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Nombre completo *</label>
                             <input type="text" name="nombre" id="editBarberoNombre" class="form-control bg-dark-input" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label-custom">Cédula</label>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Cédula *</label>
                             <input type="text" name="cedula" id="editBarberoCedula" class="form-control bg-dark-input" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label-custom">Especialidad</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Especialidad *</label>
                             <input type="text" name="especialidad" id="editBarberoEspecialidad" class="form-control bg-dark-input" required>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Teléfono</label>
-                                <input type="text" name="telefono" id="editBarberoTelefono" class="form-control bg-dark-input" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Email</label>
-                                <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Teléfono *</label>
+                            <input type="text" name="telefono" id="editBarberoTelefono" class="form-control bg-dark-input" required>
                         </div>
                     </div>
-                    <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
-                            <i class="bi bi-check-circle"></i> Guardar Cambios
-                        </button>
+                    <div class="mb-3">
+                        <label class="form-label-custom">Email *</label>
+                        <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="activo" id="editBarberoActivo" class="form-check-input" checked>
+                            <label class="form-check-label text-light" for="editBarberoActivo">Activo</label>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: #3F2E22;">
+                    <h6 class="text-yellow"><i class="bi bi-clock"></i> Configuración de Horario</h6>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Jornada Inicio</label>
+                            <input type="time" name="jornada_inicio" id="editBarberoJornadaInicio" class="form-control bg-dark-input" value="08:00">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Jornada Fin</label>
+                            <input type="time" name="jornada_fin" id="editBarberoJornadaFin" class="form-control bg-dark-input" value="18:00">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Duración Cita (min)</label>
+                            <input type="number" name="duracion_cita" id="editBarberoDuracionCita" class="form-control bg-dark-input" min="15" value="30">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Tiempo entre citas (min)</label>
+                            <input type="number" name="tiempo_entre_citas" id="editBarberoTiempoEntreCitas" class="form-control bg-dark-input" min="0" value="15">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Días Laborales</label>
+                            <select name="dias_laborales" id="editBarberoDiasLaborales" class="form-select bg-dark-input" multiple size="4">
+                                <option value="LUN">Lunes</option>
+                                <option value="MAR">Martes</option>
+                                <option value="MIE">Miércoles</option>
+                                <option value="JUE">Jueves</option>
+                                <option value="VIE">Viernes</option>
+                                <option value="SAB">Sábado</option>
+                                <option value="DOM">Domingo</option>
+                            </select>
+                            <small class="text-light-brown">Selecciona los días que trabaja (Ctrl+Click para múltiple)</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label-custom">Día de Descanso</label>
+                            <select name="dia_descanso" id="editBarberoDiaDescanso" class="form-select bg-dark-input">
+                                <option value="LUN">Lunes</option>
+                                <option value="MAR">Martes</option>
+                                <option value="MIE">Miércoles</option>
+                                <option value="JUE">Jueves</option>
+                                <option value="VIE">Viernes</option>
+                                <option value="SAB">Sábado</option>
+                                <option value="DOM">Domingo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-footer-custom">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <i class="bi bi-check-circle"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-
+</div>
     <!-- MODAL EDITAR PRODUCTO -->
     <div class="modal fade" id="modalEditarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -1173,32 +851,42 @@
     <script>
         // MODAL EDITAR CITA
         document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function(e) {
-
             const btn = e.relatedTarget;
-
-            document.getElementById('editCitaCliente').value = btn.dataset.cliente;
-            document.getElementById('editCitaServicio').value = btn.dataset.servicio;
-            document.getElementById('editCitaFecha').value = btn.dataset.fecha;
-            document.getElementById('editCitaHora').value = btn.dataset.hora;
-            document.getElementById('editCitaBarbero').value = btn.dataset.barbero;
-            document.getElementById('editCitaEstado').value = btn.dataset.estado;
-
-            document.getElementById('formEditarCita').action =
-                `/editar-cita/${btn.dataset.id}/`;
-
+            document.getElementById('editCitaCliente').value = btn.dataset.cliente || '';
+            document.getElementById('editCitaServicio').value = btn.dataset.servicio || '';
+            document.getElementById('editCitaFecha').value = btn.dataset.fecha || '';
+            document.getElementById('editCitaHora').value = btn.dataset.hora || '';
+            document.getElementById('editCitaBarbero').value = btn.dataset.barbero || '';
+            document.getElementById('editCitaEstado').value = btn.dataset.estado || 'Pendiente';
+            document.getElementById('formEditarCita').action = `/editar-cita/${btn.dataset.id}/`;
         });
 
-        // MODAL EDITAR BARBERO
-        document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
-            const btn = e.relatedTarget;
-            document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
-            document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
-            document.getElementById('editBarberoEspecialidad').value = btn.dataset.especialidad || '';
-            document.getElementById('editBarberoTelefono').value = btn.dataset.telefono || '';
-            document.getElementById('editBarberoEmail').value = btn.dataset.email || '';
-            document.getElementById('formEditarBarbero').action = `/admin-panel/editar-barbero/${btn.dataset.id}/`;
-        });
-
+       // MODAL EDITAR BARBERO
+document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
+    const btn = e.relatedTarget;
+    
+    document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
+    document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
+    document.getElementById('editBarberoEspecialidad').value = btn.dataset.especialidad || '';
+    document.getElementById('editBarberoTelefono').value = btn.dataset.telefono || '';
+    document.getElementById('editBarberoEmail').value = btn.dataset.email || '';
+    document.getElementById('editBarberoActivo').checked = btn.dataset.activo === 'true' || true;
+    
+    document.getElementById('editBarberoJornadaInicio').value = btn.dataset.jornada_inicio || '08:00';
+    document.getElementById('editBarberoJornadaFin').value = btn.dataset.jornada_fin || '18:00';
+    document.getElementById('editBarberoDuracionCita').value = btn.dataset.duracion_cita || 30;
+    document.getElementById('editBarberoTiempoEntreCitas').value = btn.dataset.tiempo_entre_citas || 15;
+    document.getElementById('editBarberoDiaDescanso').value = btn.dataset.dia_descanso || 'DOM';
+    
+    // Días laborales
+    const diasLaborales = (btn.dataset.dias_laborales || 'LUN,MAR,MIE,JUE,VIE,SAB').split(',');
+    const selectDias = document.getElementById('editBarberoDiasLaborales');
+    for (let option of selectDias.options) {
+        option.selected = diasLaborales.includes(option.value);
+    }
+    
+    document.getElementById('formEditarBarbero').action = `/editar-barbero/${btn.dataset.id}/`;
+});
         // MODAL EDITAR PRODUCTO
         document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
@@ -1215,9 +903,8 @@
             document.getElementById('editServicioDescripcion').value = btn.dataset.descripcion || '';
             document.getElementById('editServicioPrecio').value = btn.dataset.precio || 0;
             document.getElementById('editServicioDuracion').value = btn.dataset.duracion || 0;
-            document.getElementById('formEditarServicio').action = btn.dataset.url;
+            document.getElementById('formEditarServicio').action = btn.dataset.url || '';
         });
     </script>
 </body>
-
 </html>

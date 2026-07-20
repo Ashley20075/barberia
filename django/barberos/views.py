@@ -6,7 +6,7 @@ from citas.models import Cita
 from inventario.models import Producto
 from .models import Barbero
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
 from reportlab.lib.styles import getSampleStyleSheet
@@ -15,20 +15,21 @@ import os
 
 @login_required(login_url='login')
 def panel_barbero(request):
-    """
-    Panel del barbero - Muestra solo las citas asignadas a él
-    """
-    # Obtener el barbero según el email del usuario logueado
+    """Panel del barbero - Muestra solo las citas asignadas a él con validación de horario"""
+    
     try:
         barbero = Barbero.objects.get(email=request.user.email, activo=True)
     except Barbero.DoesNotExist:
         messages.error(request, 'No tienes un perfil de barbero asignado.')
         return redirect('inicio')
     
-    # Obtener todas las citas del barbero
-    citas = Cita.objects.filter(
-    barbero=barbero
-).order_by('fecha', 'hora')
+    # ===== VALIDACIÓN: Verificar si el barbero está disponible hoy =====
+    hoy = timezone.now().date()
+    if not barbero.es_dia_laboral(hoy) or barbero.es_dia_descanso(hoy):
+        messages.warning(request, f'⚠️ Hoy es día de descanso o no laboral para {barbero.nombre}.')
+    
+    # Citas del barbero
+    citas = Cita.objects.filter(barbero=barbero).order_by('fecha', 'hora')
     
     # ===== FILTROS =====
     estado = request.GET.get('estado')
@@ -60,11 +61,11 @@ def panel_barbero(request):
     
     context = {
         'citas': citas,
+        'barbero': barbero,
         'total_citas': total_citas,
         'citas_pendientes': citas_pendientes,
         'citas_confirmadas': citas_confirmadas,
         'citas_canceladas': citas_canceladas,
-        'barbero': barbero,
         'filtro_estado': estado,
         'filtro_fecha_inicio': fecha_inicio,
         'filtro_fecha_fin': fecha_fin,
@@ -75,7 +76,6 @@ def panel_barbero(request):
 def confirmar_cita(request, id):
     cita = get_object_or_404(Cita, id=id)
     
-    # Verificar que la cita pertenece al barbero logueado
     try:
         barbero = Barbero.objects.get(email=request.user.email, activo=True)
         if cita.barbero != barbero:
@@ -83,6 +83,15 @@ def confirmar_cita(request, id):
             return redirect('barberos:panel_barbero')
     except Barbero.DoesNotExist:
         messages.error(request, '❌ No tienes un perfil de barbero asignado.')
+        return redirect('barberos:panel_barbero')
+    
+    # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====
+    if not barbero.es_dia_laboral(cita.fecha):
+        messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
+        return redirect('barberos:panel_barbero')
+    
+    if barbero.es_dia_descanso(cita.fecha):
+        messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
         return redirect('barberos:panel_barbero')
     
     cita.estado = "Confirmada"
@@ -94,7 +103,6 @@ def confirmar_cita(request, id):
 def cancelar_cita(request, id):
     cita = get_object_or_404(Cita, id=id)
     
-    # Verificar que la cita pertenece al barbero logueado
     try:
         barbero = Barbero.objects.get(email=request.user.email, activo=True)
         if cita.barbero != barbero:
@@ -118,10 +126,7 @@ def cancelar_cita(request, id):
 
         cita.estado = "Cancelada"
         cita.save()
-        messages.success(
-    request,
-    f'✅ Cita de {cita.cliente.nombre} cancelada.'
-)
+        messages.success(request, f'✅ Cita de {cita.cliente.nombre} cancelada.')
 
     return redirect('barberos:panel_barbero')
 
@@ -137,12 +142,8 @@ def detalle_barbero(request, id):
 
 @login_required
 def certificado_laboral(request):
-
     try:
-        barbero = Barbero.objects.get(
-            email=request.user.email,
-            activo=True
-        )
+        barbero = Barbero.objects.get(email=request.user.email, activo=True)
     except Barbero.DoesNotExist:
         messages.error(request, "No tienes un perfil de barbero.")
         return redirect("barberos:panel_barbero")
@@ -151,113 +152,36 @@ def certificado_laboral(request):
     response['Content-Disposition'] = 'attachment; filename="certificado_laboral.pdf"'
 
     doc = SimpleDocTemplate(response)
-
     estilos = getSampleStyleSheet()
-
     elementos = []
 
-    # Logo
-
-    ruta_logo = os.path.join(
-        settings.BASE_DIR,
-        "inventario",
-        "static",
-        "img",
-        "logo.jpeg"
-    )
-
+    ruta_logo = os.path.join(settings.BASE_DIR, "inventario", "static", "img", "logo.jpeg")
     if os.path.exists(ruta_logo):
         logo = Image(ruta_logo)
         logo.drawWidth = 80
         logo.drawHeight = 80
         elementos.append(logo)
 
-    elementos.append(
-        Paragraph(
-            "<b>CERTIFICADO LABORAL</b>",
-            estilos["Title"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "BarberSpringfield",
-            estilos["Heading2"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/><br/>Se certifica que:",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<b>{barbero.nombre}</b>",
-            estilos["Heading1"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Cédula: {barbero.cedula}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Especialidad: {barbero.especialidad}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Correo: {barbero.email}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/>Actualmente se encuentra vinculado laboralmente "
-            "como BARBERO en nuestra empresa, desempeñando sus "
-            "funciones con responsabilidad y profesionalismo.",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<br/>Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/><br/><br/>____________________________",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "Administrador",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "Barbería Elegance",
-            estilos["Normal"]
-        )
-    )
+    elementos.append(Paragraph("<b>CERTIFICADO LABORAL</b>", estilos["Title"]))
+    elementos.append(Paragraph("BarberSpringfield", estilos["Heading2"]))
+    elementos.append(Paragraph("<br/><br/>Se certifica que:", estilos["Normal"]))
+    elementos.append(Paragraph(f"<b>{barbero.nombre}</b>", estilos["Heading1"]))
+    elementos.append(Paragraph(f"Cédula: {barbero.cedula}", estilos["Normal"]))
+    elementos.append(Paragraph(f"Especialidad: {barbero.especialidad}", estilos["Normal"]))
+    elementos.append(Paragraph(f"Correo: {barbero.email}", estilos["Normal"]))
+    elementos.append(Paragraph(
+        "<br/>Actualmente se encuentra vinculado laboralmente "
+        "como BARBERO en nuestra empresa, desempeñando sus "
+        "funciones con responsabilidad y profesionalismo.",
+        estilos["Normal"]
+    ))
+    elementos.append(Paragraph(
+        f"<br/>Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}",
+        estilos["Normal"]
+    ))
+    elementos.append(Paragraph("<br/><br/><br/>_________________________", estilos["Normal"]))
+    elementos.append(Paragraph("Administrador", estilos["Normal"]))
+    elementos.append(Paragraph("Barbería Elegance", estilos["Normal"]))
 
     doc.build(elementos)
-
     return response

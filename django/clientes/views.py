@@ -1,18 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-
 from clientes.models import Cliente
 from citas.models import Cita, Servicio
 from barberos.models import Barbero
 from inventario.models import Producto
+from datetime import datetime
 
 @login_required(login_url='login')
 def panel_cliente(request):
-
     cliente, creado = Cliente.objects.get_or_create(
         user=request.user,
         defaults={
@@ -23,40 +22,93 @@ def panel_cliente(request):
         }
     )
 
-    proximos = Cita.objects.filter(
-        cliente=cliente
-    ).exclude(
-        estado="Cancelada"
-    )
-
-    historial = Cita.objects.filter(
-        cliente=cliente,
-        estado="Cancelada"
-    )
-
+    proximos = Cita.objects.filter(cliente=cliente).exclude(estado="Cancelada")
+    historial = Cita.objects.filter(cliente=cliente, estado="Cancelada")
     barberos = Barbero.objects.filter(activo=True)
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
 
-    return render(
-        request,
-        "dashboard_cliente.html",
-        {
-            "nombre": cliente.nombre,
-            "proximos": proximos,
-            "historial": historial,
-            "barberos": barberos,
-            "servicios": servicios,
-            "productos": productos,
-        }
-    )
+    return render(request, "dashboard_cliente.html", {
+        "nombre": cliente.nombre,
+        "proximos": proximos,
+        "historial": historial,
+        "barberos": barberos,
+        "servicios": servicios,
+        "productos": productos,
+        "cliente": cliente,
+    })
 
+@login_required(login_url='login')
+def editar_perfil(request):
+    cliente = get_object_or_404(Cliente, user=request.user)
+    
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        cedula = request.POST.get('cedula')
+        telefono = request.POST.get('telefono')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        # Validar email único
+        if email != request.user.email and User.objects.filter(email=email).exists():
+            messages.error(request, '❌ Este correo electrónico ya está registrado.')
+            return redirect('editar_perfil')
+        
+        # Validar cédula única
+        if cedula != cliente.cedula and Cliente.objects.filter(cedula=cedula).exists():
+            messages.error(request, '❌ Esta cédula ya está registrada.')
+            return redirect('editar_perfil')
+        
+        try:
+            user = request.user
+            user.first_name = nombre
+            user.last_name = apellido
+            user.email = email
+            user.username = email
+            
+            if password:
+                if password != confirm_password:
+                    messages.error(request, '❌ Las contraseñas no coinciden.')
+                    return redirect('editar_perfil')
+                if len(password) < 6:
+                    messages.error(request, '❌ La contraseña debe tener al menos 6 caracteres.')
+                    return redirect('editar_perfil')
+                user.set_password(password)
+                update_session_auth_hash(request, user)
+            
+            user.save()
+            
+            cliente.nombre = f"{nombre} {apellido}"
+            cliente.cedula = cedula
+            cliente.telefono = telefono
+            cliente.email = email
+            cliente.save()
+            
+            # Sincronizar con barbero si existe
+            try:
+                barbero = Barbero.objects.get(email=request.user.email)
+                barbero.nombre = f"{nombre} {apellido}"
+                barbero.cedula = cedula
+                barbero.telefono = telefono
+                barbero.email = email
+                barbero.save()
+            except Barbero.DoesNotExist:
+                pass
+            
+            messages.success(request, '✅ Perfil actualizado exitosamente.')
+            return redirect('panel_cliente')
+            
+        except Exception as e:
+            messages.error(request, f'❌ Error al actualizar: {str(e)}')
+            return redirect('editar_perfil')
+    
+    return render(request, 'editar_perfil.html', {'cliente': cliente})
 
 @login_required(login_url='login')
 def agendar_cita(request):
-
     if request.method == "POST":
-
         adicionales = request.POST.getlist("adicionales")
         productos_seleccionados = request.POST.getlist("productos")
 
@@ -64,47 +116,36 @@ def agendar_cita(request):
         productos_str = ", ".join(productos_seleccionados) if productos_seleccionados else "Ninguno"
 
         try:
-
             cliente = Cliente.objects.get(user=request.user)
-
-            barbero = Barbero.objects.get(
-                id=request.POST.get("barbero"),
-                activo=True
-            )
-
-            servicio = Servicio.objects.get(
-                id=request.POST.get("servicio")
-            )
-
+            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
+            servicio = Servicio.objects.get(id=request.POST.get("servicio"))
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
-
         except (Cliente.DoesNotExist, Barbero.DoesNotExist, Servicio.DoesNotExist):
-
             messages.error(request, "❌ Datos inválidos.")
             return redirect("panel_cliente")
 
-
+        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+        
+        if not barbero.es_dia_laboral(fecha_obj):
+            messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
+            return redirect("panel_cliente")
+        
+        if barbero.es_dia_descanso(fecha_obj):
+            messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
+            return redirect("panel_cliente")
 
         cita_existente = Cita.objects.filter(
             barbero=barbero,
             fecha=fecha,
             hora=hora
-        ).exclude(
-            estado="Cancelada"
-        ).first()
+        ).exclude(estado="Cancelada").first()
 
         if cita_existente:
-
-            messages.error(
-                request,
-                f"❌ {barbero.nombre} ya tiene una cita el {fecha} a las {hora}. Selecciona otro horario."
-            )
-
+            messages.error(request, f"❌ {barbero.nombre} ya tiene una cita el {fecha} a las {hora}.")
             return redirect("panel_cliente")
 
         try:
-
             Cita.objects.create(
                 cliente=cliente,
                 servicio=servicio,
@@ -115,38 +156,20 @@ def agendar_cita(request):
                 hora=hora,
                 estado="Pendiente",
             )
-
         except IntegrityError:
-
-            messages.error(
-                request,
-                "❌ Ese horario fue reservado por otro cliente mientras realizabas la reserva."
-            )
-
+            messages.error(request, "❌ Ese horario fue reservado por otro cliente.")
             return redirect("panel_cliente")
 
-
         for nombre_producto in productos_seleccionados:
-
             try:
-
-                producto = Producto.objects.get(
-                    nombre=nombre_producto
-                )
-
+                producto = Producto.objects.get(nombre=nombre_producto)
                 if producto.stock_actual > 0:
-
                     producto.stock_actual -= 1
                     producto.save()
-
             except Producto.DoesNotExist:
                 pass
 
-        messages.success(
-            request,
-            f"✅ Cita agendada exitosamente con {barbero.nombre}."
-        )
-
+        messages.success(request, f"✅ Cita agendada exitosamente con {barbero.nombre}.")
         return redirect("panel_cliente")
 
     return redirect("panel_cliente")
@@ -156,42 +179,25 @@ def cancelar_cita_cliente(request, id):
     cita = Cita.objects.get(id=id)
 
     if cita.estado != "Cancelada":
-
         if cita.productos and cita.productos != "Ninguno":
-
             productos = cita.productos.split(",")
-
             for nombre_producto in productos:
-
                 nombre_producto = nombre_producto.strip()
-
                 try:
                     producto = Producto.objects.get(nombre=nombre_producto)
                     producto.stock_actual += 1
                     producto.save()
-
                 except Producto.DoesNotExist:
                     pass
 
         cita.estado = "Cancelada"
         cita.save()
-
-        messages.success(
-            request,
-            "✅ Cita cancelada exitosamente"
-        )
+        messages.success(request, "✅ Cita cancelada exitosamente")
 
     return redirect("panel_cliente")
 
-
-# ============================================
-# REGISTRO DE CLIENTES
-# ============================================
-
 def registro(request):
-
     if request.method == "POST":
-
         nombre = request.POST.get("nombre")
         apellido = request.POST.get("apellido")
         cedula = request.POST.get("cedula")
@@ -209,7 +215,6 @@ def registro(request):
             return render(request, "registro.html")
 
         try:
-
             user = User.objects.create_user(
                 username=email,
                 email=email,
@@ -217,7 +222,6 @@ def registro(request):
                 first_name=nombre,
                 last_name=apellido,
             )
-
             Cliente.objects.create(
                 user=user,
                 nombre=f"{nombre} {apellido}",
@@ -225,25 +229,13 @@ def registro(request):
                 telefono=telefono,
                 email=email,
             )
-
-            messages.success(
-                request,
-                "¡Cuenta creada exitosamente! Ahora inicia sesión."
-            )
-
+            messages.success(request, "¡Cuenta creada exitosamente! Ahora inicia sesión.")
             return redirect("login")
-
         except Exception as e:
-
-            messages.error(
-                request,
-                f"Error al crear usuario: {e}"
-            )
-
+            messages.error(request, f"Error al crear usuario: {e}")
             return render(request, "registro.html")
 
     return render(request, "registro.html")
-
 
 def logout_view(request):
     logout(request)
