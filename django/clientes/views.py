@@ -241,3 +241,22 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Sesión cerrada exitosamente")
     return redirect("login")
+
+@login_required(login_url='login')
+def eliminar_cuenta(request):
+    if request.method == "POST":
+
+        usuario = request.user
+
+        print("USUARIO ANTES DE BORRAR:", usuario.username)
+
+        usuario.delete()
+
+        print("USUARIO BORRADO CORRECTAMENTE")
+
+        return redirect("cuenta_eliminada")
+
+    return redirect("panel_cliente")
+
+def cuenta_eliminada(request):
+    return render(request, "cuenta_eliminada.html")

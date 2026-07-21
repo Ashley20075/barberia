@@ -264,7 +264,9 @@
             .navbar-brand-custom {
                 font-size: 1.3rem;
             }
-            .nav-btn, .btn-logout-custom {
+
+            .nav-btn,
+            .btn-logout-custom {
                 font-size: 0.8rem;
                 padding: 0.3rem 0.8rem;
             }
@@ -327,12 +329,12 @@
 
         <!-- Mensajes -->
         {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle"></i> {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
         {% endif %}
 
         <!-- Perfil del cliente -->
@@ -408,19 +410,22 @@
                         <label class="form-label-custom">➕ Adicionales</label>
                         <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #3F2E22;">
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="adicionales" value="Arreglo de barba" id="chkBarba">
+                                <input class="form-check-input" type="checkbox" name="adicionales"
+                                    value="Arreglo de barba" data-precio="5000" id="chkBarba">
                                 <label class="form-check-label text-light" for="chkBarba">
                                     ✂️ Arreglo de barba <small class="text-yellow">$5.000</small>
                                 </label>
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="adicionales" value="Cejas" id="chkCejas">
+                                <input class="form-check-input" type="checkbox" name="adicionales" value="Cejas"
+                                    data-precio="5000" id="chkCejas">
                                 <label class="form-check-label text-light" for="chkCejas">
                                     👁️ Cejas <small class="text-yellow">$5.000</small>
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="adicionales" value="Diseño y líneas" id="chkDiseno">
+                                <input class="form-check-input" type="checkbox" name="adicionales"
+                                    value="Diseño y líneas" data-precio="5000" id="chkDiseno">
                                 <label class="form-check-label text-light" for="chkDiseno">
                                     🎨 Diseño / líneas <small class="text-yellow">$5.000</small>
                                 </label>
@@ -484,7 +489,7 @@
                                 <div>
                                     <strong class="text-yellow">{{ cita.servicio.nombre }}</strong><br>
                                     <small class="text-light-brown">
-                                        📅 {{ cita.fecha|date:"d/m/Y" }} | ⏰ {{ cita.hora }} | 💈 {{ cita.barbero.nombre }}
+                                        📅 {{ cita.fecha|date:"d/m/Y" }} | ⏰ {{ cita.hora }} | 💈 {{ cita.barbero.nombre}}
                                     </small>
                                     {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
                                     <small class="text-yellow d-block mt-1">➕ {{ cita.adicionales }}</small>
@@ -496,7 +501,8 @@
                                     {% elif cita.estado == "Pendiente" %}
                                     <span class="badge bg-warning text-dark">Pendiente</span>
                                     {% endif %}
-                                    <a href="{% url 'cancelar_cita_cliente' cita.id %}" class="btn btn-sm btn-outline-danger"
+                                    <a href="{% url 'cancelar_cita_cliente' cita.id %}"
+                                        class="btn btn-sm btn-outline-danger"
                                         onclick="return confirm('¿Cancelar este turno?')">Cancelar</a>
                                 </div>
                             </div>
@@ -519,7 +525,8 @@
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div>
                                     <strong>{{ cita.servicio.nombre }}</strong><br>
-                                    <small class="text-light-brown">{{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}</small>
+                                    <small class="text-light-brown">{{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora}}
+                                    </small>
                                 </div>
                                 <span class="badge bg-danger">Cancelada</span>
                             </div>
@@ -557,8 +564,35 @@
 
         // Calcular total
         function calcularTotal() {
-            // Lógica de cálculo
+            let total = 0;
+
+            // Servicio seleccionado
+            const servicio = document.querySelector('.servicio-radio:checked');
+
+            if (servicio) {
+                total += parseFloat(servicio.dataset.precio);
+            }
+
+            // Adicionales
+            document.querySelectorAll('input[name="adicionales"]:checked').forEach(function (adicional) {
+
+                total += parseFloat(adicional.dataset.precio);
+
+            });
+
+            document.getElementById("totalPagar").textContent =
+                "$" + total.toLocaleString("es-CO");                // Lógica de cálculo
         }
+        document.querySelectorAll('.servicio-radio').forEach(function (radio) {
+            radio.addEventListener('change', calcularTotal);
+        });
+
+        document.querySelectorAll('input[name="adicionales"]').forEach(function (check) {
+            check.addEventListener('change', calcularTotal);
+        });
+
+        calcularTotal();
     </script>
 </body>
+
 </html>
