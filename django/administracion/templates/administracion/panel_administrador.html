@@ -199,12 +199,13 @@
                     <table class="table table-custom table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
+    <th>Nombre</th>
+    <th>Cédula</th>
+    <th>Email</th>
+    <th>Rol</th>
+    <th>Estado</th>
+    <th>Acciones</th>
+</tr>
                         </thead>
                         <tbody>
                             {% for u in usuarios %}
@@ -216,7 +217,15 @@
                                         {{ u.username }}
                                     {% endif %}
                                 </td>
-                                <td>{{ u.email }}</td>
+                                <td>
+    {% if u.cliente.cedula %}
+        {{ u.cliente.cedula }}
+    {% else %}
+        No registrada
+    {% endif %}
+</td>
+
+<td>{{ u.email }}</td>
                                 <td>
                                     {% if u.groups.all %}
                                         <span class="badge bg-warning text-dark">Barbero</span>
@@ -254,7 +263,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center text-light-brown py-4">
+                                <td colspan="6" class="text-center text-light-brown py-4">
                                     <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i>
                                     No hay usuarios registrados.
                                 </td>

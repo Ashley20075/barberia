@@ -49,8 +49,16 @@
             </form>
 
             <div class="text-center mt-4">
-                <a href="{% url 'registro' %}" class="text-light-brown">¿No tienes cuenta? Regístrate</a>
-            </div>
+    <a href="{% url 'registro' %}" class="text-light-brown">
+        ¿No tienes cuenta? Regístrate
+    </a>
+</div>
+
+<div class="text-center mt-2">
+    <a href="{% url 'recuperar_contrasena' %}" class="text-light-brown">
+        ¿Olvidaste tu contraseña?
+    </a>
+</div>
             <div class="text-center mt-3">
                 <a href="{% url 'inicio' %}" class="link-registro">
                     <i class="bi bi-arrow-left"></i> Volver al inicio
