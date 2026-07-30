@@ -12,4 +12,9 @@ urlpatterns = [
 
     path('registro/', views.registro, name='registro'),
     path('logout/', views.logout_view, name='logout'),
+    path(
+    'cliente/horarios/',
+    views.horarios_disponibles,
+    name='horarios_disponibles'
+),
 ]

@@ -9,6 +9,8 @@ from citas.models import Cita, Servicio
 from barberos.models import Barbero
 from inventario.models import Producto
 from datetime import datetime
+from django.http import JsonResponse
+from datetime import datetime
 
 @login_required(login_url='login')
 def panel_cliente(request):
@@ -121,6 +123,20 @@ def agendar_cita(request):
             servicio = Servicio.objects.get(id=request.POST.get("servicio"))
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
+            duracion_total = servicio.duracion
+
+            for adicional in adicionales:
+                if adicional in ["Arreglo de barba", "Cejas", "Diseño y líneas"]:
+                    duracion_total += 10
+
+            if "Arreglo de barba" in adicionales:
+                duracion_total += 10
+
+            if "Cejas" in adicionales:
+                duracion_total += 10
+
+            if "Diseño y líneas" in adicionales:
+                duracion_total += 10
         except (Cliente.DoesNotExist, Barbero.DoesNotExist, Servicio.DoesNotExist):
             messages.error(request, "❌ Datos inválidos.")
             return redirect("panel_cliente")
@@ -154,6 +170,7 @@ def agendar_cita(request):
                 productos=productos_str,
                 fecha=fecha,
                 hora=hora,
+                duracion_total=duracion_total,
                 estado="Pendiente",
             )
         except IntegrityError:
@@ -260,3 +277,38 @@ def eliminar_cuenta(request):
 
 def cuenta_eliminada(request):
     return render(request, "cuenta_eliminada.html")
+
+@login_required(login_url='login')
+def horarios_disponibles(request):
+
+    fecha = request.GET.get("fecha")
+    barbero_id = request.GET.get("barbero")
+    servicio_id = request.GET.get("servicio")
+    adicionales = request.GET.getlist("adicionales")
+
+    if not fecha or not barbero_id or not servicio_id:
+        return JsonResponse([], safe=False)
+
+    try:
+        fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+        barbero = Barbero.objects.get(id=barbero_id)
+        servicio = Servicio.objects.get(id=servicio_id)
+    except:
+        return JsonResponse([], safe=False)
+
+    duracion = servicio.duracion
+
+    for adicional in adicionales:
+        if adicional in [
+            "Arreglo de barba",
+            "Cejas",
+            "Diseño y líneas"
+        ]:
+            duracion += 10
+
+    horarios = barbero.horarios_disponibles(
+        fecha,
+        duracion
+    )
+
+    return JsonResponse(horarios, safe=False)

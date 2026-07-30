@@ -440,19 +440,25 @@
 
                     <div class="col-md-4">
                         <label class="form-label-custom">⏰ Hora</label>
-                        <select class="form-select bg-dark-input" name="hora">
-                            <option>10:00 AM</option>
-                            <option>11:30 AM</option>
-                            <option>01:00 PM</option>
-                            <option>02:30 PM</option>
-                            <option>04:00 PM</option>
-                            <option>05:30 PM</option>
-                        </select>
+                        <select
+    class="form-select bg-dark-input"
+    name="hora"
+    id="hora"
+    required>
+
+    <option value="">
+        Seleccione primero fecha y barbero
+    </option>
+
+</select>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label-custom">💈 Barbero</label>
-                        <select class="form-select bg-dark-input" name="barbero">
+                        <select
+    class="form-select bg-dark-input"
+    name="barbero"
+    id="barbero">
                             {% for barbero in barberos %}
                             <option value="{{ barbero.id }}">{{ barbero.nombre }} - {{ barbero.especialidad }}</option>
                             {% endfor %}
@@ -593,6 +599,96 @@
 
         calcularTotal();
     </script>
+    <script>
+
+function cargarHorarios(){
+
+    const fecha=document.getElementById("fecha").value;
+    const barbero=document.getElementById("barbero").value;
+
+    const servicio=document.querySelector(
+        "input[name='servicio']:checked"
+    )?.value;
+
+    if(!fecha || !barbero || !servicio){
+        return;
+    }
+
+    const adicionales=[];
+
+    document
+    .querySelectorAll("input[name='adicionales']:checked")
+    .forEach(function(a){
+
+        adicionales.push(
+            "adicionales="+encodeURIComponent(a.value)
+        );
+
+    });
+
+    fetch(
+
+        `/cliente/horarios/?fecha=${fecha}&barbero=${barbero}&servicio=${servicio}&${adicionales.join("&")}`
+
+    )
+
+    .then(r=>r.json())
+
+    .then(function(horarios){
+
+        let select=document.getElementById("hora");
+
+        select.innerHTML="";
+
+        if(horarios.length==0){
+
+            select.innerHTML="<option>No hay horarios disponibles</option>";
+
+            return;
+
+        }
+
+        horarios.forEach(function(h){
+
+            let option=document.createElement("option");
+
+            option.value=h;
+
+            option.text=h;
+
+            select.appendChild(option);
+
+        });
+
+    });
+
+}
+
+document
+.getElementById("fecha")
+.addEventListener("change",cargarHorarios);
+
+document
+.getElementById("barbero")
+.addEventListener("change",cargarHorarios);
+
+document
+.querySelectorAll(".servicio-radio")
+.forEach(function(e){
+
+    e.addEventListener("change",cargarHorarios);
+
+});
+
+document
+.querySelectorAll("input[name='adicionales']")
+.forEach(function(e){
+
+    e.addEventListener("change",cargarHorarios);
+
+});
+
+</script>
 </body>
 
 </html>

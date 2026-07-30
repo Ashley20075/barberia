@@ -45,29 +45,51 @@ class Barbero(models.Model):
         dia_semana = dias[fecha.weekday()]
         return dia_semana == self.dia_descanso
     
-    def horarios_disponibles(self, fecha):
+    def horarios_disponibles(self, fecha, duracion=35):
         import datetime
         from citas.models import Cita
-        
+
         if not self.es_dia_laboral(fecha) or self.es_dia_descanso(fecha):
             return []
-        
-        hora_actual = datetime.datetime.combine(fecha, self.jornada_inicio)
-        hora_fin = datetime.datetime.combine(fecha, self.jornada_fin)
-        horarios = []
-        
-        while hora_actual + datetime.timedelta(minutes=self.duracion_cita) <= hora_fin:
-            horarios.append(hora_actual.time().strftime('%I:%M %p'))
-            hora_actual += datetime.timedelta(minutes=self.duracion_cita + self.tiempo_entre_citas)
-        
-        citas_ocupadas = Cita.objects.filter(
+
+        inicio = datetime.datetime.combine(fecha, self.jornada_inicio)
+        fin = datetime.datetime.combine(fecha, self.jornada_fin)
+
+        citas = Cita.objects.filter(
             barbero=self,
             fecha=fecha,
-            estado__in=['Pendiente', 'Confirmada']
+            estado__in=["Pendiente", "Confirmada"]
         )
-        horarios_ocupados = [c.hora for c in citas_ocupadas]
-        
-        return [h for h in horarios if h not in horarios_ocupados]
+
+        horarios = []
+
+        while inicio + datetime.timedelta(minutes=duracion) <= fin:
+
+            hora_fin = inicio + datetime.timedelta(minutes=duracion)
+
+            ocupado = False
+
+            for cita in citas:
+
+                cita_inicio = datetime.datetime.combine(
+                    fecha,
+                    datetime.datetime.strptime(cita.hora, "%I:%M %p").time()
+                )
+
+                cita_fin = cita_inicio + datetime.timedelta(
+                    minutes=cita.duracion_total + self.tiempo_entre_citas
+                )
+
+                if inicio < cita_fin and hora_fin > cita_inicio:
+                    ocupado = True
+                    break
+
+            if not ocupado:
+                horarios.append(inicio.strftime("%I:%M %p"))
+
+            inicio += datetime.timedelta(minutes=15)
+
+        return horarios
     
     class Meta:
         verbose_name = 'Barbero'

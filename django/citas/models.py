@@ -27,6 +27,7 @@ class Cita(models.Model):
     productos = models.CharField(max_length=200, blank=True, default="")
     fecha = models.DateField()
     hora = models.CharField(max_length=20)
+    duracion_total = models.PositiveIntegerField(default=35)
     estado = models.CharField(max_length=20, choices=ESTADOS, default="Pendiente")
 
     class Meta:
