@@ -58,6 +58,7 @@ def panel_barbero(request):
     citas_pendientes = citas.filter(estado='Pendiente').count()
     citas_confirmadas = citas.filter(estado='Confirmada').count()
     citas_canceladas = citas.filter(estado='Cancelada').count()
+    citas_finalizadas = citas.filter(estado='Finalizada').count()  # <-- NUEVO
     
     context = {
         'citas': citas,
@@ -66,6 +67,7 @@ def panel_barbero(request):
         'citas_pendientes': citas_pendientes,
         'citas_confirmadas': citas_confirmadas,
         'citas_canceladas': citas_canceladas,
+        'citas_finalizadas': citas_finalizadas,  # <-- NUEVO
         'filtro_estado': estado,
         'filtro_fecha_inicio': fecha_inicio,
         'filtro_fecha_fin': fecha_fin,
@@ -85,18 +87,20 @@ def confirmar_cita(request, id):
         messages.error(request, '❌ No tienes un perfil de barbero asignado.')
         return redirect('barberos:panel_barbero')
     
-    # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====
-    if not barbero.es_dia_laboral(cita.fecha):
-        messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
-        return redirect('barberos:panel_barbero')
+    if cita.estado == "Pendiente":
+        # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====
+        if not barbero.es_dia_laboral(cita.fecha):
+            messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
+            return redirect('barberos:panel_barbero')
+        
+        if barbero.es_dia_descanso(cita.fecha):
+            messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
+            return redirect('barberos:panel_barbero')
+        
+        cita.estado = "Confirmada"
+        cita.save()
+        messages.success(request, f'✅ Cita de {cita.cliente.nombre} confirmada.')
     
-    if barbero.es_dia_descanso(cita.fecha):
-        messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
-        return redirect('barberos:panel_barbero')
-    
-    cita.estado = "Confirmada"
-    cita.save()
-    messages.success(request, f'✅ Cita de {cita.cliente.nombre} confirmada.')
     return redirect('barberos:panel_barbero')
 
 @login_required(login_url='login')
@@ -127,6 +131,40 @@ def cancelar_cita(request, id):
         cita.estado = "Cancelada"
         cita.save()
         messages.success(request, f'✅ Cita de {cita.cliente.nombre} cancelada.')
+
+    return redirect('barberos:panel_barbero')
+
+@login_required(login_url='login')
+def finalizar_cita(request, id):
+    cita = get_object_or_404(Cita, id=id)
+
+    try:
+        barbero = Barbero.objects.get(
+            email=request.user.email,
+            activo=True
+        )
+
+        if cita.barbero != barbero:
+            messages.error(
+                request,
+                '❌ No tienes permiso para finalizar esta cita.'
+            )
+            return redirect('barberos:panel_barbero')
+
+    except Barbero.DoesNotExist:
+        messages.error(
+            request,
+            '❌ No tienes un perfil de barbero asignado.'
+        )
+        return redirect('barberos:panel_barbero')
+
+    if cita.estado == "Confirmada":
+        cita.estado = "Finalizada"
+        cita.save()
+        messages.success(
+            request,
+            f'✅ Cita de {cita.cliente.nombre} finalizada.'
+        )
 
     return redirect('barberos:panel_barbero')
 

@@ -24,11 +24,60 @@
         .user-info-custom { background-color: #2A211B; padding: 0.5rem 1rem; border-radius: 40px; display: inline-flex; align-items: center; gap: 0.8rem; color: #F5EFE6; }
         .user-info-custom i { color: #F4C542; font-size: 1.2rem; }
 
-        .stat-card { background-color: #1E1A15; border-radius: 20px; border-left: 4px solid #F4C542; padding: 1.5rem; text-align: center; height: 100%; transition: transform 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(244,197,66,0.2); }
-        .stat-card i { color: #F4C542; font-size: 2.5rem; }
-        .stat-card h5 { color: #FFD966; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; }
-        .stat-card h2 { color: #F4C542; font-size: 2.2rem; font-weight: bold; }
+        /* ESTADÍSTICAS CENTRADAS */
+        .stat-card {
+            background-color: #1E1A15;
+            border-radius: 20px;
+            border-left: 4px solid #F4C542;
+            padding: 1.5rem 0.5rem;
+            text-align: center;
+            height: 100%;
+            min-height: 140px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(244,197,66,0.2);
+        }
+
+        .stat-card i {
+            color: #F4C542;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card h5 {
+            color: #FFD966;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0.3rem 0;
+        }
+
+        .stat-card h2 {
+            color: #F4C542;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                min-height: 120px;
+                padding: 1rem 0.5rem;
+            }
+            .stat-card h2 {
+                font-size: 1.6rem;
+            }
+            .stat-card i {
+                font-size: 1.8rem;
+            }
+        }
 
         .card-custom { background-color: #1E1A15 !important; border-radius: 20px !important; border: 1px solid rgba(244,197,66,0.2) !important; margin-bottom: 2rem; overflow: hidden; }
         .card-header-custom { background-color: #0B0A08 !important; border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.25rem; font-weight: 600; color: #FFD966 !important; }
@@ -41,6 +90,7 @@
         .badge-pendiente { background-color: #ffc107 !important; color: #0B0A08 !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }
         .badge-confirmada { background-color: #198754 !important; color: white !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }
         .badge-cancelada { background-color: #dc3545 !important; color: white !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }
+        .badge-finalizada { background-color: #0dcaf0 !important; color: #0B0A08 !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }
 
         .btn-modern { background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%); border: none; border-radius: 50px; padding: 10px 24px; color: #0B0A08; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 15px rgba(244,197,66,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
         .btn-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(244,197,66,0.5); color: #0B0A08; }
@@ -129,34 +179,41 @@
             {% endfor %}
         {% endif %}
 
-        <!-- ESTADÍSTICAS -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3 col-sm-6">
+        <!-- ESTADÍSTICAS CENTRADAS -->
+        <div class="row g-4 mb-4 justify-content-center">
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stat-card">
                     <i class="bi bi-calendar-event"></i>
                     <h5>Total Citas</h5>
                     <h2>{{ total_citas }}</h2>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stat-card" style="border-left-color: #ffc107;">
                     <i class="bi bi-clock-history" style="color: #ffc107;"></i>
                     <h5>Pendientes</h5>
                     <h2 class="text-warning">{{ citas_pendientes }}</h2>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stat-card" style="border-left-color: #198754;">
                     <i class="bi bi-check-circle" style="color: #198754;"></i>
                     <h5>Confirmadas</h5>
                     <h2 class="text-success">{{ citas_confirmadas }}</h2>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-lg-2 col-md-4 col-sm-6">
                 <div class="stat-card" style="border-left-color: #dc3545;">
                     <i class="bi bi-x-circle" style="color: #dc3545;"></i>
                     <h5>Canceladas</h5>
                     <h2 class="text-danger">{{ citas_canceladas }}</h2>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card" style="border-left-color: #0dcaf0;">
+                    <i class="bi bi-flag-fill" style="color: #0dcaf0;"></i>
+                    <h5>Finalizadas</h5>
+                    <h2 class="text-info">{{ citas_finalizadas }}</h2>
                 </div>
             </div>
         </div>
@@ -164,7 +221,7 @@
         <!-- FILTROS -->
         <div class="card-custom mb-4">
             <div class="card-body">
-                <form method="GET" class="row g-3">
+                <form method="GET" action="{% url 'barberos:panel_barbero' %}" class="row g-3">
                     <div class="col-md-3">
                         <label class="text-yellow">Estado</label>
                         <select name="estado" class="form-select bg-dark-input">
@@ -172,6 +229,7 @@
                             <option value="Pendiente" {% if filtro_estado == 'Pendiente' %}selected{% endif %}>⏳ Pendiente</option>
                             <option value="Confirmada" {% if filtro_estado == 'Confirmada' %}selected{% endif %}>✅ Confirmada</option>
                             <option value="Cancelada" {% if filtro_estado == 'Cancelada' %}selected{% endif %}>❌ Cancelada</option>
+                            <option value="Finalizada" {% if filtro_estado == 'Finalizada' %}selected{% endif %}>🏁 Finalizada</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -225,25 +283,52 @@
                                 <td>{{ cita.hora }}</td>
                                 <td>
                                     {% if cita.estado == "Pendiente" %}
-                                    <span class="badge-pendiente"><i class="bi bi-clock"></i> Pendiente</span>
+                                        <span class="badge-pendiente">
+                                            <i class="bi bi-clock"></i> Pendiente
+                                        </span>
                                     {% elif cita.estado == "Confirmada" %}
-                                    <span class="badge-confirmada"><i class="bi bi-check-circle"></i> Confirmada</span>
-                                    {% else %}
-                                    <span class="badge-cancelada"><i class="bi bi-x-circle"></i> Cancelada</span>
+                                        <span class="badge-confirmada">
+                                            <i class="bi bi-check-circle"></i> Confirmada
+                                        </span>
+                                    {% elif cita.estado == "Finalizada" %}
+                                        <span class="badge-finalizada">
+                                            <i class="bi bi-flag-fill"></i> Finalizada
+                                        </span>
+                                    {% elif cita.estado == "Cancelada" %}
+                                        <span class="badge-cancelada">
+                                            <i class="bi bi-x-circle"></i> Cancelada
+                                        </span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if cita.estado == "Pendiente" %}
-                                    <div class="d-flex gap-1 flex-wrap">
-                                        <a href="{% url 'barberos:confirmar_cita' cita.id %}" class="btn btn-success btn-sm" onclick="return confirm('¿Confirmar esta cita?')">
-                                            <i class="bi bi-check-circle"></i> Confirmar
-                                        </a>
-                                        <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Cancelar esta cita?')">
-                                            <i class="bi bi-x-circle"></i> Cancelar
-                                        </a>
-                                    </div>
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            <a href="{% url 'barberos:confirmar_cita' cita.id %}" 
+                                               class="btn btn-success btn-sm"
+                                               onclick="return confirm('¿Confirmar esta cita?')">
+                                                <i class="bi bi-check-circle"></i> Confirmar
+                                            </a>
+                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" 
+                                               class="btn btn-outline-danger btn-sm"
+                                               onclick="return confirm('¿Cancelar esta cita?')">
+                                                <i class="bi bi-x-circle"></i> Cancelar
+                                            </a>
+                                        </div>
+                                    {% elif cita.estado == "Confirmada" %}
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            <a href="{% url 'barberos:finalizar_cita' cita.id %}" 
+                                               class="btn btn-primary btn-sm"
+                                               onclick="return confirm('¿Finalizar esta cita?')">
+                                                <i class="bi bi-flag-fill"></i> Finalizar
+                                            </a>
+                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" 
+                                               class="btn btn-outline-danger btn-sm"
+                                               onclick="return confirm('¿Cancelar esta cita?')">
+                                                <i class="bi bi-x-circle"></i> Cancelar
+                                            </a>
+                                        </div>
                                     {% else %}
-                                    <span class="text-light-brown">—</span>
+                                        <span class="text-light-brown">—</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -262,7 +347,7 @@
             </div>
         </div>
 
-        <!-- INFORMA CIÓN ADICIONAL -->
+        <!-- INFORMACIÓN ADICIONAL -->
         <div class="row g-4 mt-2">
             <div class="col-md-6">
                 <div class="card-custom">
@@ -271,17 +356,21 @@
                     </div>
                     <div class="card-body">
                         <div class="row text-center">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <h5 class="text-yellow">Total</h5>
                                 <h3>{{ citas|length }}</h3>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <h5 class="text-warning">Pendientes</h5>
                                 <h3 class="text-warning">{{ citas_pendientes }}</h3>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <h5 class="text-success">Confirmadas</h5>
                                 <h3 class="text-success">{{ citas_confirmadas }}</h3>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="text-info">Finalizadas</h5>
+                                <h3 class="text-info">{{ citas_finalizadas }}</h3>
                             </div>
                         </div>
                     </div>

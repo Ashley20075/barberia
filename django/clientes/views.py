@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, update_session_auth_hash
@@ -10,7 +11,8 @@ from barberos.models import Barbero
 from inventario.models import Producto
 from datetime import datetime
 from django.http import JsonResponse
-from datetime import datetime
+from django.core.exceptions import ValidationError
+
 
 @login_required(login_url='login')
 def panel_cliente(request):
@@ -40,10 +42,11 @@ def panel_cliente(request):
         "cliente": cliente,
     })
 
+
 @login_required(login_url='login')
 def editar_perfil(request):
     cliente = get_object_or_404(Cliente, user=request.user)
-    
+
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellido = request.POST.get('apellido')
@@ -52,43 +55,42 @@ def editar_perfil(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
-        
-        # Validar email único
+
         if email != request.user.email and User.objects.filter(email=email).exists():
             messages.error(request, '❌ Este correo electrónico ya está registrado.')
             return redirect('editar_perfil')
-        
-        # Validar cédula única
+
         if cedula != cliente.cedula and Cliente.objects.filter(cedula=cedula).exists():
             messages.error(request, '❌ Esta cédula ya está registrada.')
             return redirect('editar_perfil')
-        
+
         try:
             user = request.user
             user.first_name = nombre
             user.last_name = apellido
             user.email = email
             user.username = email
-            
+
             if password:
                 if password != confirm_password:
                     messages.error(request, '❌ Las contraseñas no coinciden.')
                     return redirect('editar_perfil')
+
                 if len(password) < 6:
                     messages.error(request, '❌ La contraseña debe tener al menos 6 caracteres.')
                     return redirect('editar_perfil')
+
                 user.set_password(password)
                 update_session_auth_hash(request, user)
-            
+
             user.save()
-            
+
             cliente.nombre = f"{nombre} {apellido}"
             cliente.cedula = cedula
             cliente.telefono = telefono
             cliente.email = email
             cliente.save()
-            
-            # Sincronizar con barbero si existe
+
             try:
                 barbero = Barbero.objects.get(email=request.user.email)
                 barbero.nombre = f"{nombre} {apellido}"
@@ -98,19 +100,21 @@ def editar_perfil(request):
                 barbero.save()
             except Barbero.DoesNotExist:
                 pass
-            
+
             messages.success(request, '✅ Perfil actualizado exitosamente.')
             return redirect('panel_cliente')
-            
+
         except Exception as e:
             messages.error(request, f'❌ Error al actualizar: {str(e)}')
             return redirect('editar_perfil')
-    
+
     return render(request, 'editar_perfil.html', {'cliente': cliente})
+
 
 @login_required(login_url='login')
 def agendar_cita(request):
     if request.method == "POST":
+
         adicionales = request.POST.getlist("adicionales")
         productos_seleccionados = request.POST.getlist("productos")
 
@@ -119,47 +123,76 @@ def agendar_cita(request):
 
         try:
             cliente = Cliente.objects.get(user=request.user)
-            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
-            servicio = Servicio.objects.get(id=request.POST.get("servicio"))
+
+            barbero = Barbero.objects.get(
+                id=request.POST.get("barbero"),
+                activo=True
+            )
+
+            servicio = Servicio.objects.get(
+                id=request.POST.get("servicio")
+            )
+
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
-            duracion_total = servicio.duracion
 
-            for adicional in adicionales:
-                if adicional in ["Arreglo de barba", "Cejas", "Diseño y líneas"]:
-                    duracion_total += 10
-
-            if "Arreglo de barba" in adicionales:
-                duracion_total += 10
-
-            if "Cejas" in adicionales:
-                duracion_total += 10
-
-            if "Diseño y líneas" in adicionales:
-                duracion_total += 10
         except (Cliente.DoesNotExist, Barbero.DoesNotExist, Servicio.DoesNotExist):
             messages.error(request, "❌ Datos inválidos.")
             return redirect("panel_cliente")
 
-        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
-        
+        fecha_obj = datetime.strptime(
+            fecha,
+            "%Y-%m-%d"
+        ).date()
+
         if not barbero.es_dia_laboral(fecha_obj):
-            messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
-            return redirect("panel_cliente")
-        
-        if barbero.es_dia_descanso(fecha_obj):
-            messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
+            messages.error(
+                request,
+                f"❌ {barbero.nombre} no trabaja en esa fecha."
+            )
             return redirect("panel_cliente")
 
+        if barbero.es_dia_descanso(fecha_obj):
+            messages.error(
+                request,
+                f"❌ {barbero.nombre} tiene descanso en esa fecha."
+            )
+            return redirect("panel_cliente")
+
+        # Un cliente solo puede tener una cita por día
+        cita_cliente = Cita.objects.filter(
+            cliente=cliente,
+            fecha=fecha
+        ).exclude(
+            estado="Cancelada"
+        ).first()
+
+        if cita_cliente:
+            messages.error(
+                request,
+                "❌ Ya tienes una cita programada para ese día."
+            )
+            return redirect("panel_cliente")
+
+        # Un barbero no puede tener dos citas en el mismo horario
         cita_existente = Cita.objects.filter(
             barbero=barbero,
             fecha=fecha,
             hora=hora
-        ).exclude(estado="Cancelada").first()
+        ).exclude(
+            estado="Cancelada"
+        ).first()
 
         if cita_existente:
-            messages.error(request, f"❌ {barbero.nombre} ya tiene una cita el {fecha} a las {hora}.")
+            messages.error(
+                request,
+                f"❌ {barbero.nombre} ya tiene una cita el {fecha} a las {hora}."
+            )
             return redirect("panel_cliente")
+            
+        print("BARBERO:", barbero.id)
+        print("FECHA:", fecha)
+        print("HORA:", hora)
 
         try:
             Cita.objects.create(
@@ -170,26 +203,46 @@ def agendar_cita(request):
                 productos=productos_str,
                 fecha=fecha,
                 hora=hora,
-                duracion_total=duracion_total,
                 estado="Pendiente",
             )
-        except IntegrityError:
-            messages.error(request, "❌ Ese horario fue reservado por otro cliente.")
+            
+            # Disminuir el stock de los productos seleccionados
+            for nombre_producto in productos_seleccionados:
+                try:
+                    producto = Producto.objects.get(nombre=nombre_producto)
+                    if producto.stock_actual > 0:
+                        producto.stock_actual -= 1
+                        producto.save()
+                except Producto.DoesNotExist:
+                    pass
+            
+            print("CITA GUARDADA")
+            
+            messages.success(
+                request,
+                f"✅ Cita agendada exitosamente con {barbero.nombre}."
+            )
             return redirect("panel_cliente")
 
-        for nombre_producto in productos_seleccionados:
-            try:
-                producto = Producto.objects.get(nombre=nombre_producto)
-                if producto.stock_actual > 0:
-                    producto.stock_actual -= 1
-                    producto.save()
-            except Producto.DoesNotExist:
-                pass
+        except ValidationError as e:
+            messages.error(
+                request,
+                f"❌ {e.messages[0]}"
+            )
+            return redirect("panel_cliente")
 
-        messages.success(request, f"✅ Cita agendada exitosamente con {barbero.nombre}.")
-        return redirect("panel_cliente")
+        except IntegrityError:
+            import traceback
+            traceback.print_exc()
+            messages.error(
+                request,
+                "❌ Ese horario ya fue reservado."
+            )
+            return redirect("panel_cliente")
 
+    # Si no es POST o hay algún error, redirigir al panel
     return redirect("panel_cliente")
+
 
 @login_required(login_url='login')
 def cancelar_cita_cliente(request, id):
@@ -198,20 +251,28 @@ def cancelar_cita_cliente(request, id):
     if cita.estado != "Cancelada":
         if cita.productos and cita.productos != "Ninguno":
             productos = cita.productos.split(",")
+
             for nombre_producto in productos:
                 nombre_producto = nombre_producto.strip()
+
                 try:
                     producto = Producto.objects.get(nombre=nombre_producto)
                     producto.stock_actual += 1
                     producto.save()
+
                 except Producto.DoesNotExist:
                     pass
 
         cita.estado = "Cancelada"
         cita.save()
-        messages.success(request, "✅ Cita cancelada exitosamente")
+
+        messages.success(
+            request,
+            "✅ Cita cancelada exitosamente"
+        )
 
     return redirect("panel_cliente")
+
 
 def registro(request):
     if request.method == "POST":
@@ -239,6 +300,7 @@ def registro(request):
                 first_name=nombre,
                 last_name=apellido,
             )
+
             Cliente.objects.create(
                 user=user,
                 nombre=f"{nombre} {apellido}",
@@ -246,23 +308,34 @@ def registro(request):
                 telefono=telefono,
                 email=email,
             )
-            messages.success(request, "¡Cuenta creada exitosamente! Ahora inicia sesión.")
+
+            messages.success(
+                request,
+                "¡Cuenta creada exitosamente! Ahora inicia sesión."
+            )
+
             return redirect("login")
+
         except Exception as e:
-            messages.error(request, f"Error al crear usuario: {e}")
+            messages.error(
+                request,
+                f"Error al crear usuario: {e}"
+            )
+
             return render(request, "registro.html")
 
     return render(request, "registro.html")
+
 
 def logout_view(request):
     logout(request)
     messages.info(request, "Sesión cerrada exitosamente")
     return redirect("login")
 
+
 @login_required(login_url='login')
 def eliminar_cuenta(request):
     if request.method == "POST":
-
         usuario = request.user
 
         print("USUARIO ANTES DE BORRAR:", usuario.username)
@@ -275,40 +348,26 @@ def eliminar_cuenta(request):
 
     return redirect("panel_cliente")
 
+
 def cuenta_eliminada(request):
     return render(request, "cuenta_eliminada.html")
+from django.http import JsonResponse
+
 
 @login_required(login_url='login')
 def horarios_disponibles(request):
 
-    fecha = request.GET.get("fecha")
-    barbero_id = request.GET.get("barbero")
-    servicio_id = request.GET.get("servicio")
-    adicionales = request.GET.getlist("adicionales")
-
-    if not fecha or not barbero_id or not servicio_id:
-        return JsonResponse([], safe=False)
-
-    try:
-        fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
-        barbero = Barbero.objects.get(id=barbero_id)
-        servicio = Servicio.objects.get(id=servicio_id)
-    except:
-        return JsonResponse([], safe=False)
-
-    duracion = servicio.duracion
-
-    for adicional in adicionales:
-        if adicional in [
-            "Arreglo de barba",
-            "Cejas",
-            "Diseño y líneas"
-        ]:
-            duracion += 10
-
-    horarios = barbero.horarios_disponibles(
-        fecha,
-        duracion
-    )
+    horarios = [
+        "08:00 AM",
+        "09:00 AM",
+        "10:00 AM",
+        "11:00 AM",
+        "12:00 PM",
+        "01:00 PM",
+        "02:00 PM",
+        "03:00 PM",
+        "04:00 PM",
+        "05:00 PM",
+    ]
 
     return JsonResponse(horarios, safe=False)

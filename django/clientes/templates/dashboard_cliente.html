@@ -328,14 +328,40 @@
     <div class="container py-4">
 
         <!-- Mensajes -->
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <i class="bi bi-info-circle"></i> {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endfor %}
+{% if messages %}
+    {% for message in messages %}
+
+        {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+        {% elif message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+        {% elif message.tags == 'warning' %}
+            <div class="alert alert-warning alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+        {% else %}
+            <div class="alert alert-info alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         {% endif %}
+
+    {% endfor %}
+{% endif %}
 
         <!-- Perfil del cliente -->
         <div class="row align-items-center mb-5">

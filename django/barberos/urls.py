@@ -10,4 +10,5 @@ urlpatterns = [
     path('barberos/', views.lista_barberos, name='lista'),
     path('barberos/<int:id>/', views.detalle_barbero, name='detalle'),
     path('certificado/', views.certificado_laboral, name='certificado'),
+    path('finalizar/<int:id>/', views.finalizar_cita, name='finalizar_cita'),
 ]
