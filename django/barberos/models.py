@@ -49,11 +49,21 @@ class Barbero(models.Model):
         import datetime
         from citas.models import Cita
 
-        if not self.es_dia_laboral(fecha) or self.es_dia_descanso(fecha):
+        if not self.es_dia_laboral(fecha):
             return []
 
-        inicio = datetime.datetime.combine(fecha, self.jornada_inicio)
-        fin = datetime.datetime.combine(fecha, self.jornada_fin)
+        if self.es_dia_descanso(fecha):
+            return []
+
+        inicio = datetime.datetime.combine(
+            fecha,
+            self.jornada_inicio
+        )
+
+        fin = datetime.datetime.combine(
+            fecha,
+            self.jornada_fin
+        )
 
         citas = Cita.objects.filter(
             barbero=self,
@@ -65,29 +75,42 @@ class Barbero(models.Model):
 
         while inicio + datetime.timedelta(minutes=duracion) <= fin:
 
-            hora_fin = inicio + datetime.timedelta(minutes=duracion)
+            libre = True
 
-            ocupado = False
+            fin_nueva = inicio + datetime.timedelta(
+                minutes=duracion
+            )
 
             for cita in citas:
 
-                cita_inicio = datetime.datetime.combine(
+                inicio_cita = datetime.datetime.combine(
                     fecha,
-                    datetime.datetime.strptime(cita.hora, "%I:%M %p").time()
+                    datetime.datetime.strptime(
+                        cita.hora,
+                        "%I:%M %p"
+                    ).time()
                 )
 
-                cita_fin = cita_inicio + datetime.timedelta(
-                    minutes=cita.duracion_total + self.tiempo_entre_citas
+                fin_cita = inicio_cita + datetime.timedelta(
+                    minutes=cita.duracion_total
                 )
 
-                if inicio < cita_fin and hora_fin > cita_inicio:
-                    ocupado = True
+                fin_cita += datetime.timedelta(
+                    minutes=self.tiempo_entre_citas
+                )
+
+                if inicio < fin_cita and fin_nueva > inicio_cita:
+                    libre = False
                     break
 
-            if not ocupado:
-                horarios.append(inicio.strftime("%I:%M %p"))
+            if libre:
+                horarios.append(
+                    inicio.strftime("%I:%M %p")
+                )
 
-            inicio += datetime.timedelta(minutes=15)
+            inicio += datetime.timedelta(
+                minutes=15
+            )
 
         return horarios
     

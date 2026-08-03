@@ -61,6 +61,8 @@ class Cita(models.Model):
     hora = models.CharField(
         max_length=20
     )
+    
+    duracion_total = models.PositiveIntegerField(default=35)
 
     estado = models.CharField(
         max_length=20,
@@ -114,8 +116,8 @@ class Cita(models.Model):
             )
 
             fin_nueva = inicio_nueva + timedelta(
-                minutes=self.servicio.duracion
-            )
+    minutes=self.duracion_total
+)
 
             citas_existentes = Cita.objects.filter(
                 barbero=self.barbero,
@@ -134,8 +136,8 @@ class Cita(models.Model):
                 )
 
                 fin_existente = inicio_existente + timedelta(
-                    minutes=cita.servicio.duracion
-                )
+    minutes=cita.duracion_total
+)
 
                 # Validar cruce de horarios
                 if (

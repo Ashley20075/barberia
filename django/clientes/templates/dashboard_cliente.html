@@ -492,16 +492,45 @@
                     </div>
 
                     <div class="col-12">
-                        <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #F4C542;">
-                            <div class="d-flex justify-content-between"><span class="text-light-brown">Total:</span>
-                                <strong class="text-yellow" id="totalPagar">$0</strong>
-                            </div>
-                        </div>
-                    </div>
+    <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #F4C542;">
+
+        <div class="d-flex justify-content-between mb-2">
+            <span class="text-light-brown">
+                Total:
+            </span>
+
+            <strong
+                class="text-yellow"
+                id="totalPagar">
+
+                $0
+
+            </strong>
+        </div>
+
+        <div class="d-flex justify-content-between">
+    <span class="text-light-brown">Total:</span>
+    <strong class="text-yellow" id="totalPagar">$0</strong>
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between">
+    <span class="text-light-brown">Tiempo estimado:</span>
+    <strong class="text-yellow" id="tiempoEstimado">35 minutos</strong>
+</div>
+
+    </div>
+</div>
 
                 </div>
                 <div class="mt-4 d-flex gap-2 justify-content-end">
                     <button type="button" class="btn btn-secondary" id="btnCancelarForm">Cancelar</button>
+                    <input
+    type="hidden"
+    name="duracion_total"
+    id="duracion_total"
+    value="35">
                     <button type="submit" class="btn btn-primary-custom">Reservar</button>
                 </div>
             </form>
@@ -574,113 +603,119 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const btnAgendar = document.getElementById('btnAgendar');
-        const formulario = document.getElementById('formularioTurno');
-        const btnCancelar = document.getElementById('btnCancelarForm');
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        btnAgendar.addEventListener('click', () => {
-            formulario.style.display = 'block';
-            btnAgendar.style.display = 'none';
-            const fechaInput = document.getElementById('fecha');
-            if (fechaInput) {
-                fechaInput.min = new Date().toISOString().split('T')[0];
-                fechaInput.value = new Date().toISOString().split('T')[0];
-            }
-        });
+<script>
 
-        btnCancelar.addEventListener('click', () => {
-            formulario.style.display = 'none';
-            btnAgendar.style.display = 'block';
-        });
+const btnAgendar = document.getElementById("btnAgendar");
+const formulario = document.getElementById("formularioTurno");
+const btnCancelar = document.getElementById("btnCancelarForm");
 
-        // Calcular total
-        function calcularTotal() {
-            let total = 0;
+btnAgendar.addEventListener("click", function () {
 
-            // Servicio seleccionado
-            const servicio = document.querySelector('.servicio-radio:checked');
+    formulario.style.display = "block";
+    btnAgendar.style.display = "none";
 
-            if (servicio) {
-                total += parseFloat(servicio.dataset.precio);
-            }
+    const fechaInput = document.getElementById("fecha");
 
-            // Adicionales
-            document.querySelectorAll('input[name="adicionales"]:checked').forEach(function (adicional) {
-
-                total += parseFloat(adicional.dataset.precio);
-
-            });
-
-            document.getElementById("totalPagar").textContent =
-                "$" + total.toLocaleString("es-CO");                // Lógica de cálculo
-        }
-        document.querySelectorAll('.servicio-radio').forEach(function (radio) {
-            radio.addEventListener('change', calcularTotal);
-        });
-
-        document.querySelectorAll('input[name="adicionales"]').forEach(function (check) {
-            check.addEventListener('change', calcularTotal);
-        });
-
-        calcularTotal();
-    </script>
-    <script>
-
-function cargarHorarios(){
-
-    const fecha=document.getElementById("fecha").value;
-    const barbero=document.getElementById("barbero").value;
-
-    const servicio=document.querySelector(
-        "input[name='servicio']:checked"
-    )?.value;
-
-    if(!fecha || !barbero || !servicio){
-        return;
+    if (fechaInput) {
+        fechaInput.min = new Date().toISOString().split("T")[0];
+        fechaInput.value = new Date().toISOString().split("T")[0];
     }
 
-    const adicionales=[];
+    cargarHorarios();
+    calcularTotal();
+
+});
+
+btnCancelar.addEventListener("click", function () {
+
+    formulario.style.display = "none";
+    btnAgendar.style.display = "block";
+
+});
+
+function calcularTotal() {
+
+    let total = 0;
+    let tiempo = 35;
+
+    const servicio = document.querySelector(".servicio-radio:checked");
+
+    if (servicio) {
+        total += Number(servicio.dataset.precio);
+    }
 
     document
     .querySelectorAll("input[name='adicionales']:checked")
-    .forEach(function(a){
+    .forEach(function (adicional) {
+
+        total += Number(adicional.dataset.precio);
+        tiempo += 5;
+
+    });
+
+    document.getElementById("totalPagar").textContent =
+        "$" + total.toLocaleString("es-CO");
+
+    document.getElementById("tiempoEstimado").textContent =
+        tiempo + " minutos";
+
+    document.getElementById("duracion_total").value = tiempo;
+}
+
+function cargarHorarios() {
+
+    const fecha = document.getElementById("fecha").value;
+    const barbero = document.getElementById("barbero").value;
+
+    const servicio = document.querySelector(
+        "input[name='servicio']:checked"
+    )?.value;
+
+    if (!fecha || !barbero || !servicio) {
+        return;
+    }
+
+    const adicionales = [];
+
+    document
+    .querySelectorAll("input[name='adicionales']:checked")
+    .forEach(function (a) {
 
         adicionales.push(
-            "adicionales="+encodeURIComponent(a.value)
+            "adicionales=" + encodeURIComponent(a.value)
         );
 
     });
 
     fetch(
-
         `/cliente/horarios/?fecha=${fecha}&barbero=${barbero}&servicio=${servicio}&${adicionales.join("&")}`
-
     )
 
-    .then(r=>r.json())
+    .then(response => response.json())
 
-    .then(function(horarios){
+    .then(function (horarios) {
 
-        let select=document.getElementById("hora");
+        const select = document.getElementById("hora");
 
-        select.innerHTML="";
+        select.innerHTML = "";
 
-        if(horarios.length==0){
+        if (horarios.length === 0) {
 
-            select.innerHTML="<option>No hay horarios disponibles</option>";
+            select.innerHTML =
+                "<option value=''>No hay horarios disponibles</option>";
 
             return;
 
         }
 
-        horarios.forEach(function(h){
+        horarios.forEach(function (hora) {
 
-            let option=document.createElement("option");
+            const option = document.createElement("option");
 
-            option.value=h;
-
-            option.text=h;
+            option.value = hora;
+            option.textContent = hora;
 
             select.appendChild(option);
 
@@ -690,29 +725,32 @@ function cargarHorarios(){
 
 }
 
-document
-.getElementById("fecha")
-.addEventListener("change",cargarHorarios);
+document.querySelectorAll(".servicio-radio").forEach(function (radio) {
 
-document
-.getElementById("barbero")
-.addEventListener("change",cargarHorarios);
+    radio.addEventListener("change", function () {
 
-document
-.querySelectorAll(".servicio-radio")
-.forEach(function(e){
+        calcularTotal();
+        cargarHorarios();
 
-    e.addEventListener("change",cargarHorarios);
+    });
 
 });
 
-document
-.querySelectorAll("input[name='adicionales']")
-.forEach(function(e){
+document.querySelectorAll("input[name='adicionales']").forEach(function (check) {
 
-    e.addEventListener("change",cargarHorarios);
+    check.addEventListener("change", function () {
+
+        calcularTotal();
+        cargarHorarios();
+
+    });
 
 });
+
+document.getElementById("fecha").addEventListener("change", cargarHorarios);
+document.getElementById("barbero").addEventListener("change", cargarHorarios);
+
+calcularTotal();
 
 </script>
 </body>

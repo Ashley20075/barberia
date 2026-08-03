@@ -132,6 +132,13 @@ def agendar_cita(request):
             servicio = Servicio.objects.get(
                 id=request.POST.get("servicio")
             )
+            
+            duracion_total = int(
+    request.POST.get(
+        "duracion_total",
+        35
+    )
+)
 
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
@@ -203,6 +210,7 @@ def agendar_cita(request):
                 productos=productos_str,
                 fecha=fecha,
                 hora=hora,
+                duracion_total=duracion_total,
                 estado="Pendiente",
             )
             
@@ -351,23 +359,46 @@ def eliminar_cuenta(request):
 
 def cuenta_eliminada(request):
     return render(request, "cuenta_eliminada.html")
-from django.http import JsonResponse
 
 
-@login_required(login_url='login')
+@login_required(login_url="login")
 def horarios_disponibles(request):
 
-    horarios = [
-        "08:00 AM",
-        "09:00 AM",
-        "10:00 AM",
-        "11:00 AM",
-        "12:00 PM",
-        "01:00 PM",
-        "02:00 PM",
-        "03:00 PM",
-        "04:00 PM",
-        "05:00 PM",
-    ]
+    fecha = request.GET.get("fecha")
+    barbero_id = request.GET.get("barbero")
+    adicionales = request.GET.getlist("adicionales")
 
-    return JsonResponse(horarios, safe=False)
+    if not fecha or not barbero_id:
+        return JsonResponse([], safe=False)
+
+    fecha = datetime.strptime(
+        fecha,
+        "%Y-%m-%d"
+    ).date()
+
+    barbero = get_object_or_404(
+        Barbero,
+        id=barbero_id,
+        activo=True
+    )
+
+    duracion = 35
+
+    if "Arreglo de barba" in adicionales:
+        duracion += 5
+
+    if "Cejas" in adicionales:
+        duracion += 5
+
+    if "Diseño y líneas" in adicionales:
+        duracion += 5
+
+    horarios = barbero.horarios_disponibles(
+        fecha,
+        duracion
+    )
+
+    return JsonResponse(
+        horarios,
+        safe=False
+    )

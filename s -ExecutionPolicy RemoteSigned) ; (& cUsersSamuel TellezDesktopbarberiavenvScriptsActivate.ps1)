@@ -1,0 +1,322 @@
+[33mcommit 630e0faacd064ef0bc53c9463ff21f045f360b91[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Yampol <yampol069@gmail.com>
+Date:   Fri Jul 31 05:05:18 2026 -0500
+
+    se cambio lo siguiente:
+    
+    - Las fechas de las citas no deben interponerse
+    - No se debe tener mas de una cita del mismo usuario al dia
+    -Las citas deben tener su estado correspondiente (confirmada, pendiente, cancelada, finalizada)
+
+[1mdiff --git a/django/barberos/templates/dashboard_barbero.html b/django/barberos/templates/dashboard_barbero.html[m
+[1mindex 10c427e..71df084 100644[m
+[1m--- a/django/barberos/templates/dashboard_barbero.html[m
+[1m+++ b/django/barberos/templates/dashboard_barbero.html[m
+[36m@@ -24,11 +24,60 @@[m
+         .user-info-custom { background-color: #2A211B; padding: 0.5rem 1rem; border-radius: 40px; display: inline-flex; align-items: center; gap: 0.8rem; color: #F5EFE6; }[m
+         .user-info-custom i { color: #F4C542; font-size: 1.2rem; }[m
+ [m
+[31m-        .stat-card { background-color: #1E1A15; border-radius: 20px; border-left: 4px solid #F4C542; padding: 1.5rem; text-align: center; height: 100%; transition: transform 0.3s; }[m
+[31m-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(244,197,66,0.2); }[m
+[31m-        .stat-card i { color: #F4C542; font-size: 2.5rem; }[m
+[31m-        .stat-card h5 { color: #FFD966; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; }[m
+[31m-        .stat-card h2 { color: #F4C542; font-size: 2.2rem; font-weight: bold; }[m
+[32m+[m[32m        /* ESTADÍSTICAS CENTRADAS */[m
+[32m+[m[32m        .stat-card {[m
+[32m+[m[32m            background-color: #1E1A15;[m
+[32m+[m[32m            border-radius: 20px;[m
+[32m+[m[32m            border-left: 4px solid #F4C542;[m
+[32m+[m[32m            padding: 1.5rem 0.5rem;[m
+[32m+[m[32m            text-align: center;[m
+[32m+[m[32m            height: 100%;[m
+[32m+[m[32m            min-height: 140px;[m
+[32m+[m[32m            transition: transform 0.3s, box-shadow 0.3s;[m
+[32m+[m[32m            display: flex;[m
+[32m+[m[32m            flex-direction: column;[m
+[32m+[m[32m            justify-content: center;[m
+[32m+[m[32m            align-items: center;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        .stat-card:hover {[m
+[32m+[m[32m            transform: translateY(-5px);[m
+[32m+[m[32m            box-shadow: 0 10px 25px -5px rgba(244,197,66,0.2);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        .stat-card i {[m
+[32m+[m[32m            color: #F4C542;[m
+[32m+[m[32m            font-size: 2.2rem;[m
+[32m+[m[32m            margin-bottom: 0.5rem;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        .stat-card h5 {[m
+[32m+[m[32m            color: #FFD966;[m
+[32m+[m[32m            font-size: 0.8rem;[m
+[32m+[m[32m            text-transform: uppercase;[m
+[32m+[m[32m            letter-spacing: 1px;[m
+[32m+[m[32m            margin: 0.3rem 0;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        .stat-card h2 {[m
+[32m+[m[32m            color: #F4C542;[m
+[32m+[m[32m            font-size: 2rem;[m
+[32m+[m[32m            font-weight: bold;[m
+[32m+[m[32m            margin: 0;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        @media (max-width: 768px) {[m
+[32m+[m[32m            .stat-card {[m
+[32m+[m[32m                min-height: 120px;[m
+[32m+[m[32m                padding: 1rem 0.5rem;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            .stat-card h2 {[m
+[32m+[m[32m                font-size: 1.6rem;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            .stat-card i {[m
+[32m+[m[32m                font-size: 1.8rem;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+ [m
+         .card-custom { background-color: #1E1A15 !important; border-radius: 20px !important; border: 1px solid rgba(244,197,66,0.2) !important; margin-bottom: 2rem; overflow: hidden; }[m
+         .card-header-custom { background-color: #0B0A08 !important; border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.25rem; font-weight: 600; color: #FFD966 !important; }[m
+[36m@@ -41,6 +90,7 @@[m
+         .badge-pendiente { background-color: #ffc107 !important; color: #0B0A08 !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }[m
+         .badge-confirmada { background-color: #198754 !important; color: white !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }[m
+         .badge-cancelada { background-color: #dc3545 !important; color: white !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }[m
+[32m+[m[32m        .badge-finalizada { background-color: #0dcaf0 !important; color: #0B0A08 !important; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; }[m
+ [m
+         .btn-modern { background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%); border: none; border-radius: 50px; padding: 10px 24px; color: #0B0A08; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 15px rgba(244,197,66,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }[m
+         .btn-modern:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(244,197,66,0.5); color: #0B0A08; }[m
+[36m@@ -129,42 +179,49 @@[m
+             {% endfor %}[m
+         {% endif %}[m
+ [m
+[31m-        <!-- ESTADÍSTICAS -->[m
+[31m-        <div class="row g-4 mb-4">[m
+[31m-            <div class="col-md-3 col-sm-6">[m
+[32m+[m[32m        <!-- ESTADÍSTICAS CENTRADAS -->[m
+[32m+[m[32m        <div class="row g-4 mb-4 justify-content-center">[m
+[32m+[m[32m            <div class="col-lg-2 col-md-4 col-sm-6">[m
+                 <div class="stat-card">[m
+                     <i class="bi bi-calendar-event"></i>[m
+                     <h5>Total Citas</h5>[m
+                     <h2>{{ total_citas }}</h2>[m
+                 </div>[m
+             </div>[m
+[31m-            <div class="col-md-3 col-sm-6">[m
+[32m+[m[32m            <div class="col-lg-2 col-md-4 col-sm-6">[m
+                 <div class="stat-card" style="border-left-color: #ffc107;">[m
+                     <i class="bi bi-clock-history" style="color: #ffc107;"></i>[m
+                     <h5>Pendientes</h5>[m
+                     <h2 class="text-warning">{{ citas_pendientes }}</h2>[m
+                 </div>[m
+             </div>[m
+[31m-            <div class="col-md-3 col-sm-6">[m
+[32m+[m[32m            <div class="col-lg-2 col-md-4 col-sm-6">[m
+                 <div class="stat-card" style="border-left-color: #198754;">[m
+                     <i class="bi bi-check-circle" style="color: #198754;"></i>[m
+                     <h5>Confirmadas</h5>[m
+                     <h2 class="text-success">{{ citas_confirmadas }}</h2>[m
+                 </div>[m
+             </div>[m
+[31m-            <div class="col-md-3 col-sm-6">[m
+[32m+[m[32m            <div class="col-lg-2 col-md-4 col-sm-6">[m
+                 <div class="stat-card" style="border-left-color: #dc3545;">[m
+                     <i class="bi bi-x-circle" style="color: #dc3545;"></i>[m
+                     <h5>Canceladas</h5>[m
+                     <h2 class="text-danger">{{ citas_canceladas }}</h2>[m
+                 </div>[m
+             </div>[m
+[32m+[m[32m            <div class="col-lg-2 col-md-4 col-sm-6">[m
+[32m+[m[32m                <div class="stat-card" style="border-left-color: #0dcaf0;">[m
+[32m+[m[32m                    <i class="bi bi-flag-fill" style="color: #0dcaf0;"></i>[m
+[32m+[m[32m                    <h5>Finalizadas</h5>[m
+[32m+[m[32m                    <h2 class="text-info">{{ citas_finalizadas }}</h2>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m            </div>[m
+         </div>[m
+ [m
+         <!-- FILTROS -->[m
+         <div class="card-custom mb-4">[m
+             <div class="card-body">[m
+[31m-                <form method="GET" class="row g-3">[m
+[32m+[m[32m                <form method="GET" action="{% url 'barberos:panel_barbero' %}" class="row g-3">[m
+                     <div class="col-md-3">[m
+                         <label class="text-yellow">Estado</label>[m
+                         <select name="estado" class="form-select bg-dark-input">[m
+[36m@@ -172,6 +229,7 @@[m
+                             <option value="Pendiente" {% if filtro_estado == 'Pendiente' %}selected{% endif %}>⏳ Pendiente</option>[m
+                             <option value="Confirmada" {% if filtro_estado == 'Confirmada' %}selected{% endif %}>✅ Confirmada</option>[m
+                             <option value="Cancelada" {% if filtro_estado == 'Cancelada' %}selected{% endif %}>❌ Cancelada</option>[m
+[32m+[m[32m                            <option value="Finalizada" {% if filtro_estado == 'Finalizada' %}selected{% endif %}>🏁 Finalizada</option>[m
+                         </select>[m
+                     </div>[m
+                     <div class="col-md-3">[m
+[36m@@ -225,25 +283,52 @@[m
+                                 <td>{{ cita.hora }}</td>[m
+                                 <td>[m
+                                     {% if cita.estado == "Pendiente" %}[m
+[31m-                                    <span class="badge-pendiente"><i class="bi bi-clock"></i> Pendiente</span>[m
+[32m+[m[32m                                        <span class="badge-pendiente">[m
+[32m+[m[32m                                            <i class="bi bi-clock"></i> Pendiente[m
+[32m+[m[32m                                        </span>[m
+                                     {% elif cita.estado == "Confirmada" %}[m
+[31m-                                    <span class="badge-confirmada"><i class="bi bi-check-circle"></i> Confirmada</span>[m
+[31m-                                    {% else %}[m
+[31m-                                    <span class="badge-cancelada"><i class="bi bi-x-circle"></i> Cancelada</span>[m
+[32m+[m[32m                                        <span class="badge-confirmada">[m
+[32m+[m[32m                                            <i class="bi bi-check-circle"></i> Confirmada[m
+[32m+[m[32m                                        </span>[m
+[32m+[m[32m                                    {% elif cita.estado == "Finalizada" %}[m
+[32m+[m[32m                                        <span class="badge-finalizada">[m
+[32m+[m[32m                                            <i class="bi bi-flag-fill"></i> Finalizada[m
+[32m+[m[32m                                        </span>[m
+[32m+[m[32m                                    {% elif cita.estado == "Cancelada" %}[m
+[32m+[m[32m                                        <span class="badge-cancelada">[m
+[32m+[m[32m                                            <i class="bi bi-x-circle"></i> Cancelada[m
+[32m+[m[32m                                        </span>[m
+                                     {% endif %}[m
+                                 </td>[m
+                                 <td>[m
+                                     {% if cita.estado == "Pendiente" %}[m
+[31m-                                    <div class="d-flex gap-1 flex-wrap">[m
+[31m-                                        <a href="{% url 'barberos:confirmar_cita' cita.id %}" class="btn btn-success btn-sm" onclick="return confirm('¿Confirmar esta cita?')">[m
+[31m-                                            <i class="bi bi-check-circle"></i> Confirmar[m
+[31m-                                        </a>[m
+[31m-                                        <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Cancelar esta cita?')">[m
+[31m-                                            <i class="bi bi-x-circle"></i> Cancelar[m
+[31m-                                        </a>[m
+[31m-                                    </div>[m
+[32m+[m[32m                                        <div class="d-flex gap-1 flex-wrap">[m
+[32m+[m[32m                                            <a href="{% url 'barberos:confirmar_cita' cita.id %}"[m[41m [m
+[32m+[m[32m                                               class="btn btn-success btn-sm"[m
+[32m+[m[32m                                               onclick="return confirm('¿Confirmar esta cita?')">[m
+[32m+[m[32m                                                <i class="bi bi-check-circle"></i> Confirmar[m
+[32m+[m[32m                                            </a>[m
+[32m+[m[32m                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}"[m[41m [m
+[32m+[m[32m                                               class="btn btn-outline-danger btn-sm"[m
+[32m+[m[32m                                               onclick="return confirm('¿Cancelar esta cita?')">[m
+[32m+[m[32m                                                <i class="bi bi-x-circle"></i> Cancelar[m
+[32m+[m[32m                                            </a>[m
+[32m+[m[32m                                        </div>[m
+[32m+[m[32m                                    {% elif cita.estado == "Confirmada" %}[m
+[32m+[m[32m                                        <div class="d-flex gap-1 flex-wrap">[m
+[32m+[m[32m                                            <a href="{% url 'barberos:finalizar_cita' cita.id %}"[m[41m [m
+[32m+[m[32m                                               class="btn btn-primary btn-sm"[m
+[32m+[m[32m                                               onclick="return confirm('¿Finalizar esta cita?')">[m
+[32m+[m[32m                                                <i class="bi bi-flag-fill"></i> Finalizar[m
+[32m+[m[32m                                            </a>[m
+[32m+[m[32m                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}"[m[41m [m
+[32m+[m[32m                                               class="btn btn-outline-danger btn-sm"[m
+[32m+[m[32m                                               onclick="return confirm('¿Cancelar esta cita?')">[m
+[32m+[m[32m                                                <i class="bi bi-x-circle"></i> Cancelar[m
+[32m+[m[32m                                            </a>[m
+[32m+[m[32m                                        </div>[m
+                                     {% else %}[m
+[31m-                                    <span class="text-light-brown">—</span>[m
+[32m+[m[32m                                        <span class="text-light-brown">—</span>[m
+                                     {% endif %}[m
+                                 </td>[m
+                             </tr>[m
+[36m@@ -262,7 +347,7 @@[m
+             </div>[m
+         </div>[m
+ [m
+[31m-        <!-- INFORMA CIÓN ADICIONAL -->[m
+[32m+[m[32m        <!-- INFORMACIÓN ADICIONAL -->[m
+         <div class="row g-4 mt-2">[m
+             <div class="col-md-6">[m
+                 <div class="card-custom">[m
+[36m@@ -271,18 +356,22 @@[m
+                     </div>[m
+                     <div class="card-body">[m
+                         <div class="row text-center">[m
+[31m-                            <div class="col-4">[m
+[32m+[m[32m                            <div class="col-3">[m
+                                 <h5 class="text-yellow">Total</h5>[m
+                                 <h3>{{ citas|length }}</h3>[m
+                             </div>[m
+[31m-                            <div class="col-4">[m
+[32m+[m[32m                            <div class="col-3">[m
+                                 <h5 class="text-warning">Pendientes</h5>[m
+                                 <h3 class="text-warning">{{ citas_pendientes }}</h3>[m
+                             </div>[m
+[31m-                            <div class="col-4">[m
+[32m+[m[32m                            <div class="col-3">[m
+                                 <h5 class="text-success">Confirmadas</h5>[m
+                                 <h3 class="text-success">{{ citas_confirmadas }}</h3>[m
+                             </div>[m
+[32m+[m[32m                            <div class="col-3">[m
+[32m+[m[32m                                <h5 class="text-info">Finalizadas</h5>[m
+[32m+[m[32m                                <h3 class="text-info">{{ citas_finalizadas }}</h3>[m
+[32m+[m[32m                            </div>[m
+                         </div>[m
+                     </div>[m
+                 </div>[m
+[1mdiff --git a/django/barberos/urls.py b/django/barberos/urls.py[m
+[1mindex 8ff06a8..57ce572 100644[m
+[1m--- a/django/barberos/urls.py[m
+[1m+++ b/django/barberos/urls.py[m
+[36m@@ -10,4 +10,5 @@[m [murlpatterns = [[m
+     path('barberos/', views.lista_barberos, name='lista'),[m
+     path('barberos/<int:id>/', views.detalle_barbero, name='detalle'),[m
+     path('certificado/', views.certificado_laboral, name='certificado'),[m
+[32m+[m[32m    path('finalizar/<int:id>/', views.finalizar_cita, name='finalizar_cita'),[m
+ ][m
+\ No newline at end of file[m
+[1mdiff --git a/django/barberos/views.py b/django/barberos/views.py[m
+[1mindex 69849b2..616390c 100644[m
+[1m--- a/django/barberos/views.py[m
+[1m+++ b/django/barberos/views.py[m
+[36m@@ -58,6 +58,7 @@[m [mdef panel_barbero(request):[m
+     citas_pendientes = citas.filter(estado='Pendiente').count()[m
+     citas_confirmadas = citas.filter(estado='Confirmada').count()[m
+     citas_canceladas = citas.filter(estado='Cancelada').count()[m
+[32m+[m[32m    citas_finalizadas = citas.filter(estado='Finalizada').count()  # <-- NUEVO[m
+     [m
+     context = {[m
+         'citas': citas,[m
+[36m@@ -66,6 +67,7 @@[m [mdef panel_barbero(request):[m
+         'citas_pendientes': citas_pendientes,[m
+         'citas_confirmadas': citas_confirmadas,[m
+         'citas_canceladas': citas_canceladas,[m
+[32m+[m[32m        'citas_finalizadas': citas_finalizadas,  # <-- NUEVO[m
+         'filtro_estado': estado,[m
+         'filtro_fecha_inicio': fecha_inicio,[m
+         'filtro_fecha_fin': fecha_fin,[m
+[36m@@ -85,18 +87,20 @@[m [mdef confirmar_cita(request, id):[m
+         messages.error(request, '❌ No tienes un perfil de barbero asignado.')[m
+         return redirect('barberos:panel_barbero')[m
+     [m
+[31m-    # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====[m
+[31m-    if not barbero.es_dia_laboral(cita.fecha):[m
+[31m-        messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')[m
+[31m-        return redirect('barberos:panel_barbero')[m
+[31m-    [m
+[31m-    if barbero.es_dia_descanso(cita.fecha):[m
+[31m-        messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')[m
+[31m-        return redirect('barberos:panel_barbero')[m
+[32m+[m[32m    if cita.estado == "Pendiente":[m
+[32m+[m[32m        # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====[m
+[32m+[m[32m        if not barbero.es_dia_laboral(cita.fecha):[m
+[32m+[m[32m            messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')[m
+[32m+[m[32m            return redirect('barberos:panel_barbero')[m
+[32m+[m[41m        [m
+[32m+[m[32m        if barbero.es_dia_descanso(cita.fecha):[m
+[32m+[m[32m            messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')[m
+[32m+[m[32m            return redirect('barberos:panel_barbero')[m
+[32m+[m[41m        [m
+[32m+[m[32m        cita.estado = "Confirmada"[m
+[32m+[m[32m        cita.save()[m
+[32m+[m[32m        messages.success(request, f'✅ Cita de {cita.cliente.nombre} confirmada.')[m
+     [m
+[31m-    cita.estado = "Confirmada"[m
+[31m-    cita.save()[m
+[31m-    messages.success(request, f'✅ Cita de {cita.cliente.nombre} confirmada.')[m
+     return redirect('barberos:panel_barbero')[m
+ [m
+ @login_required(login_url='login')[m
+[36m@@ -130,6 +134,40 @@[m [mdef cancelar_cita(request, id):[m
+ [m
+     return redirect('barberos:panel_barbero')[m
+ [m
+[32m+[m[32m@login_required(login_url=
