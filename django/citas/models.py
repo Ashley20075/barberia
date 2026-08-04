@@ -72,84 +72,8 @@ class Cita(models.Model):
 
     class Meta:
         ordering = ["fecha", "hora"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["barbero", "fecha", "hora"],
-                name="cita_unica_por_barbero"
-            )
-        ]
 
-    def clean(self):
-
-        # Validar que un cliente no tenga más de una cita el mismo día
-        cita_cliente = Cita.objects.filter(
-            cliente=self.cliente,
-            fecha=self.fecha
-        ).exclude(
-            pk=self.pk
-        ).exclude(
-            estado="Cancelada"
-        )
-
-        if cita_cliente.exists():
-            raise ValidationError(
-                "El cliente ya tiene una cita registrada para esta fecha."
-            )
-
-        # Validaciones del barbero
-        if self.barbero:
-
-            if not self.barbero.es_dia_laboral(self.fecha):
-                raise ValidationError(
-                    f"El barbero {self.barbero.nombre} no trabaja en esta fecha."
-                )
-
-            if self.barbero.es_dia_descanso(self.fecha):
-                raise ValidationError(
-                    f"El barbero {self.barbero.nombre} tiene descanso en esta fecha."
-                )
-
-            # Convertir hora actual a datetime
-            inicio_nueva = datetime.strptime(
-                self.hora,
-                "%I:%M %p"
-            )
-
-            fin_nueva = inicio_nueva + timedelta(
-    minutes=self.duracion_total
-)
-
-            citas_existentes = Cita.objects.filter(
-                barbero=self.barbero,
-                fecha=self.fecha
-            ).exclude(
-                pk=self.pk
-            ).exclude(
-                estado="Cancelada"
-            )
-
-            for cita in citas_existentes:
-
-                inicio_existente = datetime.strptime(
-                    cita.hora,
-                    "%I:%M %p"
-                )
-
-                fin_existente = inicio_existente + timedelta(
-    minutes=cita.duracion_total
-)
-
-                # Validar cruce de horarios
-                if (
-                    inicio_nueva < fin_existente
-                    and
-                    fin_nueva > inicio_existente
-                ):
-                    raise ValidationError(
-                        f"El horario seleccionado se cruza con otra cita del barbero "
-                        f"({inicio_existente.strftime('%I:%M %p')} - "
-                        f"{fin_existente.strftime('%I:%M %p')})."
-                    )
+    
 
     def save(self, *args, **kwargs):
         self.full_clean()

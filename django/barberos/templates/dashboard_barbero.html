@@ -1,4 +1,5 @@
 {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -252,7 +253,9 @@
         <div class="card-custom">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-list-ul"></i> Citas Registradas</span>
-                <span class="badge bg-warning text-dark">{{ citas|length }} citas</span>
+                <span class="badge bg-warning text-dark">
+                    {{ proximas_citas|length }} citas
+                </span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -269,7 +272,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for cita in citas %}
+                            {% for cita in proximas_citas %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td><strong>{{ cita.cliente.nombre }}</strong></td>
@@ -358,7 +361,7 @@
                         <div class="row text-center">
                             <div class="col-3">
                                 <h5 class="text-yellow">Total</h5>
-                                <h3>{{ citas|length }}</h3>
+                                <h3>{{ total_citas }}</h3>
                             </div>
                             <div class="col-3">
                                 <h5 class="text-warning">Pendientes</h5>
@@ -375,7 +378,54 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card-custom mt-4">
+                    <div class="card-header-custom">
+                        <i class="bi bi-clock-history"></i> Historial de citas
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cita in historial_citas %}
+                                <tr>
+                                    <td>{{ cita.cliente.nombre }}</td>
+                                    <td>{{ cita.servicio.nombre }}</td>
+                                    <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+                                    <td>{{ cita.hora }}</td>
+                                    <td>
+                                        {% if cita.estado == "Finalizada" %}
+                                            <span class="badge-finalizada">
+                                                Finalizada
+                                            </span>
+                                        {% else %}
+                                            <span class="badge-cancelada">
+                                                Cancelada
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        No hay historial.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
             <div class="col-md-6">
                 <div class="card-custom">
                     <div class="card-header-custom">

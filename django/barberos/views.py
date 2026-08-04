@@ -15,64 +15,88 @@ import os
 
 @login_required(login_url='login')
 def panel_barbero(request):
-    """Panel del barbero - Muestra solo las citas asignadas a él con validación de horario"""
-    
+
     try:
-        barbero = Barbero.objects.get(email=request.user.email, activo=True)
+        barbero = Barbero.objects.get(
+            email=request.user.email,
+            activo=True
+        )
+
     except Barbero.DoesNotExist:
-        messages.error(request, 'No tienes un perfil de barbero asignado.')
-        return redirect('inicio')
-    
-    # ===== VALIDACIÓN: Verificar si el barbero está disponible hoy =====
+        messages.error(
+            request,
+            "No tienes un perfil de barbero asignado."
+        )
+        return redirect("inicio")
+
     hoy = timezone.now().date()
+
     if not barbero.es_dia_laboral(hoy) or barbero.es_dia_descanso(hoy):
-        messages.warning(request, f'⚠️ Hoy es día de descanso o no laboral para {barbero.nombre}.')
-    
-    # Citas del barbero
-    citas = Cita.objects.filter(barbero=barbero).order_by('fecha', 'hora')
-    
-    # ===== FILTROS =====
-    estado = request.GET.get('estado')
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
-    
-    if estado:
-        citas = citas.filter(estado=estado)
-    
-    if fecha_inicio:
-        try:
-            fecha_ini = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
-            citas = citas.filter(fecha__gte=fecha_ini)
-        except:
-            pass
-    
-    if fecha_fin:
-        try:
-            fecha_f = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
-            citas = citas.filter(fecha__lte=fecha_f)
-        except:
-            pass
-    
-    # ===== ESTADÍSTICAS =====
-    total_citas = citas.count()
-    citas_pendientes = citas.filter(estado='Pendiente').count()
-    citas_confirmadas = citas.filter(estado='Confirmada').count()
-    citas_canceladas = citas.filter(estado='Cancelada').count()
-    citas_finalizadas = citas.filter(estado='Finalizada').count()  # <-- NUEVO
-    
+        messages.warning(
+            request,
+            f"⚠️ Hoy es día de descanso o no laboral para {barbero.nombre}."
+        )
+
+    proximas_citas = Cita.objects.filter(
+        barbero=barbero,
+        estado__in=[
+            "Pendiente",
+            "Confirmada"
+        ]
+    ).order_by(
+        "fecha",
+        "hora"
+    )
+
+    historial_citas = Cita.objects.filter(
+        barbero=barbero,
+        estado__in=[
+            "Finalizada",
+            "Cancelada"
+        ]
+    ).order_by(
+        "-fecha",
+        "-hora"
+    )
+
+    total_citas = Cita.objects.filter(
+        barbero=barbero
+    ).count()
+
+    citas_pendientes = proximas_citas.filter(
+        estado="Pendiente"
+    ).count()
+
+    citas_confirmadas = proximas_citas.filter(
+        estado="Confirmada"
+    ).count()
+
+    citas_canceladas = historial_citas.filter(
+        estado="Cancelada"
+    ).count()
+
+    citas_finalizadas = historial_citas.filter(
+        estado="Finalizada"
+    ).count()
+
     context = {
-        'citas': citas,
-        'barbero': barbero,
-        'total_citas': total_citas,
-        'citas_pendientes': citas_pendientes,
-        'citas_confirmadas': citas_confirmadas,
-        'citas_canceladas': citas_canceladas,
-        'citas_finalizadas': citas_finalizadas,  # <-- NUEVO
-        'filtro_estado': estado,
-        'filtro_fecha_inicio': fecha_inicio,
-        'filtro_fecha_fin': fecha_fin,
+        "barbero": barbero,
+
+        "proximas_citas": proximas_citas,
+        "historial_citas": historial_citas,
+
+        "total_citas": total_citas,
+        "citas_pendientes": citas_pendientes,
+        "citas_confirmadas": citas_confirmadas,
+        "citas_canceladas": citas_canceladas,
+        "citas_finalizadas": citas_finalizadas,
     }
-    return render(request, 'dashboard_barbero.html', context)
+
+    return render(
+        request,
+        "dashboard_barbero.html",
+        context
+    )
 
 @login_required(login_url='login')
 def confirmar_cita(request, id):
