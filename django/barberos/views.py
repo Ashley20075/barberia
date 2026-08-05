@@ -12,6 +12,10 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
 from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 import os
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
+from django.db import transaction
+from clientes.models import Cliente
 
 @login_required(login_url='login')
 def panel_barbero(request):
@@ -202,48 +206,83 @@ def detalle_barbero(request, id):
     barbero = get_object_or_404(Barbero, id=id)
     return render(request, 'barberos/detalle.html', {'barbero': barbero})
 
-@login_required
-def certificado_laboral(request):
-    try:
-        barbero = Barbero.objects.get(email=request.user.email, activo=True)
-    except Barbero.DoesNotExist:
-        messages.error(request, "No tienes un perfil de barbero.")
-        return redirect("barberos:panel_barbero")
+@login_required(login_url='login')
+def editar_perfil_barbero(request):
+    barbero = get_object_or_404(
+        Barbero,
+        email=request.user.email
+    )
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="certificado_laboral.pdf"'
+    if request.method == 'POST':
 
-    doc = SimpleDocTemplate(response)
-    estilos = getSampleStyleSheet()
-    elementos = []
+        nombre = request.POST.get('nombre', '').strip()
+        apellido = request.POST.get('apellido', '').strip()
+        cedula = request.POST.get('cedula', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
-    ruta_logo = os.path.join(settings.BASE_DIR, "inventario", "static", "img", "logo.jpeg")
-    if os.path.exists(ruta_logo):
-        logo = Image(ruta_logo)
-        logo.drawWidth = 80
-        logo.drawHeight = 80
-        elementos.append(logo)
+        if email != request.user.email and User.objects.filter(email=email).exists():
+            messages.error(request, '❌ Este correo ya está registrado.')
+            return redirect('barberos:editar_perfil_barbero')
 
-    elementos.append(Paragraph("<b>CERTIFICADO LABORAL</b>", estilos["Title"]))
-    elementos.append(Paragraph("BarberSpringfield", estilos["Heading2"]))
-    elementos.append(Paragraph("<br/><br/>Se certifica que:", estilos["Normal"]))
-    elementos.append(Paragraph(f"<b>{barbero.nombre}</b>", estilos["Heading1"]))
-    elementos.append(Paragraph(f"Cédula: {barbero.cedula}", estilos["Normal"]))
-    elementos.append(Paragraph(f"Especialidad: {barbero.especialidad}", estilos["Normal"]))
-    elementos.append(Paragraph(f"Correo: {barbero.email}", estilos["Normal"]))
-    elementos.append(Paragraph(
-        "<br/>Actualmente se encuentra vinculado laboralmente "
-        "como BARBERO en nuestra empresa, desempeñando sus "
-        "funciones con responsabilidad y profesionalismo.",
-        estilos["Normal"]
-    ))
-    elementos.append(Paragraph(
-        f"<br/>Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}",
-        estilos["Normal"]
-    ))
-    elementos.append(Paragraph("<br/><br/><br/>_________________________", estilos["Normal"]))
-    elementos.append(Paragraph("Administrador", estilos["Normal"]))
-    elementos.append(Paragraph("Barbería Elegance", estilos["Normal"]))
+        try:
 
-    doc.build(elementos)
-    return response
+            with transaction.atomic():
+
+                user = request.user
+
+                user.first_name = nombre
+                user.last_name = apellido
+                user.username = email
+                user.email = email
+
+                if password:
+
+                    if password != confirm_password:
+                        messages.error(request, '❌ Las contraseñas no coinciden.')
+                        return redirect('barberos:editar_perfil_barbero')
+
+                    if len(password) < 6:
+                        messages.error(request, '❌ La contraseña debe tener al menos 6 caracteres.')
+                        return redirect('barberos:editar_perfil_barbero')
+
+                    user.set_password(password)
+                    update_session_auth_hash(request, user)
+
+                user.save()
+
+                # Actualizar datos del barbero
+                barbero.nombre = f"{nombre} {apellido}".strip()
+                barbero.cedula = cedula
+                barbero.telefono = telefono
+                barbero.email = email
+                barbero.save()
+
+                # Si existe cliente asociado también lo actualiza
+                Cliente.objects.filter(user=request.user).update(
+                    nombre=f"{nombre} {apellido}".strip(),
+                    cedula=cedula,
+                    telefono=telefono,
+                    email=email
+                )
+
+            messages.success(request, "✅ Perfil actualizado correctamente.")
+            return redirect("barberos:panel_barbero")
+
+        except Exception as e:
+            messages.error(request, f"❌ {e}")
+            return redirect("barberos:editar_perfil_barbero")
+
+    nombre = barbero.nombre.split()
+
+    return render(
+        request,
+        "editar_perfil_barbero.html",
+        {
+            "barbero": barbero,
+            "nombre": nombre[0] if len(nombre) > 0 else "",
+            "apellido": " ".join(nombre[1:]) if len(nombre) > 1 else "",
+        }
+    )

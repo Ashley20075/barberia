@@ -9,6 +9,10 @@ urlpatterns = [
     path('cancelar/<int:id>/', views.cancelar_cita, name='cancelar_cita'),
     path('barberos/', views.lista_barberos, name='lista'),
     path('barberos/<int:id>/', views.detalle_barbero, name='detalle'),
-    path('certificado/', views.certificado_laboral, name='certificado'),
     path('finalizar/<int:id>/', views.finalizar_cita, name='finalizar_cita'),
+    path(
+    "editar-perfil/",
+    views.editar_perfil_barbero,
+    name="editar_perfil_barbero",
+),
 ]

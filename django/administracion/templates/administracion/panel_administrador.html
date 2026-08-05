@@ -227,11 +227,21 @@
 
 <td>{{ u.email }}</td>
                                 <td>
-                                    {% if u.groups.all %}
-                                        <span class="badge bg-warning text-dark">Barbero</span>
-                                    {% else %}
-                                        <span class="badge bg-primary">Cliente</span>
-                                    {% endif %}
+                                    {% if u.is_superuser %}
+        <span class="badge bg-danger">
+            Admin
+        </span>
+
+    {% elif u.groups.exists %}
+        <span class="badge bg-warning text-dark">
+            Barbero
+        </span>
+
+    {% else %}
+        <span class="badge bg-primary">
+            Cliente
+        </span>
+    {% endif %}
                                 </td>
                                 <td>
                                     {% if u.is_active %}
@@ -385,13 +395,43 @@ Cancelada
                                 <td>{{ b.jornada_inicio|time:"H:i" }} - {{ b.jornada_fin|time:"H:i" }}</td>
                                 <td>{{ b.get_dia_descanso_display }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarBarbero" data-id="{{ b.id }}" data-nombre="{{ b.nombre }}" data-cedula="{{ b.cedula }}" data-especialidad="{{ b.especialidad }}" data-telefono="{{ b.telefono }}" data-email="{{ b.email }}" data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}" data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}" data-duracion_cita="{{ b.duracion_cita }}" data-dias_laborales="{{ b.dias_laborales }}" data-dia_descanso="{{ b.dia_descanso }}" data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este barbero?')">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </td>
+
+    <a href="{% url 'administracion:certificado_barbero_admin' b.id %}"
+       class="btn btn-sm btn-info"
+       target="_blank">
+
+        📄
+    </a>
+
+    <button class="btn btn-sm btn-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEditarBarbero"
+            data-id="{{ b.id }}"
+            data-nombre="{{ b.nombre }}"
+            data-cedula="{{ b.cedula }}"
+            data-especialidad="{{ b.especialidad }}"
+            data-telefono="{{ b.telefono }}"
+            data-email="{{ b.email }}"
+            data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}"
+            data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}"
+            data-duracion_cita="{{ b.duracion_cita }}"
+            data-dias_laborales="{{ b.dias_laborales }}"
+            data-dia_descanso="{{ b.dia_descanso }}"
+            data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
+
+        <i class="bi bi-pencil"></i>
+
+    </button>
+
+    <a href="{% url 'administracion:eliminar_barbero' b.id %}"
+       class="btn btn-sm btn-danger"
+       onclick="return confirm('¿Eliminar este barbero?')">
+
+        <i class="bi bi-trash"></i>
+
+    </a>
+
+</td>
                             </tr>
                             {% empty %}
                             <tr>

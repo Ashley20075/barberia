@@ -8,6 +8,11 @@ from barberos.models import Barbero
 from inventario.models import Producto
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
+from reportlab.lib.styles import getSampleStyleSheet
+from django.conf import settings
+import os
 
 @login_required
 def panel_admin(request):
@@ -68,29 +73,44 @@ def asignar_barbero(request, id):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
-    
+
     user = get_object_or_404(User, id=id)
-    
-    if Barbero.objects.filter(email=user.email).exists():
+
+    print("========== ASIGNAR BARBERO ==========")
+    print("Usuario:", user.username)
+    print("Email:", user.email)
+
+    existe_email = Barbero.objects.filter(email=user.email).exists()
+    print("Existe por email:", existe_email)
+
+    cliente = Cliente.objects.filter(user=user).first()
+
+    if cliente:
+        print("Cedula:", cliente.cedula)
+        existe_cedula = Barbero.objects.filter(cedula=cliente.cedula).exists()
+        print("Existe por cedula:", existe_cedula)
+    else:
+        print("Cliente NO existe")
+
+    if existe_email:
         messages.warning(request, f'⚠️ El usuario "{user.username}" ya es barbero.')
         return redirect('administracion:panel_admin')
-    
+
     grupo, _ = Group.objects.get_or_create(name='Barberos')
     user.groups.add(grupo)
-    
-    cliente = Cliente.objects.filter(user=user).first()
+
     if cliente is None:
         messages.error(request, '❌ Este usuario no tiene datos de cliente.')
         return redirect('administracion:panel_admin')
-    
+
     if not cliente.cedula:
         messages.error(request, '❌ El cliente no tiene cédula registrada.')
         return redirect('administracion:panel_admin')
-    
-    if Barbero.objects.filter(cedula=cliente.cedula).exists():
+
+    if existe_cedula:
         messages.warning(request, '⚠️ Este barbero ya existe.')
         return redirect('administracion:panel_admin')
-    
+
     Barbero.objects.create(
         nombre=cliente.nombre,
         cedula=cliente.cedula,
@@ -105,7 +125,7 @@ def asignar_barbero(request, id):
         dia_descanso='DOM',
         tiempo_entre_citas=15
     )
-    
+
     messages.success(request, f'✅ Usuario "{user.username}" ahora es barbero.')
     return redirect('administracion:panel_admin')
 
@@ -475,3 +495,137 @@ def eliminar_servicio(request, id):
     servicio.delete()
     messages.success(request, f'✅ Servicio "{nombre}" eliminado correctamente.')
     return redirect('administracion:panel_admin')
+
+@login_required
+def certificado_barbero_admin(request, id):
+
+    if not request.user.is_superuser:
+        messages.error(
+            request,
+            "No tienes permisos."
+        )
+        return redirect("administracion:panel_admin")
+
+    barbero = get_object_or_404(
+        Barbero,
+        id=id
+    )
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        f'attachment; filename="certificado_{barbero.nombre}.pdf"'
+    )
+
+    doc = SimpleDocTemplate(response)
+
+    estilos = getSampleStyleSheet()
+
+    elementos = []
+
+    ruta_logo = os.path.join(
+        settings.BASE_DIR,
+        "inventario",
+        "static",
+        "img",
+        "logo.jpeg"
+    )
+
+    if os.path.exists(ruta_logo):
+
+        logo = Image(ruta_logo)
+
+        logo.drawWidth = 80
+        logo.drawHeight = 80
+
+        elementos.append(logo)
+
+    elementos.append(
+        Paragraph(
+            "<b>CERTIFICADO LABORAL</b>",
+            estilos["Title"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "BarberSpringfield",
+            estilos["Heading2"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "<br/><br/>Se certifica que:",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"<b>{barbero.nombre}</b>",
+            estilos["Heading1"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"Cédula: {barbero.cedula}",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"Especialidad: {barbero.especialidad}",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"Correo: {barbero.email}",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "<br/>Actualmente se encuentra vinculado laboralmente como BARBERO en nuestra empresa, desempeñando sus funciones con responsabilidad y profesionalismo.",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"<br/>Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "<br/><br/><br/>_________________________",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "Administrador",
+            estilos["Normal"]
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "BarberSpringfield",
+            estilos["Normal"]
+        )
+    )
+
+    doc.build(elementos)
+
+    return response
