@@ -7,6 +7,7 @@ from clientes.models import Cliente
 from barberos.models import Barbero
 from inventario.models import Producto
 from datetime import datetime
+from django.core.exceptions import ValidationError
 
 @login_required
 def panel_admin(request):
@@ -16,21 +17,49 @@ def panel_admin(request):
     
     usuarios = User.objects.all()
     clientes = Cliente.objects.all()
-    citas = Cita.objects.all().order_by('-fecha')
     grupo_barberos, _ = Group.objects.get_or_create(name='Barberos')
     cantidad_barberos = User.objects.filter(groups=grupo_barberos).count()
     barberos = Barbero.objects.all()
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
     
+    citas_activas = Cita.objects.filter(
+        estado__in=[
+            "Pendiente",
+            "Confirmada",
+        ]
+    ).order_by(
+        "-fecha",
+        "-hora"
+    )
+
+    historial_citas = Cita.objects.filter(
+        estado__in=[
+            "Finalizada",
+            "Cancelada",
+        ]
+    ).order_by(
+        "-fecha",
+        "-hora"
+    )
+
+    total_citas = Cita.objects.filter(
+    estado__in=[
+        "Pendiente",
+        "Confirmada",
+    ]
+).count()
+    
     context = {
         'usuarios': usuarios,
         'clientes': clientes,
-        'citas': citas,
+        "citas": citas_activas,
+        "historial_citas": historial_citas,
         'barberos': barberos,
         'servicios': servicios,
         'productos': productos,
         'cantidad_barberos': cantidad_barberos,
+        "total_citas": total_citas,
     }
     return render(request, 'administracion/panel_administrador.html', context)
 
@@ -342,12 +371,27 @@ def agregar_producto(request):
         return redirect('administracion:panel_admin')
     
     if request.method == 'POST':
-        Producto.objects.create(
-            nombre=request.POST.get('nombre'),
-            precio_unitario=request.POST.get('precio'),
-            stock_actual=request.POST.get('stock')
-        )
-        messages.success(request, f'✅ Producto "{request.POST.get("nombre")}" agregado correctamente.')
+        try:
+            producto = Producto(
+                nombre=request.POST.get("nombre"),
+                precio_unitario=request.POST.get("precio"),
+                stock_actual=request.POST.get("stock")
+            )
+
+            producto.full_clean()
+            producto.save()
+
+            messages.success(
+                request,
+                f'✅ Producto "{producto.nombre}" agregado correctamente.'
+            )
+
+        except ValidationError as e:
+            messages.error(
+                request,
+                e.messages[0]
+            )
+
     return redirect('administracion:panel_admin')
 
 @login_required
@@ -361,7 +405,18 @@ def editar_producto(request, id):
         producto.nombre = request.POST.get('nombre')
         producto.precio_unitario = request.POST.get('precio')
         producto.stock_actual = request.POST.get('stock')
-        producto.save()
+        try:
+            producto.full_clean()
+            producto.save()
+            messages.success(
+                request,
+                    "✅ Producto actualizado correctamente."
+            )
+        except ValidationError as e:
+                messages.error(
+                    request,
+                    e.messages[0]
+                )
         messages.success(request, '✅ Producto actualizado correctamente.')
     return redirect('administracion:panel_admin')
 

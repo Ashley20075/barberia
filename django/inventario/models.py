@@ -1,11 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone  # <-- Agrega esta importación
+from django.utils import timezone 
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
-    stock_actual = models.PositiveIntegerField(default=0)
+    stock_actual = models.PositiveIntegerField(
+    default=5,
+    validators=[
+        MinValueValidator(
+            5,
+            message="El stock mínimo permitido es de 5 unidades."
+        ),
+        MaxValueValidator(
+            20,
+            message="No se puede registrar más de 20 unidades de este producto."
+        ),
+    ]
+)
     stock_minimo = models.PositiveIntegerField(default=5)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True)

@@ -86,9 +86,22 @@ def movimiento_inventario(request, producto_id):
             
             # Procesar según tipo
             if movimiento.tipo == 'ENTRADA':
-                producto.stock_actual += movimiento.cantidad
-                movimiento.stock_nuevo = producto.stock_actual
-                messages.success(request, f'✅ Entrada registrada. Nuevo stock: {producto.stock_actual}')
+                nuevo_stock = producto.stock_actual + movimiento.cantidad
+
+                if nuevo_stock > 20:
+                    messages.error(
+                        request,
+                        "❌ No se puede superar el stock máximo de 20 unidades."
+                    )
+                    return redirect('inventario:dashboard')
+
+                producto.stock_actual = nuevo_stock
+                movimiento.stock_nuevo = nuevo_stock
+
+                messages.success(
+                    request,
+                    f'✅ Entrada registrada. Nuevo stock: {producto.stock_actual}'
+                )
                 
             elif movimiento.tipo == 'SALIDA':
                 # Convertimos a entero para evitar problemas de comparación
@@ -96,19 +109,36 @@ def movimiento_inventario(request, producto_id):
     
                 if producto.stock_actual >= cantidad_salida:
                     producto.stock_actual -= cantidad_salida
-                    movimiento.stock_nuevo = producto.stock_actual # Asignamos valor concreto
+                    movimiento.stock_nuevo = producto.stock_actual  # Asignamos valor concreto
                     messages.success(request, f'✅ Salida registrada. Stock: {producto.stock_actual}')
                 else:
                     messages.error(request, 'Stock insuficiente')
                     return redirect('inventario:dashboard')
                     
-            elif movimiento.tipo == 'AJUSTE':  # <-- NUEVO TIPO
-                movimiento.stock_nuevo = movimiento.cantidad
-                producto.stock_actual = movimiento.cantidad
-                messages.success(request, f'✅ Ajuste realizado. Nuevo stock: {producto.stock_actual}')
-            
-                #PRINTS DIAGNOSTICOS
+            elif movimiento.tipo == 'AJUSTE':
+                if movimiento.cantidad > 20:
+                    messages.error(
+                        request,
+                        "❌ El stock máximo permitido es de 20 unidades."
+                    )
+                    return redirect('inventario:dashboard')
 
+                if movimiento.cantidad < 5:
+                    messages.error(
+                        request,
+                        "❌ El stock mínimo permitido es de 5 unidades."
+                    )
+                    return redirect('inventario:dashboard')
+
+                producto.stock_actual = movimiento.cantidad
+                movimiento.stock_nuevo = movimiento.cantidad
+
+                messages.success(
+                    request,
+                    f'✅ Ajuste realizado. Nuevo stock: {producto.stock_actual}'
+                )
+            
+            # PRINTS DIAGNÓSTICOS
             print(f"DEBUG - Tipo: {movimiento.tipo}")
             print(f"DEBUG - Cantidad a mover: {movimiento.cantidad}")
             print(f"DEBUG - Stock anterior: {movimiento.stock_anterior}")

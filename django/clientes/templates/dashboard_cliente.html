@@ -581,21 +581,39 @@
                         <i class="bi bi-archive"></i> Historial
                     </div>
                     <div class="p-3">
-                        {% for cita in historial %}
-                        <div class="turno-card p-2 mb-2">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                <div>
-                                    <strong>{{ cita.servicio.nombre }}</strong><br>
-                                    <small class="text-light-brown">{{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora}}
-                                    </small>
-                                </div>
-                                <span class="badge bg-danger">Cancelada</span>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="text-light-brown text-center py-3">Sin historial aún.</p>
-                        {% endfor %}
-                    </div>
+    {% for cita in historial %}
+    <div class="turno-card p-2 mb-2">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <strong>{{ cita.servicio.nombre }}</strong><br>
+
+                <small class="text-light-brown">
+                    {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
+                </small>
+            </div>
+
+            {% if cita.estado == "Finalizada" %}
+
+                <span class="badge bg-success">
+                    Finalizada
+                </span>
+
+            {% elif cita.estado == "Cancelada" %}
+
+                <span class="badge bg-danger">
+                    Cancelada
+                </span>
+
+            {% endif %}
+
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-light-brown text-center py-3">
+        Sin historial aún.
+    </p>
+    {% endfor %}
+</div>
                 </div>
             </div>
         </div>

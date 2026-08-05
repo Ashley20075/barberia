@@ -162,7 +162,7 @@
                 <div class="stat-card citas">
                     <div class="icon-wrapper"><i class="bi bi-calendar-check"></i></div>
                     <h5>Total Citas</h5>
-                    <h2>{{ citas|length }}</h2>
+                    <h2>{{ total_citas }}</h2>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">
@@ -304,13 +304,31 @@
                                 <td>{{ cita.hora }}</td>
                                 <td>{{ cita.barbero.nombre }}</td>
                                 <td>
-                                    {% if cita.estado == "Confirmada" %}
-                                        <span class="badge bg-success">Confirmada</span>
-                                    {% elif cita.estado == "Pendiente" %}
-                                        <span class="badge bg-warning text-dark">Pendiente</span>
-                                    {% else %}
-                                        <span class="badge bg-danger">Cancelada</span>
-                                    {% endif %}
+                                    {% if cita.estado == "Pendiente" %}
+
+<span class="badge bg-warning text-dark">
+Pendiente
+</span>
+
+{% elif cita.estado == "Confirmada" %}
+
+<span class="badge bg-success">
+Confirmada
+</span>
+
+{% elif cita.estado == "Finalizada" %}
+
+<span class="badge bg-info text-dark">
+Finalizada
+</span>
+
+{% elif cita.estado == "Cancelada" %}
+
+<span class="badge bg-danger">
+Cancelada
+</span>
+
+{% endif %}
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
