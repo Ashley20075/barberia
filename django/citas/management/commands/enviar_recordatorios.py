@@ -2,8 +2,6 @@ from datetime import datetime, timedelta
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.conf import settings
-from twilio.rest import Client
 
 from citas.models import Cita
 
@@ -12,16 +10,21 @@ class Command(BaseCommand):
     help = "Busca citas próximas y prepara los recordatorios de WhatsApp."
 
     def handle(self, *args, **options):
-
-        client = Client(
-            settings.TWILIO_ACCOUNT_SID,
-            settings.TWILIO_AUTH_TOKEN
-        )
-
         ahora = timezone.localtime()
 
-        limite_inferior = ahora + timedelta(minutes=55)
-        limite_superior = ahora + timedelta(minutes=65)
+        hora_inicio = ahora.replace(
+            hour=8,
+            minute=0,
+            second=0,
+            microsecond=0
+        )
+
+        hora_fin = ahora.replace(
+            hour=17,
+            minute=15,
+            second=0,
+            microsecond=0
+        )
 
         self.stdout.write(
             self.style.WARNING(
@@ -29,12 +32,30 @@ class Command(BaseCommand):
             )
         )
 
+        # Verificar horario de atención
+        if ahora < hora_inicio or ahora > hora_fin:
+            self.stdout.write(
+                self.style.WARNING(
+                    "\n⚠️ Fuera del horario de atención de BarberSpringfield."
+                )
+            )
+
+            self.stdout.write(
+                "Las citas están disponibles entre 08:00 AM y 05:15 PM."
+            )
+
+            return
+
+        limite_inferior = ahora + timedelta(minutes=55)
+        limite_superior = ahora + timedelta(minutes=65)
+
         self.stdout.write(
             f"Buscando citas entre "
             f"{limite_inferior.strftime('%I:%M %p')} y "
             f"{limite_superior.strftime('%I:%M %p')}...\n"
         )
 
+        # Solo procesamos citas dentro del horario de atención
         citas = Cita.objects.filter(
             fecha=limite_inferior.date(),
             estado__in=["Pendiente", "Confirmada"],
@@ -44,7 +65,6 @@ class Command(BaseCommand):
         citas_encontradas = []
 
         for cita in citas:
-
             try:
                 hora_cita = datetime.strptime(
                     cita.hora,
@@ -54,10 +74,18 @@ class Command(BaseCommand):
             except ValueError:
                 self.stdout.write(
                     self.style.ERROR(
-                        f"❌ No se pudo interpretar la hora de la cita {cita.id}: "
-                        f"{cita.hora}"
+                        f"❌ No se pudo interpretar la hora de la cita "
+                        f"{cita.id}: {cita.hora}"
                     )
                 )
+                continue
+
+            # Horario permitido para las citas:
+            # 08:00 AM hasta 05:15 PM
+            if hora_cita < datetime.strptime("08:00 AM", "%I:%M %p").time():
+                continue
+
+            if hora_cita > datetime.strptime("05:15 PM", "%I:%M %p").time():
                 continue
 
             fecha_hora_cita = datetime.combine(
@@ -74,8 +102,8 @@ class Command(BaseCommand):
                 fecha_hora_cita - ahora
             ).total_seconds() / 60
 
+            # Cita aproximadamente una hora después
             if 55 <= minutos_faltantes <= 65:
-
                 citas_encontradas.append(cita)
 
                 self.stdout.write(
@@ -109,6 +137,11 @@ class Command(BaseCommand):
                 )
 
                 self.stdout.write(
+                    f"Barbero: "
+                    f"{cita.barbero.nombre if cita.barbero else 'Por asignar'}"
+                )
+
+                self.stdout.write(
                     f"Estado: {cita.estado}"
                 )
 
@@ -117,7 +150,7 @@ class Command(BaseCommand):
                     f"{round(minutos_faltantes)} minutos"
                 )
 
-                # Crear el mensaje del recordatorio
+                # Mensaje que posteriormente enviaremos por WhatsApp
                 mensaje = (
                     f"🔔 Recordatorio de cita - BarberSpringfield\n\n"
                     f"Hola {cita.cliente.nombre}, te recordamos que tienes "
@@ -129,53 +162,32 @@ class Command(BaseCommand):
                     f"¡Te esperamos en BarberSpringfield! 💈"
                 )
 
-                # Envío real del mensaje vía Twilio WhatsApp
-                try:
-                    telefono = cita.cliente.telefono.strip()
-
-                    if not telefono.startswith('+'):
-                        telefono = '+57' + telefono
-
-                    mensaje_whatsapp = client.messages.create(
-                        from_=settings.TWILIO_WHATSAPP_FROM,
-                        body=mensaje,
-                        to=f'whatsapp:{telefono}'
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"\n📱 MENSAJE PREPARADO:\n{mensaje}\n"
                     )
+                )
 
-                    cita.recordatorio_enviado = True
-                    cita.save(update_fields=['recordatorio_enviado'])
+                # Por ahora solamente marcamos el recordatorio
+                # como procesado. WhatsApp se conectará después.
+                cita.recordatorio_enviado = True
+                cita.save(update_fields=["recordatorio_enviado"])
 
-                    self.stdout.write(
-                        self.style.SUCCESS(
-                            f"\n✅ WhatsApp enviado correctamente"
-                        )
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        "✅ Recordatorio marcado como enviado."
                     )
-
-                    self.stdout.write(
-                        f"📱 Destinatario: {telefono}"
-                    )
-
-                    self.stdout.write(
-                        f"🆔 SID del mensaje: {mensaje_whatsapp.sid}\n"
-                    )
-
-                except Exception as e:
-                    self.stdout.write(
-                        self.style.ERROR(
-                            f"\n❌ Error enviando WhatsApp: {str(e)}\n"
-                        )
-                    )
+                )
 
         if not citas_encontradas:
-
             self.stdout.write(
                 self.style.WARNING(
-                    "\n⚠️ No hay citas que necesiten recordatorio en este momento."
+                    "\n⚠️ No hay citas que necesiten "
+                    "recordatorio en este momento."
                 )
             )
 
         else:
-
             self.stdout.write(
                 self.style.SUCCESS(
                     f"\n🎯 Total de citas encontradas: "
