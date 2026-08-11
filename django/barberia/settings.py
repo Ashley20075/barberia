@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 """
 Django settings for barberia project.
 
@@ -137,3 +141,10 @@ LOGIN_REDIRECT_URL = '/'
 DATE_FORMAT = 'd/m/Y'
 USE_L10N = True
 USE_I18N = True
+
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_WHATSAPP_FROM = os.getenv(
+    'TWILIO_WHATSAPP_FROM',
+    'whatsapp:+17372508034'
+)

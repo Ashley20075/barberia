@@ -61,8 +61,10 @@ class Cita(models.Model):
     hora = models.CharField(
         max_length=20
     )
-    
+
     duracion_total = models.PositiveIntegerField(default=35)
+
+    recordatorio_enviado = models.BooleanField(default=False)
 
     estado = models.CharField(
         max_length=20,
@@ -72,8 +74,6 @@ class Cita(models.Model):
 
     class Meta:
         ordering = ["fecha", "hora"]
-
-    
 
     def save(self, *args, **kwargs):
         self.full_clean()

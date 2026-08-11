@@ -13,6 +13,8 @@ from clientes.models import Cliente
 from citas.models import Cita, Servicio
 from barberos.models import Barbero
 from inventario.models import Producto
+from twilio.rest import Client
+from django.conf import settings
 
 
 @login_required(login_url='login')
@@ -117,6 +119,7 @@ def editar_perfil(request):
             return redirect('editar_perfil')
 
     return render(request, 'editar_perfil.html', {'cliente': cliente})
+
 
 
 @login_required(login_url='login')

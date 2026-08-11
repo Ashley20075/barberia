@@ -32,5 +32,13 @@ pip install reportlab
 
 
 MAC
-cd django
+
 python3 -m venv venv
+pip install django django-extensions reportlab
+pip install requests
+pip install twilio
+pip install python-dotenv
+cd django
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
