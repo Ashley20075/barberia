@@ -10,61 +10,42 @@ class Command(BaseCommand):
     help = "Busca citas próximas y prepara los recordatorios de WhatsApp."
 
     def handle(self, *args, **options):
+
+        # =====================================================
+        # HORA ACTUAL DE COLOMBIA
+        # =====================================================
+
         ahora = timezone.localtime()
-
-        hora_inicio = ahora.replace(
-            hour=8,
-            minute=0,
-            second=0,
-            microsecond=0
-        )
-
-        hora_fin = ahora.replace(
-            hour=17,
-            minute=15,
-            second=0,
-            microsecond=0
-        )
 
         self.stdout.write(
             self.style.WARNING(
-                f"\nHora actual: {ahora.strftime('%d/%m/%Y %I:%M %p')}"
+                f"\nHora actual: "
+                f"{ahora.strftime('%d/%m/%Y %I:%M %p')}"
             )
         )
-
-        # Verificar horario de atención
-        if ahora < hora_inicio or ahora > hora_fin:
-            self.stdout.write(
-                self.style.WARNING(
-                    "\n⚠️ Fuera del horario de atención de BarberSpringfield."
-                )
-            )
-
-            self.stdout.write(
-                "Las citas están disponibles entre 08:00 AM y 05:15 PM."
-            )
-
-            return
-
-        limite_inferior = ahora + timedelta(minutes=55)
-        limite_superior = ahora + timedelta(minutes=65)
 
         self.stdout.write(
-            f"Buscando citas entre "
-            f"{limite_inferior.strftime('%I:%M %p')} y "
-            f"{limite_superior.strftime('%I:%M %p')}...\n"
+            "\n🔎 Revisando citas próximas a una hora...\n"
         )
 
-        # Solo procesamos citas dentro del horario de atención
+        # =====================================================
+        # BUSCAR CITAS DEL MISMO DÍA
+        # =====================================================
+
         citas = Cita.objects.filter(
-            fecha=limite_inferior.date(),
+            fecha=ahora.date(),
             estado__in=["Pendiente", "Confirmada"],
             recordatorio_enviado=False
         )
 
         citas_encontradas = []
 
+        # =====================================================
+        # REVISAR CADA CITA
+        # =====================================================
+
         for cita in citas:
+
             try:
                 hora_cita = datetime.strptime(
                     cita.hora,
@@ -74,19 +55,15 @@ class Command(BaseCommand):
             except ValueError:
                 self.stdout.write(
                     self.style.ERROR(
-                        f"❌ No se pudo interpretar la hora de la cita "
-                        f"{cita.id}: {cita.hora}"
+                        f"❌ No se pudo interpretar la hora "
+                        f"de la cita {cita.id}: {cita.hora}"
                     )
                 )
                 continue
 
-            # Horario permitido para las citas:
-            # 08:00 AM hasta 05:15 PM
-            if hora_cita < datetime.strptime("08:00 AM", "%I:%M %p").time():
-                continue
-
-            if hora_cita > datetime.strptime("05:15 PM", "%I:%M %p").time():
-                continue
+            # =================================================
+            # FECHA + HORA DE LA CITA
+            # =================================================
 
             fecha_hora_cita = datetime.combine(
                 cita.fecha,
@@ -98,12 +75,28 @@ class Command(BaseCommand):
                 timezone.get_current_timezone()
             )
 
+            # =================================================
+            # CALCULAR MINUTOS FALTANTES
+            # =================================================
+
             minutos_faltantes = (
                 fecha_hora_cita - ahora
             ).total_seconds() / 60
 
-            # Cita aproximadamente una hora después
-            if 55 <= minutos_faltantes <= 65:
+            # =================================================
+            # RECORDATORIO
+            #
+            # Se envía cuando:
+            #
+            # - Faltan 60 minutos o menos
+            # - Todavía no ha pasado la hora de la cita
+            #
+            # Esto evita perder el recordatorio si el comando
+            # se ejecuta unos minutos tarde.
+            # =================================================
+
+            if 0 < minutos_faltantes <= 60:
+
                 citas_encontradas.append(cita)
 
                 self.stdout.write(
@@ -150,11 +143,14 @@ class Command(BaseCommand):
                     f"{round(minutos_faltantes)} minutos"
                 )
 
-                # Mensaje que posteriormente enviaremos por WhatsApp
+                # =================================================
+                # CREAR MENSAJE
+                # =================================================
+
                 mensaje = (
                     f"🔔 Recordatorio de cita - BarberSpringfield\n\n"
-                    f"Hola {cita.cliente.nombre}, te recordamos que tienes "
-                    f"una cita programada para hoy.\n\n"
+                    f"Hola {cita.cliente.nombre}, te recordamos "
+                    f"que tienes una cita programada para hoy.\n\n"
                     f"✂️ Servicio: {cita.servicio.nombre}\n"
                     f"💈 Barbero: "
                     f"{cita.barbero.nombre if cita.barbero else 'Por asignar'}\n"
@@ -164,14 +160,20 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"\n📱 MENSAJE PREPARADO:\n{mensaje}\n"
+                        f"\n📱 MENSAJE PREPARADO:\n"
+                        f"{mensaje}\n"
                     )
                 )
 
-                # Por ahora solamente marcamos el recordatorio
-                # como procesado. WhatsApp se conectará después.
+                # =================================================
+                # MARCAR COMO ENVIADO
+                # =================================================
+
                 cita.recordatorio_enviado = True
-                cita.save(update_fields=["recordatorio_enviado"])
+
+                cita.save(
+                    update_fields=["recordatorio_enviado"]
+                )
 
                 self.stdout.write(
                     self.style.SUCCESS(
@@ -179,7 +181,12 @@ class Command(BaseCommand):
                     )
                 )
 
+        # =====================================================
+        # RESULTADO FINAL
+        # =====================================================
+
         if not citas_encontradas:
+
             self.stdout.write(
                 self.style.WARNING(
                     "\n⚠️ No hay citas que necesiten "
@@ -188,6 +195,7 @@ class Command(BaseCommand):
             )
 
         else:
+
             self.stdout.write(
                 self.style.SUCCESS(
                     f"\n🎯 Total de citas encontradas: "

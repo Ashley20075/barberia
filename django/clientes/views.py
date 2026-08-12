@@ -1,20 +1,20 @@
 from datetime import datetime, timedelta
 
-from django.db import IntegrityError, transaction
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout, update_session_auth_hash
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.core.exceptions import ValidationError
-
-from clientes.models import Cliente
-from citas.models import Cita, Servicio
-from barberos.models import Barbero
-from inventario.models import Producto
-from twilio.rest import Client
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import logout, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from twilio.rest import Client
+
+from barberos.models import Barbero
+from citas.models import Cita, Servicio
+from clientes.models import Cliente
+from inventario.models import Producto
 
 
 @login_required(login_url='login')
@@ -121,7 +121,6 @@ def editar_perfil(request):
     return render(request, 'editar_perfil.html', {'cliente': cliente})
 
 
-
 @login_required(login_url='login')
 def agendar_cita(request):
     if request.method == "POST":
@@ -138,6 +137,17 @@ def agendar_cita(request):
             duracion_total = int(request.POST.get("duracion_total", 35))
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
+            hora_obj = datetime.strptime(hora, "%I:%M %p").time()
+
+            hora_apertura = datetime.strptime("08:00 AM", "%I:%M %p").time()
+            hora_cierre = datetime.strptime("05:15 PM", "%I:%M %p").time()
+
+            if hora_obj < hora_apertura or hora_obj > hora_cierre:
+                messages.error(
+                    request,
+                    "❌ Las citas solo pueden agendarse entre las 8:00 AM y las 5:15 PM."
+                )
+                return redirect("panel_cliente")
 
         except (Cliente.DoesNotExist, Barbero.DoesNotExist, Servicio.DoesNotExist, ValueError):
             messages.error(request, "❌ Datos inválidos al agendar la cita.")
