@@ -1,0 +1,9 @@
+Django>=5.0
+django-extensions
+mysql-connector-python
+pillow
+pydotplus
+reportlab
+requests
+twilio
+python-dotenv
