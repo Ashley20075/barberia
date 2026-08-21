@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from twilio.rest import Client
 
 from citas.models import Cita
 
@@ -19,14 +21,11 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.WARNING(
-                f"\nHora actual: "
-                f"{ahora.strftime('%d/%m/%Y %I:%M %p')}"
+                f"\nHora actual: " f"{ahora.strftime('%d/%m/%Y %I:%M %p')}"
             )
         )
 
-        self.stdout.write(
-            "\n🔎 Revisando citas próximas a una hora...\n"
-        )
+        self.stdout.write("\n🔎 Revisando citas próximas a una hora...\n")
 
         # =====================================================
         # BUSCAR CITAS DEL MISMO DÍA
@@ -35,7 +34,7 @@ class Command(BaseCommand):
         citas = Cita.objects.filter(
             fecha=ahora.date(),
             estado__in=["Pendiente", "Confirmada"],
-            recordatorio_enviado=False
+            recordatorio_enviado=False,
         )
 
         citas_encontradas = []
@@ -48,8 +47,7 @@ class Command(BaseCommand):
 
             try:
                 hora_cita = datetime.strptime(
-                    cita.hora,
-                    "%I:%M %p"
+                    cita.hora, "%I:%M %p"
                 ).time()
 
             except ValueError:
@@ -65,14 +63,10 @@ class Command(BaseCommand):
             # FECHA + HORA DE LA CITA
             # =================================================
 
-            fecha_hora_cita = datetime.combine(
-                cita.fecha,
-                hora_cita
-            )
+            fecha_hora_cita = datetime.combine(cita.fecha, hora_cita)
 
             fecha_hora_cita = timezone.make_aware(
-                fecha_hora_cita,
-                timezone.get_current_timezone()
+                fecha_hora_cita, timezone.get_current_timezone()
             )
 
             # =================================================
@@ -100,43 +94,27 @@ class Command(BaseCommand):
                 citas_encontradas.append(cita)
 
                 self.stdout.write(
-                    self.style.SUCCESS(
-                        "\n✅ CITA ENCONTRADA"
-                    )
+                    self.style.SUCCESS("\n✅ CITA ENCONTRADA")
                 )
 
-                self.stdout.write(
-                    f"ID: {cita.id}"
-                )
+                self.stdout.write(f"ID: {cita.id}")
 
-                self.stdout.write(
-                    f"Cliente: {cita.cliente.nombre}"
-                )
+                self.stdout.write(f"Cliente: {cita.cliente.nombre}")
 
-                self.stdout.write(
-                    f"Teléfono: {cita.cliente.telefono}"
-                )
+                self.stdout.write(f"Teléfono: {cita.cliente.telefono}")
 
-                self.stdout.write(
-                    f"Fecha: {cita.fecha}"
-                )
+                self.stdout.write(f"Fecha: {cita.fecha}")
 
-                self.stdout.write(
-                    f"Hora: {cita.hora}"
-                )
+                self.stdout.write(f"Hora: {cita.hora}")
 
-                self.stdout.write(
-                    f"Servicio: {cita.servicio.nombre}"
-                )
+                self.stdout.write(f"Servicio: {cita.servicio.nombre}")
 
                 self.stdout.write(
                     f"Barbero: "
                     f"{cita.barbero.nombre if cita.barbero else 'Por asignar'}"
                 )
 
-                self.stdout.write(
-                    f"Estado: {cita.estado}"
-                )
+                self.stdout.write(f"Estado: {cita.estado}")
 
                 self.stdout.write(
                     f"Faltan aproximadamente: "
@@ -160,26 +138,69 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"\n📱 MENSAJE PREPARADO:\n"
-                        f"{mensaje}\n"
+                        f"\n📱 MENSAJE PREPARADO:\n" f"{mensaje}\n"
                     )
                 )
 
                 # =================================================
-                # MARCAR COMO ENVIADO
+                # ENVIAR RECORDATORIO POR WHATSAPP
                 # =================================================
 
-                cita.recordatorio_enviado = True
+                try:
+                    telefono = cita.cliente.telefono
 
-                cita.save(
-                    update_fields=["recordatorio_enviado"]
-                )
+                    if not telefono:
+                        self.stdout.write(
+                            self.style.ERROR(
+                                f"❌ El cliente {cita.cliente.nombre} "
+                                f"no tiene número de teléfono."
+                            )
+                        )
+                        continue
 
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        "✅ Recordatorio marcado como enviado."
+                    # Convertir número colombiano a formato internacional
+                    if telefono.startswith("3"):
+                        telefono = "+57" + telefono
+
+                    client = Client(
+                        settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN
                     )
-                )
+
+                    mensaje_twilio = client.messages.create(
+                        from_=settings.TWILIO_WHATSAPP_FROM,
+                        content_sid="HXfe5ab5f00277942d4d4200328b4d403c",
+                        to=f"whatsapp:{telefono}",
+                    )
+
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            f"📱 WhatsApp enviado correctamente."
+                        )
+                    )
+
+                    self.stdout.write(f"SID: {mensaje_twilio.sid}")
+
+                    self.stdout.write(f"Estado: {mensaje_twilio.status}")
+
+                    # =================================================
+                    # MARCAR COMO ENVIADO SOLO SI TWILIO ACEPTÓ EL MENSAJE
+                    # =================================================
+
+                    cita.recordatorio_enviado = True
+
+                    cita.save(update_fields=["recordatorio_enviado"])
+
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            "✅ Recordatorio marcado como enviado."
+                        )
+                    )
+
+                except Exception as e:
+
+                    self.stdout.write(
+                        self.style.ERROR(f"❌ Error enviando WhatsApp: {e}")
+                    )
 
         # =====================================================
         # RESULTADO FINAL
