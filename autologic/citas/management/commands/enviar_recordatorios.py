@@ -167,10 +167,10 @@ class Command(BaseCommand):
                     )
 
                     mensaje_twilio = client.messages.create(
-                        from_=settings.TWILIO_WHATSAPP_FROM,
-                        content_sid="HXfe5ab5f00277942d4d4200328b4d403c",
-                        to=f"whatsapp:{telefono}",
-                    )
+    from_=settings.TWILIO_WHATSAPP_FROM,
+    body=mensaje,
+    to=f"whatsapp:{telefono}",
+)
 
                     self.stdout.write(
                         self.style.SUCCESS(
