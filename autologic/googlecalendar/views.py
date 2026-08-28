@@ -63,10 +63,22 @@ def _construir_flow():
 def _iniciar_flow(request, accion):
     flow = _construir_flow()
 
+    # "conectar" (botón explícito en el panel): forzamos SIEMPRE la pantalla
+    # de consentimiento, porque el usuario quiere anclar/re-anclar su
+    # calendario a propósito, y así garantizamos que Google nos entregue
+    # un refresh_token fresco.
+    #
+    # "login" (botón "Continuar con Google"): NO forzamos consentimiento en
+    # cada clic. Si el usuario ya lo autorizó antes, Google lo deja pasar
+    # directo (o solo le pide elegir la cuenta), en vez de mostrarle otra
+    # vez la pantalla de permisos. Esto es lo que arregla el problema de
+    # "me sigue pidiendo permiso" cada vez que entra.
+    prompt = "consent" if accion == "conectar" else "select_account"
+
     autorizacion_url, estado = flow.authorization_url(
         access_type="offline",
         include_granted_scopes="true",
-        prompt="consent",
+        prompt=prompt,
     )
 
     request.session[SESSION_STATE_KEY] = estado
@@ -83,11 +95,26 @@ def _obtener_perfil_google(credenciales):
 
 
 def _guardar_cuenta_google(usuario, credenciales, email_google):
+    """
+    Guarda/actualiza la cuenta de Google conectada de `usuario`.
+
+    IMPORTANTE: Google solo entrega un `refresh_token` la PRIMERA vez que
+    alguien autoriza la app (o cuando se fuerza `prompt=consent`). En los
+    logins siguientes `credenciales.refresh_token` viene vacío (None), y
+    si lo guardáramos tal cual, borraríamos el que ya teníamos guardado
+    y se rompería la conexión con el calendario sin que nadie se dé cuenta.
+    Por eso: si Google no mandó uno nuevo, conservamos el que ya existía.
+    """
+    cuenta_existente = CuentaGoogle.objects.filter(usuario=usuario).first()
+    refresh_token = credenciales.refresh_token or (
+        cuenta_existente.token_refresco if cuenta_existente else None
+    )
+
     CuentaGoogle.objects.update_or_create(
         usuario=usuario,
         defaults={
             "token_acceso": credenciales.token,
-            "token_refresco": credenciales.refresh_token,
+            "token_refresco": refresh_token,
             "token_uri": credenciales.token_uri,
             "client_id": credenciales.client_id,
             "client_secret": credenciales.client_secret,

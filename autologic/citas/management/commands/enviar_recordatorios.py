@@ -215,11 +215,3 @@ class Command(BaseCommand):
                 )
             )
 
-        else:
-
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"\n🎯 Total de citas encontradas: "
-                    f"{len(citas_encontradas)}"
-                )
-            )

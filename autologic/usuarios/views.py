@@ -18,6 +18,19 @@ def login_view(request):
             messages.error(request, 'Credenciales inválidas')
             return render(request, 'login.html')
 
+        # Esta cuenta se creó con "Continuar con Google" y nunca tuvo
+        # contraseña propia (a propósito, por seguridad). Si intenta
+        # entrar aquí con contraseña, avisamos claramente en vez de
+        # mostrar un genérico "credenciales inválidas" confuso.
+        if not usuario.has_usable_password():
+            messages.error(
+                request,
+                'Esta cuenta se creó con Google. Usa el botón "Continuar con Google" '
+                'para iniciar sesión, o entra a tu perfil una vez logueado para crear '
+                'una contraseña propia.'
+            )
+            return render(request, 'login.html')
+
         user = authenticate(request, username=username, password=password)
 
         if user is not None:

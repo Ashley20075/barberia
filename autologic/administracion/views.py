@@ -79,48 +79,56 @@ def asignar_barbero(request, id):
         return redirect('administracion:panel_admin')
 
     user = get_object_or_404(User, id=id)
-
-    print("========== ASIGNAR BARBERO ==========")
-    print("Usuario:", user.username)
-    print("Email:", user.email)
-
-    existe_email = Barbero.objects.filter(email=user.email).exists()
-    print("Existe por email:", existe_email)
-
     cliente = Cliente.objects.filter(user=user).first()
 
-    if cliente:
-        print("Cedula:", cliente.cedula)
-        existe_cedula = Barbero.objects.filter(cedula=cliente.cedula).exists()
-        print("Existe por cedula:", existe_cedula)
-    else:
-        print("Cliente NO existe")
-
-    if existe_email:
+    if Barbero.objects.filter(email=user.email).exists():
         messages.warning(request, f'⚠️ El usuario "{user.username}" ya es barbero.')
         return redirect('administracion:panel_admin')
 
+    # Las cuentas creadas con "Continuar con Google" no traen cédula
+    # (Google no la conoce), así que el modal "Hacer barbero" del panel
+    # deja completarla aquí en vez de bloquear la acción.
+    cedula = (request.POST.get('cedula') or (cliente.cedula if cliente else '') or '').strip()
+    telefono = (request.POST.get('telefono') or (cliente.telefono if cliente else '') or '').strip()
+    especialidad = (request.POST.get('especialidad') or 'General').strip()
+
+    if not cedula:
+        messages.error(
+            request,
+            f'❌ Para hacer barbero a "{user.username}" primero debes ingresar su cédula '
+            'en el formulario de "Hacer barbero".'
+        )
+        return redirect('administracion:panel_admin')
+
+    if Barbero.objects.filter(cedula=cedula).exists():
+        messages.warning(request, '⚠️ Ya existe un barbero registrado con esa cédula.')
+        return redirect('administracion:panel_admin')
+
+    # Solo tocamos el grupo/rol una vez que TODAS las validaciones pasaron,
+    # para no dejar al usuario marcado como "Barbero" sin un registro
+    # de Barbero real detrás (eso pasaba antes: el grupo se asignaba
+    # primero y las validaciones podían fallar después).
     grupo, _ = Group.objects.get_or_create(name='Barberos')
     user.groups.add(grupo)
 
-    if cliente is None:
-        messages.error(request, '❌ Este usuario no tiene datos de cliente.')
-        return redirect('administracion:panel_admin')
-
-    if not cliente.cedula:
-        messages.error(request, '❌ El cliente no tiene cédula registrada.')
-        return redirect('administracion:panel_admin')
-
-    if existe_cedula:
-        messages.warning(request, '⚠️ Este barbero ya existe.')
-        return redirect('administracion:panel_admin')
+    # Aprovechamos para completar los datos del cliente si le faltaban
+    if cliente:
+        cambios = False
+        if not cliente.cedula:
+            cliente.cedula = cedula
+            cambios = True
+        if telefono and not cliente.telefono:
+            cliente.telefono = telefono
+            cambios = True
+        if cambios:
+            cliente.save()
 
     Barbero.objects.create(
-        nombre=cliente.nombre,
-        cedula=cliente.cedula,
-        telefono=cliente.telefono or '',
-        email=cliente.email,
-        especialidad='General',
+        nombre=cliente.nombre if cliente else (user.get_full_name() or user.username),
+        cedula=cedula,
+        telefono=telefono,
+        email=user.email,
+        especialidad=especialidad,
         activo=True,
         jornada_inicio='08:00',
         jornada_fin='18:00',

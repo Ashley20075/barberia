@@ -258,9 +258,46 @@
                                             <i class="bi bi-person-dash"></i> Quitar barbero
                                         </a>
                                     {% else %}
-                                        <a href="{% url 'administracion:asignar_barbero' u.id %}" class="btn btn-sm btn-warning" onclick="return confirm('¿Asignar como barbero?')">
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
                                             <i class="bi bi-person-badge"></i> Hacer barbero
-                                        </a>
+                                        </button>
+
+                                        <div class="modal fade" id="modalAsignarBarbero{{ u.id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content modal-content-custom">
+                                                    <form method="post" action="{% url 'administracion:asignar_barbero' u.id %}">
+                                                        {% csrf_token %}
+                                                        <div class="modal-header modal-header-custom">
+                                                            <h5 class="modal-title text-yellow">Hacer barbero a {{ u.username }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="text-light-brown small">
+                                                                Si esta cuenta se registró con Google, todavía no tiene cédula guardada: complétala aquí para poder convertirla en barbero.
+                                                            </p>
+                                                            <div class="mb-3">
+                                                                <label class="form-label text-yellow">Cédula *</label>
+                                                                <input type="text" name="cedula" class="form-control bg-dark-input" value="{{ u.cliente.cedula|default:'' }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label text-yellow">Teléfono</label>
+                                                                <input type="text" name="telefono" class="form-control bg-dark-input" value="{{ u.cliente.telefono|default:'' }}">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label text-yellow">Especialidad</label>
+                                                                <input type="text" name="especialidad" class="form-control bg-dark-input" value="General">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer modal-footer-custom">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn-modern">
+                                                                <i class="bi bi-person-badge"></i> Confirmar
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     {% endif %}
                                     {% if u.is_active %}
                                         <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
