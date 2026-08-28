@@ -12,9 +12,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from twilio.rest import Client
 
 from barberos.models import Barbero
-from citas.models import Cita, Servicio
+from citas.models import Cita, Notificacion, Servicio
 from clientes.models import Cliente
 from inventario.models import Producto
+from citas.notificaciones import notificar_barbero_turno_liberado
 
 
 @login_required(login_url='login')
@@ -43,6 +44,15 @@ def panel_cliente(request):
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
 
+    notificaciones = Notificacion.objects.filter(
+        usuario=request.user
+    )[:10]
+
+    notificaciones_no_leidas = Notificacion.objects.filter(
+        usuario=request.user,
+        leida=False
+    ).count()
+
     return render(request, "dashboard_cliente.html", {
         "nombre": cliente.nombre,
         "proximos": proximos,
@@ -51,6 +61,8 @@ def panel_cliente(request):
         "servicios": servicios,
         "productos": productos,
         "cliente": cliente,
+        "notificaciones": notificaciones,
+        "notificaciones_no_leidas": notificaciones_no_leidas,
     })
 
 
@@ -248,6 +260,8 @@ def cancelar_cita_cliente(request, id):
 
             cita.estado = "Cancelada"
             cita.save()
+
+        notificar_barbero_turno_liberado(cita)
 
         # El evento se borra automáticamente de Google Calendar
         # (señal post_save en googlecalendar/signals.py, ya que el estado
