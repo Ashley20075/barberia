@@ -9,5 +9,6 @@ urlpatterns = [
     path('', include('citas.urls')),
     path('', include('administracion.urls')),
     path('inventario/', include('inventario.urls')),
+    path('calendario/', include('googlecalendar.urls')),
     
 ]

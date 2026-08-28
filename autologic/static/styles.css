@@ -1263,3 +1263,257 @@ h2 {
         padding: 12px 0;
     }
 }
+
+/* =========================================================
+   PÁGINA: EDITAR PERFIL (cliente y barbero comparten el mismo diseño)
+   Antes este bloque estaba duplicado línea por línea en:
+     - clientes/templates/editar_perfil.html
+     - barberos/templates/editar_perfil_barbero.html
+   Ahora vive en un solo lugar.
+   ========================================================= */
+body {
+            background-color: #0B0A08;
+            color: #F5EFE6;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+        }
+
+        .navbar-custom {
+            background-color: #0B0A08;
+            border-bottom: 2px solid #F4C542;
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+        }
+
+        .navbar-brand-custom {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #F4C542 !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand-custom span {
+            color: #C9A87C;
+        }
+
+        .navbar-brand-custom img {
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #3F2E22;
+            color: #F5EFE6 !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background-color: #3F2E22;
+            border-color: #F4C542;
+            transform: scale(1.02);
+        }
+
+        .nav-btn.active {
+            background-color: #F4C542;
+            border-color: #F4C542;
+            color: #0B0A08 !important;
+            box-shadow: 0 0 20px rgba(244, 197, 66, 0.3);
+        }
+
+        .btn-logout-custom {
+            background: transparent;
+            border: 2px solid #3F2E22;
+            color: #F5EFE6;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-logout-custom:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .user-info-custom {
+            background-color: #2A211B;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #F5EFE6;
+        }
+
+        .user-info-custom i {
+            color: #F4C542;
+            font-size: 1.2rem;
+        }
+
+        .card-custom {
+            background-color: #1E1A15;
+            border-radius: 20px;
+            border: 1px solid rgba(244, 197, 66, 0.2);
+            overflow: hidden;
+        }
+
+        .card-header-custom {
+            background-color: #0B0A08;
+            border-bottom: 2px solid #F4C542;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            color: #FFD966;
+        }
+
+        .bg-dark-input {
+            background-color: #2A211B !important;
+            border: 1px solid #3F2E22 !important;
+            color: #F5EFE6 !important;
+        }
+
+        .bg-dark-input:focus {
+            background-color: #352b23 !important;
+            border-color: #F4C542 !important;
+            box-shadow: 0 0 0 0.2rem rgba(244, 197, 66, 0.25);
+        }
+
+        .form-label-custom {
+            color: #FFD966;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-modern {
+            background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            color: #0B0A08;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(244, 197, 66, 0.35);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(244, 197, 66, 0.5);
+        }
+
+        .text-yellow {
+            color: #F4C542 !important;
+        }
+
+        .text-light-brown {
+            color: #C9A87C !important;
+        }
+
+        .modal-content-custom {
+            background-color: #1E1A15 !important;
+            border: 1px solid rgba(244, 197, 66, 0.3) !important;
+        }
+
+        .modal-header-custom {
+            border-bottom: 2px solid #F4C542 !important;
+            padding: 1rem 1.5rem;
+        }
+
+        .modal-footer-custom {
+            border-top: 2px solid #F4C542 !important;
+            padding: 1rem 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand-custom {
+                font-size: 1.3rem;
+            }
+
+            .nav-btn,
+            .btn-logout-custom {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.8rem;
+            }
+        }
+
+        .btn-delete-account {
+            background-color: #dc3545;
+            border: 2px solid #dc3545;
+            color: white !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete-account:hover {
+            background-color: #b02a37;
+            border-color: #b02a37;
+            color: white !important;
+            transform: scale(1.03);
+        }
+
+
+/* =========================================================
+   COMPONENTES COMPARTIDOS DE PANELES INTERNOS
+   (navbar, botones, tarjetas, tablas, modales, inputs)
+   Antes este bloque estaba duplicado línea por línea en:
+     - administracion/templates/administracion/panel_administrador.html
+     - barberos/templates/dashboard_barbero.html
+   Ahora vive en un solo lugar.
+   ========================================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0B0A08; color: #F5EFE6; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
+        .navbar-custom { background-color: #0B0A08; border-bottom: 2px solid #F4C542; padding: 0.8rem 0; position: sticky; top: 0; z-index: 1050; }
+        .navbar-brand-custom { font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.8rem; font-weight: 700; color: #F4C542 !important; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .navbar-brand-custom span { color: #C9A87C; }
+        .navbar-brand-custom img { height: 40px; width: 40px; object-fit: cover; border-radius: 50%; }
+        .nav-btn { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6 !important; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
+        .nav-btn:hover { background-color: #3F2E22; border-color: #F4C542; transform: scale(1.02); }
+        .btn-logout-custom { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
+        .btn-logout-custom:hover { background-color: #dc3545; border-color: #dc3545; color: white; }
+        .user-info-custom { background-color: #2A211B; padding: 0.5rem 1rem; border-radius: 40px; display: inline-flex; align-items: center; gap: 0.8rem; color: #F5EFE6; }
+        .user-info-custom i { color: #F4C542; font-size: 1.2rem; }
+        .card-custom { background-color: #1E1A15 !important; border-radius: 20px !important; border: 1px solid rgba(244,197,66,0.2) !important; margin-bottom: 2rem; overflow: hidden; }
+        .card-header-custom { background-color: #0B0A08 !important; border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.25rem; font-weight: 600; color: #FFD966 !important; }
+        .table-custom { background-color: #1E1A15 !important; margin-bottom: 0; }
+        .table-custom thead th { background-color: #0B0A08 !important; color: #FFD966 !important; border-bottom: 2px solid #F4C542 !important; font-weight: 600; padding: 0.75rem 1rem; }
+        .table-custom tbody td { background-color: #1E1A15 !important; color: #F5EFE6 !important; vertical-align: middle; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(63,46,34,0.3) !important; }
+        .table-custom tbody tr:hover td { background-color: #2A211B !important; }
+        .modal-content-custom { background-color: #1E1A15 !important; border: 1px solid rgba(244,197,66,0.3) !important; }
+        .modal-header-custom { border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
+        .modal-footer-custom { border-top: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
+        .bg-dark-input { background-color: #2A211B !important; border: 1px solid #3F2E22 !important; color: #F5EFE6 !important; }
+        .bg-dark-input:focus { background-color: #352b23 !important; border-color: #F4C542 !important; box-shadow: 0 0 0 0.2rem rgba(244,197,66,0.25); }
+        .text-yellow { color: #F4C542 !important; }
+        .text-light-brown { color: #C9A87C !important; }

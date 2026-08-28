@@ -48,6 +48,12 @@
                 </button>
             </form>
 
+            <div class="text-center my-3 text-light-brown">— o —</div>
+
+            <a href="{% url 'googlecalendar:login_google' %}" class="btn btn-outline-light w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-google"></i> Continuar con Google
+            </a>
+
             <div class="text-center mt-4">
     <a href="{% url 'registro' %}" class="text-light-brown">
         ¿No tienes cuenta? Regístrate
@@ -67,5 +73,6 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/ui-mejoras.js' %}"></script>
 </body>
 </html>

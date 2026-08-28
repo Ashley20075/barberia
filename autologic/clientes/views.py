@@ -194,7 +194,7 @@ def agendar_cita(request):
 
         try:
             with transaction.atomic():
-                Cita.objects.create(
+                nueva_cita = Cita.objects.create(
                     cliente=cliente,
                     servicio=servicio,
                     barbero=barbero,
@@ -212,6 +212,9 @@ def agendar_cita(request):
                     if producto and producto.stock_actual > 0:
                         producto.stock_actual -= 1
                         producto.save()
+
+            # Crea el evento en el calendario del admin y del barbero (si están conectados)
+            # -> Esto ya lo hace automáticamente la señal post_save en googlecalendar/signals.py
 
             messages.success(request, f"✅ Cita agendada exitosamente con {barbero.nombre}.")
             return redirect("panel_cliente")
@@ -245,6 +248,10 @@ def cancelar_cita_cliente(request, id):
 
             cita.estado = "Cancelada"
             cita.save()
+
+        # El evento se borra automáticamente de Google Calendar
+        # (señal post_save en googlecalendar/signals.py, ya que el estado
+        # "Cancelada" no es un estado activo).
 
         messages.success(request, "✅ Cita cancelada exitosamente.")
 

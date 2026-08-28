@@ -16,6 +16,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.db import transaction
 from clientes.models import Cliente
+from googlecalendar.models import CuentaGoogle
 
 @login_required(login_url='login')
 def panel_barbero(request):
@@ -94,6 +95,8 @@ def panel_barbero(request):
         "citas_confirmadas": citas_confirmadas,
         "citas_canceladas": citas_canceladas,
         "citas_finalizadas": citas_finalizadas,
+
+        "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
     }
 
     return render(

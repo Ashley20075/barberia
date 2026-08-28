@@ -9,10 +9,13 @@ from inventario.models import Producto
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 from django.conf import settings
 import os
+from googlecalendar.models import CuentaGoogle
+from .reportes import calcular_cierre_caja
 
 @login_required
 def panel_admin(request):
@@ -65,6 +68,7 @@ def panel_admin(request):
         'productos': productos,
         'cantidad_barberos': cantidad_barberos,
         "total_citas": total_citas,
+        "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
     }
     return render(request, 'administracion/panel_administrador.html', context)
 
@@ -253,7 +257,7 @@ def editar_cita(request, id):
         if cita_existente:
             messages.error(request, f'❌ El barbero ya tiene una cita en ese horario.')
             return redirect('administracion:panel_admin')
-        
+
         cita.cliente = cliente
         cita.servicio = servicio
         cita.barbero = barbero
@@ -261,7 +265,9 @@ def editar_cita(request, id):
         cita.hora = hora
         cita.estado = estado
         cita.save()
-        
+        # La sincronización con Google Calendar (incluida la reasignación
+        # de barbero) la hace automáticamente la señal post_save.
+
         messages.success(request, '✅ Cita actualizada correctamente.')
         return redirect('administracion:panel_admin')
     return redirect('administracion:panel_admin')
@@ -274,6 +280,8 @@ def eliminar_cita(request, id):
     
     cita = get_object_or_404(Cita, id=id)
     cita.delete()
+    # El evento de Google Calendar se borra automáticamente
+    # (señal pre_delete en googlecalendar/signals.py).
     messages.success(request, '✅ Cita eliminada correctamente.')
     return redirect('administracion:panel_admin')
 
@@ -625,6 +633,111 @@ def certificado_barbero_admin(request, id):
             estilos["Normal"]
         )
     )
+
+    doc.build(elementos)
+
+    return response
+
+
+@login_required
+def cierre_caja(request):
+    """Reporte de cierre de caja diario: servicios realizados, ingresos y cancelaciones."""
+
+    if not request.user.is_superuser:
+        messages.error(request, "No tienes permisos para ver esta página.")
+        return redirect("administracion:panel_admin")
+
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+        except ValueError:
+            fecha = datetime.today().date()
+    else:
+        fecha = datetime.today().date()
+
+    resumen = calcular_cierre_caja(fecha)
+
+    return render(request, "administracion/cierre_caja.html", resumen)
+
+
+@login_required
+def cierre_caja_pdf(request):
+    """Misma información que cierre_caja, pero descargable en PDF."""
+
+    if not request.user.is_superuser:
+        messages.error(request, "No tienes permisos para ver esta página.")
+        return redirect("administracion:panel_admin")
+
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+        except ValueError:
+            fecha = datetime.today().date()
+    else:
+        fecha = datetime.today().date()
+
+    resumen = calcular_cierre_caja(fecha)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="cierre_caja_{fecha}.pdf"'
+
+    doc = SimpleDocTemplate(response)
+    estilos = getSampleStyleSheet()
+    elementos = []
+
+    elementos.append(Paragraph(f"Cierre de caja — {fecha.strftime('%d/%m/%Y')}", estilos["Title"]))
+    elementos.append(Spacer(1, 10))
+    elementos.append(Paragraph(f"Servicios finalizados: {resumen['total_finalizadas']}", estilos["Normal"]))
+    elementos.append(Paragraph(f"Citas canceladas: {resumen['total_canceladas']}", estilos["Normal"]))
+    elementos.append(Paragraph(f"Citas sin resolver: {resumen['total_pendientes']}", estilos["Normal"]))
+    elementos.append(Paragraph(f"Total de ingresos: ${resumen['total_ingresos']:,}", estilos["Normal"]))
+    elementos.append(Spacer(1, 16))
+
+    elementos.append(Paragraph("Servicios realizados", estilos["Heading2"]))
+    data_finalizadas = [["Hora", "Cliente", "Servicio", "Barbero", "Precio"]]
+    for cita in resumen["finalizadas"]:
+        data_finalizadas.append([
+            cita.hora,
+            cita.cliente.nombre,
+            cita.servicio.nombre,
+            cita.barbero.nombre if cita.barbero else "-",
+            f"${cita.servicio.precio:,}",
+        ])
+    if len(data_finalizadas) == 1:
+        data_finalizadas.append(["-", "Sin servicios finalizados este día", "-", "-", "-"])
+
+    tabla_finalizadas = Table(data_finalizadas, hAlign="LEFT")
+    tabla_finalizadas.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F4C542")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+        ("FONTSIZE", (0, 0), (-1, -1), 9),
+    ]))
+    elementos.append(tabla_finalizadas)
+    elementos.append(Spacer(1, 20))
+
+    elementos.append(Paragraph("Citas canceladas", estilos["Heading2"]))
+    data_canceladas = [["Hora", "Cliente", "Servicio", "Barbero"]]
+    for cita in resumen["canceladas"]:
+        data_canceladas.append([
+            cita.hora,
+            cita.cliente.nombre,
+            cita.servicio.nombre,
+            cita.barbero.nombre if cita.barbero else "-",
+        ])
+    if len(data_canceladas) == 1:
+        data_canceladas.append(["-", "Sin cancelaciones este día", "-", "-"])
+
+    tabla_canceladas = Table(data_canceladas, hAlign="LEFT")
+    tabla_canceladas.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#3F2E22")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+        ("FONTSIZE", (0, 0), (-1, -1), 9),
+    ]))
+    elementos.append(tabla_canceladas)
 
     doc.build(elementos)
 

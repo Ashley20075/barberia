@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'administracion',
     'inventario',
     'django_extensions',
+    'googlecalendar',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,27 @@ TWILIO_WHATSAPP_FROM = os.getenv(
     'TWILIO_WHATSAPP_FROM',
     'whatsapp:+17372508034'
 )
+
+# ===== Integración con Google Calendar =====
+GOOGLE_OAUTH_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')
+GOOGLE_OAUTH_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
+GOOGLE_OAUTH_REDIRECT_URI = os.getenv(
+    'GOOGLE_OAUTH_REDIRECT_URI',
+    'http://127.0.0.1:8000/calendario/oauth2callback/'
+)
+GOOGLE_CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar.events']
+
+# Se usan tanto para "Conectar Google Calendar" (usuario ya logueado) como
+# para "Continuar con Google" (login/registro). Al pedir openid+email+profile
+# junto con calendar.events, un solo permiso de Google sirve para ambas cosas.
+GOOGLE_OAUTH_SCOPES = [
+    'openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/calendar.events',
+]
+
+# Google exige HTTPS para OAuth, EXCEPTO en desarrollo local (127.0.0.1/localhost).
+# Esta línea solo debe existir mientras trabajas en tu máquina con DEBUG=True.
+if DEBUG:
+    os.environ.setdefault('OAUTHLIB_INSECURE_TRANSPORT', '1')

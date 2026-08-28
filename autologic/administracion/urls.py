@@ -26,4 +26,6 @@ urlpatterns = [
     views.certificado_barbero_admin,
     name="certificado_barbero_admin",
 ),
+    path('cierre-caja/', views.cierre_caja, name='cierre_caja'),
+    path('cierre-caja/pdf/', views.cierre_caja_pdf, name='cierre_caja_pdf'),
 ]
