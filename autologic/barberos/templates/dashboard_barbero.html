@@ -83,7 +83,7 @@
 
     </style>
 </head>
-<body>
+<body class="tema-barbero">
 
     <!-- NAVBAR -->
     <nav class="navbar-custom">
@@ -91,49 +91,18 @@
             <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
                 <a class="navbar-brand-custom" href="{% url 'inicio' %}">
                     <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
+                    <span class="role-badge">Panel Barbero</span>
                 </a>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <div class="dropdown">
-                        <button class="nav-btn position-relative" type="button" id="dropdownNotificaciones" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-bell"></i> Notificaciones
-                            {% if notificaciones_no_leidas > 0 %}
-                                <span class="badge rounded-pill bg-danger" style="position:absolute; top:-6px; right:-6px;">{{ notificaciones_no_leidas }}</span>
-                            {% endif %}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="dropdownNotificaciones" style="min-width: 320px; max-height: 380px; overflow-y: auto; background-color: #1E1A15; border: 1px solid #3F2E22;">
-                            {% if notificaciones %}
-                                {% for n in notificaciones %}
-                                    <li class="mb-1">
-                                        <div class="d-flex justify-content-between align-items-start gap-2 p-2 rounded {% if not n.leida %}border-start border-3 border-warning{% endif %}" style="background-color:#0B0A08;">
-                                            <div>
-                                                <small class="text-light-brown d-block mb-1">{{ n.fecha_creacion|date:"d/m/Y H:i" }}</small>
-                                                <span class="text-light" style="font-size:0.9rem;">{{ n.mensaje }}</span>
-                                            </div>
-                                            {% if not n.leida %}
-                                                <form method="post" action="{% url 'marcar_notificacion_leida' n.id %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="next" value="{% url 'barberos:panel_barbero' %}">
-                                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Marcar como leída">
-                                                        <i class="bi bi-check2"></i>
-                                                    </button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                                {% if notificaciones_no_leidas > 0 %}
-                                    <li class="text-center mt-1">
-                                        <form method="post" action="{% url 'marcar_todas_notificaciones_leidas' %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="next" value="{% url 'barberos:panel_barbero' %}">
-                                            <button type="submit" class="btn btn-sm btn-link text-yellow">Marcar todas como leídas</button>
-                                        </form>
-                                    </li>
-                                {% endif %}
-                            {% else %}
-                                <li class="text-center text-light-brown py-3">Sin notificaciones por ahora.</li>
-                            {% endif %}
-                        </ul>
+                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
+                        <i class="bi bi-bell"></i>
+                        {% if notificaciones_no_leidas %}
+                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
+                    </a>
+                    <div class="user-info-custom">
+                        <i class="bi bi-person-circle"></i>
+                        <span>{{ user.username }}</span>
                     </div>
                     <a href="{% url 'barberos:panel_barbero' %}" class="nav-btn active">
                         <i class="bi bi-calendar-check"></i> Mis Citas
@@ -358,7 +327,7 @@
                                     {% elif cita.estado == "Confirmada" %}
                                         <div class="d-flex gap-1 flex-wrap">
                                             <a href="{% url 'barberos:finalizar_cita' cita.id %}" 
-                                               class="btn btn-primary btn-sm"
+                                               class="btn btn-info btn-sm"
                                                onclick="return confirm('¿Finalizar esta cita?')">
                                                 <i class="bi bi-flag-fill"></i> Finalizar
                                             </a>
@@ -460,6 +429,9 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-body">
+                        {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
                     </div>
                 </div>
             </div>

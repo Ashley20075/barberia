@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from citas.models import Cita, Notificacion
+from citas.models import Cita
 from inventario.models import Producto
 from .models import Barbero
 from django.utils import timezone
@@ -17,7 +17,8 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from clientes.models import Cliente
 from googlecalendar.models import CuentaGoogle
-from citas.notificaciones import notificar_cliente_turno_liberado
+from citas.paginacion import paginar
+
 @login_required(login_url='login')
 def panel_barbero(request):
 
@@ -84,23 +85,11 @@ def panel_barbero(request):
         estado="Finalizada"
     ).count()
 
-    notificaciones = Notificacion.objects.filter(
-        usuario=request.user
-    )[:10]
-
-    notificaciones_no_leidas = Notificacion.objects.filter(
-        usuario=request.user,
-        leida=False
-    ).count()
-
     context = {
         "barbero": barbero,
 
-        "notificaciones": notificaciones,
-        "notificaciones_no_leidas": notificaciones_no_leidas,
-
         "proximas_citas": proximas_citas,
-        "historial_citas": historial_citas,
+        "historial_citas": paginar(historial_citas, request, parametro="pagina_historial"),
 
         "total_citas": total_citas,
         "citas_pendientes": citas_pendientes,
@@ -109,6 +98,7 @@ def panel_barbero(request):
         "citas_finalizadas": citas_finalizadas,
 
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
+        "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
     }
 
     return render(
@@ -173,9 +163,6 @@ def cancelar_cita(request, id):
 
         cita.estado = "Cancelada"
         cita.save()
-
-        notificar_cliente_turno_liberado(cita)
-
         messages.success(request, f'✅ Cita de {cita.cliente.nombre} cancelada.')
 
     return redirect('barberos:panel_barbero')

@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from barberos.models import Barbero
@@ -92,44 +91,3 @@ class Cita(models.Model):
             f"{self.fecha} {self.hora} - "
             f"{nombre_barbero}"
         )
-
-
-class Notificacion(models.Model):
-    TIPOS = [
-        ("turno_liberado", "Turno liberado"),
-        ("cita_cancelada", "Cita cancelada"),
-    ]
-
-    usuario = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="notificaciones"
-    )
-
-    cita = models.ForeignKey(
-        Cita,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="notificaciones"
-    )
-
-    tipo = models.CharField(
-        max_length=30,
-        choices=TIPOS,
-        default="turno_liberado"
-    )
-
-    mensaje = models.CharField(max_length=255)
-
-    leida = models.BooleanField(default=False)
-
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-fecha_creacion"]
-        verbose_name = "Notificación"
-        verbose_name_plural = "Notificaciones"
-
-    def __str__(self):
-        return f"{self.usuario} - {self.mensaje[:40]}"

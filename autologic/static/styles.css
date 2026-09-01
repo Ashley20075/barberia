@@ -1483,37 +1483,264 @@ body {
             transform: scale(1.03);
         }
 
+/* =========================================================
+   DIFERENCIACIÓN VISUAL POR ROL
+   Antes cada panel (admin, barbero, cliente) usaba EXACTAMENTE el mismo
+   color de acento (dorado) en navbar, tarjetas y encabezados, por lo que
+   visualmente eran indistinguibles entre sí. El dorado se conserva como
+   identidad de marca (usado en la página pública y en el panel de admin,
+   quien controla todo el negocio); barbero y cliente reciben su propio
+   color de acento para que sea evidente en qué panel estás.
+   Se activa agregando una clase al <body>: tema-barbero / tema-cliente.
+   ========================================================= */
+
+.tema-barbero .navbar-custom { border-bottom-color: #C9812F !important; }
+.tema-barbero .card-header-custom { border-bottom-color: #C9812F !important; }
+.tema-barbero .modal-header-custom { border-bottom-color: #C9812F !important; }
+.tema-barbero .modal-footer-custom { border-top-color: #C9812F !important; }
+.tema-barbero .table-custom thead th { border-bottom-color: #C9812F !important; }
+.tema-barbero .nav-btn.active { background-color: #C9812F !important; border-color: #C9812F !important; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(201, 129, 47, 0.35) !important; }
+.tema-barbero .nav-btn:hover { border-color: #C9812F !important; }
+.tema-barbero .btn-modern,
+.tema-barbero .btn-modern:hover { background: #C9812F !important; box-shadow: 0 4px 15px rgba(201, 129, 47, 0.4) !important; }
+.tema-barbero .role-badge { background-color: rgba(201, 129, 47, 0.18); color: #C9812F; border: 1px solid rgba(201, 129, 47, 0.5); }
+
+.tema-cliente .navbar-custom { border-bottom-color: #4FB8B0 !important; }
+.tema-cliente .card-header-custom { border-bottom-color: #4FB8B0 !important; }
+.tema-cliente .modal-header-custom { border-bottom-color: #4FB8B0 !important; }
+.tema-cliente .modal-footer-custom { border-top-color: #4FB8B0 !important; }
+.tema-cliente .table-custom thead th { border-bottom-color: #4FB8B0 !important; }
+.tema-cliente .nav-btn.active { background-color: #4FB8B0 !important; border-color: #4FB8B0 !important; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(79, 184, 176, 0.35) !important; }
+.tema-cliente .nav-btn:hover { border-color: #4FB8B0 !important; }
+.tema-cliente .btn-modern,
+.tema-cliente .btn-modern:hover { background: #4FB8B0 !important; box-shadow: 0 4px 15px rgba(79, 184, 176, 0.4) !important; }
+.tema-cliente .role-badge { background-color: rgba(79, 184, 176, 0.18); color: #4FB8B0; border: 1px solid rgba(79, 184, 176, 0.5); }
+
+/* Acentos adicionales que solo existían en el <style> propio de
+   dashboard_cliente.html (avatar, stat-card, tarjetas de turno) */
+.tema-barbero .stat-card { border-left-color: #C9812F !important; }
+.tema-barbero .stat-card i, .tema-barbero .stat-card h2, .tema-barbero .stat-card h3 { color: #C9812F !important; }
+.tema-barbero .avatar-circle { background: #C9812F !important; }
+.tema-barbero .turno-card { border-left-color: #C9812F !important; }
+
+.tema-cliente .stat-card { border-left-color: #4FB8B0 !important; }
+.tema-cliente .stat-card i, .tema-cliente .stat-card h3 { color: #4FB8B0 !important; }
+.tema-cliente .avatar-circle { background: #4FB8B0 !important; }
+.tema-cliente .turno-card { border-left-color: #4FB8B0 !important; }
+
+.role-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.7rem;
+    border-radius: 40px;
+    margin-left: 0.6rem;
+    background-color: rgba(244, 197, 66, 0.18);
+    color: #F4C542;
+    border: 1px solid rgba(244, 197, 66, 0.5);
+    vertical-align: middle;
+}
 
 /* =========================================================
-   COMPONENTES COMPARTIDOS DE PANELES INTERNOS
-   (navbar, botones, tarjetas, tablas, modales, inputs)
-   Antes este bloque estaba duplicado línea por línea en:
-     - administracion/templates/administracion/panel_administrador.html
-     - barberos/templates/dashboard_barbero.html
-   Ahora vive en un solo lugar.
+   MODAL DE ACCIÓN DESTRUCTIVA (eliminar cuenta, eliminar producto, etc.)
+   Usa rojo en vez del dorado normal: el color debe coincidir con la
+   gravedad de la acción, no verse igual que un modal cualquiera.
    ========================================================= */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #0B0A08; color: #F5EFE6; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
-        .navbar-custom { background-color: #0B0A08; border-bottom: 2px solid #F4C542; padding: 0.8rem 0; position: sticky; top: 0; z-index: 1050; }
-        .navbar-brand-custom { font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.8rem; font-weight: 700; color: #F4C542 !important; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
-        .navbar-brand-custom span { color: #C9A87C; }
-        .navbar-brand-custom img { height: 40px; width: 40px; object-fit: cover; border-radius: 50%; }
-        .nav-btn { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6 !important; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
-        .nav-btn:hover { background-color: #3F2E22; border-color: #F4C542; transform: scale(1.02); }
-        .btn-logout-custom { background: transparent; border: 2px solid #3F2E22; color: #F5EFE6; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; cursor: pointer; }
-        .btn-logout-custom:hover { background-color: #dc3545; border-color: #dc3545; color: white; }
-        .user-info-custom { background-color: #2A211B; padding: 0.5rem 1rem; border-radius: 40px; display: inline-flex; align-items: center; gap: 0.8rem; color: #F5EFE6; }
-        .user-info-custom i { color: #F4C542; font-size: 1.2rem; }
-        .card-custom { background-color: #1E1A15 !important; border-radius: 20px !important; border: 1px solid rgba(244,197,66,0.2) !important; margin-bottom: 2rem; overflow: hidden; }
-        .card-header-custom { background-color: #0B0A08 !important; border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.25rem; font-weight: 600; color: #FFD966 !important; }
-        .table-custom { background-color: #1E1A15 !important; margin-bottom: 0; }
-        .table-custom thead th { background-color: #0B0A08 !important; color: #FFD966 !important; border-bottom: 2px solid #F4C542 !important; font-weight: 600; padding: 0.75rem 1rem; }
-        .table-custom tbody td { background-color: #1E1A15 !important; color: #F5EFE6 !important; vertical-align: middle; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(63,46,34,0.3) !important; }
-        .table-custom tbody tr:hover td { background-color: #2A211B !important; }
-        .modal-content-custom { background-color: #1E1A15 !important; border: 1px solid rgba(244,197,66,0.3) !important; }
-        .modal-header-custom { border-bottom: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
-        .modal-footer-custom { border-top: 2px solid #F4C542 !important; padding: 1rem 1.5rem; }
-        .bg-dark-input { background-color: #2A211B !important; border: 1px solid #3F2E22 !important; color: #F5EFE6 !important; }
-        .bg-dark-input:focus { background-color: #352b23 !important; border-color: #F4C542 !important; box-shadow: 0 0 0 0.2rem rgba(244,197,66,0.25); }
-        .text-yellow { color: #F4C542 !important; }
-        .text-light-brown { color: #C9A87C !important; }
+.modal-content-danger {
+    background-color: #1E1A15 !important;
+    border: 1px solid rgba(220, 53, 69, 0.5) !important;
+}
+.modal-header-danger {
+    border-bottom: 2px solid #dc3545 !important;
+    padding: 1rem 1.5rem;
+}
+.modal-footer-danger {
+    border-top: 2px solid #dc3545 !important;
+    padding: 1rem 1.5rem;
+}
+
+/* =========================================================
+   BOTÓN DE ACCIÓN DESTRUCTIVA CONSISTENTE
+   Antes había una mezcla de "btn btn-danger", "btn-outline-danger",
+   "btn btn-sm btn-danger" sueltos y sin relación visual con "btn-modern".
+   Este es el equivalente en rojo de btn-modern, para usarlo en TODAS las
+   acciones de eliminar y que se vean coherentes entre sí.
+   ========================================================= */
+.btn-danger-modern {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-danger-modern:hover {
+    background-color: #b02a37;
+    color: white;
+    transform: scale(1.03);
+}
+
+/* =========================================================
+   CAMPANITA DE NOTIFICACIONES (compartida por cliente y barbero)
+   ========================================================= */
+.nav-bell {
+    position: relative;
+    background: transparent;
+    border: 2px solid #3F2E22;
+    color: #F5EFE6 !important;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.nav-bell:hover {
+    background-color: #3F2E22;
+    border-color: #F4C542;
+    color: #F5EFE6;
+}
+.nav-bell .nav-bell-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+/* =========================================================
+   ÚNICOS DE "MI CUENTA" (dashboard_cliente.html)
+   Antes este bloque repetía TODAS las clases ya definidas arriba
+   (navbar, nav-btn, btn-modern, card-header-custom, etc). Ahora solo
+   quedan aquí las clases que de verdad no existían en ningún otro lado.
+   ========================================================= */
+.stat-card { height: 100%; padding: 1.5rem; text-align: center; }
+
+.badge-confirmado {
+    background-color: #198754;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: #F4C542;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0B0A08;
+    margin: 0 auto;
+}
+
+.turno-card {
+    background-color: #2A211B;
+    border-radius: 12px;
+    border-left: 3px solid #F4C542;
+}
+
+/* =========================================================
+   PAGINACIÓN (historial de citas en los 3 paneles)
+   ========================================================= */
+.pagination-custom .page-link {
+    background-color: #1E1A15;
+    border: 1px solid #3F2E22;
+    color: #F5EFE6;
+    margin: 0 3px;
+    border-radius: 8px;
+    min-width: 40px;
+    text-align: center;
+}
+.pagination-custom .page-link:hover {
+    background-color: #3F2E22;
+    border-color: #F4C542;
+    color: #F5EFE6;
+}
+.pagination-custom .page-item.active .page-link {
+    background-color: #F4C542;
+    border-color: #F4C542;
+    color: #0B0A08;
+    font-weight: 700;
+}
+.pagination-custom .page-item.disabled .page-link {
+    background-color: #1E1A15;
+    border-color: #2A211B;
+    color: #6b6058;
+}
+
+.tema-barbero .pagination-custom .page-item.active .page-link { background-color: #C9812F !important; border-color: #C9812F !important; color: #0B0A08 !important; }
+.tema-barbero .pagination-custom .page-link:hover { border-color: #C9812F !important; }
+
+.tema-cliente .pagination-custom .page-item.active .page-link { background-color: #4FB8B0 !important; border-color: #4FB8B0 !important; color: #0B0A08 !important; }
+.tema-cliente .pagination-custom .page-link:hover { border-color: #4FB8B0 !important; }
+
+/* =========================================================
+   TABLA OSCURA COMPARTIDA (.table-custom)
+   Esta clase la usan TODAS las tablas del sitio (historial, cierre de
+   caja, notificaciones, panel de admin, inventario), pero nunca se
+   había definido en el archivo compartido — solo existía duplicada dos
+   veces dentro de inventario/dashboard.html. El resto de páginas la
+   usaban sin que existiera, por eso se veían con la tabla blanca por
+   defecto de Bootstrap, sin ningún tema oscuro aplicado.
+   ========================================================= */
+.table-custom {
+    background-color: transparent !important;
+    margin-bottom: 0;
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: #241d17;
+    --bs-table-hover-bg: #2A211B;
+    --bs-table-color: #F5EFE6;
+}
+
+.table-custom thead th {
+    color: #FFD966 !important;
+    border-bottom: 2px solid #F4C542;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    background-color: #0B0A08 !important;
+}
+
+.table-custom tbody td,
+.table-custom tbody th {
+    color: #F5EFE6 !important;
+    vertical-align: middle;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(63, 46, 34, 0.3);
+    background-color: transparent !important;
+}
+
+.table-custom tbody tr {
+    background-color: #1E1A15 !important;
+    transition: background-color 0.2s ease;
+}
+
+.table-custom tbody tr:hover td {
+    background-color: #2A211B !important;
+}

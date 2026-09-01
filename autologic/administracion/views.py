@@ -16,6 +16,7 @@ from django.conf import settings
 import os
 from googlecalendar.models import CuentaGoogle
 from .reportes import calcular_cierre_caja
+from citas.paginacion import paginar
 
 @login_required
 def panel_admin(request):
@@ -62,7 +63,7 @@ def panel_admin(request):
         'usuarios': usuarios,
         'clientes': clientes,
         "citas": citas_activas,
-        "historial_citas": historial_citas,
+        "historial_citas": paginar(historial_citas, request, parametro="pagina_historial"),
         'barberos': barberos,
         'servicios': servicios,
         'productos': productos,

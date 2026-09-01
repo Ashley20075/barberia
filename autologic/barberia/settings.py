@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'inventario',
     'django_extensions',
     'googlecalendar',
+    'notificaciones',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            BASE_DIR / 'templates',
             BASE_DIR / 'barberos' / 'templates',
             BASE_DIR / 'clientes' / 'templates',
             BASE_DIR / 'citas' / 'templates',

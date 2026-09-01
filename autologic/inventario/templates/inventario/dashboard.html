@@ -219,132 +219,6 @@ body {
     font-weight: bold;
 }
 
-/* ========== TABLAS - ESTILO OSCURO COMO REPORTES ========== */
-.card-custom {
-    background-color: #1E1A15;
-    border-radius: 20px;
-    border: 1px solid rgba(244, 197, 66, 0.2);
-    margin-bottom: 2rem;
-    overflow: hidden;
-}
-
-.card-header-custom {
-    background-color: #0B0A08;
-    border-bottom: 2px solid #F4C542;
-    padding: 1rem 1.25rem;
-    font-weight: 600;
-    color: #FFD966;
-}
-
-.table-custom {
-    background-color: transparent;
-    margin-bottom: 0;
-}
-
-.table-custom thead th {
-    color: #FFD966;
-    border-bottom: 2px solid #F4C542;
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    background-color: #0B0A08;
-}
-
-.table-custom tbody td {
-    color: #F5EFE6;
-    vertical-align: middle;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(63, 46, 34, 0.3);
-}
-
-.table-custom tbody tr {
-    background-color: #1E1A15;
-    transition: background-color 0.2s ease;
-}
-
-.table-custom tbody tr:hover {
-    background-color: #2A211B !important;
-}
-
-/* ========== BOTONES EN TABLA ========== */
-.table-custom .btn-outline-warning {
-    color: #F4C542;
-    border-color: #F4C542;
-}
-
-.table-custom .btn-outline-warning:hover {
-    background-color: #F4C542;
-    color: #0B0A08;
-}
-
-.table-custom .btn-outline-info {
-    color: #0dcaf0;
-    border-color: #0dcaf0;
-}
-
-.table-custom .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    color: #0B0A08;
-}
-
-.table-custom .btn-outline-danger {
-    color: #dc3545;
-    border-color: #dc3545;
-}
-
-.table-custom .btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.table-custom .btn-group .btn {
-    transition: all 0.2s ease;
-}
-
-.table-custom .btn-group .btn:hover {
-    transform: scale(1.1);
-}
-
-/* ========== BADGES ========== */
-.badge-stock-bajo {
-    background-color: #dc3545;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
-
-.badge-stock-medio {
-    background-color: #ffc107;
-    color: #0B0A08;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
-
-.badge-stock-bueno {
-    background-color: #198754;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
-
-/* ========== BADGES MOVIMIENTOS ========== */
-.badge.bg-success {
-    background-color: #198754 !important;
-    color: white !important;
-}
-
-.badge.bg-warning {
-    background-color: #ffc107 !important;
-    color: #0B0A08 !important;
-}
-
-.badge.bg-info {
-    background-color: #0dcaf0 !important;
-    color: #0B0A08 !important;
-}
-
 /* ========== MODALES ========== */
 .modal-content-custom {
     background-color: #1E1A15 !important;
@@ -755,7 +629,7 @@ body {
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button type="button" 
-                                            class="btn btn-outline-warning" 
+                                            class="btn btn-warning" 
                                             title="Registrar movimiento"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalMovimiento"
@@ -764,7 +638,7 @@ body {
                                             data-stock="{{ producto.stock_actual }}">
                                             <i class="bi bi-arrow-left-right"></i>
                                         </button>
-                                        <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-outline-info" title="Editar">
+                                        <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-info" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button"
@@ -1038,8 +912,8 @@ body {
     <!-- ===== MODAL ELIMINAR PRODUCTO ===== -->
     <div class="modal fade" id="modalEliminarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-header modal-header-custom">
+            <div class="modal-content modal-content-danger">
+                <div class="modal-header modal-header-danger">
                     <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle"></i> Eliminar Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -1051,9 +925,9 @@ body {
                         <p class="text-light-brown">Producto: <strong class="text-white" id="eliminarProductoNombre"></strong></p>
                         <p class="text-warning small">⚠️ Esta acción no se puede deshacer.</p>
                     </div>
-                    <div class="modal-footer modal-footer-custom">
+                    <div class="modal-footer modal-footer-danger">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar Producto</button>
+                        <button type="submit" class="btn-danger-modern">Eliminar Producto</button>
                     </div>
                 </form>
             </div>
