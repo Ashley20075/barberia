@@ -12,6 +12,14 @@
 </head>
 
 <body>
+    <button
+    type="button"
+    id="themeToggle"
+    class="theme-toggle theme-toggle-floating"
+    title="Cambiar tema"
+    aria-label="Cambiar tema">
+    <i class="bi bi-moon-fill"></i>
+</button>
     <div class="registro-wrapper">
         <div class="registro-card">
             <div class="text-center mb-4">
@@ -69,9 +77,11 @@
 
             <div class="text-center my-3 text-light-brown">— o —</div>
 
-            <a href="{% url 'googlecalendar:login_google' %}" class="btn btn-outline-light w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                <i class="bi bi-google"></i> Registrarte con Google
-            </a>
+            <a href="{% url 'googlecalendar:login_google' %}"
+   class="btn-google w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+    <i class="bi bi-google"></i>
+    Registrarte con Google
+</a>
 
             <div class="text-center mt-4">
                 <a href="{% url 'login' %}" class="text-light-brown">¿Ya tienes cuenta? Inicia sesión</a>

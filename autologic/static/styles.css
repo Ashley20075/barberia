@@ -1,3 +1,45 @@
+/* =====================================================
+   TEMA OSCURO - TEMA PRINCIPAL DE BARBER SPRINGFIELD
+===================================================== */
+
+:root {
+    --color-fondo: #0B0A08;
+    --color-fondo-secundario: #1E1A15;
+    --color-fondo-card: #2A211B;
+    --color-borde: #3F2E22;
+
+    --color-texto: #F5EFE6;
+    --color-texto-secundario: #C9A87C;
+
+    --color-amarillo: #F4C542;
+    --color-amarillo-claro: #FFD966;
+
+    --color-hover-card: #352b23;
+
+    --color-navbar: #0B0A08;
+}
+
+
+/* =====================================================
+   TEMA CLARO
+===================================================== */
+
+[data-theme="light"] {
+    --color-fondo: #F7F3EC;
+    --color-fondo-secundario: #EFE7DA;
+    --color-fondo-card: #FFFFFF;
+    --color-borde: #D8C8B5;
+
+    --color-texto: #2B241E;
+    --color-texto-secundario: #756454;
+
+    --color-amarillo: #C89418;
+    --color-amarillo-claro: #D9A928;
+
+    --color-hover-card: #F3EBDD;
+
+    --color-navbar: #FFFFFF;
+}
 /* ========== PALETA DE COLORES ==========
    Yellow (Amarillo): #F4C542
    Yellow light: #FFD966
@@ -14,9 +56,10 @@
 }
 
 body {
-  font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #0B0A08;
-  color: #F5EFE6;
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ========== TIPOGRAFÍA ========== */
@@ -30,36 +73,40 @@ h3,
 h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #FFD966;
+  color: var(--color-primario-claro);
 }
 
 /* ========== HEADER / NAVBAR ========== */
 .navbar {
-  background-color: #0B0A08;
-  border-bottom: 2px solid #F4C542;
-  padding: 1rem 0;
+    background-color: var(--color-navbar);
+    border-bottom: 2px solid var(--color-primario);
+    padding: 1rem 0;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .navbar-brand {
   font-size: 1.8rem;
-  font-weight: 700;
-  color: #F4C542 !important;
-  letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--color-primario) !important;
+    letter-spacing: 1px;
 }
 
 .navbar-brand span {
-  color: #C9A87C;
+  color: var(--color-texto-secundario);
 }
 
 .nav-link {
-  color: #F5EFE6 !important;
+  color: var(--color-texto) !important;
   font-weight: 500;
   transition: color 0.3s;
   margin: 0 0.25rem;
 }
 
 .nav-link:hover {
-  color: #F4C542 !important;
+  color: var(--color-primario) !important;
 }
 
 .btn-reservar:hover {
@@ -98,9 +145,19 @@ h2 {
 
 /* ========== HERO SECTION ========== */
 .hero {
-  background: linear-gradient(135deg, #0B0A08 0%, #2A1E14 100%);
-  padding: 80px 0;
-  border-bottom: 1px solid #3F2E22;
+    background: linear-gradient(
+        135deg,
+        var(--color-fondo) 0%,
+        var(--color-fondo-secundario) 100%
+    );
+
+    padding: 80px 0;
+
+    border-bottom: 1px solid var(--color-borde);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .badge-custom {
@@ -197,16 +254,18 @@ h2 {
 }
 
 .servicios {
-  background-color: #1E1A15;
-  padding: 80px 0;
+  background-color: var(--color-fondo-secundario);
+    padding: 80px 0;
+
+    transition: background-color 0.3s ease;
 }
 
 .text-light-brown {
-  color: #C9A87C;
+  color: var(--color-texto-secundario);
 }
 
 .card-servicio {
-  background-color: #2A211B;
+  background-color: var(--color-fondo-card);
   border-radius: 24px;
   padding: 2rem 1.5rem;
   text-align: center;
@@ -217,7 +276,7 @@ h2 {
 
 .card-servicio:hover {
   transform: translateY(-8px);
-  background-color: #352b23;
+  background-color: var(--color-fondo-hover);
 }
 
 .card-servicio i {
@@ -847,11 +906,12 @@ h2 {
 }
 
 .table-dark {
-  --bs-table-bg: #2A211B;
+  --bs-table-bg: var(--color-fondo-card);
+  --bs-table-color: var(--color-texto);
 }
 
 .table thead {
-  color: #F4C542;
+  color: var(--color-amarillo);
 }
 
 .table tbody {
@@ -862,7 +922,7 @@ h2 {
 
 /* ========== DASHBOARD ADMIN ========== */
 .stat-card {
-    background-color: #1E1A15;
+    background-color: var(--color-fondo-secundario);
     border-radius: 20px;
     border-left: 4px solid #F4C542;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -948,15 +1008,15 @@ h2 {
 }
 
 .bg-dark-input {
-    background-color: #2A211B !important;
-    border: 1px solid #3F2E22 !important;
-    color: #F5EFE6 !important;
+    background-color: var(--color-fondo-card) !important;
+    border-color: var(--color-borde) !important;
+    color: var(--color-texto) !important;
 }
 
 .bg-dark-input:focus {
-    background-color: #352b23 !important;
-    border-color: #F4C542 !important;
-    box-shadow: 0 0 0 0.2rem rgba(244, 197, 66, 0.25);
+    background-color: var(--color-hover-card) !important;
+    border-color: var(--color-amarillo) !important;
+    color: var(--color-texto) !important;
 }
 
 .form-label {
@@ -1012,7 +1072,7 @@ h2 {
 }
 
 .text-light-brown {
-    color: #C9A87C !important;
+    color: var(--color-texto-secundario) !important;
 }
 
 
@@ -1278,8 +1338,8 @@ body {
         }
 
         .navbar-custom {
-            background-color: #0B0A08;
-            border-bottom: 2px solid #F4C542;
+            background-color: var(--color-navbar);
+            border-bottom: 2px solid var(--color-amarillo);
             padding: 0.8rem 0;
             position: sticky;
             top: 0;
@@ -1428,20 +1488,22 @@ body {
         }
 
         .text-yellow {
-            color: #F4C542 !important;
+            color: var(--color-amarillo) !important;
         }
 
         .text-light-brown {
-            color: #C9A87C !important;
+            color: var(--color-texto-secundario);
         }
 
         .modal-content-custom {
-            background-color: #1E1A15 !important;
+            background-color: var(--color-fondo-secundario);
+            color: var(--color-texto);
             border: 1px solid rgba(244, 197, 66, 0.3) !important;
         }
 
         .modal-header-custom {
-            border-bottom: 2px solid #F4C542 !important;
+            background-color: var(--color-navbar);
+            border-bottom-color: var(--color-amarillo);
             padding: 1rem 1.5rem;
         }
 
@@ -1743,4 +1805,1200 @@ body {
 
 .table-custom tbody tr:hover td {
     background-color: #2A211B !important;
+}
+
+/* =====================================================
+   BOTÓN CAMBIO DE TEMA
+===================================================== */
+
+.theme-toggle {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    border: 2px solid var(--color-borde);
+
+    background-color: var(--color-fondo-card);
+    color: var(--color-primario);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--color-fondo-hover);
+    border-color: var(--color-primario);
+
+    transform: scale(1.08);
+}
+
+.theme-toggle i {
+    font-size: 1rem;
+}
+
+/* =========================================================
+   TEMA CLARO - ADAPTACIÓN COMPLETA
+   Barber Springfield
+========================================================= */
+
+[data-theme="light"] {
+
+    /* Transición general */
+    color-scheme: light;
+}
+
+
+/* =========================================================
+   BODY Y TEXTOS GENERALES
+========================================================= */
+
+[data-theme="light"] body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+    color: var(--color-texto);
+}
+
+[data-theme="light"] p,
+[data-theme="light"] li {
+    color: var(--color-texto);
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+[data-theme="light"] .navbar,
+[data-theme="light"] .navbar-custom {
+    background-color: var(--color-navbar) !important;
+    border-bottom-color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .navbar-brand,
+[data-theme="light"] .navbar-brand-custom {
+    color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .navbar-brand span,
+[data-theme="light"] .navbar-brand-custom span {
+    color: var(--color-texto-secundario);
+}
+
+[data-theme="light"] .nav-link {
+    color: var(--color-texto) !important;
+}
+
+[data-theme="light"] .nav-link:hover,
+[data-theme="light"] .nav-link.active {
+    color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .nav-btn {
+    color: var(--color-texto) !important;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .nav-btn:hover {
+    background-color: var(--color-fondo-hover);
+    border-color: var(--color-primario);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+[data-theme="light"] .hero {
+    background: linear-gradient(
+        135deg,
+        #F7F3EC 0%,
+        #EFE7DA 100%
+    ) !important;
+
+    border-bottom-color: var(--color-borde);
+}
+
+[data-theme="light"] .hero h1 {
+    color: #2B241E !important;
+}
+
+[data-theme="light"] .hero .lead {
+    color: #62574D !important;
+}
+
+[data-theme="light"] .badge-custom {
+    color: #9A7414;
+    background-color: rgba(200, 148, 24, 0.12);
+    border-left-color: var(--color-primario);
+}
+
+[data-theme="light"] .text-yellow {
+    color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .btn-outline-custom {
+    color: var(--color-texto) !important;
+    border-color: var(--color-texto-secundario);
+}
+
+[data-theme="light"] .btn-outline-custom:hover {
+    color: var(--color-primario) !important;
+    border-color: var(--color-primario);
+}
+
+
+/* =========================================================
+   SERVICIOS
+========================================================= */
+
+[data-theme="light"] .servicios {
+    background-color: #EFE7DA !important;
+}
+
+[data-theme="light"] .card-servicio {
+    background-color: #FFFFFF !important;
+    border-color: var(--color-borde);
+    border-bottom-color: var(--color-primario);
+}
+
+[data-theme="light"] .card-servicio:hover {
+    background-color: #F3EBDD !important;
+}
+
+[data-theme="light"] .card-servicio h3 {
+    color: #2B241E;
+}
+
+[data-theme="light"] .card-servicio p {
+    color: #756454;
+}
+
+[data-theme="light"] .precio {
+    color: var(--color-primario-claro);
+}
+
+
+/* =========================================================
+   BARBEROS
+========================================================= */
+
+[data-theme="light"] .barberos {
+    background-color: #F7F3EC !important;
+    border-top-color: var(--color-borde);
+    border-bottom-color: var(--color-borde);
+}
+
+[data-theme="light"] .card-barbero {
+    background-color: #FFFFFF !important;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .card-barbero:hover {
+    background-color: #F3EBDD !important;
+}
+
+[data-theme="light"] .barbero-info h3 {
+    color: #2B241E;
+}
+
+[data-theme="light"] .especialidad {
+    color: #756454;
+}
+
+[data-theme="light"] .calificacion span {
+    color: #756454;
+}
+
+[data-theme="light"] .barbero-social {
+    border-top-color: var(--color-borde);
+}
+
+[data-theme="light"] .barbero-social i {
+    color: var(--color-texto-secundario);
+}
+
+
+/* =========================================================
+   NOSOTROS
+========================================================= */
+
+[data-theme="light"] .nosotros {
+    background-color: #FFFFFF !important;
+    border-top-color: var(--color-borde);
+    border-bottom-color: var(--color-borde);
+}
+
+[data-theme="light"] .nosotros p {
+    color: #51483F !important;
+}
+
+[data-theme="light"] .nosotros ul li {
+    color: #62574D !important;
+}
+
+[data-theme="light"] .about-icon-box {
+    background-color: #F3EBDD !important;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .about-icon-box i {
+    color: var(--color-primario);
+}
+
+[data-theme="light"] .about-icon-box p {
+    color: #756454;
+}
+
+
+/* =========================================================
+   OPINIONES / TESTIMONIOS
+========================================================= */
+
+[data-theme="light"] .testimonios {
+    background-color: #EFE7DA !important;
+}
+
+[data-theme="light"] .card-testimonio {
+    background-color: #FFFFFF !important;
+    border-left-color: var(--color-primario);
+}
+
+[data-theme="light"] .card-testimonio p {
+    color: #51483F;
+}
+
+[data-theme="light"] .card-testimonio h4 {
+    color: #8E6912;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+[data-theme="light"] .cta-section {
+    background: linear-gradient(
+        90deg,
+        #F7F3EC 0%,
+        #EDE1CF 100%
+    ) !important;
+
+    border-top-color: var(--color-primario);
+    border-bottom-color: var(--color-borde);
+}
+
+[data-theme="light"] .cta-section h2 {
+    color: #2B241E !important;
+}
+
+[data-theme="light"] .cta-section p {
+    color: #62574D !important;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+[data-theme="light"] .footer {
+    background-color: #FFFFFF !important;
+    border-top-color: var(--color-borde);
+}
+
+[data-theme="light"] .footer h3 {
+    color: var(--color-primario);
+}
+
+[data-theme="light"] .footer p,
+[data-theme="light"] .footer li {
+    color: #756454;
+}
+
+[data-theme="light"] .copyright {
+    border-top-color: var(--color-borde);
+}
+
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+[data-theme="light"] .form-control,
+[data-theme="light"] .form-control-registro,
+[data-theme="light"] .form-control-login,
+[data-theme="light"] .bg-dark-input {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border-color: var(--color-borde) !important;
+}
+
+[data-theme="light"] .form-control::placeholder,
+[data-theme="light"] .form-control-registro::placeholder,
+[data-theme="light"] .form-control-login::placeholder {
+    color: #8A7B6B;
+}
+
+[data-theme="light"] .form-control:focus,
+[data-theme="light"] .form-control-registro:focus,
+[data-theme="light"] .form-control-login:focus,
+[data-theme="light"] .bg-dark-input:focus {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border-color: var(--color-primario) !important;
+}
+
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+[data-theme="light"] .modal-content-custom,
+[data-theme="light"] .modal-content.bg-dark,
+[data-theme="light"] .modal-content-danger {
+    background-color: #FFFFFF !important;
+    color: #2B241E;
+}
+
+[data-theme="light"] .modal-header-custom {
+    background-color: #F7F3EC;
+    border-bottom-color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .modal-footer-custom {
+    background-color: #F7F3EC;
+    border-top-color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .btn-close-white {
+    filter: none;
+}
+
+
+/* =========================================================
+   DASHBOARDS
+========================================================= */
+
+[data-theme="light"] .card-custom,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .form-turno {
+    background-color: #FFFFFF !important;
+    color: #2B241E;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .card-header-custom {
+    background-color: #F7F3EC !important;
+    color: var(--color-primario-claro) !important;
+    border-bottom-color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .turno-card {
+    background-color: #FFFFFF !important;
+    border-color: var(--color-borde);
+    color: #2B241E;
+}
+
+[data-theme="light"] .turno-card:hover {
+    background-color: #F3EBDD !important;
+}
+
+[data-theme="light"] .servicio-rapido {
+    background-color: #F7F3EC !important;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .servicio-rapido:hover {
+    background-color: #F3EBDD !important;
+}
+
+[data-theme="light"] .user-info-custom,
+[data-theme="light"] .user-info {
+    background-color: #F3EBDD !important;
+    color: #2B241E !important;
+}
+
+[data-theme="light"] .user-info-custom span,
+[data-theme="light"] .user-info span {
+    color: #2B241E !important;
+}
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+[data-theme="light"] .table-custom {
+    --bs-table-color: #2B241E;
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: #F7F3EC;
+    --bs-table-hover-bg: #F3EBDD;
+}
+
+[data-theme="light"] .table-custom thead th {
+    background-color: #F7F3EC !important;
+    color: #8E6912 !important;
+    border-bottom-color: var(--color-primario);
+}
+
+[data-theme="light"] .table-custom tbody tr {
+    background-color: #FFFFFF !important;
+}
+
+[data-theme="light"] .table-custom tbody td,
+[data-theme="light"] .table-custom tbody th {
+    color: #2B241E !important;
+}
+
+[data-theme="light"] .table-custom tbody tr:hover td {
+    background-color: #F3EBDD !important;
+}
+
+[data-theme="light"] .table-dark {
+    --bs-table-bg: #FFFFFF;
+    --bs-table-color: #2B241E;
+}
+
+
+/* =========================================================
+   PAGINACIÓN
+========================================================= */
+
+[data-theme="light"] .pagination-custom .page-link {
+    background-color: #FFFFFF;
+    border-color: var(--color-borde);
+    color: #2B241E;
+}
+
+[data-theme="light"] .pagination-custom .page-link:hover {
+    background-color: #F3EBDD;
+    border-color: var(--color-primario);
+    color: #2B241E;
+}
+
+[data-theme="light"] .pagination-custom .page-item.active .page-link {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: #FFFFFF;
+}
+
+
+/* =========================================================
+   NOTIFICACIONES
+========================================================= */
+
+[data-theme="light"] .nav-bell {
+    color: #2B241E !important;
+    border-color: var(--color-borde);
+}
+
+[data-theme="light"] .nav-bell:hover {
+    background-color: #F3EBDD;
+    border-color: var(--color-primario);
+    color: var(--color-primario) !important;
+}
+
+
+/* =========================================================
+   BARRA DE ACCIONES
+========================================================= */
+
+[data-theme="light"] .action-bar-sticky {
+    background: linear-gradient(
+        180deg,
+        #FFFFFF,
+        #F7F3EC
+    ) !important;
+
+    border-bottom-color: var(--color-primario);
+}
+
+
+/* =========================================================
+   LOGIN / REGISTRO
+========================================================= */
+
+[data-theme="light"] .login-wrapper,
+[data-theme="light"] .registro-wrapper {
+    background: linear-gradient(
+        135deg,
+        #F7F3EC 0%,
+        #EFE7DA 100%
+    ) !important;
+}
+
+[data-theme="light"] .login-card-custom,
+[data-theme="light"] .registro-card {
+    background-color: #FFFFFF !important;
+    color: #2B241E;
+    border-color: rgba(200, 148, 24, 0.3);
+}
+
+[data-theme="light"] .input-group-text-custom {
+    background-color: #F7F3EC;
+    border-color: var(--color-borde);
+    color: var(--color-primario);
+}
+
+
+/* =========================================================
+   BOTONES SECUNDARIOS
+========================================================= */
+
+[data-theme="light"] .btn-secondary {
+    background-color: #E5D8C8;
+    color: #2B241E;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background-color: #D2BFA8;
+    color: #2B241E;
+}
+
+
+/* =========================================================
+   TEXTOS SECUNDARIOS
+========================================================= */
+
+[data-theme="light"] .text-light-brown {
+    color: #756454 !important;
+}
+
+[data-theme="light"] .link-registro {
+    color: #756454 !important;
+}
+
+[data-theme="light"] .link-registro:hover {
+    color: var(--color-primario) !important;
+}
+
+/* =========================================================
+   BOTÓN DE TEMA FLOTANTE
+   Para páginas sin navbar
+========================================================= */
+
+.theme-toggle-floating {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+}
+
+/* =========================================================
+   TEMA BARBERO - NUEVO COLOR DE ACENTO
+========================================================= */
+
+.tema-barbero {
+    --barbero-acento: #58758C;
+    --barbero-acento-hover: #6E8CA1;
+    --barbero-acento-suave: rgba(88, 117, 140, 0.16);
+}
+
+
+/* Tema oscuro */
+.tema-barbero .nav-btn.active {
+    background-color: var(--barbero-acento) !important;
+    border-color: var(--barbero-acento) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 20px rgba(88, 117, 140, 0.30) !important;
+}
+
+.tema-barbero .nav-btn:hover {
+    border-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .navbar-custom {
+    border-bottom-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .card-header-custom {
+    border-bottom-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .modal-header-custom {
+    border-bottom-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .modal-footer-custom {
+    border-top-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .table-custom thead th {
+    border-bottom-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .btn-modern,
+.tema-barbero .btn-modern:hover {
+    background: var(--barbero-acento) !important;
+    box-shadow: 0 4px 15px rgba(88, 117, 140, 0.35) !important;
+    color: #FFFFFF !important;
+}
+
+.tema-barbero .role-badge {
+    background-color: var(--barbero-acento-suave);
+    color: var(--barbero-acento);
+    border-color: rgba(88, 117, 140, 0.45);
+}
+
+.tema-barbero .stat-card {
+    border-left-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .stat-card i,
+.tema-barbero .stat-card h2,
+.tema-barbero .stat-card h3 {
+    color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .avatar-circle {
+    background: var(--barbero-acento) !important;
+}
+
+.tema-barbero .turno-card {
+    border-left-color: var(--barbero-acento) !important;
+}
+
+.tema-barbero .pagination-custom .page-item.active .page-link {
+    background-color: var(--barbero-acento) !important;
+    border-color: var(--barbero-acento) !important;
+    color: #FFFFFF !important;
+}
+
+.tema-barbero .pagination-custom .page-link:hover {
+    border-color: var(--barbero-acento) !important;
+}
+
+/* =========================================================
+   TABLAS - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .table-custom {
+    background-color: transparent !important;
+
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: #F8F4ED;
+    --bs-table-hover-bg: #F3EBDD;
+    --bs-table-color: #2B241E;
+}
+
+
+/* Encabezado */
+[data-theme="light"] .table-custom thead th {
+    background-color: #F1E8DA !important;
+    color: #6E551D !important;
+
+    border-bottom: 2px solid #C89418 !important;
+}
+
+
+/* Celdas */
+[data-theme="light"] .table-custom tbody td,
+[data-theme="light"] .table-custom tbody th {
+    background-color: #FFFFFF !important;
+
+    color: #2B241E !important;
+
+    border-bottom: 1px solid #E0D4C4 !important;
+}
+
+
+/* Filas */
+[data-theme="light"] .table-custom tbody tr {
+    background-color: #FFFFFF !important;
+}
+
+
+/* Hover */
+[data-theme="light"] .table-custom tbody tr:hover td {
+    background-color: #F5EFE6 !important;
+}
+
+
+/* Texto secundario dentro de las tablas */
+[data-theme="light"] .table-custom .text-light-brown {
+    color: #756454 !important;
+}
+
+
+/* Strong */
+[data-theme="light"] .table-custom strong {
+    color: #2B241E !important;
+}
+
+/* =========================================================
+   INVENTARIO - TABLAS EN TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .table-custom tbody td {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+}
+
+[data-theme="light"] .table-custom tbody tr {
+    background-color: #FFFFFF !important;
+}
+
+[data-theme="light"] .table-custom thead th {
+    background-color: #F1E8DA !important;
+    color: #6E551D !important;
+    border-bottom-color: #C89418 !important;
+}
+
+[data-theme="light"] .table-custom tbody tr:hover td,
+[data-theme="light"] .table-custom tbody tr:hover {
+    background-color: #F5EFE6 !important;
+}
+
+/* =========================================================
+   BOTÓN GOOGLE
+========================================================= */
+
+.btn-google {
+    background-color: transparent;
+    border: 1px solid #8A7B6B;
+    border-radius: 10px;
+
+    color: #F5EFE6;
+
+    text-decoration: none;
+    font-weight: 600;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.2s ease;
+}
+
+.btn-google:hover {
+    background-color: #2A211B;
+    border-color: #F4C542;
+    color: #F4C542;
+
+    transform: translateY(-1px);
+}
+
+
+/* GOOGLE EN TEMA CLARO */
+
+[data-theme="light"] .btn-google {
+    background-color: #FFFFFF;
+
+    border-color: #CFC2B2;
+
+    color: #2B241E;
+}
+
+[data-theme="light"] .btn-google:hover {
+    background-color: #F7F3EC;
+
+    border-color: #C89418;
+
+    color: #8E6912;
+}
+
+/* =========================================================
+   INPUTS Y SELECTS - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .bg-dark-input {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border-color: #D8C8B5 !important;
+}
+
+[data-theme="light"] .bg-dark-input:focus {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border-color: #C89418 !important;
+
+    box-shadow: 0 0 0 0.2rem rgba(200, 148, 24, 0.15) !important;
+}
+
+[data-theme="light"] .bg-dark-input option {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+}
+
+/* =========================================================
+   ADMINISTRADOR - TEMA CLARO
+   Tarjetas de estadísticas
+========================================================= */
+
+[data-theme="light"] .stat-card {
+    background: #FFFFFF !important;
+    border-left: 5px solid #C89418 !important;
+    color: #2B241E !important;
+
+    box-shadow: 0 8px 25px rgba(80, 60, 40, 0.10) !important;
+}
+
+
+/* Icono */
+[data-theme="light"] .stat-card .icon-wrapper {
+    background: rgba(200, 148, 24, 0.10) !important;
+}
+
+[data-theme="light"] .stat-card i {
+    color: #C89418 !important;
+}
+
+
+/* Título */
+[data-theme="light"] .stat-card h5 {
+    color: #756454 !important;
+}
+
+
+/* Número */
+[data-theme="light"] .stat-card h2 {
+    color: #8E6912 !important;
+}
+
+
+/* Hover */
+[data-theme="light"] .stat-card:hover {
+    background: #FFFFFF !important;
+    box-shadow: 0 15px 35px rgba(80, 60, 40, 0.15) !important;
+}
+
+
+/* Animación del icono */
+[data-theme="light"] .stat-card:hover .icon-wrapper {
+    background: rgba(200, 148, 24, 0.16) !important;
+}
+
+/* =========================================================
+   COLORES DE LAS CARDS DEL ADMIN EN TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .stat-card.citas {
+    border-left-color: #3B82F6 !important;
+}
+
+[data-theme="light"] .stat-card.citas i,
+[data-theme="light"] .stat-card.citas h2 {
+    color: #2563EB !important;
+}
+
+[data-theme="light"] .stat-card.barberos {
+    border-left-color: #198754 !important;
+}
+
+[data-theme="light"] .stat-card.barberos i,
+[data-theme="light"] .stat-card.barberos h2 {
+    color: #198754 !important;
+}
+
+[data-theme="light"] .stat-card.servicios {
+    border-left-color: #C89418 !important;
+}
+
+[data-theme="light"] .stat-card.servicios i,
+[data-theme="light"] .stat-card.servicios h2 {
+    color: #A8790E !important;
+}
+
+[data-theme="light"] .stat-card.productos {
+    border-left-color: #7C5C99 !important;
+}
+
+[data-theme="light"] .stat-card.productos i,
+[data-theme="light"] .stat-card.productos h2 {
+    color: #6B4C87 !important;
+}
+/* =========================================================
+   ADMIN - BARRA DE ACCIONES
+========================================================= */
+
+[data-theme="light"] .action-bar-sticky {
+    background: linear-gradient(
+        180deg,
+        #FFFFFF,
+        #F7F3EC
+    ) !important;
+
+    border-bottom: 1px solid #D8C8B5 !important;
+    box-shadow: 0 4px 15px rgba(80, 60, 40, 0.06) !important;
+}
+
+[data-theme="light"] .action-bar-sticky .btn-modern,
+[data-theme="light"] .action-bar-sticky .btn-modern-inventario {
+    box-shadow: 0 4px 12px rgba(80, 60, 40, 0.12);
+}
+
+/* =========================================================
+   ADMIN - TARJETAS CONTENEDORAS
+========================================================= */
+
+[data-theme="light"] .card-custom {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E0D4C4 !important;
+    color: #2B241E !important;
+    box-shadow: 0 6px 20px rgba(80, 60, 40, 0.08) !important;
+}
+
+
+[data-theme="light"] .card-header-custom {
+    background-color: #F7F3EC !important;
+    color: #6E551D !important;
+    border-bottom: 2px solid #C89418 !important;
+}
+
+/* =========================================================
+   BARBERO - CARDS DE ESTADÍSTICAS
+   Tema claro
+========================================================= */
+
+[data-theme="light"] .tema-barbero .stat-card {
+    background: #FFFFFF !important;
+
+    border-left: 5px solid #58758C !important;
+
+    color: #2B241E !important;
+
+    box-shadow:
+        0 8px 25px rgba(70, 90, 105, 0.10) !important;
+}
+
+
+/* Iconos */
+[data-theme="light"] .tema-barbero .stat-card .icon-wrapper {
+    background: rgba(88, 117, 140, 0.12) !important;
+}
+
+[data-theme="light"] .tema-barbero .stat-card i {
+    color: #58758C !important;
+}
+
+
+/* Títulos */
+[data-theme="light"] .tema-barbero .stat-card h5 {
+    color: #66737D !important;
+}
+
+
+/* Números */
+[data-theme="light"] .tema-barbero .stat-card h2 {
+    color: #466276 !important;
+}
+
+
+/* Hover */
+[data-theme="light"] .tema-barbero .stat-card:hover {
+    background: #FFFFFF !important;
+
+    box-shadow:
+        0 15px 35px rgba(70, 90, 105, 0.15) !important;
+}
+
+
+/* Icono al pasar mouse */
+[data-theme="light"] .tema-barbero .stat-card:hover .icon-wrapper {
+    background: rgba(88, 117, 140, 0.18) !important;
+}
+/* =========================================================
+   CERRAR SESIÓN - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .btn-logout-custom {
+    background-color: #FFFFFF !important;
+
+    border: 2px solid #D8C8B5 !important;
+
+    color: #5E5145 !important;
+
+    box-shadow: 0 2px 8px rgba(80, 60, 40, 0.06);
+
+    font-weight: 600;
+}
+
+
+/* Icono */
+[data-theme="light"] .btn-logout-custom i {
+    color: #8A7460 !important;
+}
+
+
+/* Hover */
+[data-theme="light"] .btn-logout-custom:hover {
+    background-color: #FFF1F1 !important;
+
+    border-color: #DC3545 !important;
+
+    color: #C82333 !important;
+
+    box-shadow:
+        0 4px 12px rgba(220, 53, 69, 0.15) !important;
+}
+
+[data-theme="light"] .btn-logout-custom:hover i {
+    color: #C82333 !important;
+}
+/* =========================================================
+   CERRAR SESIÓN - VARIANTE btn-logout
+========================================================= */
+
+[data-theme="light"] .btn-logout {
+    background-color: #FFFFFF !important;
+    border: 2px solid #D8C8B5 !important;
+    color: #5E5145 !important;
+}
+
+[data-theme="light"] .btn-logout:hover {
+    background-color: #FFF1F1 !important;
+    border-color: #DC3545 !important;
+    color: #C82333 !important;
+}
+/* =========================================================
+   INFORMACIÓN DEL USUARIO - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .user-info-custom,
+[data-theme="light"] .user-info {
+    background-color: #F3EBDD !important;
+
+    border: 1px solid #E0D4C4 !important;
+
+    color: #51483F !important;
+}
+
+[data-theme="light"] .user-info-custom i,
+[data-theme="light"] .user-info i {
+    color: #8E6912 !important;
+}
+
+[data-theme="light"] .user-info-custom span,
+[data-theme="light"] .user-info span {
+    color: #51483F !important;
+}
+
+/* =========================================================
+   PANEL ADMIN - REPORTE / TABLA DE INVENTARIO
+   Corrección específica para tema claro
+========================================================= */
+
+[data-theme="light"] .card-custom {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border: 1px solid #E0D4C4 !important;
+}
+
+
+/* Encabezado de Inventario - Productos */
+[data-theme="light"] .card-header-custom {
+    background-color: #F7F3EC !important;
+    color: #6E551D !important;
+    border-bottom: 2px solid #C89418 !important;
+}
+
+[data-theme="light"] .card-header-custom span {
+    color: #6E551D !important;
+}
+
+[data-theme="light"] .card-header-custom i {
+    color: #C89418 !important;
+}
+
+
+/* Zona interna de la tarjeta */
+[data-theme="light"] .card-custom .card-body,
+[data-theme="light"] .card-custom .table-responsive {
+    background-color: #FFFFFF !important;
+}
+
+
+/* Tabla de inventario */
+[data-theme="light"] .card-custom .table-custom {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+}
+
+
+/* Encabezados de la tabla */
+[data-theme="light"] .card-custom .table-custom thead,
+[data-theme="light"] .card-custom .table-custom thead tr,
+[data-theme="light"] .card-custom .table-custom thead th {
+    background-color: #F1E8DA !important;
+    color: #6E551D !important;
+}
+
+
+/* Filas y celdas */
+[data-theme="light"] .card-custom .table-custom tbody,
+[data-theme="light"] .card-custom .table-custom tbody tr,
+[data-theme="light"] .card-custom .table-custom tbody td {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+}
+
+
+/* Hover de las filas */
+[data-theme="light"] .card-custom .table-custom tbody tr:hover,
+[data-theme="light"] .card-custom .table-custom tbody tr:hover td {
+    background-color: #F5EFE6 !important;
+}
+
+
+/* Bordes */
+[data-theme="light"] .card-custom .table-custom td,
+[data-theme="light"] .card-custom .table-custom th {
+    border-color: #E0D4C4 !important;
+}
+
+
+/* Texto cuando no hay registros */
+[data-theme="light"] .card-custom .text-light-brown {
+    color: #756454 !important;
+}
+
+/* =========================================================
+   REPORTES DE INVENTARIO - TEMA CLARO
+========================================================= */
+
+/* Cajas internas de los reportes */
+[data-theme="light"] #reportes .bg-dark {
+    background-color: #FFFFFF !important;
+    color: #2B241E !important;
+    border-color: #E0D4C4 !important;
+}
+
+
+/* Títulos de los reportes */
+[data-theme="light"] #reportes .text-yellow {
+    color: #8E6912 !important;
+}
+
+
+/* Texto secundario */
+[data-theme="light"] #reportes .text-light-brown {
+    color: #6B5D50 !important;
+}
+
+
+/* Números importantes */
+[data-theme="light"] #reportes .text-white {
+    color: #2B241E !important;
+}
+
+
+/* Bordes */
+[data-theme="light"] #reportes .border-secondary {
+    border-color: #D8C8B5 !important;
 }
