@@ -26,6 +26,14 @@ class Barbero(models.Model):
     dias_laborales = models.CharField(max_length=50, default='LUN,MAR,MIE,JUE,VIE,SAB')
     dia_descanso = models.CharField(max_length=3, choices=DIAS_SEMANA, default='DOM')
     tiempo_entre_citas = models.IntegerField(default=15)
+
+    # Información visible en la página de inicio
+    imagen_url = models.URLField(blank=True, default='')
+    calificacion = models.DecimalField(max_digits=2, decimal_places=1, default=5.0)
+    numero_resenas = models.PositiveIntegerField(default=0)
+    instagram = models.URLField(blank=True, default='')
+    facebook = models.URLField(blank=True, default='')
+    whatsapp = models.URLField(blank=True, default='')
     
     def __str__(self):
         return self.nombre

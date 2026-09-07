@@ -16,6 +16,7 @@ from django.conf import settings
 import os
 from googlecalendar.models import CuentaGoogle
 from .reportes import calcular_cierre_caja
+from .models import Sitio
 from citas.paginacion import paginar
 
 @login_required
@@ -67,11 +68,49 @@ def panel_admin(request):
         'barberos': barberos,
         'servicios': servicios,
         'productos': productos,
+        'sitio': Sitio.obtener(),
         'cantidad_barberos': cantidad_barberos,
         "total_citas": total_citas,
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
     }
     return render(request, 'administracion/panel_administrador.html', context)
+
+@login_required
+def editar_inicio(request):
+    """Actualiza todo el contenido editable de la página pública de inicio."""
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('inicio')
+
+    sitio = Sitio.obtener()
+    if request.method != 'POST':
+        return redirect('administracion:panel_admin')
+
+    campos = [
+        'nombre_marca', 'eslogan', 'hero_titulo', 'hero_descripcion',
+        'hero_imagen_1', 'hero_imagen_2', 'hero_imagen_3',
+        'servicios_titulo', 'servicios_subtitulo', 'barberos_titulo', 'barberos_subtitulo',
+        'nosotros_titulo', 'nosotros_parrafo_1', 'nosotros_parrafo_2',
+        'nosotros_punto_1', 'nosotros_punto_2', 'nosotros_punto_3', 'nosotros_imagen',
+        'testimonios_titulo', 'testimonios_subtitulo', 'testimonio_1', 'testimonio_1_autor',
+        'testimonio_2', 'testimonio_2_autor', 'testimonio_3', 'testimonio_3_autor',
+        'cta_titulo', 'cta_descripcion', 'cta_boton', 'footer_descripcion', 'horario',
+        'direccion', 'telefono', 'email', 'noticias_titulo', 'noticias_descripcion',
+        'copyright_texto',
+    ]
+    for campo in campos:
+        if campo in request.POST:
+            setattr(sitio, campo, request.POST.get(campo, '').strip())
+
+    try:
+        sitio.full_clean()
+        sitio.save()
+        messages.success(request, '✅ La información de la página de inicio fue actualizada correctamente.')
+    except ValidationError as e:
+        messages.error(request, f'❌ No se pudo guardar la información: {e.messages[0]}')
+
+    return redirect('administracion:panel_admin')
+
 
 @login_required
 def asignar_barbero(request, id):
@@ -325,7 +364,13 @@ def agregar_barbero(request):
                 duracion_cita=int(request.POST.get('duracion_cita', 30)),
                 dias_laborales=request.POST.get('dias_laborales', 'LUN,MAR,MIE,JUE,VIE,SAB'),
                 dia_descanso=request.POST.get('dia_descanso', 'DOM'),
-                tiempo_entre_citas=int(request.POST.get('tiempo_entre_citas', 15))
+                tiempo_entre_citas=int(request.POST.get('tiempo_entre_citas', 15)),
+                imagen_url=request.POST.get('imagen_url', '').strip(),
+                calificacion=request.POST.get('calificacion', '5.0') or '5.0',
+                numero_resenas=int(request.POST.get('numero_resenas', 0) or 0),
+                instagram=request.POST.get('instagram', '').strip(),
+                facebook=request.POST.get('facebook', '').strip(),
+                whatsapp=request.POST.get('whatsapp', '').strip()
             )
             messages.success(request, f'✅ Barbero "{barbero.nombre}" agregado correctamente.')
         except Exception as e:
@@ -348,6 +393,12 @@ def editar_barbero(request, id):
             barbero.especialidad = request.POST.get('especialidad', '').strip()
             barbero.telefono = request.POST.get('telefono', '').strip()
             barbero.email = request.POST.get('email', '').strip()
+            barbero.imagen_url = request.POST.get('imagen_url', '').strip()
+            barbero.calificacion = request.POST.get('calificacion', '5.0') or '5.0'
+            barbero.numero_resenas = int(request.POST.get('numero_resenas', 0) or 0)
+            barbero.instagram = request.POST.get('instagram', '').strip()
+            barbero.facebook = request.POST.get('facebook', '').strip()
+            barbero.whatsapp = request.POST.get('whatsapp', '').strip()
             barbero.activo = request.POST.get('activo') == 'on'
             
             # Horarios

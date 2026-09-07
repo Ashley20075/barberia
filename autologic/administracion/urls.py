@@ -5,6 +5,7 @@ app_name = 'administracion'
 
 urlpatterns = [
     path('admin-panel/', views.panel_admin, name='panel_admin'),
+    path('editar-inicio/', views.editar_inicio, name='editar_inicio'),
     path('asignar-barbero/<int:id>/', views.asignar_barbero, name='asignar_barbero'),
     path('quitar-barbero/<int:id>/', views.quitar_barbero, name='quitar_barbero'),
     path('crear-usuario/', views.crear_usuario, name='crear_usuario'),

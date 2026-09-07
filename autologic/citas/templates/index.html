@@ -1,410 +1,272 @@
 {% load static %}
 <!doctype html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Barbería Corte & Estilo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sections = document.querySelectorAll("section, footer");
-            const navLinks = document.querySelectorAll(".nav-link");
-
-            function actualizarMenu() {
-                let actual = "";
-                sections.forEach(section => {
-                    const top = section.offsetTop - 150;
-                    const bottom = top + section.offsetHeight;
-                    if (window.scrollY >= top && window.scrollY < bottom) {
-                        actual = section.id;
-                    }
-                });
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
-                    actual = "contacto";
-                }
-                navLinks.forEach(link => {
-                    link.classList.remove("active");
-                    const href = link.getAttribute("href").replace("#", "");
-                    if (href === actual) {
-                        link.classList.add("active");
-                    }
-                });
-            }
-            window.addEventListener("scroll", actualizarMenu);
-            actualizarMenu();
-        });
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ sitio.nombre_marca }} | {{ sitio.eslogan|striptags }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
-
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-    <img src="{% static 'logo.jpeg' %}" alt="Logo" style="height:40px; width:40px; object-fit:cover; border-radius:50%; margin-right:8px;">
-    Barber<span>Springfield</span>
-</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#nosotros">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#testimonios">Opiniones</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <!-- CAMBIO DE TEMA -->
-                    <li class="nav-item d-flex align-items-center ms-2">
-                        <button
-                            type="button"
-                            id="themeToggle"
-                            class="theme-toggle"
-                            title="Cambiar a tema claro"
-                            aria-label="Cambiar a tema claro">
-                            <i class="bi bi-moon-fill"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-login-nav ms-2" href="{% url 'login' %}">Iniciar Sesión</a>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#inicio">
+            <img src="{% static 'logo.jpeg' %}" alt="Logo" style="height:40px;width:40px;object-fit:cover;border-radius:50%;margin-right:8px;">
+            {{ sitio.nombre_marca }}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Abrir menú">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                <li class="nav-item"><a class="nav-link" href="#barberos">Barberos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#nosotros">Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link" href="#testimonios">Opiniones</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                <li class="nav-item d-flex align-items-center ms-2">
+                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema"><i class="bi bi-moon-fill"></i></button>
+                </li>
+                <li class="nav-item"><a class="btn btn-login-nav ms-lg-2 mt-2 mt-lg-0" href="{% url 'login' %}">Iniciar Sesión</a></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <main>
-        <!-- HERO -->
-        <section id="inicio" class="hero">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="badge-custom">✂️ CORTES CON PERSONALIDAD</div>
-                        <h1 class="display-4 fw-bold">
-                            Estilo & <span class="text-yellow">Elegancia</span><br /> Para Caballeros
-                        </h1>
-                        <p class="lead">
-                            Vive la experiencia de una barbería tradicional con técnicas modernas. Atención personalizada, ambiente único y los mejores acabados.
-                        </p>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <a href="{% url 'login' %}" class="btn btn-primary-custom">
-                                Agendar turno
-                            </a>
-                            <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#modalEstilos">
-                                Ver estilos
-                            </button>
-                        </div>
-
-                        <!-- Modal Estilos -->
-                        <div class="modal fade" id="modalEstilos" tabindex="-1">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content modal-content-custom">
-                                    <div class="modal-header modal-header-custom">
-                                        <h3 class="modal-title text-yellow">💈 Nuestros Servicios</h3>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h5 class="text-yellow">Cortes con Personalidad</h5>
-                                        <p>En BarberSpringfield ofrecemos cortes modernos y clásicos adaptados a tu estilo.</p>
-                                        <div class="row mt-4">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">✂️ Corte Clásico</h6>
-                                                    <p>Un estilo elegante y tradicional para cualquier ocasión.</p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">👑 Combo Rey</h6>
-                                                    <p>Corte impecable, barba perfectamente perfilada y una cerveza artesanal.</p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">🎨 Diseño Personalizado</h6>
-                                                    <p>Detalles y líneas exclusivas para destacar tu estilo.</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">🧔 Perfilado de Barba</h6>
-                                                    <p>Definición profesional para una apariencia impecable.</p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">💈 Afeitado Tradicional</h6>
-                                                    <p>Experiencia clásica con acabados suaves y precisos.</p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <h6 class="text-yellow">✨ Corte + Barba</h6>
-                                                    <p>Servicio completo para renovar completamente tu imagen.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer modal-footer-custom">
-                                        <button class="btn-modern" data-bs-dismiss="modal">Cerrar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 text-center mt-5 mt-lg-0">
-                        <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-                                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=1200&auto=format&fit=crop" class="hero-img w-100 rounded-3" alt="Barbero trabajando" />
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1200&auto=format&fit=crop" class="hero-img w-100 rounded-3" alt="Corte Fade" />
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1200&auto=format&fit=crop" class="hero-img w-100 rounded-3" alt="Barbería moderna" />
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-                    </div>
+<main>
+<section id="inicio" class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="badge-custom">{{ sitio.eslogan }}</div>
+                <h1 class="display-4 fw-bold">{{ sitio.hero_titulo }}</h1>
+                <p class="lead">{{ sitio.hero_descripcion }}</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'login' %}" class="btn btn-primary-custom">Agendar turno</a>
+                    <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#modalEstilos">Ver estilos</button>
                 </div>
             </div>
-        </section>
-
-<!-- SERVICIOS -->
-<section id="servicios" class="servicios py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Servicios Populares</h2>
-            <p class="text-light-brown">Cada corte, cada arreglo, hecho con precisión y dedicación</p>
+            <div class="col-lg-6 text-center mt-5 mt-lg-0">
+                <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="{{ sitio.hero_imagen_1 }}" class="hero-img w-100 rounded-3" alt="Barbería">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ sitio.hero_imagen_2 }}" class="hero-img w-100 rounded-3" alt="Corte de cabello">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="{{ sitio.hero_imagen_3 }}" class="hero-img w-100 rounded-3" alt="Barbero trabajando">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                </div>
+            </div>
         </div>
-        <div class="row g-4">
-
-{% for servicio in servicios %}
-
-<div class="col-md-4">
-
-    <div class="card-servicio">
-
-        <i class="bi bi-scissors"></i>
-
-        <h3>{{ servicio.nombre }}</h3>
-
-        <p>{{ servicio.descripcion }}</p>
-
-        <div class="precio">
-
-            ${{ servicio.precio }}
-
-        </div>
-
-        <a href="{% url 'login' %}"
-           class="btn btn-outline-custom btn-sm mt-2">
-
-            Reservar
-
-        </a>
-
-    </div>
-
-</div>
-
-{% endfor %}
-
-</div>
     </div>
 </section>
 
-        <!-- BARBEROS -->
-        <section id="barberos" class="barberos py-5">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2>Nuestros Barberos</h2>
-                    <p class="text-light-brown">Profesionales apasionados por su arte</p>
+<section id="servicios" class="servicios py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>{{ sitio.servicios_titulo }}</h2>
+            <p class="text-light-brown">{{ sitio.servicios_subtitulo }}</p>
+        </div>
+        <div class="row g-4">
+            {% for servicio in servicios %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card-servicio">
+                    <i class="bi bi-scissors"></i>
+                    <h3>{{ servicio.nombre }}</h3>
+                    <p>{{ servicio.descripcion }}</p>
+                    <div class="precio">${{ servicio.precio }}</div>
+                    <a href="{% url 'login' %}" class="btn btn-outline-custom btn-sm mt-2">Reservar</a>
                 </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card-barbero">
-                            <div class="barbero-img-wrapper">
-                                <img src="https://thumbs.dreamstime.com/b/peluquero-con-poses-de-cuchilla-afeitar-en-la-barber%C3%ADa-silla-barbero-una-profesional-es-profesi%C3%B3n-moda-masculino-peluquer%C3%ADa-175803540.jpg" alt="Barbero Carlos" class="barbero-img">
-                            </div>
-                            <div class="barbero-info">
-                                <h3>Carlos Rodríguez</h3>
-                                <p class="especialidad">Especialista en Cortes Clásicos</p>
-                                <div class="calificacion">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>4.8 (156 reseñas)</span>
-                                </div>
-                                <div class="barbero-social">
-                                    <i class="bi bi-instagram"></i>
-                                    <i class="bi bi-facebook"></i>
-                                    <i class="bi bi-whatsapp"></i>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-light-brown">No hay servicios disponibles.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="barberos" class="barberos py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>{{ sitio.barberos_titulo }}</h2>
+            <p class="text-light-brown">{{ sitio.barberos_subtitulo }}</p>
+        </div>
+        <div class="row g-4">
+            {% for barbero in barberos_inicio %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card-barbero">
+                    <div class="barbero-img-wrapper">
+                        {% if barbero.imagen_url %}
+                            <img src="{{ barbero.imagen_url }}" alt="{{ barbero.nombre }}" class="barbero-img">
+                        {% else %}
+                            <img src="{% static 'logo.jpeg' %}" alt="{{ barbero.nombre }}" class="barbero-img">
+                        {% endif %}
                     </div>
-                    <div class="col-md-4">
-                        <div class="card-barbero">
-                            <div class="barbero-img-wrapper">
-                                <img src="https://ebc.edu/wp-content/uploads/2022/03/Barber-posing.jpg" alt="Barbero Miguel" class="barbero-img">
-                            </div>
-                            <div class="barbero-info">
-                                <h3>Miguel Sánchez</h3>
-                                <p class="especialidad">Especialista en Cortes Modernos</p>
-                                <div class="calificacion">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>4.9 (203 reseñas)</span>
-                                </div>
-                                <div class="barbero-social">
-                                    <i class="bi bi-instagram"></i>
-                                    <i class="bi bi-facebook"></i>
-                                    <i class="bi bi-whatsapp"></i>
-                                </div>
-                            </div>
+                    <div class="barbero-info">
+                        <h3>{{ barbero.nombre }}</h3>
+                        <p class="especialidad">{{ barbero.especialidad }}</p>
+                        <div class="calificacion">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            <span>{{ barbero.calificacion }} ({{ barbero.numero_resenas }} reseñas)</span>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card-barbero">
-                            <div class="barbero-img-wrapper">
-                                <img src="https://img.freepik.com/free-photo/portrait-male-hairstylist-looking-camera_23-2147839829.jpg" alt="Barbero Andrés" class="barbero-img">
-                            </div>
-                            <div class="barbero-info">
-                                <h3>Andrés López</h3>
-                                <p class="especialidad">Especialista en Afeitado</p>
-                                <div class="calificacion">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-half"></i>
-                                    <span>4.7 (98 reseñas)</span>
-                                </div>
-                                <div class="barbero-social">
-                                    <i class="bi bi-instagram"></i>
-                                    <i class="bi bi-facebook"></i>
-                                    <i class="bi bi-whatsapp"></i>
-                                </div>
-                            </div>
+                        {% if barbero.instagram or barbero.facebook or barbero.whatsapp %}
+                        <div class="barbero-social">
+                            {% if barbero.instagram %}<a href="{{ barbero.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
+                            {% if barbero.facebook %}<a href="{{ barbero.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
+                            {% if barbero.whatsapp %}<a href="{{ barbero.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>{% endif %}
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        </section>
+            {% empty %}
+            <div class="col-12 text-center text-light-brown">No hay barberos disponibles.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
-        <!-- NOSOTROS -->
-        <section id="nosotros" class="nosotros py-5">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <h2>Más que una barbería, <span class="text-yellow">un legado</span></h2>
-                        <p>Desde 2012, BarberSpringfield es el punto de encuentro para los hombres que valoran la estética, la tradición y la buena conversación.</p>
-                        <p>Con un ambiente que fusiona lo vintage con lo moderno, cada visita es una experiencia sensorial.</p>
-                        <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle-fill text-yellow me-2"></i> Profesionales certificados</li>
-                            <li><i class="bi bi-check-circle-fill text-yellow me-2"></i> Productos premium importados</li>
-                            <li><i class="bi bi-check-circle-fill text-yellow me-2"></i> Higiene y esterilización garantizada</li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-6 text-center mt-4 mt-lg-0">
-                        <img src="https://www.peluker.com/blog/wp-content/uploads/2024/11/Image04Inspiracion-en-mobiliario-de-barberia-vintage-para-un-look-clasico.jpg" alt="Ambiente barbería" class="img-fluid rounded-3 w-100" style="max-height: 260px; object-fit: cover;" />
-                    </div>
-                </div>
+<section id="nosotros" class="nosotros py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2>{{ sitio.nosotros_titulo }}</h2>
+                <p>{{ sitio.nosotros_parrafo_1 }}</p>
+                <p>{{ sitio.nosotros_parrafo_2 }}</p>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_1 }}</li>
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_2 }}</li>
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_3 }}</li>
+                </ul>
             </div>
-        </section>
-
-        <!-- TESTIMONIOS -->
-        <section id="testimonios" class="testimonios py-5">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2>Lo que dicen nuestros clientes</h2>
-                    <p class="text-light-brown">Más de 500 reseñas nos respaldan</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card-testimonio">
-                            <i class="bi bi-quote"></i>
-                            <div class="estrellas">★★★★★</div>
-                            <p>"Excelente servicio, el barbero entendió exactamente lo que quería."</p>
-                            <h4>— Javier M.</h4>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card-testimonio">
-                            <i class="bi bi-quote"></i>
-                            <div class="estrellas">★★★★★</div>
-                            <p>"Llevo años buscando un lugar así. El corte Fade perfecto. 100% recomendado."</p>
-                            <h4>— Andrés L.</h4>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card-testimonio">
-                            <i class="bi bi-quote"></i>
-                            <div class="estrellas">★★★★★</div>
-                            <p>"La mejor barbería de la zona. Precios justos y te dan una cerveza mientras esperas."</p>
-                            <h4>— Camila R.</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA -->
-        <div class="cta-section py-5">
-            <div class="container text-center">
-                <h2>¿Listo para un cambio de look?</h2>
-                <p>Reserva tu cita ahora y obtén un 15% de descuento en tu primer corte.</p>
-                <a href="{% url 'panel_cliente' %}" class="btn btn-cta">Reservar mi espacio</a>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <img src="{{ sitio.nosotros_imagen }}" alt="Ambiente de la barbería" class="img-fluid rounded-3 w-100" style="max-height:360px;object-fit:cover;">
             </div>
         </div>
-    </main>
+    </div>
+</section>
 
-    <!-- FOOTER -->
-    <footer id="contacto" class="footer py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <h3>BarberSpringfield</h3>
-                    <p>Cortes modernos, atención personalizada y calidad garantizada.</p>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h3>Horario</h3>
-                    <p>Lun - Vie: 9:00 AM - 8:00 PM<br/>Sábados: 10:00 AM - 6:00 PM<br/>Domingos: Cerrado</p>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h3>Contacto</h3>
-                    <p>
-                        <i class="bi bi-geo-alt"></i> Calle 36B Sur # 5-50<br/>
-                        <i class="bi bi-telephone"></i> +57 301 234 5678<br/>
-                        <i class="bi bi-envelope"></i> barberspringfield@gmail.com
-                    </p>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h3>Noticias</h3>
-                    <p>Promociones y tips de cuidado masculino.</p>
-                    <div class="d-flex">
-                        <input type="email" class="form-control" placeholder="Tu correo" />
-                        <button class="btn btn-newsletter">→</button>
-                    </div>
+<section id="testimonios" class="testimonios py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>{{ sitio.testimonios_titulo }}</h2>
+            <p class="text-light-brown">{{ sitio.testimonios_subtitulo }}</p>
+        </div>
+        <div class="row g-4">
+            {% for texto, autor in testimonios %}
+            <div class="col-md-4">
+                <div class="card-testimonio">
+                    <i class="bi bi-quote"></i>
+                    <div class="estrellas">★★★★★</div>
+                    <p>"{{ texto }}"</p>
+                    <h4>— {{ autor }}</h4>
                 </div>
             </div>
-            <div class="copyright text-center pt-4">
-                <p>© 2025 BarberSpringfield | Estilo & Elegancia - Todos los derechos reservados</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div class="cta-section py-5">
+    <div class="container text-center">
+        <h2>{{ sitio.cta_titulo }}</h2>
+        <p>{{ sitio.cta_descripcion }}</p>
+        <a href="{% url 'panel_cliente' %}" class="btn btn-cta">{{ sitio.cta_boton }}</a>
+    </div>
+</div>
+</main>
+
+<footer id="contacto" class="footer py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <h3>{{ sitio.nombre_marca }}</h3>
+                <p>{{ sitio.footer_descripcion }}</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3>Horario</h3>
+                <p>{{ sitio.horario|linebreaksbr }}</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3>Contacto</h3>
+                <p>
+                    <i class="bi bi-geo-alt"></i> {{ sitio.direccion }}<br>
+                    <i class="bi bi-telephone"></i> {{ sitio.telefono }}<br>
+                    <i class="bi bi-envelope"></i> {{ sitio.email }}
+                </p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3>{{ sitio.noticias_titulo }}</h3>
+                <p>{{ sitio.noticias_descripcion }}</p>
+                <div class="d-flex">
+                    <input type="email" class="form-control" placeholder="Tu correo" aria-label="Tu correo">
+                    <button class="btn btn-newsletter" type="button">→</button>
+                </div>
             </div>
         </div>
-    </footer>
+        <div class="copyright text-center pt-4"><p>{{ sitio.copyright_texto }}</p></div>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/ui-mejoras.js' %}"></script>
+<!-- Modal de estilos: también usa los servicios registrados por el administrador -->
+<div class="modal fade" id="modalEstilos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h3 class="modal-title text-yellow"><i class="bi bi-scissors"></i> {{ sitio.servicios_titulo }}</h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ sitio.servicios_subtitulo }}</p>
+                <div class="row">
+                    {% for servicio in servicios %}
+                    <div class="col-md-6 mb-3">
+                        <h6 class="text-yellow">{{ servicio.nombre }}</h6>
+                        <p>{{ servicio.descripcion }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-custom">
+                <button class="btn btn-secondary-custom" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/ui-mejoras.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = document.querySelectorAll("section, footer");
+    const navLinks = document.querySelectorAll(".nav-link");
+    function actualizarMenu() {
+        let actual = "";
+        sections.forEach(section => {
+            const top = section.offsetTop - 150;
+            const bottom = top + section.offsetHeight;
+            if (window.scrollY >= top && window.scrollY < bottom) actual = section.id;
+        });
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) actual = "contacto";
+        navLinks.forEach(link => link.classList.toggle("active", link.getAttribute("href").replace("#","") === actual));
+    }
+    window.addEventListener("scroll", actualizarMenu);
+    actualizarMenu();
+});
+</script>
 </body>
-
 </html>

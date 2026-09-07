@@ -42,8 +42,19 @@
         .stat-card.productos i { color: #F4C542; }
         .stat-card.productos h2 { color: #F4C542; }
         .form-label-custom { color: #FFD966; font-weight: 500; margin-bottom: 0.5rem; }
+        .section-editor { background:#17130f; border:1px solid #3F2E22; border-radius:18px; padding:20px; margin-bottom:18px; }
+        .section-editor h6 { color:#F4C542; font-weight:700; margin-bottom:16px; border-bottom:1px solid #3F2E22; padding-bottom:10px; }
+        .btn-modern-secondary { background:linear-gradient(135deg,#C9A87C,#E0C49A); }
+        .btn-modern-secondary:hover { background:linear-gradient(135deg,#E0C49A,#C9A87C); }
+        .btn-secondary-custom { background:#3F2E22; border:1px solid #6A5140; color:#F5EFE6; border-radius:50px; padding:10px 24px; font-weight:700; }
+        .btn-secondary-custom:hover { background:#5A4332; color:#fff; }
         @media (max-width: 768px) { .navbar-brand-custom { font-size: 1.3rem; } .nav-btn, .btn-logout-custom { font-size: 0.8rem; padding: 0.3rem 0.8rem; } .btn-modern, .btn-modern-inventario { font-size: 13px; padding: 11px 18px; min-width: 140px; } .stat-card h2 { font-size: 2rem; } }
         @media (max-width: 576px) { .btn-group-modern { flex-direction: column; align-items: stretch; gap: 10px; } .btn-modern, .btn-modern-inventario { font-size: 14px; padding: 13px 20px; min-width: unset; width: 100%; } .stat-card { padding: 1.2rem 1rem; } .stat-card h2 { font-size: 1.8rem; } }
+        .modal-body-scroll {max-height: 70vh;overflow-y: auto; padding-right: 10px;}
+        .modal-body-scroll::-webkit-scrollbar {width: 8px;}
+        .modal-body-scroll::-webkit-scrollbar-track {background: #1E1A15; border-radius: 10px;}
+        .modal-body-scroll::-webkit-scrollbar-thumb {background: #F4C542; border-radius: 10px;}
+        .modal-body-scroll::-webkit-scrollbar-thumb:hover {background: #FFD966;}
     </style>
 </head>
 
@@ -67,12 +78,7 @@
                     <a href="{% url 'inventario:dashboard' %}" class="nav-btn">
                         <i class="bi bi-boxes"></i> Inventario
                     </a>
-                    <button
-                        type="button"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        title="Cambiar tema"
-                        aria-label="Cambiar tema">
+                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
                         <i class="bi bi-moon-fill"></i>
                     </button>
                     <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
@@ -118,32 +124,32 @@
             <div>
                 <i class="bi bi-google"></i>
                 {% if cuenta_google %}
-                    Conectado con <strong>{{ cuenta_google.email_google }}</strong>. Todas las citas activas se muestran en ESE Google Calendar (ábrelo con esa misma cuenta en
-                    <a href="https://calendar.google.com/" target="_blank" rel="noopener" class="alert-link">calendar.google.com</a>).
+                Conectado con <strong>{{ cuenta_google.email_google }}</strong>. Todas las citas activas se muestran en ESE Google Calendar (ábrelo con esa misma cuenta en
+                <a href="https://calendar.google.com/" target="_blank" rel="noopener" class="alert-link">calendar.google.com</a>).
                 {% else %}
-                    Conecta tu Google Calendar para ver ahí todas las citas generales de la barbería. Puedes usar cualquier Gmail real tuyo, no tiene que coincidir con tu correo de acceso a este sistema.
+                Conecta tu Google Calendar para ver ahí todas las citas generales de la barbería. Puedes usar cualquier Gmail real tuyo, no tiene que coincidir con tu correo de acceso a este sistema.
                 {% endif %}
             </div>
             {% if cuenta_google %}
-                <form method="post" action="{% url 'googlecalendar:desconectar' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{% url 'administracion:panel_admin' %}">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Desconectar</button>
-                </form>
+            <form method="post" action="{% url 'googlecalendar:desconectar' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'administracion:panel_admin' %}">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Desconectar</button>
+            </form>
             {% else %}
-                <a href="{% url 'googlecalendar:conectar' %}?next={% url 'administracion:panel_admin' %}" class="btn btn-sm btn-warning">
-                    Conectar Google Calendar
-                </a>
+            <a href="{% url 'googlecalendar:conectar' %}?next={% url 'administracion:panel_admin' %}" class="btn btn-sm btn-warning">
+                Conectar Google Calendar
+            </a>
             {% endif %}
         </div>
 
         {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle"></i> {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
         {% endif %}
 
         <!-- BARRA DE ACCIONES -->
@@ -152,6 +158,9 @@
                 <div class="btn-group-modern">
                     <button class="btn-modern" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio">
                         <i class="bi bi-plus-circle"></i> Nuevo Servicio
+                    </button>
+                    <button class="btn-modern btn-modern-secondary" data-bs-toggle="modal" data-bs-target="#modalEditarInicio">
+                        <i class="bi bi-house-gear"></i> Editar página de inicio
                     </button>
                     <button class="btn-modern" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
                         <i class="bi bi-person-plus"></i> Nuevo Usuario
@@ -198,7 +207,7 @@
             </div>
         </div>
 
-        <!-- TABLA DE USUARIOS - SOLO GESTIÓN DE ROLES Y ACTIVAR/DESACTIVAR -->
+        <!-- TABLA DE USUARIOS -->
         <div class="card-custom">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-people"></i> Usuarios Registrados</span>
@@ -209,112 +218,103 @@
                     <table class="table table-custom table-hover mb-0">
                         <thead>
                             <tr>
-    <th>Nombre</th>
-    <th>Cédula</th>
-    <th>Email</th>
-    <th>Rol</th>
-    <th>Estado</th>
-    <th>Acciones</th>
-</tr>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
                         </thead>
                         <tbody>
                             {% for u in usuarios %}
                             <tr>
                                 <td>
                                     {% if u.first_name %}
-                                        {{ u.first_name }} {{ u.last_name }}
+                                    {{ u.first_name }} {{ u.last_name }}
                                     {% else %}
-                                        {{ u.username }}
+                                    {{ u.username }}
                                     {% endif %}
                                 </td>
                                 <td>
-    {% if u.cliente.cedula %}
-        {{ u.cliente.cedula }}
-    {% else %}
-        No registrada
-    {% endif %}
-</td>
-
-<td>{{ u.email }}</td>
+                                    {% if u.cliente.cedula %}
+                                    {{ u.cliente.cedula }}
+                                    {% else %}
+                                    No registrada
+                                    {% endif %}
+                                </td>
+                                <td>{{ u.email }}</td>
                                 <td>
                                     {% if u.is_superuser %}
-        <span class="badge badge-role-admin">
-            Admin
-        </span>
-
-    {% elif u.groups.exists %}
-        <span class="badge badge-role-barbero">
-            Barbero
-        </span>
-
-    {% else %}
-        <span class="badge badge-role-cliente">
-            Cliente
-        </span>
-    {% endif %}
+                                    <span class="badge badge-role-admin">Admin</span>
+                                    {% elif u.groups.exists %}
+                                    <span class="badge badge-role-barbero">Barbero</span>
+                                    {% else %}
+                                    <span class="badge badge-role-cliente">Cliente</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if u.is_active %}
-                                        <span class="badge bg-success">Activo</span>
+                                    <span class="badge bg-success">Activo</span>
                                     {% else %}
-                                        <span class="badge bg-danger">Inactivo</span>
+                                    <span class="badge bg-danger">Inactivo</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if u.groups.all %}
-                                        <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
-                                            <i class="bi bi-person-dash"></i> Quitar barbero
-                                        </a>
+                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
+                                        <i class="bi bi-person-dash"></i> Quitar barbero
+                                    </a>
                                     {% else %}
-                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
-                                            <i class="bi bi-person-badge"></i> Hacer barbero
-                                        </button>
+                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
+                                        <i class="bi bi-person-badge"></i> Hacer barbero
+                                    </button>
 
-                                        <div class="modal fade" id="modalAsignarBarbero{{ u.id }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content modal-content-custom">
-                                                    <form method="post" action="{% url 'administracion:asignar_barbero' u.id %}">
-                                                        {% csrf_token %}
-                                                        <div class="modal-header modal-header-custom">
-                                                            <h5 class="modal-title text-yellow">Hacer barbero a {{ u.username }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    <div class="modal fade" id="modalAsignarBarbero{{ u.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content modal-content-custom">
+                                                <form method="post" action="{% url 'administracion:asignar_barbero' u.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="modal-header modal-header-custom">
+                                                        <h5 class="modal-title text-yellow">Hacer barbero a {{ u.username }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-light-brown small">
+                                                            Si esta cuenta se registró con Google, todavía no tiene cédula guardada: complétala aquí para poder convertirla en barbero.
+                                                        </p>
+                                                        <div class="mb-3">
+                                                            <label class="form-label text-yellow">Cédula *</label>
+                                                            <input type="text" name="cedula" class="form-control bg-dark-input" value="{{ u.cliente.cedula|default:'' }}" required>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <p class="text-light-brown small">
-                                                                Si esta cuenta se registró con Google, todavía no tiene cédula guardada: complétala aquí para poder convertirla en barbero.
-                                                            </p>
-                                                            <div class="mb-3">
-                                                                <label class="form-label text-yellow">Cédula *</label>
-                                                                <input type="text" name="cedula" class="form-control bg-dark-input" value="{{ u.cliente.cedula|default:'' }}" required>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label text-yellow">Teléfono</label>
-                                                                <input type="text" name="telefono" class="form-control bg-dark-input" value="{{ u.cliente.telefono|default:'' }}">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label text-yellow">Especialidad</label>
-                                                                <input type="text" name="especialidad" class="form-control bg-dark-input" value="General">
-                                                            </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label text-yellow">Teléfono</label>
+                                                            <input type="text" name="telefono" class="form-control bg-dark-input" value="{{ u.cliente.telefono|default:'' }}">
                                                         </div>
-                                                        <div class="modal-footer modal-footer-custom">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                            <button type="submit" class="btn-modern">
-                                                                <i class="bi bi-person-badge"></i> Confirmar
-                                                            </button>
+                                                        <div class="mb-3">
+                                                            <label class="form-label text-yellow">Especialidad</label>
+                                                            <input type="text" name="especialidad" class="form-control bg-dark-input" value="General">
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                    <div class="modal-footer modal-footer-custom">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn-modern">
+                                                            <i class="bi bi-person-badge"></i> Confirmar
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
+                                    </div>
                                     {% endif %}
                                     {% if u.is_active %}
-                                        <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
-                                            <i class="bi bi-person-x"></i> Desactivar
-                                        </a>
+                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
+                                        <i class="bi bi-person-x"></i> Desactivar
+                                    </a>
                                     {% else %}
-                                        <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
-                                            <i class="bi bi-person-check"></i> Activar
-                                        </a>
+                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
+                                        <i class="bi bi-person-check"></i> Activar
+                                    </a>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -362,30 +362,14 @@
                                 <td>{{ cita.barbero.nombre }}</td>
                                 <td>
                                     {% if cita.estado == "Pendiente" %}
-
-<span class="badge bg-warning text-dark">
-Pendiente
-</span>
-
-{% elif cita.estado == "Confirmada" %}
-
-<span class="badge bg-success">
-Confirmada
-</span>
-
-{% elif cita.estado == "Finalizada" %}
-
-<span class="badge bg-info text-dark">
-Finalizada
-</span>
-
-{% elif cita.estado == "Cancelada" %}
-
-<span class="badge bg-danger">
-Cancelada
-</span>
-
-{% endif %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% elif cita.estado == "Confirmada" %}
+                                    <span class="badge bg-success">Confirmada</span>
+                                    {% elif cita.estado == "Finalizada" %}
+                                    <span class="badge bg-info text-dark">Finalizada</span>
+                                    {% elif cita.estado == "Cancelada" %}
+                                    <span class="badge bg-danger">Cancelada</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
@@ -410,7 +394,7 @@ Cancelada
             </div>
         </div>
 
-        <!-- HISTORIAL DE CITAS (finalizadas / canceladas) -->
+        <!-- HISTORIAL DE CITAS -->
         <div class="card-custom">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-clock-history"></i> Historial de citas</span>
@@ -439,9 +423,9 @@ Cancelada
                                 <td>{{ cita.barbero.nombre|default:"Sin asignar" }}</td>
                                 <td>
                                     {% if cita.estado == "Finalizada" %}
-                                        <span class="badge bg-info text-dark">Finalizada</span>
+                                    <span class="badge bg-info text-dark">Finalizada</span>
                                     {% else %}
-                                        <span class="badge bg-danger">Cancelada</span>
+                                    <span class="badge bg-danger">Cancelada</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -472,6 +456,7 @@ Cancelada
                     <table class="table table-custom table-hover mb-0">
                         <thead>
                             <tr>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Cédula</th>
                                 <th>Especialidad</th>
@@ -485,6 +470,13 @@ Cancelada
                         <tbody>
                             {% for b in barberos %}
                             <tr>
+                                <td>
+                                    {% if b.imagen_url %}
+                                    <img src="{{ b.imagen_url }}" alt="{{ b.nombre }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                    {% else %}
+                                    <i class="bi bi-person-circle" style="font-size: 2rem; color: #C9A87C;"></i>
+                                    {% endif %}
+                                </td>
                                 <td>{{ b.nombre }}</td>
                                 <td>{{ b.cedula }}</td>
                                 <td>{{ b.especialidad }}</td>
@@ -493,47 +485,35 @@ Cancelada
                                 <td>{{ b.jornada_inicio|time:"H:i" }} - {{ b.jornada_fin|time:"H:i" }}</td>
                                 <td>{{ b.get_dia_descanso_display }}</td>
                                 <td>
-
-    <a href="{% url 'administracion:certificado_barbero_admin' b.id %}"
-       class="btn btn-sm btn-info"
-       target="_blank">
-
-        📄
-    </a>
-
-    <button class="btn btn-sm btn-warning"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEditarBarbero"
-            data-id="{{ b.id }}"
-            data-nombre="{{ b.nombre }}"
-            data-cedula="{{ b.cedula }}"
-            data-especialidad="{{ b.especialidad }}"
-            data-telefono="{{ b.telefono }}"
-            data-email="{{ b.email }}"
-            data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}"
-            data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}"
-            data-duracion_cita="{{ b.duracion_cita }}"
-            data-dias_laborales="{{ b.dias_laborales }}"
-            data-dia_descanso="{{ b.dia_descanso }}"
-            data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
-
-        <i class="bi bi-pencil"></i>
-
-    </button>
-
-    <a href="{% url 'administracion:eliminar_barbero' b.id %}"
-       class="btn btn-sm btn-danger"
-       onclick="return confirm('¿Eliminar este barbero?')">
-
-        <i class="bi bi-trash"></i>
-
-    </a>
-
-</td>
+                                    <a href="{% url 'administracion:certificado_barbero_admin' b.id %}" class="btn btn-sm btn-info" target="_blank">
+                                        📄
+                                    </a>
+                                    <button class="btn btn-sm btn-warning"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarBarbero"
+                                            data-id="{{ b.id }}"
+                                            data-nombre="{{ b.nombre }}"
+                                            data-cedula="{{ b.cedula }}"
+                                            data-especialidad="{{ b.especialidad }}"
+                                            data-telefono="{{ b.telefono }}"
+                                            data-email="{{ b.email }}"
+                                            data-imagen_url="{{ b.imagen_url }}"
+                                            data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}"
+                                            data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}"
+                                            data-duracion_cita="{{ b.duracion_cita }}"
+                                            data-dias_laborales="{{ b.dias_laborales }}"
+                                            data-dia_descanso="{{ b.dia_descanso }}"
+                                            data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este barbero?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center text-light-brown py-4">
+                                <td colspan="9" class="text-center text-light-brown py-4">
                                     <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i>
                                     No hay barberos registrados.
                                 </td>
@@ -575,13 +555,13 @@ Cancelada
                                 </td>
                                 <td>
                                     {% if producto.stock_actual >= 10 %}
-                                        <span class="badge bg-success">Suficiente</span>
+                                    <span class="badge bg-success">Suficiente</span>
                                     {% elif producto.stock_actual >= 6 %}
-                                        <span class="badge bg-warning text-dark">Medio</span>
+                                    <span class="badge bg-warning text-dark">Medio</span>
                                     {% elif producto.stock_actual >= 1 %}
-                                        <span class="badge bg-danger">Bajo</span>
+                                    <span class="badge bg-danger">Bajo</span>
                                     {% else %}
-                                        <span class="badge bg-danger">Agotado</span>
+                                    <span class="badge bg-danger">Agotado</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -662,6 +642,200 @@ Cancelada
 
     <!-- ===== MODALES ===== -->
 
+    <!-- MODAL EDITAR PÁGINA DE INICIO -->
+    <div class="modal fade" id="modalEditarInicio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-height: 90vh;">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title text-yellow"><i class="bi bi-house-gear"></i> Editar página de inicio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="{% url 'administracion:editar_inicio' %}">
+                    {% csrf_token %}
+                    <div class="modal-body modal-body-scroll">
+                        <div class="section-editor">
+                            <h6>Marca y portada</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Nombre de la barbería</label>
+                                    <input name="nombre_marca" value="{{ sitio.nombre_marca }}" class="form-control bg-dark-input" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Eslogan</label>
+                                    <input name="eslogan" value="{{ sitio.eslogan }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Título principal</label>
+                                <input name="hero_titulo" value="{{ sitio.hero_titulo }}" class="form-control bg-dark-input">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Descripción principal</label>
+                                <textarea name="hero_descripcion" class="form-control bg-dark-input" rows="3">{{ sitio.hero_descripcion }}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Imagen portada 1</label>
+                                    <input type="url" name="hero_imagen_1" value="{{ sitio.hero_imagen_1 }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Imagen portada 2</label>
+                                    <input type="url" name="hero_imagen_2" value="{{ sitio.hero_imagen_2 }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Imagen portada 3</label>
+                                    <input type="url" name="hero_imagen_3" value="{{ sitio.hero_imagen_3 }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-editor">
+                            <h6>Servicios y barberos</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Título de servicios</label>
+                                    <input name="servicios_titulo" value="{{ sitio.servicios_titulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Subtítulo de servicios</label>
+                                    <input name="servicios_subtitulo" value="{{ sitio.servicios_subtitulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Título de barberos</label>
+                                    <input name="barberos_titulo" value="{{ sitio.barberos_titulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Subtítulo de barberos</label>
+                                    <input name="barberos_subtitulo" value="{{ sitio.barberos_subtitulo }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                            <small class="text-light-brown">Los nombres, precios y descripciones de cada servicio se editan en la tabla de Servicios. Los datos de cada barbero se editan en la tabla de Barberos.</small>
+                        </div>
+                        <div class="section-editor">
+                            <h6>Nosotros</h6>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Título</label>
+                                <input name="nosotros_titulo" value="{{ sitio.nosotros_titulo }}" class="form-control bg-dark-input">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Primer párrafo</label>
+                                    <textarea name="nosotros_parrafo_1" class="form-control bg-dark-input" rows="4">{{ sitio.nosotros_parrafo_1 }}</textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Segundo párrafo</label>
+                                    <textarea name="nosotros_parrafo_2" class="form-control bg-dark-input" rows="4">{{ sitio.nosotros_parrafo_2 }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Punto 1</label>
+                                    <input name="nosotros_punto_1" value="{{ sitio.nosotros_punto_1 }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Punto 2</label>
+                                    <input name="nosotros_punto_2" value="{{ sitio.nosotros_punto_2 }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Punto 3</label>
+                                    <input name="nosotros_punto_3" value="{{ sitio.nosotros_punto_3 }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Imagen de Nosotros</label>
+                                <input type="url" name="nosotros_imagen" value="{{ sitio.nosotros_imagen }}" class="form-control bg-dark-input">
+                            </div>
+                        </div>
+                        <div class="section-editor">
+                            <h6>Testimonios</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Título</label>
+                                    <input name="testimonios_titulo" value="{{ sitio.testimonios_titulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Subtítulo</label>
+                                    <input name="testimonios_subtitulo" value="{{ sitio.testimonios_subtitulo }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Testimonio 1</label>
+                                    <textarea name="testimonio_1" class="form-control bg-dark-input mb-2" rows="3">{{ sitio.testimonio_1 }}</textarea>
+                                    <input name="testimonio_1_autor" value="{{ sitio.testimonio_1_autor }}" class="form-control bg-dark-input mb-3" placeholder="Autor">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Testimonio 2</label>
+                                    <textarea name="testimonio_2" class="form-control bg-dark-input mb-2" rows="3">{{ sitio.testimonio_2 }}</textarea>
+                                    <input name="testimonio_2_autor" value="{{ sitio.testimonio_2_autor }}" class="form-control bg-dark-input mb-3" placeholder="Autor">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Testimonio 3</label>
+                                    <textarea name="testimonio_3" class="form-control bg-dark-input mb-2" rows="3">{{ sitio.testimonio_3 }}</textarea>
+                                    <input name="testimonio_3_autor" value="{{ sitio.testimonio_3_autor }}" class="form-control bg-dark-input mb-3" placeholder="Autor">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-editor">
+                            <h6>Botón de reserva y pie de página</h6>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Título CTA</label>
+                                    <input name="cta_titulo" value="{{ sitio.cta_titulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Texto CTA</label>
+                                    <textarea name="cta_descripcion" class="form-control bg-dark-input" rows="2">{{ sitio.cta_descripcion }}</textarea>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label-custom">Texto del botón</label>
+                                    <input name="cta_boton" value="{{ sitio.cta_boton }}" class="form-control bg-dark-input">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Descripción del pie de página</label>
+                                <textarea name="footer_descripcion" class="form-control bg-dark-input" rows="2">{{ sitio.footer_descripcion }}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Horario</label>
+                                    <textarea name="horario" class="form-control bg-dark-input" rows="3">{{ sitio.horario }}</textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Dirección</label>
+                                    <input name="direccion" value="{{ sitio.direccion }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Teléfono</label>
+                                    <input name="telefono" value="{{ sitio.telefono }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Correo</label>
+                                    <input type="email" name="email" value="{{ sitio.email }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Título de noticias</label>
+                                    <input name="noticias_titulo" value="{{ sitio.noticias_titulo }}" class="form-control bg-dark-input">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">Texto de noticias</label>
+                                    <textarea name="noticias_descripcion" class="form-control bg-dark-input" rows="2">{{ sitio.noticias_descripcion }}</textarea>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label-custom">Copyright</label>
+                                <input name="copyright_texto" value="{{ sitio.copyright_texto }}" class="form-control bg-dark-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-modern"><i class="bi bi-check-circle"></i> Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL AGREGAR USUARIO -->
     <div class="modal fade" id="modalAgregarUsuario" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -730,7 +904,7 @@ Cancelada
                             <label class="form-label-custom">Cliente</label>
                             <select name="cliente" id="editCitaCliente" class="form-select bg-dark-input">
                                 {% for cliente in clientes %}
-                                    <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -738,7 +912,7 @@ Cancelada
                             <label class="form-label-custom">Servicio</label>
                             <select name="servicio" id="editCitaServicio" class="form-select bg-dark-input">
                                 {% for servicio in servicios %}
-                                    <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
+                                <option value="{{ servicio.id }}">{{ servicio.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -763,7 +937,7 @@ Cancelada
                             <label class="form-label-custom">Barbero</label>
                             <select name="barbero" id="editCitaBarbero" class="form-select bg-dark-input">
                                 {% for b in barberos %}
-                                    <option value="{{ b.id }}">{{ b.nombre }}</option>
+                                <option value="{{ b.id }}">{{ b.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -787,112 +961,142 @@ Cancelada
         </div>
     </div>
 
-   <!-- MODAL EDITAR BARBERO -->
-<div class="modal fade" id="modalEditarBarbero" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header modal-header-custom">
-                <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Barbero</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <!-- MODAL EDITAR BARBERO -->
+    <div class="modal fade" id="modalEditarBarbero" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Barbero</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" id="formEditarBarbero" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Nombre completo *</label>
+                                <input type="text" name="nombre" id="editBarberoNombre" class="form-control bg-dark-input" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Cédula *</label>
+                                <input type="text" name="cedula" id="editBarberoCedula" class="form-control bg-dark-input" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Especialidad *</label>
+                                <input type="text" name="especialidad" id="editBarberoEspecialidad" class="form-control bg-dark-input" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Teléfono *</label>
+                                <input type="text" name="telefono" id="editBarberoTelefono" class="form-control bg-dark-input" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Email *</label>
+                            <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
+                        </div>
+                        <hr style="border-color:#3F2E22;">
+                        <h6 class="text-yellow"><i class="bi bi-display"></i> Información pública</h6>
+                        <div class="mb-3">
+                            <label class="form-label-custom">URL de imagen</label>
+                            <input type="url" name="imagen_url" id="editBarberoImagen" class="form-control bg-dark-input" placeholder="https://...">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Calificación</label>
+                                <input type="number" name="calificacion" id="editBarberoCalificacion" class="form-control bg-dark-input" min="0" max="5" step="0.1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Número de reseñas</label>
+                                <input type="number" name="numero_resenas" id="editBarberoResenas" class="form-control bg-dark-input" min="0">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom">Instagram</label>
+                                <input type="url" name="instagram" id="editBarberoInstagram" class="form-control bg-dark-input">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom">Facebook</label>
+                                <input type="url" name="facebook" id="editBarberoFacebook" class="form-control bg-dark-input">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label-custom">WhatsApp</label>
+                                <input type="url" name="whatsapp" id="editBarberoWhatsapp" class="form-control bg-dark-input">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="activo" id="editBarberoActivo" class="form-check-input" checked>
+                                <label class="form-check-label text-light" for="editBarberoActivo">Activo</label>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: #3F2E22;">
+                        <h6 class="text-yellow"><i class="bi bi-clock"></i> Configuración de Horario</h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Jornada Inicio</label>
+                                <input type="time" name="jornada_inicio" id="editBarberoJornadaInicio" class="form-control bg-dark-input" value="08:00">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Jornada Fin</label>
+                                <input type="time" name="jornada_fin" id="editBarberoJornadaFin" class="form-control bg-dark-input" value="18:00">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Duración Cita (min)</label>
+                                <input type="number" name="duracion_cita" id="editBarberoDuracionCita" class="form-control bg-dark-input" min="15" value="30">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Tiempo entre citas (min)</label>
+                                <input type="number" name="tiempo_entre_citas" id="editBarberoTiempoEntreCitas" class="form-control bg-dark-input" min="0" value="15">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Días Laborales</label>
+                                <select name="dias_laborales" id="editBarberoDiasLaborales" class="form-select bg-dark-input" multiple size="4">
+                                    <option value="LUN">Lunes</option>
+                                    <option value="MAR">Martes</option>
+                                    <option value="MIE">Miércoles</option>
+                                    <option value="JUE">Jueves</option>
+                                    <option value="VIE">Viernes</option>
+                                    <option value="SAB">Sábado</option>
+                                    <option value="DOM">Domingo</option>
+                                </select>
+                                <small class="text-light-brown">Selecciona los días que trabaja (Ctrl+Click para múltiple)</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Día de Descanso</label>
+                                <select name="dia_descanso" id="editBarberoDiaDescanso" class="form-select bg-dark-input">
+                                    <option value="LUN">Lunes</option>
+                                    <option value="MAR">Martes</option>
+                                    <option value="MIE">Miércoles</option>
+                                    <option value="JUE">Jueves</option>
+                                    <option value="VIE">Viernes</option>
+                                    <option value="SAB">Sábado</option>
+                                    <option value="DOM">Domingo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                            <i class="bi bi-check-circle"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
             </div>
-            <form method="POST" id="formEditarBarbero" action="">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <!-- Datos personales -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Nombre completo *</label>
-                            <input type="text" name="nombre" id="editBarberoNombre" class="form-control bg-dark-input" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Cédula *</label>
-                            <input type="text" name="cedula" id="editBarberoCedula" class="form-control bg-dark-input" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Especialidad *</label>
-                            <input type="text" name="especialidad" id="editBarberoEspecialidad" class="form-control bg-dark-input" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Teléfono *</label>
-                            <input type="text" name="telefono" id="editBarberoTelefono" class="form-control bg-dark-input" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label-custom">Email *</label>
-                        <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input type="checkbox" name="activo" id="editBarberoActivo" class="form-check-input" checked>
-                            <label class="form-check-label text-light" for="editBarberoActivo">Activo</label>
-                        </div>
-                    </div>
-
-                    <hr style="border-color: #3F2E22;">
-                    <h6 class="text-yellow"><i class="bi bi-clock"></i> Configuración de Horario</h6>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Jornada Inicio</label>
-                            <input type="time" name="jornada_inicio" id="editBarberoJornadaInicio" class="form-control bg-dark-input" value="08:00">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Jornada Fin</label>
-                            <input type="time" name="jornada_fin" id="editBarberoJornadaFin" class="form-control bg-dark-input" value="18:00">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Duración Cita (min)</label>
-                            <input type="number" name="duracion_cita" id="editBarberoDuracionCita" class="form-control bg-dark-input" min="15" value="30">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Tiempo entre citas (min)</label>
-                            <input type="number" name="tiempo_entre_citas" id="editBarberoTiempoEntreCitas" class="form-control bg-dark-input" min="0" value="15">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Días Laborales</label>
-                            <select name="dias_laborales" id="editBarberoDiasLaborales" class="form-select bg-dark-input" multiple size="4">
-                                <option value="LUN">Lunes</option>
-                                <option value="MAR">Martes</option>
-                                <option value="MIE">Miércoles</option>
-                                <option value="JUE">Jueves</option>
-                                <option value="VIE">Viernes</option>
-                                <option value="SAB">Sábado</option>
-                                <option value="DOM">Domingo</option>
-                            </select>
-                            <small class="text-light-brown">Selecciona los días que trabaja (Ctrl+Click para múltiple)</small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-custom">Día de Descanso</label>
-                            <select name="dia_descanso" id="editBarberoDiaDescanso" class="form-select bg-dark-input">
-                                <option value="LUN">Lunes</option>
-                                <option value="MAR">Martes</option>
-                                <option value="MIE">Miércoles</option>
-                                <option value="JUE">Jueves</option>
-                                <option value="VIE">Viernes</option>
-                                <option value="SAB">Sábado</option>
-                                <option value="DOM">Domingo</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer modal-footer-custom">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
-                        <i class="bi bi-check-circle"></i> Guardar Cambios
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+
     <!-- MODAL EDITAR PRODUCTO -->
     <div class="modal fade" id="modalEditarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -1012,7 +1216,8 @@ Cancelada
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
     <script>
         // MODAL EDITAR CITA
         document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function(e) {
@@ -1026,32 +1231,38 @@ Cancelada
             document.getElementById('formEditarCita').action = `/editar-cita/${btn.dataset.id}/`;
         });
 
-       // MODAL EDITAR BARBERO
-document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
-    const btn = e.relatedTarget;
-    
-    document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
-    document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
-    document.getElementById('editBarberoEspecialidad').value = btn.dataset.especialidad || '';
-    document.getElementById('editBarberoTelefono').value = btn.dataset.telefono || '';
-    document.getElementById('editBarberoEmail').value = btn.dataset.email || '';
-    document.getElementById('editBarberoActivo').checked = btn.dataset.activo === 'true' || true;
-    
-    document.getElementById('editBarberoJornadaInicio').value = btn.dataset.jornada_inicio || '08:00';
-    document.getElementById('editBarberoJornadaFin').value = btn.dataset.jornada_fin || '18:00';
-    document.getElementById('editBarberoDuracionCita').value = btn.dataset.duracion_cita || 30;
-    document.getElementById('editBarberoTiempoEntreCitas').value = btn.dataset.tiempo_entre_citas || 15;
-    document.getElementById('editBarberoDiaDescanso').value = btn.dataset.dia_descanso || 'DOM';
-    
-    // Días laborales
-    const diasLaborales = (btn.dataset.dias_laborales || 'LUN,MAR,MIE,JUE,VIE,SAB').split(',');
-    const selectDias = document.getElementById('editBarberoDiasLaborales');
-    for (let option of selectDias.options) {
-        option.selected = diasLaborales.includes(option.value);
-    }
-    
-    document.getElementById('formEditarBarbero').action = `/editar-barbero/${btn.dataset.id}/`;
-});
+        // MODAL EDITAR BARBERO
+        document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
+            const btn = e.relatedTarget;
+
+            document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
+            document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
+            document.getElementById('editBarberoEspecialidad').value = btn.dataset.especialidad || '';
+            document.getElementById('editBarberoTelefono').value = btn.dataset.telefono || '';
+            document.getElementById('editBarberoEmail').value = btn.dataset.email || '';
+            document.getElementById('editBarberoImagen').value = btn.dataset.imagen_url || '';
+            document.getElementById('editBarberoCalificacion').value = btn.dataset.calificacion || '5.0';
+            document.getElementById('editBarberoResenas').value = btn.dataset.numero_resenas || '0';
+            document.getElementById('editBarberoInstagram').value = btn.dataset.instagram || '';
+            document.getElementById('editBarberoFacebook').value = btn.dataset.facebook || '';
+            document.getElementById('editBarberoWhatsapp').value = btn.dataset.whatsapp || '';
+            document.getElementById('editBarberoActivo').checked = btn.dataset.activo === 'true';
+
+            document.getElementById('editBarberoJornadaInicio').value = btn.dataset.jornada_inicio || '08:00';
+            document.getElementById('editBarberoJornadaFin').value = btn.dataset.jornada_fin || '18:00';
+            document.getElementById('editBarberoDuracionCita').value = btn.dataset.duracion_cita || 30;
+            document.getElementById('editBarberoTiempoEntreCitas').value = btn.dataset.tiempo_entre_citas || 15;
+            document.getElementById('editBarberoDiaDescanso').value = btn.dataset.dia_descanso || 'DOM';
+
+            const diasLaborales = (btn.dataset.dias_laborales || 'LUN,MAR,MIE,JUE,VIE,SAB').split(',');
+            const selectDias = document.getElementById('editBarberoDiasLaborales');
+            for (let option of selectDias.options) {
+                option.selected = diasLaborales.includes(option.value);
+            }
+
+            document.getElementById('formEditarBarbero').action = `/editar-barbero/${btn.dataset.id}/`;
+        });
+
         // MODAL EDITAR PRODUCTO
         document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
@@ -1071,6 +1282,8 @@ document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', 
             document.getElementById('formEditarServicio').action = btn.dataset.url || '';
         });
     </script>
-    <script src="{% static 'js/ui-mejoras.js' %}"></script>
+    <script src="{% static 'js/ui-mejoras.js' %}">
+    </script>
 </body>
+
 </html>
