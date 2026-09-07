@@ -47,7 +47,7 @@
     </style>
 </head>
 
-<body>
+<body class="tema-admin">
 
     <!-- NAVBAR -->
     <nav class="navbar-custom">
@@ -55,7 +55,6 @@
             <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
                 <a class="navbar-brand-custom" href="{% url 'inicio' %}">
                     <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
-                    <span class="role-badge">Panel Admin</span>
                 </a>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <div class="user-info-custom">
@@ -239,17 +238,17 @@
 <td>{{ u.email }}</td>
                                 <td>
                                     {% if u.is_superuser %}
-        <span class="badge bg-danger">
+        <span class="badge badge-role-admin">
             Admin
         </span>
 
     {% elif u.groups.exists %}
-        <span class="badge bg-warning text-dark">
+        <span class="badge badge-role-barbero">
             Barbero
         </span>
 
     {% else %}
-        <span class="badge bg-primary">
+        <span class="badge badge-role-cliente">
             Cliente
         </span>
     {% endif %}

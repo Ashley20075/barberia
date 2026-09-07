@@ -14,27 +14,39 @@
 
 <body class="tema-barbero">
 
+    <!-- NAVBAR -->
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
-                <a class="navbar-brand-custom" href="/">
+                <a class="navbar-brand-custom" href="{% url 'inicio' %}">
                     <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
                 </a>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <a href="{% url 'barberos:panel_barbero' %}" class="nav-btn">
-    <i class="bi bi-person"></i> Mis Citas
-</a>
-                    <a href="{% url 'barberos:editar_perfil_barbero' %}" class="nav-btn active">
-                        <i class="bi bi-gear"></i> Editar Perfil
+                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
+                        <i class="bi bi-bell"></i>
+                        {% if notificaciones_no_leidas %}
+                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
                     </a>
-                    <button
-                        type="button"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        title="Cambiar tema"
-                        aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
+                    <div class="user-info-custom">
+                        <i class="bi bi-person-circle"></i>
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <a href="{% url 'barberos:panel_barbero' %}" class="nav-btn">
+                        <i class="bi bi-calendar-check"></i> Mis Citas
+                    </a>
+                    <a href="{% url 'barberos:editar_perfil_barbero' %}" class="nav-btn active">
+    <i class="bi bi-gear"></i>
+    Editar Perfil
+</a>
+<button
+    type="button"
+    id="themeToggle"
+    class="theme-toggle"
+    title="Cambiar tema"
+    aria-label="Cambiar tema">
+    <i class="bi bi-moon-fill"></i>
+</button>
                     <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>

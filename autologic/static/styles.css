@@ -1546,63 +1546,223 @@ body {
         }
 
 /* =========================================================
-   DIFERENCIACIÓN VISUAL POR ROL
-   Antes cada panel (admin, barbero, cliente) usaba EXACTAMENTE el mismo
-   color de acento (dorado) en navbar, tarjetas y encabezados, por lo que
-   visualmente eran indistinguibles entre sí. El dorado se conserva como
-   identidad de marca (usado en la página pública y en el panel de admin,
-   quien controla todo el negocio); barbero y cliente reciben su propio
-   color de acento para que sea evidente en qué panel estás.
-   Se activa agregando una clase al <body>: tema-barbero / tema-cliente.
+   DIFERENCIACIÓN VISUAL POR ROL (v3)
+   Había DOS sistemas de color para "barbero" peleando entre sí en este
+   archivo (uno naranja #C9812F y otro azul-gris #58758C más abajo, que
+   era el que terminaba ganando), más un tercero solo en tema claro. Por
+   eso se veía disparejo: dependía de qué regla cargaba al final.
+
+   Ahora hay UNA sola variable, --color-primario (con su par claro y su
+   versión "-rgb" para sombras/brillos), definida una vez según la clase
+   del <body>. TODO lo demás —navbar, insignia de rol, botones, tarjetas,
+   modales, tablas, avatar, paginación— la lee. Cambiar de panel cambia
+   un solo valor y arrastra visualmente TODO junto, en los tres paneles
+   por igual, tanto en tema oscuro como en tema claro:
+
+     - Admin   -> DORADO  #F4C542 / claro #C89418
+     - Barbero -> BRONCE  #CD7F32 / claro #8B5A2B
+     - Cliente -> PLATA   #C7CDD3 / claro #5B6670 (más oscura en fondo
+                  blanco para que siga siendo legible)
    ========================================================= */
 
-.tema-barbero .navbar-custom { border-bottom-color: #C9812F !important; }
-.tema-barbero .card-header-custom { border-bottom-color: #C9812F !important; }
-.tema-barbero .modal-header-custom { border-bottom-color: #C9812F !important; }
-.tema-barbero .modal-footer-custom { border-top-color: #C9812F !important; }
-.tema-barbero .table-custom thead th { border-bottom-color: #C9812F !important; }
-.tema-barbero .nav-btn.active { background-color: #C9812F !important; border-color: #C9812F !important; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(201, 129, 47, 0.35) !important; }
-.tema-barbero .nav-btn:hover { border-color: #C9812F !important; }
-.tema-barbero .btn-modern,
-.tema-barbero .btn-modern:hover { background: #C9812F !important; box-shadow: 0 4px 15px rgba(201, 129, 47, 0.4) !important; }
-.tema-barbero .role-badge { background-color: rgba(201, 129, 47, 0.18); color: #C9812F; border: 1px solid rgba(201, 129, 47, 0.5); }
+:root {
+    --color-primario: #F4C542;
+    --color-primario-claro: #FFD966;
+    --color-primario-rgb: 244, 197, 66;
+}
 
-.tema-cliente .navbar-custom { border-bottom-color: #4FB8B0 !important; }
-.tema-cliente .card-header-custom { border-bottom-color: #4FB8B0 !important; }
-.tema-cliente .modal-header-custom { border-bottom-color: #4FB8B0 !important; }
-.tema-cliente .modal-footer-custom { border-top-color: #4FB8B0 !important; }
-.tema-cliente .table-custom thead th { border-bottom-color: #4FB8B0 !important; }
-.tema-cliente .nav-btn.active { background-color: #4FB8B0 !important; border-color: #4FB8B0 !important; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(79, 184, 176, 0.35) !important; }
-.tema-cliente .nav-btn:hover { border-color: #4FB8B0 !important; }
-.tema-cliente .btn-modern,
-.tema-cliente .btn-modern:hover { background: #4FB8B0 !important; box-shadow: 0 4px 15px rgba(79, 184, 176, 0.4) !important; }
-.tema-cliente .role-badge { background-color: rgba(79, 184, 176, 0.18); color: #4FB8B0; border: 1px solid rgba(79, 184, 176, 0.5); }
+[data-theme="light"] {
+    --color-primario: #C89418;
+    --color-primario-claro: #D9A928;
+    --color-primario-rgb: 200, 148, 24;
+}
 
-/* Acentos adicionales que solo existían en el <style> propio de
-   dashboard_cliente.html (avatar, stat-card, tarjetas de turno) */
-.tema-barbero .stat-card { border-left-color: #C9812F !important; }
-.tema-barbero .stat-card i, .tema-barbero .stat-card h2, .tema-barbero .stat-card h3 { color: #C9812F !important; }
-.tema-barbero .avatar-circle { background: #C9812F !important; }
-.tema-barbero .turno-card { border-left-color: #C9812F !important; }
+.tema-admin {
+    --color-primario: #F4C542;
+    --color-primario-claro: #FFD966;
+    --color-primario-rgb: 244, 197, 66;
+}
+[data-theme="light"] .tema-admin {
+    --color-primario: #C89418;
+    --color-primario-claro: #D9A928;
+    --color-primario-rgb: 200, 148, 24;
+}
 
-.tema-cliente .stat-card { border-left-color: #4FB8B0 !important; }
-.tema-cliente .stat-card i, .tema-cliente .stat-card h3 { color: #4FB8B0 !important; }
-.tema-cliente .avatar-circle { background: #4FB8B0 !important; }
-.tema-cliente .turno-card { border-left-color: #4FB8B0 !important; }
+.tema-barbero {
+    --color-primario: #CD7F32;
+    --color-primario-claro: #E3A360;
+    --color-primario-rgb: 205, 127, 50;
+}
+[data-theme="light"] .tema-barbero {
+    --color-primario: #8B5A2B;
+    --color-primario-claro: #6B4520;
+    --color-primario-rgb: 139, 90, 43;
+}
 
+.tema-cliente {
+    --color-primario: #C7CDD3;
+    --color-primario-claro: #EAEEF1;
+    --color-primario-rgb: 199, 205, 211;
+}
+[data-theme="light"] .tema-cliente {
+    --color-primario: #5B6670;
+    --color-primario-claro: #3F4750;
+    --color-primario-rgb: 91, 102, 112;
+}
+
+/* ---------- NAVBAR: mismo diseño en los 3 paneles ---------- */
+.navbar-custom {
+    border-bottom: 3px solid var(--color-primario) !important;
+    box-shadow: 0 2px 20px rgba(var(--color-primario-rgb), 0.25);
+}
+
+.navbar-brand-custom {
+    color: var(--color-primario) !important;
+}
+
+.user-info-custom {
+    border: 1px solid rgba(var(--color-primario-rgb), 0.35);
+}
+
+.user-info-custom i {
+    color: var(--color-primario) !important;
+}
+
+.nav-bell {
+    border-color: rgba(var(--color-primario-rgb), 0.4) !important;
+}
+
+.nav-bell:hover {
+    border-color: var(--color-primario) !important;
+    color: var(--color-primario) !important;
+}
+
+.nav-btn:hover {
+    border-color: var(--color-primario) !important;
+    background-color: rgba(var(--color-primario-rgb), 0.12);
+}
+
+.nav-btn.active {
+    background-color: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
+    color: #0B0A08 !important;
+    box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.45) !important;
+}
+
+/* ---------- Insignia de rol: grande, con brillo propio ---------- */
 .role-badge {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 0.2rem 0.7rem;
+    padding: 0.32rem 0.9rem;
     border-radius: 40px;
     margin-left: 0.6rem;
-    background-color: rgba(244, 197, 66, 0.18);
-    color: #F4C542;
-    border: 1px solid rgba(244, 197, 66, 0.5);
+    background-color: rgba(var(--color-primario-rgb), 0.16);
+    color: var(--color-primario);
+    border: 1px solid rgba(var(--color-primario-rgb), 0.7);
+    box-shadow: 0 0 14px rgba(var(--color-primario-rgb), 0.45);
     vertical-align: middle;
+}
+
+.role-badge::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--color-primario);
+    box-shadow: 0 0 6px 1px rgba(var(--color-primario-rgb), 0.9);
+}
+
+/* ---------- Resto del panel: tarjetas, modales, tablas, botones ---------- */
+.card-header-custom {
+    border-bottom-color: var(--color-primario) !important;
+    color: var(--color-primario-claro) !important;
+}
+
+.modal-header-custom { border-bottom-color: var(--color-primario) !important; }
+.modal-footer-custom { border-top-color: var(--color-primario) !important; }
+.modal-content-custom { border-color: rgba(var(--color-primario-rgb), 0.3) !important; }
+.card-custom { border-color: rgba(var(--color-primario-rgb), 0.2) !important; }
+.table-custom thead th { border-bottom-color: var(--color-primario) !important; }
+
+.stat-card { border-left-color: var(--color-primario) !important; }
+.stat-card:hover { box-shadow: 0 10px 25px -5px rgba(var(--color-primario-rgb), 0.25) !important; }
+.stat-card i, .stat-card h2, .stat-card h3 { color: var(--color-primario) !important; }
+.stat-card h5 { color: var(--color-primario-claro) !important; }
+
+.avatar-circle {
+    background: linear-gradient(135deg, var(--color-primario), var(--color-primario-claro)) !important;
+    color: #0B0A08 !important;
+}
+
+.turno-card { border-left-color: var(--color-primario) !important; }
+.turno-card:hover {
+    border-color: var(--color-primario) !important;
+    background-color: rgba(var(--color-primario-rgb), 0.06) !important;
+}
+
+.btn-modern,
+.btn-primary-custom {
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%) !important;
+    color: #0B0A08 !important;
+    box-shadow: 0 4px 15px rgba(var(--color-primario-rgb), 0.35) !important;
+}
+.btn-modern:hover,
+.btn-primary-custom:hover { box-shadow: 0 8px 30px rgba(var(--color-primario-rgb), 0.5) !important; }
+
+.form-label-custom { color: var(--color-primario-claro) !important; }
+.bg-dark-input:focus {
+    border-color: var(--color-primario) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primario-rgb), 0.25) !important;
+}
+
+.pagination-custom .page-item.active .page-link {
+    background-color: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
+    color: #0B0A08 !important;
+}
+.pagination-custom .page-link:hover { border-color: var(--color-primario) !important; }
+
+/* En tema claro, las tarjetas de estadísticas del admin ya tenían un
+   dorado fijo con !important y más especificidad que la regla genérica
+   de arriba; se iguala aquí SOLO para barbero/cliente (el admin ya
+   estaba bien) para que también respondan a su color en fondo claro. */
+[data-theme="light"] .tema-barbero .stat-card,
+[data-theme="light"] .tema-cliente .stat-card {
+    border-left-color: var(--color-primario) !important;
+}
+[data-theme="light"] .tema-barbero .stat-card i,
+[data-theme="light"] .tema-barbero .stat-card h2,
+[data-theme="light"] .tema-cliente .stat-card i,
+[data-theme="light"] .tema-cliente .stat-card h2 {
+    color: var(--color-primario) !important;
+}
+
+/* Insignias de rol para tablas/listados (p. ej. el listado de usuarios
+   del admin), donde conviven varias filas de distinto rol a la vez, así
+   que quedan fijas por rol en vez de depender del tema del <body>. */
+.badge-role-admin {
+    background-color: rgba(244, 197, 66, 0.18) !important;
+    color: #F4C542 !important;
+    border: 1px solid rgba(244, 197, 66, 0.7);
+    box-shadow: 0 0 10px rgba(244, 197, 66, 0.35);
+}
+.badge-role-barbero {
+    background-color: rgba(205, 127, 50, 0.18) !important;
+    color: #CD7F32 !important;
+    border: 1px solid rgba(205, 127, 50, 0.7);
+    box-shadow: 0 0 10px rgba(205, 127, 50, 0.35);
+}
+.badge-role-cliente {
+    background-color: rgba(199, 205, 211, 0.18) !important;
+    color: #C7CDD3 !important;
+    border: 1px solid rgba(199, 205, 211, 0.7);
+    box-shadow: 0 0 10px rgba(199, 205, 211, 0.35);
 }
 
 /* =========================================================
@@ -1756,12 +1916,6 @@ body {
     border-color: #2A211B;
     color: #6b6058;
 }
-
-.tema-barbero .pagination-custom .page-item.active .page-link { background-color: #C9812F !important; border-color: #C9812F !important; color: #0B0A08 !important; }
-.tema-barbero .pagination-custom .page-link:hover { border-color: #C9812F !important; }
-
-.tema-cliente .pagination-custom .page-item.active .page-link { background-color: #4FB8B0 !important; border-color: #4FB8B0 !important; color: #0B0A08 !important; }
-.tema-cliente .pagination-custom .page-link:hover { border-color: #4FB8B0 !important; }
 
 /* =========================================================
    TABLA OSCURA COMPARTIDA (.table-custom)
@@ -2401,90 +2555,6 @@ body {
 }
 
 /* =========================================================
-   TEMA BARBERO - NUEVO COLOR DE ACENTO
-========================================================= */
-
-.tema-barbero {
-    --barbero-acento: #58758C;
-    --barbero-acento-hover: #6E8CA1;
-    --barbero-acento-suave: rgba(88, 117, 140, 0.16);
-}
-
-
-/* Tema oscuro */
-.tema-barbero .nav-btn.active {
-    background-color: var(--barbero-acento) !important;
-    border-color: var(--barbero-acento) !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 0 20px rgba(88, 117, 140, 0.30) !important;
-}
-
-.tema-barbero .nav-btn:hover {
-    border-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .navbar-custom {
-    border-bottom-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .card-header-custom {
-    border-bottom-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .modal-header-custom {
-    border-bottom-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .modal-footer-custom {
-    border-top-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .table-custom thead th {
-    border-bottom-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .btn-modern,
-.tema-barbero .btn-modern:hover {
-    background: var(--barbero-acento) !important;
-    box-shadow: 0 4px 15px rgba(88, 117, 140, 0.35) !important;
-    color: #FFFFFF !important;
-}
-
-.tema-barbero .role-badge {
-    background-color: var(--barbero-acento-suave);
-    color: var(--barbero-acento);
-    border-color: rgba(88, 117, 140, 0.45);
-}
-
-.tema-barbero .stat-card {
-    border-left-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .stat-card i,
-.tema-barbero .stat-card h2,
-.tema-barbero .stat-card h3 {
-    color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .avatar-circle {
-    background: var(--barbero-acento) !important;
-}
-
-.tema-barbero .turno-card {
-    border-left-color: var(--barbero-acento) !important;
-}
-
-.tema-barbero .pagination-custom .page-item.active .page-link {
-    background-color: var(--barbero-acento) !important;
-    border-color: var(--barbero-acento) !important;
-    color: #FFFFFF !important;
-}
-
-.tema-barbero .pagination-custom .page-link:hover {
-    border-color: var(--barbero-acento) !important;
-}
-
-/* =========================================================
    TABLAS - TEMA CLARO
 ========================================================= */
 
@@ -2761,58 +2831,6 @@ body {
     border-bottom: 2px solid #C89418 !important;
 }
 
-/* =========================================================
-   BARBERO - CARDS DE ESTADÍSTICAS
-   Tema claro
-========================================================= */
-
-[data-theme="light"] .tema-barbero .stat-card {
-    background: #FFFFFF !important;
-
-    border-left: 5px solid #58758C !important;
-
-    color: #2B241E !important;
-
-    box-shadow:
-        0 8px 25px rgba(70, 90, 105, 0.10) !important;
-}
-
-
-/* Iconos */
-[data-theme="light"] .tema-barbero .stat-card .icon-wrapper {
-    background: rgba(88, 117, 140, 0.12) !important;
-}
-
-[data-theme="light"] .tema-barbero .stat-card i {
-    color: #58758C !important;
-}
-
-
-/* Títulos */
-[data-theme="light"] .tema-barbero .stat-card h5 {
-    color: #66737D !important;
-}
-
-
-/* Números */
-[data-theme="light"] .tema-barbero .stat-card h2 {
-    color: #466276 !important;
-}
-
-
-/* Hover */
-[data-theme="light"] .tema-barbero .stat-card:hover {
-    background: #FFFFFF !important;
-
-    box-shadow:
-        0 15px 35px rgba(70, 90, 105, 0.15) !important;
-}
-
-
-/* Icono al pasar mouse */
-[data-theme="light"] .tema-barbero .stat-card:hover .icon-wrapper {
-    background: rgba(88, 117, 140, 0.18) !important;
-}
 /* =========================================================
    CERRAR SESIÓN - TEMA CLARO
 ========================================================= */

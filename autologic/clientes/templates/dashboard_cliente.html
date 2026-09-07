@@ -29,6 +29,10 @@
                             <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
                         {% endif %}
                     </a>
+                    <div class="user-info-custom">
+                        <i class="bi bi-person-circle"></i>
+                        <span>{{ user.username }}</span>
+                    </div>
                     <a href="{% url 'panel_cliente' %}" class="nav-btn active">
                         <i class="bi bi-person"></i> Mi Perfil
                     </a>
