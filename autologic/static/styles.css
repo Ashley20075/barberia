@@ -3020,3 +3020,28 @@ body {
 [data-theme="light"] #reportes .border-secondary {
     border-color: #D8C8B5 !important;
 }
+
+/* Sección de desarrolladores */
+.card-desarrollador h3 {
+    color: #C89418 !important;
+}
+/* Fotos de los desarrolladores */
+.desarrollador-img-wrapper {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #f5c518;
+    background-color: #2b2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.desarrollador-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
