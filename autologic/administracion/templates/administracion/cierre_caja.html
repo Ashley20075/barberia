@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
-<body class="tema-admin">
+<body>
 
     <nav class="navbar navbar-custom">
         <div class="container">
@@ -34,24 +34,81 @@
         {% endif %}
 
         <h1 class="mb-4 text-yellow" style="font-family:'Playfair Display',serif;">
-            <i class="bi bi-cash-coin"></i> Cierre de Caja Diario
+            <i class="bi bi-cash-coin"></i> Cierre de Caja
         </h1>
 
-        <!-- SELECTOR DE FECHA -->
+        <!-- SELECTOR DE RANGO DE FECHA Y HORA -->
+        <style>
+    #btn-descargar-pdf {
+        background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 12px 28px;
+        color: #0B0A08;
+        font-weight: 700;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(244, 197, 66, 0.35);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    #btn-descargar-pdf:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(244, 197, 66, 0.5);
+        color: #0B0A08;
+    }
+</style>
         <div class="card-custom p-3 mb-4">
-            <form method="get" class="d-flex flex-wrap gap-3 align-items-end">
+            <form method="get" id="form-cierre-caja" class="d-flex flex-wrap gap-3 align-items-end">
                 <div>
-                    <label class="form-label text-light-brown mb-1">Fecha</label>
-                    <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}" class="form-control bg-dark-input">
+                    <label class="form-label text-light-brown mb-1">Desde</label>
+                    <input type="date" name="fecha_inicio" value="{{ fecha_inicio|date:'Y-m-d' }}" class="form-control bg-dark-input" required>
+                </div>
+                <div>
+                    <label class="form-label text-light-brown mb-1">Hasta</label>
+                    <input type="date" name="fecha_fin" value="{{ fecha_fin|date:'Y-m-d' }}" class="form-control bg-dark-input" required>
+                </div>
+                <div>
+                    <label class="form-label text-light-brown mb-1">Hora desde <span class="text-muted small">(opcional)</span></label>
+                    <input type="time" name="hora_inicio" value="{{ hora_inicio|default:'' }}" class="form-control bg-dark-input">
+                </div>
+                <div>
+                    <label class="form-label text-light-brown mb-1">Hora hasta <span class="text-muted small">(opcional)</span></label>
+                    <input type="time" name="hora_fin" value="{{ hora_fin|default:'' }}" class="form-control bg-dark-input">
                 </div>
                 <button type="submit" class="btn btn-modern">
                     <i class="bi bi-search"></i> Consultar
                 </button>
-                <a href="{% url 'administracion:cierre_caja_pdf' %}?fecha={{ fecha|date:'Y-m-d' }}" class="btn btn-modern-inventario">
+                <a id="btn-descargar-pdf"
+                   href="{% url 'administracion:cierre_caja_pdf' %}?fecha_inicio={{ fecha_inicio|date:'Y-m-d' }}&fecha_fin={{ fecha_fin|date:'Y-m-d' }}{% if hora_inicio %}&hora_inicio={{ hora_inicio }}{% endif %}{% if hora_fin %}&hora_fin={{ hora_fin }}{% endif %}"
+                   class="btn btn-modern-inventario">
                     <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
                 </a>
             </form>
         </div>
+
+        <script>
+            // Mantiene el botón "Descargar PDF" sincronizado con el rango
+            // elegido en el formulario, sin necesidad de recargar la página.
+            (function () {
+                const form = document.getElementById('form-cierre-caja');
+                const btnPdf = document.getElementById('btn-descargar-pdf');
+                if (!form || !btnPdf) return;
+
+                function actualizarLinkPdf() {
+                    const datos = new FormData(form);
+                    const params = new URLSearchParams();
+                    ['fecha_inicio', 'fecha_fin', 'hora_inicio', 'hora_fin'].forEach((campo) => {
+                        const valor = datos.get(campo);
+                        if (valor) params.set(campo, valor);
+                    });
+                    btnPdf.href = "{% url 'administracion:cierre_caja_pdf' %}?" + params.toString();
+                }
+
+                form.addEventListener('input', actualizarLinkPdf);
+            })();
+        </script>
 
         <!-- ESTADÍSTICAS DEL DÍA -->
         <div class="row g-3 mb-4">
@@ -79,11 +136,23 @@
             <div class="col-6 col-md-3">
                 <div class="stat-card productos">
                     <i class="bi bi-cash-stack"></i>
-                    <h5>Ingresos del día</h5>
+                    <h5>Ingresos del período</h5>
                     <h2>${{ total_ingresos|floatformat:0 }}</h2>
                 </div>
             </div>
         </div>
+
+        <p class="text-light-brown mb-4">
+            <i class="bi bi-calendar-range"></i>
+            {% if es_rango %}
+                Del <strong>{{ fecha_inicio|date:"d/m/Y" }}</strong> al <strong>{{ fecha_fin|date:"d/m/Y" }}</strong>
+            {% else %}
+                <strong>{{ fecha_inicio|date:"d/m/Y" }}</strong>
+            {% endif %}
+            {% if hora_inicio and hora_fin %}
+                &nbsp;·&nbsp; de <strong>{{ hora_inicio }}</strong> a <strong>{{ hora_fin }}</strong>
+            {% endif %}
+        </p>
 
         <!-- INGRESOS POR BARBERO -->
         {% if por_barbero %}
@@ -123,6 +192,7 @@
                 <table class="table table-custom mb-0">
                     <thead>
                         <tr>
+                            {% if es_rango %}<th>Fecha</th>{% endif %}
                             <th>Hora</th>
                             <th>Cliente</th>
                             <th>Servicio</th>
@@ -133,6 +203,7 @@
                     <tbody>
                         {% for cita in finalizadas %}
                         <tr>
+                            {% if es_rango %}<td>{{ cita.fecha|date:"d/m/Y" }}</td>{% endif %}
                             <td>{{ cita.hora }}</td>
                             <td>{{ cita.cliente.nombre }}</td>
                             <td>{{ cita.servicio.nombre }}</td>
@@ -140,7 +211,7 @@
                             <td>${{ cita.servicio.precio|floatformat:0 }}</td>
                         </tr>
                         {% empty %}
-                        <tr><td colspan="5" class="text-center text-light-brown py-3">No hubo servicios finalizados este día.</td></tr>
+                        <tr><td colspan="{% if es_rango %}6{% else %}5{% endif %}" class="text-center text-light-brown py-3">No hubo servicios finalizados en este período.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -156,6 +227,7 @@
                 <table class="table table-custom mb-0">
                     <thead>
                         <tr>
+                            {% if es_rango %}<th>Fecha</th>{% endif %}
                             <th>Hora</th>
                             <th>Cliente</th>
                             <th>Servicio</th>
@@ -165,13 +237,14 @@
                     <tbody>
                         {% for cita in canceladas %}
                         <tr>
+                            {% if es_rango %}<td>{{ cita.fecha|date:"d/m/Y" }}</td>{% endif %}
                             <td>{{ cita.hora }}</td>
                             <td>{{ cita.cliente.nombre }}</td>
                             <td>{{ cita.servicio.nombre }}</td>
                             <td>{{ cita.barbero.nombre|default:"Sin asignar" }}</td>
                         </tr>
                         {% empty %}
-                        <tr><td colspan="4" class="text-center text-light-brown py-3">No hubo cancelaciones este día.</td></tr>
+                        <tr><td colspan="{% if es_rango %}5{% else %}4{% endif %}" class="text-center text-light-brown py-3">No hubo cancelaciones en este período.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -188,6 +261,7 @@
                 <table class="table table-custom mb-0">
                     <thead>
                         <tr>
+                            {% if es_rango %}<th>Fecha</th>{% endif %}
                             <th>Hora</th>
                             <th>Cliente</th>
                             <th>Servicio</th>
@@ -198,6 +272,7 @@
                     <tbody>
                         {% for cita in pendientes %}
                         <tr>
+                            {% if es_rango %}<td>{{ cita.fecha|date:"d/m/Y" }}</td>{% endif %}
                             <td>{{ cita.hora }}</td>
                             <td>{{ cita.cliente.nombre }}</td>
                             <td>{{ cita.servicio.nombre }}</td>

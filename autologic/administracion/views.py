@@ -700,23 +700,51 @@ def certificado_barbero_admin(request, id):
 
 
 @login_required
+def _parsear_rango_cierre_caja(request):
+    """
+    Lee fecha_inicio/fecha_fin (y opcionalmente hora_inicio/hora_fin) de
+    la querystring. Mantiene compatibilidad con el parámetro viejo
+    `fecha` (un solo día). Si algo falta o es inválido, cae a "hoy".
+    """
+
+    hoy = datetime.today().date()
+
+    fecha_inicio_str = request.GET.get("fecha_inicio") or request.GET.get("fecha")
+    fecha_fin_str = request.GET.get("fecha_fin") or request.GET.get("fecha")
+
+    try:
+        fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date() if fecha_inicio_str else hoy
+    except ValueError:
+        fecha_inicio = hoy
+
+    try:
+        fecha_fin = datetime.strptime(fecha_fin_str, "%Y-%m-%d").date() if fecha_fin_str else hoy
+    except ValueError:
+        fecha_fin = hoy
+
+    # Si el usuario invierte las fechas, las corregimos en vez de devolver vacío.
+    if fecha_fin < fecha_inicio:
+        fecha_inicio, fecha_fin = fecha_fin, fecha_inicio
+
+    hora_inicio = (request.GET.get("hora_inicio") or "").strip() or None
+    hora_fin = (request.GET.get("hora_fin") or "").strip() or None
+    if hora_inicio and hora_fin and hora_fin < hora_inicio:
+        hora_inicio, hora_fin = hora_fin, hora_inicio
+
+    return fecha_inicio, fecha_fin, hora_inicio, hora_fin
+
+
+@login_required
 def cierre_caja(request):
-    """Reporte de cierre de caja diario: servicios realizados, ingresos y cancelaciones."""
+    """Reporte de cierre de caja: servicios realizados, ingresos y cancelaciones en un rango de fecha/hora."""
 
     if not request.user.is_superuser:
         messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("administracion:panel_admin")
 
-    fecha_str = request.GET.get("fecha")
-    if fecha_str:
-        try:
-            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-        except ValueError:
-            fecha = datetime.today().date()
-    else:
-        fecha = datetime.today().date()
+    fecha_inicio, fecha_fin, hora_inicio, hora_fin = _parsear_rango_cierre_caja(request)
 
-    resumen = calcular_cierre_caja(fecha)
+    resumen = calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio, hora_fin)
 
     return render(request, "administracion/cierre_caja.html", resumen)
 
@@ -729,25 +757,28 @@ def cierre_caja_pdf(request):
         messages.error(request, "No tienes permisos para ver esta página.")
         return redirect("administracion:panel_admin")
 
-    fecha_str = request.GET.get("fecha")
-    if fecha_str:
-        try:
-            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-        except ValueError:
-            fecha = datetime.today().date()
-    else:
-        fecha = datetime.today().date()
+    fecha_inicio, fecha_fin, hora_inicio, hora_fin = _parsear_rango_cierre_caja(request)
 
-    resumen = calcular_cierre_caja(fecha)
+    resumen = calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio, hora_fin)
+
+    if fecha_inicio == fecha_fin:
+        titulo_periodo = fecha_inicio.strftime("%d/%m/%Y")
+        nombre_archivo = f"{fecha_inicio}"
+    else:
+        titulo_periodo = f"{fecha_inicio.strftime('%d/%m/%Y')} — {fecha_fin.strftime('%d/%m/%Y')}"
+        nombre_archivo = f"{fecha_inicio}_a_{fecha_fin}"
+
+    if hora_inicio and hora_fin:
+        titulo_periodo += f" · {hora_inicio} a {hora_fin}"
 
     response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="cierre_caja_{fecha}.pdf"'
+    response["Content-Disposition"] = f'attachment; filename="cierre_caja_{nombre_archivo}.pdf"'
 
     doc = SimpleDocTemplate(response)
     estilos = getSampleStyleSheet()
     elementos = []
 
-    elementos.append(Paragraph(f"Cierre de caja — {fecha.strftime('%d/%m/%Y')}", estilos["Title"]))
+    elementos.append(Paragraph(f"Cierre de caja — {titulo_periodo}", estilos["Title"]))
     elementos.append(Spacer(1, 10))
     elementos.append(Paragraph(f"Servicios finalizados: {resumen['total_finalizadas']}", estilos["Normal"]))
     elementos.append(Paragraph(f"Citas canceladas: {resumen['total_canceladas']}", estilos["Normal"]))
@@ -756,17 +787,26 @@ def cierre_caja_pdf(request):
     elementos.append(Spacer(1, 16))
 
     elementos.append(Paragraph("Servicios realizados", estilos["Heading2"]))
-    data_finalizadas = [["Hora", "Cliente", "Servicio", "Barbero", "Precio"]]
+    if resumen["es_rango"]:
+        encabezado_finalizadas = ["Fecha", "Hora", "Cliente", "Servicio", "Barbero", "Precio"]
+    else:
+        encabezado_finalizadas = ["Hora", "Cliente", "Servicio", "Barbero", "Precio"]
+    data_finalizadas = [encabezado_finalizadas]
     for cita in resumen["finalizadas"]:
-        data_finalizadas.append([
+        fila = []
+        if resumen["es_rango"]:
+            fila.append(cita.fecha.strftime("%d/%m/%Y"))
+        fila += [
             cita.hora,
             cita.cliente.nombre,
             cita.servicio.nombre,
             cita.barbero.nombre if cita.barbero else "-",
             f"${cita.servicio.precio:,}",
-        ])
+        ]
+        data_finalizadas.append(fila)
     if len(data_finalizadas) == 1:
-        data_finalizadas.append(["-", "Sin servicios finalizados este día", "-", "-", "-"])
+        fila_vacia = ["Sin servicios finalizados en este período"] + ["-"] * (len(encabezado_finalizadas) - 1)
+        data_finalizadas.append(fila_vacia)
 
     tabla_finalizadas = Table(data_finalizadas, hAlign="LEFT")
     tabla_finalizadas.setStyle(TableStyle([
@@ -779,16 +819,25 @@ def cierre_caja_pdf(request):
     elementos.append(Spacer(1, 20))
 
     elementos.append(Paragraph("Citas canceladas", estilos["Heading2"]))
-    data_canceladas = [["Hora", "Cliente", "Servicio", "Barbero"]]
+    if resumen["es_rango"]:
+        encabezado_canceladas = ["Fecha", "Hora", "Cliente", "Servicio", "Barbero"]
+    else:
+        encabezado_canceladas = ["Hora", "Cliente", "Servicio", "Barbero"]
+    data_canceladas = [encabezado_canceladas]
     for cita in resumen["canceladas"]:
-        data_canceladas.append([
+        fila = []
+        if resumen["es_rango"]:
+            fila.append(cita.fecha.strftime("%d/%m/%Y"))
+        fila += [
             cita.hora,
             cita.cliente.nombre,
             cita.servicio.nombre,
             cita.barbero.nombre if cita.barbero else "-",
-        ])
+        ]
+        data_canceladas.append(fila)
     if len(data_canceladas) == 1:
-        data_canceladas.append(["-", "Sin cancelaciones este día", "-", "-"])
+        fila_vacia = ["Sin cancelaciones en este período"] + ["-"] * (len(encabezado_canceladas) - 1)
+        data_canceladas.append(fila_vacia)
 
     tabla_canceladas = Table(data_canceladas, hAlign="LEFT")
     tabla_canceladas.setStyle(TableStyle([
