@@ -10,9 +10,6 @@ urlpatterns = [
     path('barberos/', views.lista_barberos, name='lista'),
     path('barberos/<int:id>/', views.detalle_barbero, name='detalle'),
     path('finalizar/<int:id>/', views.finalizar_cita, name='finalizar_cita'),
-    path(
-    "editar-perfil/",
-    views.editar_perfil_barbero,
-    name="editar_perfil_barbero",
-),
+    path("editar-perfil/",views.editar_perfil_barbero,name="editar_perfil_barbero"),
+    path('barbero/vaciar-historial/',views.vaciar_historial_barbero,name='vaciar_historial_barbero'),
 ]

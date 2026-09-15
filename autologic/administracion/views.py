@@ -44,14 +44,9 @@ def panel_admin(request):
     )
 
     historial_citas = Cita.objects.filter(
-        estado__in=[
-            "Finalizada",
-            "Cancelada",
-        ]
-    ).order_by(
-        "-fecha",
-        "-hora"
-    )
+        estado__in=["Finalizada", "Cancelada"],
+        historial_archivado=False
+).order_by("-fecha", "-hora")
 
     total_citas = Cita.objects.filter(
     estado__in=[
@@ -851,3 +846,28 @@ def cierre_caja_pdf(request):
     doc.build(elementos)
 
     return response
+
+@login_required
+def vaciar_historial_admin(request):
+
+    if not request.user.is_superuser:
+        messages.error(
+            request,
+            "No tienes permisos para realizar esta acción."
+        )
+        return redirect("inicio")
+
+    if request.method == "POST":
+
+        Cita.objects.filter(
+            estado__in=["Finalizada", "Cancelada"]
+        ).update(
+            historial_archivado=True
+        )
+
+        messages.success(
+            request,
+            "✅ El historial de citas ha sido vaciado correctamente."
+        )
+
+    return redirect("administracion:panel_admin")

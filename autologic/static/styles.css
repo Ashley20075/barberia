@@ -1545,26 +1545,6 @@ body {
             transform: scale(1.03);
         }
 
-/* =========================================================
-   DIFERENCIACIÓN VISUAL POR ROL (v3)
-   Había DOS sistemas de color para "barbero" peleando entre sí en este
-   archivo (uno naranja #C9812F y otro azul-gris #58758C más abajo, que
-   era el que terminaba ganando), más un tercero solo en tema claro. Por
-   eso se veía disparejo: dependía de qué regla cargaba al final.
-
-   Ahora hay UNA sola variable, --color-primario (con su par claro y su
-   versión "-rgb" para sombras/brillos), definida una vez según la clase
-   del <body>. TODO lo demás —navbar, insignia de rol, botones, tarjetas,
-   modales, tablas, avatar, paginación— la lee. Cambiar de panel cambia
-   un solo valor y arrastra visualmente TODO junto, en los tres paneles
-   por igual, tanto en tema oscuro como en tema claro:
-
-     - Admin   -> DORADO  #F4C542 / claro #C89418
-     - Barbero -> BRONCE  #CD7F32 / claro #8B5A2B
-     - Cliente -> PLATA   #C7CDD3 / claro #5B6670 (más oscura en fondo
-                  blanco para que siga siendo legible)
-   ========================================================= */
-
 :root {
     --color-primario: #F4C542;
     --color-primario-claro: #FFD966;
@@ -1888,44 +1868,52 @@ body {
     border-left: 3px solid #F4C542;
 }
 
-/* =========================================================
-   PAGINACIÓN (historial de citas en los 3 paneles)
-   ========================================================= */
-.pagination-custom .page-link {
-    background-color: #1E1A15;
-    border: 1px solid #3F2E22;
-    color: #F5EFE6;
-    margin: 0 3px;
-    border-radius: 8px;
-    min-width: 40px;
-    text-align: center;
-}
-.pagination-custom .page-link:hover {
-    background-color: #3F2E22;
-    border-color: #F4C542;
-    color: #F5EFE6;
-}
-.pagination-custom .page-item.active .page-link {
-    background-color: #F4C542;
-    border-color: #F4C542;
-    color: #0B0A08;
-    font-weight: 700;
-}
-.pagination-custom .page-item.disabled .page-link {
-    background-color: #1E1A15;
-    border-color: #2A211B;
-    color: #6b6058;
+//* =========================================================
+   PAGINACIÓN - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .pagination-custom .page-link {
+    background-color: #FFFFFF !important;
+    border-color: #C9A87C !important;
+    color: #6C757D !important;
 }
 
-/* =========================================================
-   TABLA OSCURA COMPARTIDA (.table-custom)
-   Esta clase la usan TODAS las tablas del sitio (historial, cierre de
-   caja, notificaciones, panel de admin, inventario), pero nunca se
-   había definido en el archivo compartido — solo existía duplicada dos
-   veces dentro de inventario/dashboard.html. El resto de páginas la
-   usaban sin que existiera, por eso se veían con la tabla blanca por
-   defecto de Bootstrap, sin ningún tema oscuro aplicado.
-   ========================================================= */
+/* Flechas de paginación */
+[data-theme="light"] .pagination-custom .page-link i {
+    color: #6C757D !important;
+}
+
+/* Flecha/botón deshabilitado */
+[data-theme="light"] .pagination-custom .page-item.disabled .page-link {
+    background-color: #FFFFFF !important;
+    border-color: #D6D6D6 !important;
+    color: #6C757D !important;
+    opacity: 1 !important;
+}
+
+[data-theme="light"] .pagination-custom .page-item.disabled .page-link i {
+    color: #6C757D !important;
+}
+
+/* Cuando se puede hacer clic */
+[data-theme="light"] .pagination-custom .page-item:not(.disabled) .page-link:hover {
+    background-color: #F3F3F3 !important;
+    border-color: #AFAFAF !important;
+    color: #555555 !important;
+}
+
+[data-theme="light"] .pagination-custom .page-item:not(.disabled) .page-link:hover i {
+    color: #555555 !important;
+}
+
+/* Página actual */
+[data-theme="light"] .pagination-custom .page-item.active .page-link {
+    background-color: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
+    color: #FFFFFF !important;
+}
+
+
 .table-custom {
     background-color: transparent !important;
     margin-bottom: 0;
@@ -2511,18 +2499,14 @@ body {
 }
 
 
-/* =========================================================
-   BOTONES SECUNDARIOS
-========================================================= */
-
 [data-theme="light"] .btn-secondary {
     background-color: #E5D8C8;
-    color: #2B241E;
+    color: #FFFFFF !important;
 }
 
 [data-theme="light"] .btn-secondary:hover {
     background-color: #D2BFA8;
-    color: #2B241E;
+    color: #FFFFFF !important;
 }
 
 
@@ -3045,3 +3029,87 @@ body {
     object-fit: cover;
 }
 
+/* =========================================================
+   CLIENTE - TEXTO BLANCO EN BOTONES GRISES - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .tema-cliente .nav-btn.active {
+    color: #FFFFFF !important;
+}
+
+[data-theme="light"] .tema-cliente .btn-primary-custom {
+    color: #FFFFFF !important;
+}
+
+[data-theme="light"] .tema-cliente .btn-modern {
+    color: #FFFFFF !important;
+}
+
+/* =========================================================
+   BOTONES SECUNDARIOS - TEMA CLARO
+   Cerrar sesión / Cancelar en todos los paneles
+========================================================= */
+
+[data-theme="light"] .btn-secondary {
+    background-color: #6C757D !important;
+    border-color: #6C757D !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background-color: #5C636A !important;
+    border-color: #5C636A !important;
+    color: #FFFFFF !important;
+}
+/* =========================================================
+   HACER BARBERO - TEMA CLARO
+========================================================= */
+
+[data-theme="light"] .tema-admin .btn-warning {
+    background-color: #F4C542 !important;
+    border-color: #F4C542 !important;
+    color: #0B0A08 !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="light"] .tema-admin .btn-warning:hover {
+    background-color: #FFD966 !important;
+    border-color: #FFD966 !important;
+    color: #0B0A08 !important;
+}
+/* VER INVENTARIO Y CIERRE DE CAJA - MISMO AMARILLO OPACO */
+.tema-admin .btn-modern-inventario {
+    background: linear-gradient(
+        135deg,
+        var(--color-primario) 0%,
+        var(--color-primario-claro) 100%
+    ) !important;
+
+    background-size: auto !important;
+    border: none !important;
+    color: #0B0A08 !important;
+    box-shadow: 0 4px 15px rgba(var(--color-primario-rgb), 0.35) !important;
+    animation: none !important;
+}
+
+.tema-admin .btn-modern-inventario:hover {
+    background: linear-gradient(
+        135deg,
+        var(--color-primario-claro) 0%,
+        var(--color-primario) 100%
+    ) !important;
+
+    color: #0B0A08 !important;
+    box-shadow: 0 8px 30px rgba(var(--color-primario-rgb), 0.5) !important;
+}
+/* =====================================================
+   INFORMACIÓN DEL BARBERO - MODO CLARO
+   ===================================================== */
+
+[data-theme="light"] .tema-barbero .card-custom .text-white {
+    color: #000000 !important;
+}
+
+[data-theme="light"] .tema-barbero .card-custom .text-light-brown {
+    color: #555555 !important;
+}

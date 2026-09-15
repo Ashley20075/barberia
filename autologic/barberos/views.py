@@ -56,14 +56,9 @@ def panel_barbero(request):
 
     historial_citas = Cita.objects.filter(
         barbero=barbero,
-        estado__in=[
-            "Finalizada",
-            "Cancelada"
-        ]
-    ).order_by(
-        "-fecha",
-        "-hora"
-    )
+        estado__in=["Finalizada", "Cancelada"],
+        historial_archivado=False
+).order_by("-fecha", "-hora")
 
     total_citas = Cita.objects.filter(
         barbero=barbero
@@ -291,3 +286,27 @@ def editar_perfil_barbero(request):
             "apellido": " ".join(nombre[1:]) if len(nombre) > 1 else "",
         }
     )
+@login_required(login_url='login')
+def vaciar_historial_barbero(request):
+
+    if request.method == "POST":
+
+        barbero = get_object_or_404(
+            Barbero,
+            email=request.user.email,
+            activo=True
+        )
+
+        Cita.objects.filter(
+            barbero=barbero,
+            estado__in=["Finalizada", "Cancelada"]
+        ).update(
+            historial_archivado=True
+        )
+
+        messages.success(
+            request,
+            "✅ Tu historial de citas ha sido vaciado correctamente."
+        )
+
+    return redirect("barberos:panel_barbero")

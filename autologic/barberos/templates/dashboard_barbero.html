@@ -396,55 +396,223 @@
                     </div>
                 </div>
 
-                <div class="card-custom mt-4">
-                    <div class="card-header-custom">
-                        <i class="bi bi-clock-history"></i> Historial de citas
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-custom mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Servicio</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for cita in historial_citas %}
-                                <tr>
-                                    <td>{{ cita.cliente.nombre }}</td>
-                                    <td>{{ cita.servicio.nombre }}</td>
-                                    <td>{{ cita.fecha|date:"d/m/Y" }}</td>
-                                    <td>{{ cita.hora }}</td>
-                                    <td>
-                                        {% if cita.estado == "Finalizada" %}
-                                            <span class="badge-finalizada">
-                                                Finalizada
-                                            </span>
-                                        {% else %}
-                                            <span class="badge-cancelada">
-                                                Cancelada
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        No hay historial.
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-body">
-                        {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
-                    </div>
-                </div>
+                <!-- ==================== HISTORIAL DE CITAS ==================== -->
+<div class="card-custom mt-4">
+
+    <!-- ENCABEZADO -->
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+
+        <span>
+            <i class="bi bi-clock-history"></i>
+            Historial de citas
+        </span>
+
+        <!-- BOTÓN VACIAR HISTORIAL -->
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#modalVaciarHistorialBarbero"
+            title="Vaciar historial">
+
+            <i class="bi bi-trash3"></i>
+
+        </button>
+
+    </div>
+
+
+    <!-- TABLA -->
+    <div class="table-responsive">
+
+        <table class="table table-custom mb-0">
+
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                {% for cita in historial_citas %}
+
+                <tr>
+
+                    <td>
+                        {{ cita.cliente.nombre }}
+                    </td>
+
+                    <td>
+                        {{ cita.servicio.nombre }}
+                    </td>
+
+                    <td>
+                        {{ cita.fecha|date:"d/m/Y" }}
+                    </td>
+
+                    <td>
+                        {{ cita.hora }}
+                    </td>
+
+                    <td>
+
+                        {% if cita.estado == "Finalizada" %}
+
+                            <span class="badge-finalizada">
+                                Finalizada
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge-cancelada">
+                                Cancelada
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No hay historial.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- PAGINACIÓN -->
+    <div class="card-body">
+
+        {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- MODAL VACIAR HISTORIAL DEL BARBERO -->
+<!-- IMPORTANTE: ESTÁ FUERA DEL FOR -->
+<!-- ===================================================== -->
+
+<div
+    class="modal fade"
+    id="modalVaciarHistorialBarbero"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content modal-content-custom">
+
+
+            <!-- ENCABEZADO -->
+            <div class="modal-header modal-header-custom">
+
+                <h5 class="modal-title text-yellow">
+
+                    <i class="bi bi-trash3"></i>
+
+                    Vaciar historial
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar">
+                </button>
+
             </div>
+
+
+            <!-- CUERPO -->
+            <div class="modal-body text-center py-4">
+
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-inline-block"></i>
+
+
+                <h5>
+                    ¿Vaciar tu historial?
+                </h5>
+
+
+                <p class="text-light-brown mb-0">
+
+                    Se ocultarán todas las citas finalizadas
+                    y canceladas de tu historial.
+
+                </p>
+
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="modal-footer modal-footer-custom">
+
+
+                <!-- CANCELAR -->
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+
+                <!-- CONFIRMAR -->
+                <form
+                    method="POST"
+                    action="{% url 'barberos:vaciar_historial_barbero' %}"
+                    class="d-inline">
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        <i class="bi bi-trash3"></i>
+
+                        Vaciar historial
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
             <div class="col-md-6">
                 <div class="card-custom">

@@ -37,7 +37,8 @@ def panel_cliente(request):
 
     historial = Cita.objects.filter(
         cliente=cliente,
-        estado__in=["Finalizada", "Cancelada"]
+        estado__in=["Finalizada", "Cancelada"],
+        historial_archivado=False
     ).order_by("-fecha", "-hora")
 
     barberos = Barbero.objects.filter(activo=True)
@@ -54,6 +55,23 @@ def panel_cliente(request):
         "cliente": cliente,
         "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
     })
+
+@login_required(login_url='login')
+def vaciar_historial_cliente(request):
+    if request.method == "POST":
+        cliente = get_object_or_404(Cliente, user=request.user)
+
+        Cita.objects.filter(
+            cliente=cliente,
+            estado__in=["Finalizada", "Cancelada"]
+        ).update(historial_archivado=True)
+
+        messages.success(
+            request,
+            "✅ Tu historial de citas ha sido vaciado correctamente."
+        )
+
+    return redirect("panel_cliente")
 
 
 @login_required(login_url='login')

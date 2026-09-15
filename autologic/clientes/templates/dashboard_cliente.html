@@ -29,16 +29,11 @@
                             <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
                         {% endif %}
                     </a>
-                    <div class="user-info-custom">
-                        <i class="bi bi-person-circle"></i>
-                        <span>{{ user.username }}</span>
-                    </div>
+
                     <a href="{% url 'panel_cliente' %}" class="nav-btn active">
                         <i class="bi bi-person"></i> Mi Perfil
                     </a>
-                    <a href="#turnos" class="nav-btn">
-                        <i class="bi bi-calendar-check"></i> Mis Turnos
-                    </a>
+
                     <a href="{% url 'editar_perfil' %}" class="nav-btn">
                         <i class="bi bi-gear"></i> Editar Perfil
                     </a>
@@ -130,7 +125,7 @@
             <div class="col-md-7 text-center text-md-start mt-3 mt-md-0">
                 <h1 class="display-6">¡Hola, {{ nombre }}! 👋</h1>
                 <p class="text-light-brown mb-2">
-                    <i class="bi bi-star-fill text-yellow"></i> {{ proximos|length }} próximas citas
+                    <i class="bi bi-star-fill text-yellow"></i> {{ proximos|length }} citas próximas 
                 </p>
             </div>
             <div class="col-md-3 text-center text-md-end mt-3 mt-md-0">
@@ -332,51 +327,202 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="stat-card p-0 overflow-hidden">
-                    <div class="card-header-custom">
-                        <i class="bi bi-archive"></i> Historial
+            <!-- ==================== HISTORIAL ==================== -->
+<div class="col-md-6">
+
+    <div class="stat-card p-0 overflow-hidden">
+
+        <!-- ENCABEZADO -->
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+
+            <span>
+                <i class="bi bi-archive"></i> Historial
+            </span>
+
+            <!-- BOTÓN VACIAR HISTORIAL -->
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#modalVaciarHistorialCliente"
+                title="Vaciar historial">
+
+                <i class="bi bi-trash3"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- CONTENIDO DEL HISTORIAL -->
+        <div class="p-3">
+
+            {% for cita in historial %}
+
+                <div class="turno-card p-2 mb-2">
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                        <div>
+
+                            <strong>
+                                {{ cita.servicio.nombre }}
+                            </strong>
+
+                            <br>
+
+                            <small class="text-light-brown">
+                                {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
+                            </small>
+
+                        </div>
+
+
+                        {% if cita.estado == "Finalizada" %}
+
+                            <span class="badge bg-success">
+                                Finalizada
+                            </span>
+
+                        {% elif cita.estado == "Cancelada" %}
+
+                            <span class="badge bg-danger">
+                                Cancelada
+                            </span>
+
+                        {% endif %}
+
                     </div>
-                    <div class="p-3">
-    {% for cita in historial %}
-    <div class="turno-card p-2 mb-2">
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <strong>{{ cita.servicio.nombre }}</strong><br>
 
-                <small class="text-light-brown">
-                    {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
-                </small>
-            </div>
-
-            {% if cita.estado == "Finalizada" %}
-
-                <span class="badge bg-success">
-                    Finalizada
-                </span>
-
-            {% elif cita.estado == "Cancelada" %}
-
-                <span class="badge bg-danger">
-                    Cancelada
-                </span>
-
-            {% endif %}
-
-        </div>
-    </div>
-    {% empty %}
-    <p class="text-light-brown text-center py-3">
-        Sin historial aún.
-    </p>
-    {% endfor %}
-    {% include "_paginacion.html" with page_obj=historial parametro="pagina_historial" %}
-</div>
                 </div>
-            </div>
+
+            {% empty %}
+
+                <div class="text-center py-4">
+
+                    <i class="bi bi-archive fs-1 text-light-brown mb-3 d-inline-block"></i>
+
+                    <p class="text-light-brown mb-0">
+                        No tienes registros en tu historial.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+
+            <!-- PAGINACIÓN -->
+            {% include "_paginacion.html" with page_obj=historial parametro="pagina_historial" %}
+
         </div>
 
     </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- MODAL VACIAR HISTORIAL -->
+<!-- IMPORTANTE: ESTÁ FUERA DEL for Y FUERA DEL stat-card -->
+<!-- ===================================================== -->
+
+<div
+    class="modal fade"
+    id="modalVaciarHistorialCliente"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content modal-content-custom">
+
+
+            <!-- ENCABEZADO DEL MODAL -->
+            <div class="modal-header modal-header-custom">
+
+                <h5 class="modal-title text-yellow">
+
+                    <i class="bi bi-trash3"></i>
+
+                    Vaciar historial
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar">
+                </button>
+
+            </div>
+
+
+            <!-- CUERPO -->
+            <div class="modal-body text-center py-4">
+
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-inline-block"></i>
+
+
+                <h5>
+                    ¿Vaciar tu historial?
+                </h5>
+
+
+                <p class="text-light-brown mb-0">
+
+                    Se ocultarán todas tus citas finalizadas
+                    y canceladas del historial.
+
+                </p>
+
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="modal-footer modal-footer-custom">
+
+
+                <!-- CANCELAR -->
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+
+                <!-- CONFIRMAR -->
+                <form
+                    method="POST"
+                    action="{% url 'vaciar_historial_cliente' %}"
+                    class="d-inline">
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        <i class="bi bi-trash3"></i>
+
+                        Vaciar historial
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

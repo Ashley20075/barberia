@@ -66,6 +66,8 @@ class Cita(models.Model):
 
     recordatorio_enviado = models.BooleanField(default=False)
 
+    historial_archivado = models.BooleanField(default=False)
+
     estado = models.CharField(
         max_length=20,
         choices=ESTADOS,
