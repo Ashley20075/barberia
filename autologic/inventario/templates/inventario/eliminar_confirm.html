@@ -12,31 +12,31 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: #0B0A08;
-            color: #F5EFE6;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
         }
         .navbar-custom {
-            background-color: #0B0A08;
-            border-bottom: 2px solid #F4C542;
+            background-color: var(--color-fondo);
+            border-bottom: 2px solid var(--color-primario);
             padding: 0.8rem 0;
         }
         .navbar-brand-custom {
             font-family: 'Playfair Display', 'Georgia', serif;
             font-size: 1.8rem;
             font-weight: 700;
-            color: #F4C542 !important;
+            color: var(--color-primario) !important;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        .navbar-brand-custom span { color: #C9A87C; }
+        .navbar-brand-custom span { color: var(--color-texto-secundario); }
         .navbar-brand-custom img {
             height: 40px; width: 40px; object-fit: cover; border-radius: 50%;
         }
         .card-custom {
-            background-color: #1E1A15;
+            background-color: var(--color-fondo-secundario);
             border-radius: 20px;
             border: 1px solid rgba(220, 53, 69, 0.4);
             overflow: hidden;
@@ -47,7 +47,7 @@
             padding: 1rem 1.25rem;
             font-weight: 600;
         }
-        .text-light-brown { color: #C9A87C !important; }
+        .text-light-brown { color: var(--color-texto-secundario) !important; }
     </style>
 </head>
 

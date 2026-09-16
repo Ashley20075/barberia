@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from .models import Producto, MovimientoInventario
 from .forms import ProductoForm, MovimientoForm
+from .utils import registrar_movimiento
 from django.http import HttpResponse
 from reportlab.platypus import (
     SimpleDocTemplate,
@@ -73,79 +74,51 @@ def movimiento_inventario(request, producto_id):
     if request.method == 'POST':
         form = MovimientoForm(request.POST)
         if form.is_valid():
-            movimiento = form.save(commit=False)
-            movimiento.producto = producto
-            movimiento.usuario = request.user
-            
-            # Si no se proporcionó fecha, usar la actual
-            if not movimiento.fecha:
-                movimiento.fecha = timezone.now()
-            
-            # Guardar stock anterior
-            movimiento.stock_anterior = producto.stock_actual
-            
-            # Procesar según tipo
-            if movimiento.tipo == 'ENTRADA':
-                nuevo_stock = producto.stock_actual + movimiento.cantidad
+            datos = form.cleaned_data
 
-                if nuevo_stock > 20:
-                    messages.error(
-                        request,
-                        "❌ No se puede superar el stock máximo de 20 unidades."
-                    )
-                    return redirect('inventario:dashboard')
+            # Límites de stock (máx. 20 / mín. 5 en ajustes)
+            if datos['tipo'] == 'ENTRADA' and producto.stock_actual + datos['cantidad'] > 20:
+                messages.error(request, "❌ No se puede superar el stock máximo de 20 unidades.")
+                return redirect('inventario:dashboard')
 
-                producto.stock_actual = nuevo_stock
-                movimiento.stock_nuevo = nuevo_stock
+            if datos['tipo'] == 'AJUSTE' and datos['cantidad'] > 20:
+                messages.error(request, "❌ El stock máximo permitido es de 20 unidades.")
+                return redirect('inventario:dashboard')
 
-                messages.success(
-                    request,
-                    f'✅ Entrada registrada. Nuevo stock: {producto.stock_actual}'
+            if datos['tipo'] == 'AJUSTE' and datos['cantidad'] < 5:
+                messages.error(request, "❌ El stock mínimo permitido es de 5 unidades.")
+                return redirect('inventario:dashboard')
+
+            try:
+                movimiento = registrar_movimiento(
+                    producto=producto,
+                    tipo=datos['tipo'],
+                    cantidad=datos['cantidad'],
+                    usuario=request.user,
+                    proveedor=datos.get('proveedor'),
+                    nota=datos.get('nota'),
                 )
-                
-            elif movimiento.tipo == 'SALIDA':
-                # Convertimos a entero para evitar problemas de comparación
-                cantidad_salida = int(movimiento.cantidad) 
-    
-                if producto.stock_actual >= cantidad_salida:
-                    producto.stock_actual -= cantidad_salida
-                    movimiento.stock_nuevo = producto.stock_actual  # Asignamos valor concreto
-                    messages.success(request, f'✅ Salida registrada. Stock: {producto.stock_actual}')
-                else:
-                    messages.error(request, 'Stock insuficiente')
-                    return redirect('inventario:dashboard')
-                    
-            elif movimiento.tipo == 'AJUSTE':
-                if movimiento.cantidad > 20:
-                    messages.error(
-                        request,
-                        "❌ El stock máximo permitido es de 20 unidades."
-                    )
-                    return redirect('inventario:dashboard')
+            except ValueError as e:
+                messages.error(request, f'❌ {e}')
+                return redirect('inventario:dashboard')
 
-                if movimiento.cantidad < 5:
-                    messages.error(
-                        request,
-                        "❌ El stock mínimo permitido es de 5 unidades."
-                    )
-                    return redirect('inventario:dashboard')
+            # Respeta la fecha indicada en el formulario
+            if datos.get('fecha'):
+                movimiento.fecha = datos['fecha']
+                movimiento.save(update_fields=['fecha'])
 
-                producto.stock_actual = movimiento.cantidad
-                movimiento.stock_nuevo = movimiento.cantidad
-
-                messages.success(
-                    request,
-                    f'✅ Ajuste realizado. Nuevo stock: {producto.stock_actual}'
-                )
-            
-            # PRINTS DIAGNÓSTICOS
-            print(f"DEBUG - Tipo: {movimiento.tipo}")
-            print(f"DEBUG - Cantidad a mover: {movimiento.cantidad}")
-            print(f"DEBUG - Stock anterior: {movimiento.stock_anterior}")
-            print(f"DEBUG - Stock nuevo a guardar: {movimiento.stock_nuevo}")
-
-            producto.save()
-            movimiento.save()
+            etiquetas = {
+                'ENTRADA': f'✅ Entrada registrada. Nuevo stock: {producto.stock_actual}',
+                'SALIDA': f'✅ Salida registrada. Stock: {producto.stock_actual}',
+                'AJUSTE': f'✅ Ajuste realizado. Nuevo stock: {producto.stock_actual}',
+            }
+            messages.success(request, etiquetas[datos['tipo']])
+            return redirect('inventario:dashboard')
+        else:
+            # El formulario trae errores: se muestran en vez de perderse
+            for campo, errores in form.errors.items():
+                for error in errores:
+                    messages.error(request, f'❌ {error}')
             return redirect('inventario:dashboard')
     else:
         form = MovimientoForm(initial={'fecha': timezone.now()})  # <-- Fecha por defecto
@@ -181,9 +154,9 @@ def historial_movimientos(request):
     if producto_id:
         movimientos = movimientos.filter(producto_id=producto_id)
     if fecha_inicio:
-        movimientos = movimientos.filter(fecha_date_gte=fecha_inicio)
+        movimientos = movimientos.filter(fecha__date__gte=fecha_inicio)
     if fecha_fin:
-        movimientos = movimientos.filter(fecha_date_lte=fecha_fin)
+        movimientos = movimientos.filter(fecha__date__lte=fecha_fin)
     
     productos = Producto.objects.filter(activo=True)
     

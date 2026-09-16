@@ -169,7 +169,7 @@
 
                     <div class="col-md-4">
                         <label class="form-label-custom">✂️ Cortes</label>
-                        <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #3F2E22;">
+                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
                             {% for servicio in servicios %}
                             <div class="form-check mb-2">
                                 <input class="form-check-input servicio-radio" type="radio" name="servicio"
@@ -186,7 +186,7 @@
 
                     <div class="col-md-4">
                         <label class="form-label-custom">➕ Adicionales</label>
-                        <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #3F2E22;">
+                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="adicionales"
                                     value="Arreglo de barba" data-precio="5000" id="chkBarba">
@@ -244,7 +244,7 @@
                     </div>
 
                     <div class="col-12">
-    <div class="p-3 rounded" style="background-color:#2A211B; border:1px solid #F4C542;">
+    <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-primario);">
 
         <div class="d-flex justify-content-between mb-2">
             <span class="text-light-brown">
@@ -316,7 +316,10 @@
                                     {% endif %}
                                     <a href="{% url 'cancelar_cita_cliente' cita.id %}"
                                         class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('¿Cancelar este turno?')">Cancelar</a>
+                                        data-confirmar="¿Cancelar este turno?"
+                                               data-confirmar-titulo="Cancelar turno"
+                                               data-confirmar-boton="Sí, cancelar"
+                                               data-confirmar-peligro>Cancelar</a>
                                 </div>
                             </div>
                         </div>
@@ -419,6 +422,10 @@
     </div>
 
 </div>
+
+        </div><!-- /.row #turnos -->
+
+    </div><!-- /.container py-4 -->
 
 
 <!-- ===================================================== -->
@@ -524,7 +531,6 @@
 
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>

@@ -11,6 +11,7 @@ urlpatterns = [
     path('cuenta-eliminada/', views.cuenta_eliminada, name='cuenta_eliminada'),
 
     path('registro/', views.registro, name='registro'),
+    path('confirmar-correo/<str:token>/', views.confirmar_correo, name='confirmar_correo'),
     path('logout/', views.logout_view, name='logout'),
     path('cliente/horarios/',views.horarios_disponibles,name='horarios_disponibles'),
     path('cliente/vaciar-historial/',views.vaciar_historial_cliente,name='vaciar_historial_cliente'),

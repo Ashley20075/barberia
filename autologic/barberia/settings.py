@@ -177,3 +177,50 @@ GOOGLE_OAUTH_SCOPES = [
 # Esta línea solo debe existir mientras trabajas en tu máquina con DEBUG=True.
 if DEBUG:
     os.environ.setdefault('OAUTHLIB_INSECURE_TRANSPORT', '1')
+
+
+# ===== Mensajes =====
+# Django etiqueta los errores como "error", pero Bootstrap usa "danger".
+# Sin esta traducción, las plantillas que hacen alert-{{ message.tags }}
+# generaban la clase inexistente "alert-error" y los mensajes de error
+# aparecían sin el estilo rojo (o casi invisibles).
+from django.contrib.messages import constants as messages_constants
+
+MESSAGE_TAGS = {
+    messages_constants.DEBUG: 'secondary',
+    messages_constants.INFO: 'info',
+    messages_constants.SUCCESS: 'success',
+    messages_constants.WARNING: 'warning',
+    messages_constants.ERROR: 'danger',
+}
+
+
+# ===== Correo =====
+# Se usa para el enlace de confirmacion que valida que la direccion de
+# una cuenta nueva existe de verdad.
+#
+# En desarrollo (DEBUG=True) no se manda nada a internet: el correo se
+# imprime en la consola donde corre runserver, y ahi mismo se puede
+# copiar el enlace de confirmacion para probar el registro.
+#
+# En produccion hay que definir estas variables de entorno:
+#   EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+# (para Gmail hace falta una "contrasena de aplicacion", no la del
+# correo; se crea desde la cuenta de Google con verificacion en dos
+# pasos activada).
+if DEBUG and not os.getenv('EMAIL_HOST'):
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', '1') == '1'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_TIMEOUT = 15
+
+DEFAULT_FROM_EMAIL = os.getenv(
+    'DEFAULT_FROM_EMAIL',
+    EMAIL_HOST_USER or 'no-responder@barberspringfield.local'
+)

@@ -24,7 +24,7 @@ class Producto(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     
-    def _str_(self):
+    def __str__(self):
         return self.nombre
     
     def necesita_reposicion(self):
@@ -61,7 +61,7 @@ class MovimientoInventario(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     nota = models.TextField(blank=True, null=True)
     
-    def _str_(self):
+    def __str__(self):
         return f"{self.get_tipo_display()} - {self.producto.nombre} ({self.cantidad})"
     
     def save(self, *args, **kwargs):

@@ -17,15 +17,15 @@
         }
 
         body {
-            background-color: #0B0A08;
-            color: #F5EFE6;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
         }
 
         /* ========== NAVBAR ========== */
         .navbar-custom {
-            background-color: #0B0A08;
-            border-bottom: 2px solid #F4C542;
+            background-color: var(--color-fondo);
+            border-bottom: 2px solid var(--color-primario);
             padding: 0.8rem 0;
             position: sticky;
             top: 0;
@@ -36,7 +36,7 @@
             font-family: 'Playfair Display', 'Georgia', serif;
             font-size: 1.8rem;
             font-weight: 700;
-            color: #F4C542 !important;
+            color: var(--color-primario) !important;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -44,7 +44,7 @@
         }
 
         .navbar-brand-custom span {
-            color: #C9A87C;
+            color: var(--color-texto-secundario);
         }
 
         .navbar-brand-custom img {
@@ -56,8 +56,8 @@
 
         .nav-btn {
             background: transparent;
-            border: 2px solid #3F2E22;
-            color: #F5EFE6 !important;
+            border: 2px solid var(--color-borde);
+            color: var(--color-texto) !important;
             padding: 0.5rem 1.2rem;
             border-radius: 40px;
             font-weight: 600;
@@ -71,22 +71,22 @@
         }
 
         .nav-btn:hover {
-            background-color: #3F2E22;
-            border-color: #F4C542;
+            background-color: var(--color-borde);
+            border-color: var(--color-primario);
             transform: scale(1.02);
         }
 
         .nav-btn.active {
-            background-color: #F4C542;
-            border-color: #F4C542;
+            background-color: var(--color-primario);
+            border-color: var(--color-primario);
             color: #0B0A08 !important;
-            box-shadow: 0 0 20px rgba(244, 197, 66, 0.3);
+            box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.3);
         }
 
         .btn-logout-custom {
             background: transparent;
-            border: 2px solid #3F2E22;
-            color: #F5EFE6;
+            border: 2px solid var(--color-borde);
+            color: var(--color-texto);
             padding: 0.5rem 1.2rem;
             border-radius: 40px;
             font-weight: 600;
@@ -105,34 +105,34 @@
         }
 
         .user-info-custom {
-            background-color: #2A211B;
+            background-color: var(--color-fondo-card);
             padding: 0.5rem 1rem;
             border-radius: 40px;
             display: inline-flex;
             align-items: center;
             gap: 0.8rem;
-            color: #F5EFE6;
+            color: var(--color-texto);
         }
 
         .user-info-custom i {
-            color: #F4C542;
+            color: var(--color-primario);
             font-size: 1.2rem;
         }
 
         /* ========== UTILIDADES ========== */
         .text-yellow {
-            color: #F4C542 !important;
+            color: var(--color-primario) !important;
         }
 
         .text-light-brown {
-            color: #C9A87C !important;
+            color: var(--color-texto-secundario) !important;
         }
 
         /* ========== TARJETAS ========== */
         .card-custom {
-            background-color: #1E1A15 !important;
+            background-color: var(--color-fondo-secundario) !important;
             border-radius: 20px !important;
-            border: 1px solid rgba(244, 197, 66, 0.2) !important;
+            border: 1px solid rgba(var(--color-primario-rgb), 0.2) !important;
             margin-bottom: 2rem;
             overflow: hidden;
         }
@@ -155,32 +155,32 @@
 
         /* ========== FILTROS ========== */
         .bg-dark-input {
-            background-color: #2A211B !important;
-            border: 1px solid #3F2E22 !important;
-            color: #F5EFE6 !important;
+            background-color: var(--color-fondo-card) !important;
+            border: 1px solid var(--color-borde) !important;
+            color: var(--color-texto) !important;
         }
 
         .bg-dark-input:focus {
-            background-color: #352b23 !important;
-            border-color: #F4C542 !important;
-            box-shadow: 0 0 0 0.2rem rgba(244, 197, 66, 0.25);
+            background-color: var(--color-hover-card) !important;
+            border-color: var(--color-primario) !important;
+            box-shadow: 0 0 0 0.2rem rgba(var(--color-primario-rgb), 0.25);
         }
 
         .bg-dark-input option {
-            background-color: #2A211B !important;
-            color: #F5EFE6 !important;
+            background-color: var(--color-fondo-card) !important;
+            color: var(--color-texto) !important;
         }
 
         /* ========== BOTONES ========== */
         .btn-modern {
-            background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%);
+            background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%);
             border: none;
             border-radius: 50px;
             padding: 12px 24px;
             color: #0B0A08;
             font-weight: 700;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(244, 197, 66, 0.35);
+            box-shadow: 0 4px 15px rgba(var(--color-primario-rgb), 0.35);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -190,16 +190,16 @@
 
         .btn-modern:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(244, 197, 66, 0.5);
+            box-shadow: 0 8px 30px rgba(var(--color-primario-rgb), 0.5);
             color: #0B0A08;
         }
 
         .btn-secondary-custom {
-            background: #3F2E22;
+            background: var(--color-borde);
             border: none;
             border-radius: 50px;
             padding: 12px 24px;
-            color: #F5EFE6;
+            color: var(--color-texto);
             font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
@@ -211,23 +211,23 @@
 
         .btn-secondary-custom:hover {
             background: #5a4233;
-            color: #F5EFE6;
+            color: var(--color-texto);
             transform: translateY(-3px);
         }
 
         /* ========== MODALES ========== */
         .modal-content-custom {
-            background-color: #1E1A15 !important;
-            border: 1px solid rgba(244, 197, 66, 0.3) !important;
+            background-color: var(--color-fondo-secundario) !important;
+            border: 1px solid rgba(var(--color-primario-rgb), 0.3) !important;
         }
 
         .modal-header-custom {
-            border-bottom: 2px solid #F4C542 !important;
+            border-bottom: 2px solid var(--color-primario) !important;
             padding: 1rem 1.5rem;
         }
 
         .modal-footer-custom {
-            border-top: 2px solid #F4C542 !important;
+            border-top: 2px solid var(--color-primario) !important;
             padding: 1rem 1.5rem;
         }
 
@@ -406,7 +406,7 @@
                             {% empty %}
                             <tr>
                                 <td colspan="9" class="text-center text-light-brown py-5">
-                                    <i class="bi bi-inbox fs-1 d-block mb-3" style="color: #C9A87C;"></i>
+                                    <i class="bi bi-inbox fs-1 d-block mb-3" style="color: var(--color-texto-secundario);"></i>
                                     <h5>No hay movimientos registrados</h5>
                                     <p class="mb-0">Los movimientos aparecerán aquí cuando registres entradas o salidas.</p>
                                 </td>

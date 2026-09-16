@@ -6,6 +6,7 @@ from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,6 +17,13 @@ from citas.models import Cita, Servicio
 from citas.paginacion import paginar
 from clientes.models import Cliente
 from inventario.models import Producto
+from inventario.utils import registrar_movimiento
+from clientes.verificacion import enviar_correo_confirmacion, leer_token
+
+
+class CorreoNoEntregado(Exception):
+    """El correo de confirmación no se pudo entregar en esa dirección."""
+    pass
 
 
 @login_required(login_url='login')
@@ -226,12 +234,22 @@ def agendar_cita(request):
                     estado="Pendiente",
                 )
                 
-                # Descontar stock de productos seleccionados
+                # Descontar stock de productos seleccionados.
+                # Se hace con registrar_movimiento() para que la salida quede
+                # visible en el historial de inventario.
                 for nombre_producto in productos_seleccionados:
                     producto = Producto.objects.filter(nombre=nombre_producto.strip()).first()
                     if producto and producto.stock_actual > 0:
-                        producto.stock_actual -= 1
-                        producto.save()
+                        try:
+                            registrar_movimiento(
+                                producto=producto,
+                                tipo='SALIDA',
+                                cantidad=1,
+                                usuario=request.user,
+                                nota=f'Uso en cita de {cliente.nombre}',
+                            )
+                        except ValueError:
+                            pass
 
             # Crea el evento en el calendario del admin y del barbero (si están conectados)
             # -> Esto ya lo hace automáticamente la señal post_save en googlecalendar/signals.py
@@ -263,8 +281,13 @@ def cancelar_cita_cliente(request, id):
                 for nombre_producto in productos:
                     producto = Producto.objects.filter(nombre=nombre_producto.strip()).first()
                     if producto:
-                        producto.stock_actual += 1
-                        producto.save()
+                        registrar_movimiento(
+                            producto=producto,
+                            tipo='ENTRADA',
+                            cantidad=1,
+                            usuario=request.user,
+                            nota=f'Devolución por cancelación de cita de {cita.cliente.nombre}',
+                        )
 
             cita.estado = "Cancelada"
             cita.save()
@@ -288,26 +311,56 @@ def registro(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
+        # Todo lo que el usuario ya escribió se devuelve a la plantilla para
+        # que el formulario no se vacíe cuando algo falla. Las contraseñas
+        # NO se devuelven, a propósito (no se reenvían al navegador).
+        datos = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "cedula": cedula,
+            "telefono": telefono,
+            "email": email,
+        }
+
         if password != confirm_password:
             messages.error(request, "❌ Las contraseñas no coinciden.")
-            return render(request, "registro.html")
+            return render(request, "registro.html", datos)
 
-        if User.objects.filter(email=email).exists():
+        if len(password or "") < 6:
+            messages.error(request, "❌ La contraseña debe tener al menos 6 caracteres.")
+            return render(request, "registro.html", datos)
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(
+                request,
+                '❌ "%s" no es un correo electrónico válido.' % email
+            )
+            return render(request, "registro.html", datos)
+
+        if User.objects.filter(email__iexact=email).exists():
             messages.error(request, "❌ Este correo electrónico ya está registrado.")
-            return render(request, "registro.html")
+            return render(request, "registro.html", datos)
 
         if cedula and Cliente.objects.filter(cedula=cedula).exists():
             messages.error(request, "❌ Esta cédula ya está registrada.")
-            return render(request, "registro.html")
+            return render(request, "registro.html", datos)
 
         try:
             with transaction.atomic():
+                # La cuenta nace DESACTIVADA. Solo se activa cuando la
+                # persona abre el enlace que le llega a ese correo: es la
+                # única forma de saber que la dirección existe de verdad
+                # y es suya. Validar el formato no basta, "x@gmail.com"
+                # tiene formato perfecto y puede no existir.
                 user = User.objects.create_user(
                     username=email,
                     email=email,
                     password=password,
                     first_name=nombre,
                     last_name=apellido,
+                    is_active=False,
                 )
 
                 Cliente.objects.create(
@@ -318,14 +371,70 @@ def registro(request):
                     email=email,
                 )
 
-            messages.success(request, "¡Cuenta creada exitosamente! Ahora inicia sesión.")
+                enviado = enviar_correo_confirmacion(request, user)
+
+                if not enviado:
+                    # No se pudo entregar: se deshace el registro para no
+                    # dejar una cuenta muerta que bloquee ese correo.
+                    raise CorreoNoEntregado(email)
+
+            messages.success(
+                request,
+                "✅ Te enviamos un correo a %s. Abre el enlace que "
+                "contiene para activar tu cuenta y poder iniciar sesión."
+                % email
+            )
             return redirect("login")
+
+        except CorreoNoEntregado:
+            messages.error(
+                request,
+                '❌ No pudimos entregar el correo de confirmación en "%s". '
+                'Revisa que la dirección exista y esté bien escrita.' % email
+            )
+            return render(request, "registro.html", datos)
 
         except Exception as e:
             messages.error(request, f"Error al crear usuario: {e}")
-            return render(request, "registro.html")
+            return render(request, "registro.html", datos)
 
     return render(request, "registro.html")
+
+
+def confirmar_correo(request, token):
+    """
+    Activa la cuenta cuando la persona abre el enlace que le llegó.
+    Que este enlace se haya podido abrir demuestra que el correo existe
+    y que quien se registró tiene acceso a él.
+    """
+    uid = leer_token(token)
+
+    if uid is None:
+        messages.error(
+            request,
+            "❌ Ese enlace de confirmación no es válido o ya caducó. "
+            "Regístrate de nuevo para recibir uno nuevo."
+        )
+        return redirect("registro")
+
+    user = User.objects.filter(pk=uid).first()
+
+    if user is None:
+        messages.error(request, "❌ Esa cuenta ya no existe.")
+        return redirect("registro")
+
+    if user.is_active:
+        messages.info(request, "Tu cuenta ya estaba confirmada. Inicia sesión.")
+        return redirect("login")
+
+    user.is_active = True
+    user.save(update_fields=["is_active"])
+
+    messages.success(
+        request,
+        "✅ Correo confirmado. Ya puedes iniciar sesión."
+    )
+    return redirect("login")
 
 
 def logout_view(request):

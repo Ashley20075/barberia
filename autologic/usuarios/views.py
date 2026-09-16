@@ -4,19 +4,70 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from barberos.models import Barbero
 from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from clientes.models import Cliente
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = (request.POST.get('email') or '').strip()
+        password = request.POST.get('password') or ''
 
+        # Los datos ya escritos se devuelven SIEMPRE a la plantilla, para que
+        # el formulario no se vacíe cuando hay un error de validación.
+        datos = {'email': email}
+
+        # ---- 1. El correo no puede venir vacío ----
+        if not email:
+            messages.error(request, '❌ Debes escribir tu correo electrónico.')
+            return render(request, 'login.html', datos)
+
+        # ---- 2. El correo debe tener un formato válido ----
         try:
-            usuario = User.objects.get(email=email)
-            username = usuario.username
-        except User.DoesNotExist:
-            messages.error(request, 'Credenciales inválidas')
-            return render(request, 'login.html')
+            validate_email(email)
+        except ValidationError:
+            messages.error(
+                request,
+                '❌ "%s" no es un correo electrónico válido. '
+                'Revisa que esté bien escrito (ejemplo: nombre@correo.com).' % email
+            )
+            return render(request, 'login.html', datos)
+
+        if not password:
+            messages.error(request, '❌ Debes escribir tu contraseña.')
+            return render(request, 'login.html', datos)
+
+        # ---- 3. El correo debe existir realmente en la base de datos ----
+        # Se busca sin distinguir mayúsculas/minúsculas: "Ana@Mail.com" y
+        # "ana@mail.com" son la misma cuenta.
+        usuario = User.objects.filter(email__iexact=email).first()
+
+        if usuario is None:
+            messages.error(
+                request,
+                '❌ No existe ninguna cuenta registrada con el correo "%s". '
+                'Verifica que esté bien escrito o regístrate.' % email
+            )
+            return render(request, 'login.html', datos)
+
+        if not usuario.is_active:
+            # Una cuenta recién registrada está inactiva hasta que la
+            # persona abre el enlace que le llegó por correo. Se
+            # distingue de una cuenta desactivada por la barbería, que
+            # ya llegó a iniciar sesión alguna vez.
+            if usuario.last_login is None:
+                messages.error(
+                    request,
+                    '❌ Todavía no has confirmado tu correo. Busca el mensaje '
+                    'que te enviamos a "%s" y abre el enlace para activar '
+                    'tu cuenta.' % email
+                )
+            else:
+                messages.error(
+                    request,
+                    '❌ Esta cuenta está desactivada. Comunícate con la barbería.'
+                )
+            return render(request, 'login.html', datos)
 
         # Esta cuenta se creó con "Continuar con Google" y nunca tuvo
         # contraseña propia (a propósito, por seguridad). Si intenta
@@ -29,29 +80,31 @@ def login_view(request):
                 'para iniciar sesión, o entra a tu perfil una vez logueado para crear '
                 'una contraseña propia.'
             )
-            return render(request, 'login.html')
+            return render(request, 'login.html', datos)
 
-        user = authenticate(request, username=username, password=password)
+        # ---- 4. El correo existe: ahora sí se valida la contraseña ----
+        user = authenticate(request, username=usuario.username, password=password)
 
-        if user is not None:
-            login(request, user)
+        if user is None:
+            messages.error(
+                request,
+                '❌ La contraseña es incorrecta. Inténtalo de nuevo o usa '
+                '"¿Olvidaste tu contraseña?".'
+            )
+            return render(request, 'login.html', datos)
 
-            # SUPERUSUARIO → Admin
-            if user.is_superuser:
-                return redirect('administracion:panel_admin')
+        login(request, user)
 
-            # BARBERO (por email en modelo Barbero)
-            try:
-                barbero = Barbero.objects.get(email=user.email, activo=True)
-                return redirect('barberos:panel_barbero')
-            except Barbero.DoesNotExist:
-                pass
+        # SUPERUSUARIO → Admin
+        if user.is_superuser:
+            return redirect('administracion:panel_admin')
 
-            # CLIENTE (por defecto)
-            return redirect('panel_cliente')
+        # BARBERO (por email en modelo Barbero)
+        if Barbero.objects.filter(email__iexact=user.email, activo=True).exists():
+            return redirect('barberos:panel_barbero')
 
-        messages.error(request, 'Credenciales inválidas')
-        return render(request, 'login.html')
+        # CLIENTE (por defecto)
+        return redirect('panel_cliente')
 
     return render(request, 'login.html')
 
@@ -65,14 +118,26 @@ def registro_view(request):
 
 def recuperar_contrasena(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        cedula = request.POST.get("cedula")
+        email = (request.POST.get("email") or "").strip()
+        cedula = (request.POST.get("cedula") or "").strip()
+
+        # Se devuelven los datos escritos para no vaciar el formulario.
+        datos = {"email": email, "cedula": cedula}
 
         try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            messages.error(request, "No existe una cuenta con ese correo.")
-            return render(request, "recuperar_contrasena.html")
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, "❌ Ese correo no tiene un formato válido.")
+            return render(request, "recuperar_contrasena.html", datos)
+
+        user = User.objects.filter(email__iexact=email).first()
+
+        if user is None:
+            messages.error(
+                request,
+                '❌ No existe ninguna cuenta registrada con el correo "%s".' % email
+            )
+            return render(request, "recuperar_contrasena.html", datos)
 
         cliente = Cliente.objects.filter(
             user=user,
@@ -80,14 +145,17 @@ def recuperar_contrasena(request):
         ).first()
 
         barbero = Barbero.objects.filter(
-            email=email,
+            email__iexact=email,
             cedula=cedula,
             activo=True
         ).first()
 
         if not cliente and not barbero:
-            messages.error(request, "Los datos no coinciden.")
-            return render(request, "recuperar_contrasena.html")
+            messages.error(
+                request,
+                "❌ La cédula no coincide con la registrada para ese correo."
+            )
+            return render(request, "recuperar_contrasena.html", datos)
 
         request.session["recuperar_usuario"] = user.id
 

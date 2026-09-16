@@ -38,29 +38,29 @@
     </div>
 {% endif %}
 
-            <form method="POST">
+            <form method="POST" data-conservar>
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-yellow">Nombre</label>
-                        <input type="text" name="nombre" class="form-control form-control-registro" required>
+                        <input type="text" name="nombre" class="form-control form-control-registro" value="{{ nombre|default:'' }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-yellow">Apellido</label>
-                        <input type="text" name="apellido" class="form-control form-control-registro" required>
+                        <input type="text" name="apellido" class="form-control form-control-registro" value="{{ apellido|default:'' }}" required>
                     </div>
                     <div class="mb-3">
     <label class="form-label text-yellow">Cédula</label>
-    <input type="text" name="cedula" class="form-control form-control-registro" required>
+    <input type="text" name="cedula" class="form-control form-control-registro" value="{{ cedula|default:'' }}" required>
 </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label text-yellow">Correo Electrónico</label>
-                    <input type="email" name="email" class="form-control form-control-registro" required>
+                    <input type="email" name="email" class="form-control form-control-registro" value="{{ email|default:'' }}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label text-yellow">Teléfono</label>
-                    <input type="tel" name="telefono" class="form-control form-control-registro" placeholder="Opcional">
+                    <input type="tel" name="telefono" class="form-control form-control-registro" value="{{ telefono|default:'' }}" placeholder="Opcional">
                 </div>
                 <div class="mb-3">
                     <label class="form-label text-yellow">Contraseña</label>

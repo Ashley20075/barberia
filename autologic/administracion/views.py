@@ -6,6 +6,7 @@ from citas.models import Cita, Servicio
 from clientes.models import Cliente
 from barberos.models import Barbero
 from inventario.models import Producto
+from inventario.utils import registrar_movimiento
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
@@ -485,22 +486,43 @@ def editar_producto(request, id):
     
     producto = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
+        try:
+            nuevo_stock = int(request.POST.get('stock'))
+        except (TypeError, ValueError):
+            messages.error(request, '❌ El stock debe ser un número entero.')
+            return redirect('administracion:panel_admin')
+
+        stock_cambio = nuevo_stock != producto.stock_actual
+
+        if stock_cambio and not (5 <= nuevo_stock <= 20):
+            messages.error(request, '❌ El stock debe estar entre 5 y 20 unidades.')
+            return redirect('administracion:panel_admin')
+
         producto.nombre = request.POST.get('nombre')
         producto.precio_unitario = request.POST.get('precio')
-        producto.stock_actual = request.POST.get('stock')
+        if not stock_cambio:
+            producto.stock_actual = nuevo_stock
+
         try:
-            producto.full_clean()
+            producto.full_clean(exclude=['stock_actual'] if stock_cambio else None)
             producto.save()
-            messages.success(
-                request,
-                    "✅ Producto actualizado correctamente."
-            )
-        except ValidationError as e:
-                messages.error(
-                    request,
-                    e.messages[0]
+
+            # Si cambió el stock se registra como AJUSTE, para que el cambio
+            # aparezca en el historial de movimientos de inventario.
+            if stock_cambio:
+                registrar_movimiento(
+                    producto=producto,
+                    tipo='AJUSTE',
+                    cantidad=nuevo_stock,
+                    usuario=request.user,
+                    nota='Ajuste manual desde el panel de administración',
                 )
-        messages.success(request, '✅ Producto actualizado correctamente.')
+
+            messages.success(request, '✅ Producto actualizado correctamente.')
+
+        except ValidationError as e:
+            messages.error(request, e.messages[0])
+
     return redirect('administracion:panel_admin')
 
 @login_required

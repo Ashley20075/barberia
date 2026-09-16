@@ -3131,3 +3131,129 @@ body {
 [data-theme="light"] .tema-cliente #formularioTurno .p-3.rounded * {
     color: #000000 !important;
 }
+
+
+/* =========================================================
+   CORRECCIONES DE COHERENCIA VISUAL
+   ---------------------------------------------------------
+   Tres problemas que se repetian en todos los paneles:
+
+   1) .text-yellow estaba fijado a dorado (#F4C542). Como el
+      panel del barbero usa bronce y el del cliente su propio
+      color, los titulos y etiquetas salian amarillos en
+      paneles que no son amarillos. Ahora sigue al color del
+      panel.
+
+   2) .text-white se usaba para destacar valores. En tema
+      claro eso es texto blanco sobre fondo blanco: invisible.
+
+   3) Los paneles definian sus tarjetas con colores fijos
+      oscuros en un <style> propio, asi que en tema claro
+      quedaban manchas oscuras sobre fondo claro.
+   ========================================================= */
+
+/* --- 1. El "amarillo" es en realidad el color del panel --- */
+.text-yellow {
+    color: var(--color-primario) !important;
+}
+
+.card-header-custom,
+.modal-title.text-yellow,
+.form-label-custom {
+    color: var(--color-primario) !important;
+}
+
+/* --- 2. Texto destacado legible en ambos temas --- */
+[data-theme="light"] .text-white {
+    color: var(--color-texto) !important;
+}
+
+/* Excepcion: sobre fondos de color solido el blanco si es correcto. */
+[data-theme="light"] .badge .text-white,
+[data-theme="light"] .btn-danger .text-white,
+[data-theme="light"] .bg-danger .text-white,
+[data-theme="light"] .bg-success .text-white,
+[data-theme="light"] .bg-primary .text-white {
+    color: #FFFFFF !important;
+}
+
+/* --- 3. Superficies de tarjeta segun el tema --- */
+[data-theme="light"] .stat-card,
+[data-theme="light"] .card-custom,
+[data-theme="light"] .modal-content-custom,
+[data-theme="light"] .modal-content-danger {
+    background-color: var(--color-fondo-card) !important;
+    color: var(--color-texto);
+}
+
+[data-theme="light"] .stat-card h5,
+[data-theme="light"] .stat-card h2,
+[data-theme="light"] .stat-card i {
+    color: var(--color-primario) !important;
+}
+
+[data-theme="light"] .card-header-custom,
+[data-theme="light"] .modal-header-custom,
+[data-theme="light"] .modal-footer-custom {
+    background-color: var(--color-fondo-secundario) !important;
+}
+
+/* El texto sobre un boton primario debe contrastar con el
+   relleno del boton, no con el fondo de la pagina. */
+.btn-modern,
+.btn-modern:hover,
+.nav-btn.active {
+    color: #1A1410 !important;
+}
+
+
+/* =========================================================
+   MODAL DE CONFIRMACION COMPARTIDO
+   ---------------------------------------------------------
+   Sustituye al confirm() del navegador, que aparecia como un
+   cuadro gris del sistema operativo, sin nada que ver con el
+   resto de la pagina.
+   ========================================================= */
+
+#modalConfirmar .modal-content {
+    background-color: var(--color-fondo-secundario);
+    color: var(--color-texto);
+    border-radius: 18px;
+}
+
+#modalConfirmar .modal-header,
+#modalConfirmar .modal-footer {
+    border-color: rgba(var(--color-primario-rgb), 0.35);
+}
+
+#modalConfirmar.confirmar-peligro .modal-content {
+    border: 1px solid rgba(220, 53, 69, 0.55);
+}
+
+#modalConfirmar.confirmar-peligro .modal-header,
+#modalConfirmar.confirmar-peligro .modal-footer {
+    border-color: #dc3545;
+}
+
+#modalConfirmar .confirmar-icono {
+    font-size: 2.6rem;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: var(--color-primario);
+}
+
+#modalConfirmar.confirmar-peligro .confirmar-icono {
+    color: #dc3545;
+}
+
+#modalConfirmar .modal-title {
+    color: var(--color-primario);
+}
+
+#modalConfirmar.confirmar-peligro .modal-title {
+    color: #dc3545;
+}
+
+[data-theme="light"] #modalConfirmar .modal-content {
+    background-color: var(--color-fondo-card);
+}

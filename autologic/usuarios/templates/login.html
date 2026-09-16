@@ -33,7 +33,7 @@
             {% if messages %}
                 <div class="container mt-3">
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
                             {{ message }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -41,11 +41,12 @@
                 </div>
             {% endif %}
 
-            <form method="POST">
+            <form method="POST" data-conservar>
                 {% csrf_token %}
                 <div class="mb-3">
                     <label class="form-label text-yellow">Correo Electrónico</label>
-                    <input type="email" name="email" class="form-control form-control-registro" required>
+                    <input type="email" name="email" class="form-control form-control-registro"
+                           value="{{ email|default:'' }}" autofocus required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label text-yellow">Contraseña</label>

@@ -10,25 +10,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
-        .nav-btn.active { background-color: #F4C542; border-color: #F4C542; color: #0B0A08 !important; box-shadow: 0 0 20px rgba(244, 197, 66, 0.3); }
-        .action-bar-sticky { position: sticky; top: 76px; z-index: 1040; background: #0B0A08; padding: 18px 0; border-bottom: 3px solid #F4C542; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .nav-btn.active { background-color: var(--color-primario); border-color: var(--color-primario); color: #0B0A08 !important; box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.3); }
+        .action-bar-sticky { position: sticky; top: 76px; z-index: 1040; background: var(--color-fondo); padding: 18px 0; border-bottom: 3px solid var(--color-primario); margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .btn-group-modern { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
-        .btn-modern { background: linear-gradient(135deg, #F4C542 0%, #FFD966 100%); border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 15px rgba(244,197,66,0.35); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; }
+        .btn-modern { background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%); border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 15px rgba(var(--color-primario-rgb),0.35); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; }
         .btn-modern::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s ease; }
         .btn-modern:hover::before { left: 100%; }
-        .btn-modern:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 30px rgba(244,197,66,0.5); background: linear-gradient(135deg, #FFD966 0%, #F4C542 100%); }
-        .btn-modern-inventario { background: linear-gradient(135deg, #F4C542 0%, #FFD966 40%, #F4C542 80%, #FFD966 100%); background-size: 300% 300%; border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 20px rgba(244,197,66,0.4); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; animation: shimmerBtn 3s ease-in-out infinite; }
+        .btn-modern:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 30px rgba(var(--color-primario-rgb),0.5); background: linear-gradient(135deg, var(--color-primario-claro) 0%, var(--color-primario) 100%); }
+        .btn-modern-inventario { background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 40%, var(--color-primario) 80%, var(--color-primario-claro) 100%); background-size: 300% 300%; border: none; border-radius: 50px; padding: 14px 28px; color: #0B0A08; font-weight: 700; font-size: 15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 20px rgba(var(--color-primario-rgb),0.4); display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; text-decoration: none; min-width: 180px; flex: 1 1 auto; letter-spacing: 0.3px; position: relative; overflow: hidden; animation: shimmerBtn 3s ease-in-out infinite; }
         .btn-modern-inventario::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: left 0.6s ease; }
         .btn-modern-inventario:hover::before { left: 100%; }
-        .btn-modern-inventario:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 35px rgba(244,197,66,0.6); }
+        .btn-modern-inventario:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 35px rgba(var(--color-primario-rgb),0.6); }
         @keyframes shimmerBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .stat-card { background: linear-gradient(145deg, #1E1A15, #2A211B); border-radius: 20px; border-left: 5px solid #F4C542; transition: all 0.3s ease; height: 100%; padding: 1.8rem 1.5rem; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
-        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(244,197,66,0.15); }
-        .stat-card .icon-wrapper { width: 65px; height: 65px; background: rgba(244,197,66,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; transition: all 0.3s ease; }
-        .stat-card:hover .icon-wrapper { background: rgba(244,197,66,0.2); transform: scale(1.05) rotate(-5deg); }
-        .stat-card i { color: #F4C542; font-size: 2.2rem; }
-        .stat-card h5 { color: #C9A87C; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-top: 0.5rem; }
-        .stat-card h2 { color: #F4C542; font-size: 2.8rem; font-weight: 800; margin-bottom: 0; }
+        .stat-card { background: linear-gradient(145deg, var(--color-fondo-secundario), var(--color-fondo-card)); border-radius: 20px; border-left: 5px solid var(--color-primario); transition: all 0.3s ease; height: 100%; padding: 1.8rem 1.5rem; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(var(--color-primario-rgb),0.15); }
+        .stat-card .icon-wrapper { width: 65px; height: 65px; background: rgba(var(--color-primario-rgb),0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; transition: all 0.3s ease; }
+        .stat-card:hover .icon-wrapper { background: rgba(var(--color-primario-rgb),0.2); transform: scale(1.05) rotate(-5deg); }
+        .stat-card i { color: var(--color-primario); font-size: 2.2rem; }
+        .stat-card h5 { color: var(--color-texto-secundario); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-top: 0.5rem; }
+        .stat-card h2 { color: var(--color-primario); font-size: 2.8rem; font-weight: 800; margin-bottom: 0; }
         .stat-card.citas { border-left-color: #0d6efd; }
         .stat-card.citas i { color: #0d6efd; }
         .stat-card.citas h2 { color: #0d6efd; }
@@ -38,23 +38,23 @@
         .stat-card.servicios { border-left-color: #ffc107; }
         .stat-card.servicios i { color: #ffc107; }
         .stat-card.servicios h2 { color: #ffc107; }
-        .stat-card.productos { border-left-color: #F4C542; }
-        .stat-card.productos i { color: #F4C542; }
-        .stat-card.productos h2 { color: #F4C542; }
-        .form-label-custom { color: #FFD966; font-weight: 500; margin-bottom: 0.5rem; }
-        .section-editor { background:#17130f; border:1px solid #3F2E22; border-radius:18px; padding:20px; margin-bottom:18px; }
-        .section-editor h6 { color:#F4C542; font-weight:700; margin-bottom:16px; border-bottom:1px solid #3F2E22; padding-bottom:10px; }
-        .btn-modern-secondary { background:linear-gradient(135deg,#C9A87C,#E0C49A); }
-        .btn-modern-secondary:hover { background:linear-gradient(135deg,#E0C49A,#C9A87C); }
-        .btn-secondary-custom { background:#3F2E22; border:1px solid #6A5140; color:#F5EFE6; border-radius:50px; padding:10px 24px; font-weight:700; }
+        .stat-card.productos { border-left-color: var(--color-primario); }
+        .stat-card.productos i { color: var(--color-primario); }
+        .stat-card.productos h2 { color: var(--color-primario); }
+        .form-label-custom { color: var(--color-primario-claro); font-weight: 500; margin-bottom: 0.5rem; }
+        .section-editor { background:#17130f; border:1px solid var(--color-borde); border-radius:18px; padding:20px; margin-bottom:18px; }
+        .section-editor h6 { color:var(--color-primario); font-weight:700; margin-bottom:16px; border-bottom:1px solid var(--color-borde); padding-bottom:10px; }
+        .btn-modern-secondary { background:linear-gradient(135deg,var(--color-texto-secundario),#E0C49A); }
+        .btn-modern-secondary:hover { background:linear-gradient(135deg,#E0C49A,var(--color-texto-secundario)); }
+        .btn-secondary-custom { background:var(--color-borde); border:1px solid #6A5140; color:var(--color-texto); border-radius:50px; padding:10px 24px; font-weight:700; }
         .btn-secondary-custom:hover { background:#5A4332; color:#fff; }
         @media (max-width: 768px) { .navbar-brand-custom { font-size: 1.3rem; } .nav-btn, .btn-logout-custom { font-size: 0.8rem; padding: 0.3rem 0.8rem; } .btn-modern, .btn-modern-inventario { font-size: 13px; padding: 11px 18px; min-width: 140px; } .stat-card h2 { font-size: 2rem; } }
         @media (max-width: 576px) { .btn-group-modern { flex-direction: column; align-items: stretch; gap: 10px; } .btn-modern, .btn-modern-inventario { font-size: 14px; padding: 13px 20px; min-width: unset; width: 100%; } .stat-card { padding: 1.2rem 1rem; } .stat-card h2 { font-size: 1.8rem; } }
         .modal-body-scroll {max-height: 70vh;overflow-y: auto; padding-right: 10px;}
         .modal-body-scroll::-webkit-scrollbar {width: 8px;}
-        .modal-body-scroll::-webkit-scrollbar-track {background: #1E1A15; border-radius: 10px;}
-        .modal-body-scroll::-webkit-scrollbar-thumb {background: #F4C542; border-radius: 10px;}
-        .modal-body-scroll::-webkit-scrollbar-thumb:hover {background: #FFD966;}
+        .modal-body-scroll::-webkit-scrollbar-track {background: var(--color-fondo-secundario); border-radius: 10px;}
+        .modal-body-scroll::-webkit-scrollbar-thumb {background: var(--color-primario); border-radius: 10px;}
+        .modal-body-scroll::-webkit-scrollbar-thumb:hover {background: var(--color-primario-claro);}
     </style>
 </head>
 
@@ -262,7 +262,10 @@
                                 </td>
                                 <td>
                                     {% if u.groups.all %}
-                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" onclick="return confirm('¿Quitar rol de barbero?')">
+                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" data-confirmar="¿Quitar rol de barbero?"
+                                               data-confirmar-titulo="Quitar rol"
+                                               data-confirmar-boton="Sí, quitar"
+                                               data-confirmar-peligro>
                                         <i class="bi bi-person-dash"></i> Quitar barbero
                                     </a>
                                     {% else %}
@@ -308,11 +311,16 @@
                                     </div>
                                     {% endif %}
                                     {% if u.is_active %}
-                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" onclick="return confirm('¿Deseas desactivar este usuario?')">
+                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" data-confirmar="¿Deseas desactivar este usuario?"
+                                               data-confirmar-titulo="Desactivar usuario"
+                                               data-confirmar-boton="Sí, desactivar"
+                                               data-confirmar-peligro>
                                         <i class="bi bi-person-x"></i> Desactivar
                                     </a>
                                     {% else %}
-                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" onclick="return confirm('¿Deseas activar este usuario?')">
+                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" data-confirmar="¿Deseas activar este usuario?"
+                                               data-confirmar-titulo="Activar usuario"
+                                               data-confirmar-boton="Sí, activar">
                                         <i class="bi bi-person-check"></i> Activar
                                     </a>
                                     {% endif %}
@@ -321,7 +329,7 @@
                             {% empty %}
                             <tr>
                                 <td colspan="6" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    <i class="bi bi-people fs-1 d-block mb-2" style="color:var(--color-texto-secundario);"></i>
                                     No hay usuarios registrados.
                                 </td>
                             </tr>
@@ -375,7 +383,10 @@
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta cita?')">
+                                    <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar esta cita?"
+                                               data-confirmar-titulo="Eliminar cita"
+                                               data-confirmar-boton="Sí, eliminar"
+                                               data-confirmar-peligro>
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -383,7 +394,7 @@
                             {% empty %}
                             <tr>
                                 <td colspan="7" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    <i class="bi bi-calendar-check fs-1 d-block mb-2" style="color:var(--color-texto-secundario);"></i>
                                     No hay citas registradas.
                                 </td>
                             </tr>
@@ -660,7 +671,7 @@
                                     {% if b.imagen_url %}
                                     <img src="{{ b.imagen_url }}" alt="{{ b.nombre }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                                     {% else %}
-                                    <i class="bi bi-person-circle" style="font-size: 2rem; color: #C9A87C;"></i>
+                                    <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--color-texto-secundario);"></i>
                                     {% endif %}
                                 </td>
                                 <td>{{ b.nombre }}</td>
@@ -692,7 +703,10 @@
                                             data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este barbero?')">
+                                    <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar este barbero?"
+                                               data-confirmar-titulo="Eliminar barbero"
+                                               data-confirmar-boton="Sí, eliminar"
+                                               data-confirmar-peligro>
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -700,7 +714,7 @@
                             {% empty %}
                             <tr>
                                 <td colspan="9" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    <i class="bi bi-person-badge fs-1 d-block mb-2" style="color:var(--color-texto-secundario);"></i>
                                     No hay barberos registrados.
                                 </td>
                             </tr>
@@ -711,70 +725,6 @@
             </div>
         </div>
 
-        <!-- TABLA DE PRODUCTOS -->
-        <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-box-seam"></i> Inventario - Productos</span>
-                <span class="badge bg-warning text-dark">{{ productos|length }}</span>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-custom table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for producto in productos %}
-                            <tr>
-                                <td>{{ producto.nombre }}</td>
-                                <td>${{ producto.precio_unitario }}</td>
-                                <td>
-                                    <span class="fw-bold {% if producto.stock_actual <= 5 %}text-danger{% endif %}">
-                                        {{ producto.stock_actual }}
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if producto.stock_actual >= 10 %}
-                                    <span class="badge bg-success">Suficiente</span>
-                                    {% elif producto.stock_actual >= 6 %}
-                                    <span class="badge bg-warning text-dark">Medio</span>
-                                    {% elif producto.stock_actual >= 1 %}
-                                    <span class="badge bg-danger">Bajo</span>
-                                    {% else %}
-                                    <span class="badge bg-danger">Agotado</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarProducto" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio_unitario }}" data-stock="{{ producto.stock_actual }}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <a href="{% url 'administracion:eliminar_producto_admin' producto.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este producto?')">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <a href="{% url 'inventario:dashboard' %}" class="btn btn-sm btn-info">
-                                        <i class="bi bi-boxes"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-box-seam fs-1 d-block mb-2" style="color:#C9A87C;"></i>
-                                    No hay productos registrados.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
 
         <!-- TABLA DE SERVICIOS -->
         <div class="card-custom">
@@ -805,7 +755,10 @@
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}" data-duracion="{{ servicio.duracion }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este servicio?')">
+                                    <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar este servicio?"
+                                               data-confirmar-titulo="Eliminar servicio"
+                                               data-confirmar-boton="Sí, eliminar"
+                                               data-confirmar-peligro>
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -813,7 +766,7 @@
                             {% empty %}
                             <tr>
                                 <td colspan="5" class="text-center text-light-brown py-4">
-                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:#C9A87C;"></i>
+                                    <i class="bi bi-scissors fs-1 d-block mb-2" style="color:var(--color-texto-secundario);"></i>
                                     No hay servicios registrados.
                                 </td>
                             </tr>
@@ -1182,7 +1135,7 @@
                             <label class="form-label-custom">Email *</label>
                             <input type="email" name="email" id="editBarberoEmail" class="form-control bg-dark-input" required>
                         </div>
-                        <hr style="border-color:#3F2E22;">
+                        <hr style="border-color:var(--color-borde);">
                         <h6 class="text-yellow"><i class="bi bi-display"></i> Información pública</h6>
                         <div class="mb-3">
                             <label class="form-label-custom">URL de imagen</label>
@@ -1219,7 +1172,7 @@
                             </div>
                         </div>
 
-                        <hr style="border-color: #3F2E22;">
+                        <hr style="border-color: var(--color-borde);">
                         <h6 class="text-yellow"><i class="bi bi-clock"></i> Configuración de Horario</h6>
 
                         <div class="row">
@@ -1408,6 +1361,10 @@
         // MODAL EDITAR CITA
         document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
+            // El modal tambien puede abrirse por JS (al restaurar un
+            // formulario tras un error). En ese caso no hay boton de
+            // origen y no se debe sobrescribir lo que el usuario escribio.
+            if (!btn) { return; }
             document.getElementById('editCitaCliente').value = btn.dataset.cliente || '';
             document.getElementById('editCitaServicio').value = btn.dataset.servicio || '';
             document.getElementById('editCitaFecha').value = btn.dataset.fecha || '';
@@ -1420,6 +1377,10 @@
         // MODAL EDITAR BARBERO
         document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
+            // El modal tambien puede abrirse por JS (al restaurar un
+            // formulario tras un error). En ese caso no hay boton de
+            // origen y no se debe sobrescribir lo que el usuario escribio.
+            if (!btn) { return; }
 
             document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editBarberoCedula').value = btn.dataset.cedula || '';
@@ -1452,6 +1413,10 @@
         // MODAL EDITAR PRODUCTO
         document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
+            // El modal tambien puede abrirse por JS (al restaurar un
+            // formulario tras un error). En ese caso no hay boton de
+            // origen y no se debe sobrescribir lo que el usuario escribio.
+            if (!btn) { return; }
             document.getElementById('editProductoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editProductoPrecio').value = btn.dataset.precio || 0;
             document.getElementById('editProductoStock').value = btn.dataset.stock || 0;
@@ -1461,6 +1426,10 @@
         // MODAL EDITAR SERVICIO
         document.getElementById('modalEditarServicio').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
+            // El modal tambien puede abrirse por JS (al restaurar un
+            // formulario tras un error). En ese caso no hay boton de
+            // origen y no se debe sobrescribir lo que el usuario escribio.
+            if (!btn) { return; }
             document.getElementById('editServicioNombre').value = btn.dataset.nombre || '';
             document.getElementById('editServicioDescripcion').value = btn.dataset.descripcion || '';
             document.getElementById('editServicioPrecio').value = btn.dataset.precio || 0;

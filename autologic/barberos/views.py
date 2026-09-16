@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from citas.models import Cita
 from inventario.models import Producto
+from inventario.utils import registrar_movimiento
 from .models import Barbero
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -151,8 +152,13 @@ def cancelar_cita(request, id):
                 nombre_producto = nombre_producto.strip()
                 try:
                     producto = Producto.objects.get(nombre=nombre_producto)
-                    producto.stock_actual += 1
-                    producto.save()
+                    registrar_movimiento(
+                        producto=producto,
+                        tipo='ENTRADA',
+                        cantidad=1,
+                        usuario=request.user,
+                        nota=f'Devolución por cancelación de cita de {cita.cliente.nombre}',
+                    )
                 except Producto.DoesNotExist:
                     pass
 
