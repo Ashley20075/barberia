@@ -80,10 +80,11 @@
                     <i class="bi bi-search"></i> Consultar
                 </button>
                 <a id="btn-descargar-pdf"
-                   href="{% url 'administracion:cierre_caja_pdf' %}?fecha_inicio={{ fecha_inicio|date:'Y-m-d' }}&fecha_fin={{ fecha_fin|date:'Y-m-d' }}{% if hora_inicio %}&hora_inicio={{ hora_inicio }}{% endif %}{% if hora_fin %}&hora_fin={{ hora_fin }}{% endif %}"
-                   class="btn btn-modern-inventario">
-                    <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
-                </a>
+   href="{% url 'administracion:cierre_caja_pdf' %}?fecha_inicio={{ fecha_inicio|date:'Y-m-d' }}&fecha_fin={{ fecha_fin|date:'Y-m-d' }}{% if hora_inicio %}&hora_inicio={{ hora_inicio }}{% endif %}{% if hora_fin %}&hora_fin={{ hora_fin }}{% endif %}"
+   class="btn btn-sm"
+   style="background: #dc3545 !important; background-color: #dc3545 !important; color: #ffffff !important; border-color: #dc3545 !important;">
+    <i class="bi bi-file-earmark-pdf" style="color: #ffffff !important;"></i> Descargar PDF
+</a>
             </form>
         </div>
 
