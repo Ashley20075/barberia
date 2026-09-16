@@ -3113,3 +3113,21 @@ body {
 [data-theme="light"] .tema-barbero .card-custom .text-light-brown {
     color: #555555 !important;
 }
+/* =====================================================
+   AGENDAR CITA - MODO CLARO
+   Fondos de Cortes, Adicionales y Total
+   ===================================================== */
+
+[data-theme="light"] .tema-cliente #formularioTurno .p-3.rounded {
+    background-color: #FFFFFF !important;
+    border-color: #C9A87C !important;
+}
+
+/* Mantener el borde amarillo del bloque Total */
+[data-theme="light"] .tema-cliente #formularioTurno .col-12 .p-3.rounded {
+    border-color: #F4C542 !important;
+}
+[data-theme="light"] .tema-cliente #formularioTurno .p-3.rounded,
+[data-theme="light"] .tema-cliente #formularioTurno .p-3.rounded * {
+    color: #000000 !important;
+}
