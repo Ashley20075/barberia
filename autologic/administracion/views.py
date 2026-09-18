@@ -19,6 +19,7 @@ from googlecalendar.models import CuentaGoogle
 from .reportes import calcular_cierre_caja
 from .models import Sitio
 from citas.paginacion import paginar
+from notificaciones.models import Notificacion
 
 @login_required
 def panel_admin(request):
@@ -68,6 +69,7 @@ def panel_admin(request):
         'cantidad_barberos': cantidad_barberos,
         "total_citas": total_citas,
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
+        "notificaciones_no_leidas": Notificacion.objects.filter(usuario=request.user, leida=False).count(),
     }
     return render(request, 'administracion/panel_administrador.html', context)
 

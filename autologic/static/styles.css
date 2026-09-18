@@ -3257,3 +3257,278 @@ body {
 [data-theme="light"] #modalConfirmar .modal-content {
     background-color: var(--color-fondo-card);
 }
+
+
+/* =========================================================
+   CALENDARIO Y HORARIOS PERSONALIZADOS - RESERVAS CLIENTE
+   ========================================================= */
+.calendario-turnos {
+    background: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+
+.calendario-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.calendario-mes {
+    color: var(--color-primario, var(--color-amarillo));
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.calendario-nav {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--color-borde);
+    background: var(--color-fondo-secundario);
+    color: var(--color-texto);
+    transition: .2s ease;
+}
+
+.calendario-nav:hover {
+    background: var(--color-amarillo);
+    color: #0B0A08;
+    transform: scale(1.05);
+}
+
+.calendario-semana,
+.calendario-dias {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.calendario-semana {
+    margin-bottom: 8px;
+    text-align: center;
+    color: var(--color-texto-secundario);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.calendario-semana span:first-child,
+.calendario-dia.domingo {
+    color: #d9534f;
+}
+
+.calendario-dia {
+    aspect-ratio: 1 / 1;
+    min-height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-texto);
+    font-weight: 750;
+    transition: .2s ease;
+}
+
+.calendario-dia:not(:disabled):hover {
+    background: var(--color-hover-card);
+    color: var(--color-amarillo-claro);
+    transform: translateY(-1px);
+}
+
+.calendario-dia.hoy {
+    outline: 2px solid var(--color-amarillo);
+    outline-offset: -2px;
+}
+
+.calendario-dia.seleccionado {
+    background: var(--color-amarillo);
+    color: #0B0A08;
+    box-shadow: 0 5px 14px rgba(244,197,66,.25);
+}
+
+.calendario-dia.no-disponible {
+    opacity: .28;
+    cursor: not-allowed;
+}
+
+.calendario-dia.vacio {
+    pointer-events: none;
+}
+
+.fecha-seleccionada {
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: var(--color-fondo-secundario);
+    border: 1px solid var(--color-borde);
+    color: var(--color-texto-secundario);
+    text-transform: capitalize;
+}
+
+.fecha-seleccionada i {
+    color: var(--color-amarillo);
+}
+
+.horarios-turnos {
+    display: grid;
+    gap: 9px;
+    max-height: 430px;
+    overflow-y: auto;
+    padding-right: 3px;
+}
+
+.horario-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 13px;
+    border-radius: 13px;
+    border: 1px solid var(--color-borde);
+    background: var(--color-fondo-card);
+    transition: .2s ease;
+}
+
+.horario-libre {
+    cursor: pointer;
+}
+
+.horario-libre:hover {
+    border-color: var(--color-amarillo);
+    background: var(--color-hover-card);
+}
+
+.horario-ocupado {
+    background: var(--color-fondo-secundario);
+    opacity: .9;
+}
+
+.horario-principal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 135px;
+}
+
+.horario-radio {
+    accent-color: var(--color-amarillo);
+    cursor: pointer;
+}
+
+.horario-hora {
+    margin: 0;
+    color: var(--color-texto);
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.horario-hora i {
+    color: var(--color-amarillo);
+    margin-right: 4px;
+}
+
+.horario-hora.tachado {
+    color: var(--color-texto-secundario);
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #d9534f;
+}
+
+.horario-hora.tachado i {
+    color: #d9534f;
+}
+
+.horario-estado {
+    font-size: .76rem;
+    font-weight: 700;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.estado-libre {
+    color: var(--color-amarillo);
+}
+
+.estado-ocupado-texto {
+    color: #d9534f;
+}
+
+.horario-aviso {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.aviso-check {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+}
+
+.aviso-check .form-check-input {
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--color-amarillo);
+}
+
+.aviso-check .form-check-label {
+    color: var(--color-texto-secundario);
+    font-size: .78rem;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.aviso-no-necesario {
+    color: var(--color-texto-secundario);
+    font-size: .76rem;
+    white-space: nowrap;
+}
+
+.aviso-no-necesario i {
+    color: var(--color-amarillo);
+}
+
+.horarios-vacio {
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px dashed var(--color-borde);
+    border-radius: 14px;
+    color: var(--color-texto-secundario);
+    text-align: center;
+    padding: 20px;
+}
+
+.horarios-vacio i {
+    color: var(--color-amarillo);
+    font-size: 2rem;
+}
+
+@media (max-width: 767px) {
+    .horario-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .horario-principal,
+    .horario-aviso {
+        width: 100%;
+    }
+
+    .horario-aviso {
+        justify-content: flex-start;
+        padding-left: 29px;
+    }
+
+    .horario-estado {
+        margin-left: auto;
+    }
+}

@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     
+    <style>
+        .turno-disponible-aviso { background: var(--color-fondo-card); border: 1px solid var(--color-borde); border-radius: 12px; padding: 10px 12px; }
+        .turno-disponible-aviso:hover { border-color: var(--color-primario); }
+        .turno-disponible-aviso .form-check-input:checked { background-color: var(--color-primario); border-color: var(--color-primario); }
+        .estado-suscripcion { font-size: .78rem; }
+    </style>
 </head>
 
 <body class="tema-cliente">
@@ -211,24 +217,43 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label-custom">📅 Fecha</label>
-                        <input type="date" class="form-control bg-dark-input" name="fecha" id="fecha" required>
+                        <div class="calendario-turnos" id="calendarioTurnos">
+                            <div class="calendario-cabecera">
+                                <button type="button" class="calendario-nav" id="mesAnterior" aria-label="Mes anterior">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <div>
+                                    <div class="calendario-mes" id="calendarioMes">-</div>
+                                    <small class="text-light-brown" id="calendarioAnio">-</small>
+                                </div>
+                                <button type="button" class="calendario-nav" id="mesSiguiente" aria-label="Mes siguiente">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendario-semana">
+                                <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span>
+                                <span>Jue</span><span>Vie</span><span>Sáb</span>
+                            </div>
+                            <div class="calendario-dias" id="calendarioDias"></div>
+                        </div>
+                        <input type="hidden" name="fecha" id="fecha" required>
+                        <div class="fecha-seleccionada mt-2" id="fechaSeleccionada">Selecciona una fecha para ver los turnos.</div>
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label-custom">⏰ Hora</label>
-                        <select
-    class="form-select bg-dark-input"
-    name="hora"
-    id="hora"
-    required>
-
-    <option value="">
-        Seleccione primero fecha y barbero
-    </option>
-
-</select>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">⏰ Horarios</label>
+                        <input type="hidden" name="hora" id="hora" required>
+                        <div class="horarios-turnos" id="horariosTurnos">
+                            <div class="horarios-vacio">
+                                <i class="bi bi-calendar2-week"></i>
+                                <span>Selecciona primero una fecha y un barbero.</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 small text-light-brown">
+                            <i class="bi bi-info-circle"></i> Los horarios tachados no se pueden reservar. Puedes activar el aviso para recibir una notificación cuando se liberen.
+                        </div>
                     </div>
 
                     <div class="col-md-4">
@@ -238,42 +263,28 @@
     name="barbero"
     id="barbero">
                             {% for barbero in barberos %}
-                            <option value="{{ barbero.id }}">{{ barbero.nombre }} - {{ barbero.especialidad }}</option>
+                            <option value="{{ barbero.id }}" data-dias-laborales="{{ barbero.dias_laborales }}">{{ barbero.nombre }} - {{ barbero.especialidad }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
                     <div class="col-12">
-    <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-primario);">
+                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-primario);">
 
-        <div class="d-flex justify-content-between mb-2">
-            <span class="text-light-brown">
-                Total:
-            </span>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-light-brown">Total:</span>
+                                <strong class="text-yellow" id="totalPagar">$0</strong>
+                            </div>
 
-            <strong
-                class="text-yellow"
-                id="totalPagar">
+                            <hr>
 
-                $0
+                            <div class="d-flex justify-content-between">
+                                <span class="text-light-brown">Tiempo estimado:</span>
+                                <strong class="text-yellow" id="tiempoEstimado">40 minutos</strong>
+                            </div>
 
-            </strong>
-        </div>
-
-        <div class="d-flex justify-content-between">
-    <span class="text-light-brown">Total:</span>
-    <strong class="text-yellow" id="totalPagar">$0</strong>
-</div>
-
-<hr>
-
-<div class="d-flex justify-content-between">
-    <span class="text-light-brown">Tiempo estimado:</span>
-    <strong class="text-yellow" id="tiempoEstimado">35 minutos</strong>
-</div>
-
-    </div>
-</div>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="mt-4 d-flex gap-2 justify-content-end">
@@ -282,7 +293,7 @@
     type="hidden"
     name="duracion_total"
     id="duracion_total"
-    value="35">
+    value="40">
                     <button type="submit" class="btn btn-primary-custom">Reservar</button>
                 </div>
             </form>
@@ -430,7 +441,6 @@
 
 <!-- ===================================================== -->
 <!-- MODAL VACIAR HISTORIAL -->
-<!-- IMPORTANTE: ESTÁ FUERA DEL for Y FUERA DEL stat-card -->
 <!-- ===================================================== -->
 
 <div
@@ -531,6 +541,8 @@
 
 </div>
 
+    {{ suscripciones_turnos|json_script:"suscripciones-turnos-data" }}
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -538,145 +550,349 @@
 const btnAgendar = document.getElementById("btnAgendar");
 const formulario = document.getElementById("formularioTurno");
 const btnCancelar = document.getElementById("btnCancelarForm");
+const fechaInput = document.getElementById("fecha");
+const horaInput = document.getElementById("hora");
+const barberoInput = document.getElementById("barbero");
+const calendarioDias = document.getElementById("calendarioDias");
+const calendarioMes = document.getElementById("calendarioMes");
+const calendarioAnio = document.getElementById("calendarioAnio");
+const fechaSeleccionada = document.getElementById("fechaSeleccionada");
+const horariosTurnos = document.getElementById("horariosTurnos");
 
-btnAgendar.addEventListener("click", function () {
+let mesCalendario;
+let anioCalendario;
+let fechaElegida = null;
 
-    formulario.style.display = "block";
-    btnAgendar.style.display = "none";
+const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+const diasSemana = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
+const hoy = new Date();
+const hoyLocal = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
 
-    const fechaInput = document.getElementById("fecha");
+const suscripcionesTurnos = (JSON.parse(document.getElementById("suscripciones-turnos-data").textContent) || [])
+    .map(item => `${item.barbero_id}|${item.fecha}|${item.hora}`);
 
-    if (fechaInput) {
-        fechaInput.min = new Date().toISOString().split("T")[0];
-        fechaInput.value = new Date().toISOString().split("T")[0];
+function fechaISO(fecha) {
+    const y = fecha.getFullYear();
+    const m = String(fecha.getMonth() + 1).padStart(2, "0");
+    const d = String(fecha.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+}
+
+function fechaDesdeISO(valor) {
+    const [y, m, d] = valor.split("-").map(Number);
+    return new Date(y, m - 1, d);
+}
+
+function diasLaboralesSeleccionados() {
+    const opcion = barberoInput.options[barberoInput.selectedIndex];
+    const dias = (opcion?.dataset.diasLaborales || "LUN,MAR,MIE,JUE,VIE,SAB")
+        .split(",")
+        .map(d => d.trim().toUpperCase());
+    return new Set(dias);
+}
+
+function esDiaLaboral(fecha) {
+    return diasLaboralesSeleccionados().has(diasSemana[fecha.getDay()]);
+}
+
+function esFechaPasada(fecha) {
+    return fecha < hoyLocal;
+}
+
+function renderCalendario() {
+    calendarioMes.textContent = meses[mesCalendario];
+    calendarioAnio.textContent = anioCalendario;
+    calendarioDias.innerHTML = "";
+
+    const primerDia = new Date(anioCalendario, mesCalendario, 1).getDay();
+    const cantidadDias = new Date(anioCalendario, mesCalendario + 1, 0).getDate();
+
+    for (let i = 0; i < primerDia; i++) {
+        const vacio = document.createElement("span");
+        vacio.className = "calendario-dia vacio";
+        calendarioDias.appendChild(vacio);
     }
 
-    cargarHorarios();
-    calcularTotal();
+    for (let dia = 1; dia <= cantidadDias; dia++) {
+        const fecha = new Date(anioCalendario, mesCalendario, dia);
+        const boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "calendario-dia";
+        boton.textContent = dia;
 
+        const iso = fechaISO(fecha);
+        boton.dataset.fecha = iso;
+
+        if (fecha.getDay() === 0) boton.classList.add("domingo");
+        if (fecha.toDateString() === hoyLocal.toDateString()) boton.classList.add("hoy");
+        if (fechaElegida === iso) boton.classList.add("seleccionado");
+
+        const noLaboral = !esDiaLaboral(fecha);
+        const pasada = esFechaPasada(fecha);
+        if (noLaboral || pasada) {
+            boton.disabled = true;
+            boton.classList.add("no-disponible");
+            boton.title = pasada ? "Fecha anterior" : "Día no laboral";
+        } else {
+            boton.addEventListener("click", () => seleccionarFecha(iso));
+        }
+
+        calendarioDias.appendChild(boton);
+    }
+}
+
+function seleccionarFecha(iso) {
+    const fecha = fechaDesdeISO(iso);
+    if (esFechaPasada(fecha) || !esDiaLaboral(fecha)) return;
+
+    fechaElegida = iso;
+    fechaInput.value = iso;
+    horaInput.value = "";
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${fecha.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+    renderCalendario();
+    cargarHorarios();
+}
+
+function buscarPrimeraFechaLaboral(fechaBase) {
+    const fecha = new Date(fechaBase);
+    for (let i = 0; i < 370; i++) {
+        if (!esFechaPasada(fecha) && esDiaLaboral(fecha)) return fecha;
+        fecha.setDate(fecha.getDate() + 1);
+    }
+    return fechaBase;
+}
+
+function inicializarCalendario() {
+    const fechaInicial = fechaElegida ? fechaDesdeISO(fechaElegida) : buscarPrimeraFechaLaboral(hoyLocal);
+    fechaElegida = fechaISO(fechaInicial);
+    fechaInput.value = fechaElegida;
+    mesCalendario = fechaInicial.getMonth();
+    anioCalendario = fechaInicial.getFullYear();
+    renderCalendario();
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${fechaInicial.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+}
+
+function cambiarMes(cambio) {
+    const nuevaFecha = new Date(anioCalendario, mesCalendario + cambio, 1);
+    const limiteMes = new Date(hoyLocal.getFullYear(), hoyLocal.getMonth(), 1);
+    if (nuevaFecha < limiteMes) return;
+    mesCalendario = nuevaFecha.getMonth();
+    anioCalendario = nuevaFecha.getFullYear();
+    renderCalendario();
+}
+
+document.getElementById("mesAnterior").addEventListener("click", () => cambiarMes(-1));
+document.getElementById("mesSiguiente").addEventListener("click", () => cambiarMes(1));
+
+btnAgendar.addEventListener("click", function () {
+    formulario.style.display = "block";
+    btnAgendar.style.display = "none";
+    inicializarCalendario();
+    calcularTotal();
+    cargarHorarios();
 });
 
 btnCancelar.addEventListener("click", function () {
-
     formulario.style.display = "none";
     btnAgendar.style.display = "block";
-
 });
 
 function calcularTotal() {
-
     let total = 0;
-    let tiempo = 35;
-
+    let tiempo = 40;
     const servicio = document.querySelector(".servicio-radio:checked");
 
-    if (servicio) {
-        total += Number(servicio.dataset.precio);
-    }
+    if (servicio) total += Number(servicio.dataset.precio);
 
-    document
-    .querySelectorAll("input[name='adicionales']:checked")
-    .forEach(function (adicional) {
-
+    document.querySelectorAll("input[name='adicionales']:checked").forEach(function (adicional) {
         total += Number(adicional.dataset.precio);
         tiempo += 5;
-
     });
 
-    document.getElementById("totalPagar").textContent =
-        "$" + total.toLocaleString("es-CO");
-
-    document.getElementById("tiempoEstimado").textContent =
-        tiempo + " minutos";
-
+    document.getElementById("totalPagar").textContent = "$" + total.toLocaleString("es-CO");
+    document.getElementById("tiempoEstimado").textContent = tiempo + " minutos";
     document.getElementById("duracion_total").value = tiempo;
 }
 
+function calcularDuracionActual() {
+    let duracion = 40;
+    document.querySelectorAll("input[name='adicionales']:checked").forEach(() => duracion += 5);
+    return duracion;
+}
+
+function mostrarHorariosVacios(texto, icono = "bi-calendar2-week") {
+    horariosTurnos.innerHTML = `
+        <div class="horarios-vacio">
+            <i class="bi ${icono}"></i>
+            <span>${texto}</span>
+        </div>`;
+}
+
 function cargarHorarios() {
-
-    const fecha = document.getElementById("fecha").value;
-    const barbero = document.getElementById("barbero").value;
-
-    const servicio = document.querySelector(
-        "input[name='servicio']:checked"
-    )?.value;
-
-    if (!fecha || !barbero || !servicio) {
+    const fecha = fechaInput.value;
+    const barbero = barberoInput.value;
+    const servicio = document.querySelector("input[name='servicio']:checked")?.value || "";
+    if (!fecha || !barbero) {
+        mostrarHorariosVacios("Selecciona primero una fecha y un barbero.");
         return;
     }
 
-    const adicionales = [];
-
-    document
-    .querySelectorAll("input[name='adicionales']:checked")
-    .forEach(function (a) {
-
-        adicionales.push(
-            "adicionales=" + encodeURIComponent(a.value)
-        );
-
+    const params = new URLSearchParams({
+        fecha: fecha,
+        barbero: barbero,
+        servicio: servicio,
+        duracion_total: calcularDuracionActual()
     });
+    document.querySelectorAll("input[name='adicionales']:checked").forEach(a => params.append("adicionales", a.value));
 
-    fetch(
-        `/cliente/horarios/?fecha=${fecha}&barbero=${barbero}&servicio=${servicio}&${adicionales.join("&")}`
-    )
+    mostrarHorariosVacios("Cargando horarios...", "bi-hourglass-split");
 
-    .then(response => response.json())
+    fetch(`/cliente/horarios/?${params.toString()}`)
+        .then(response => response.json())
+        .then(function (horarios) {
+            horariosTurnos.innerHTML = "";
 
-    .then(function (horarios) {
+            if (!horarios.length) {
+                mostrarHorariosVacios("No hay horarios para esta fecha.", "bi-calendar-x");
+                return;
+            }
 
-        const select = document.getElementById("hora");
+            horarios.forEach(function (turno, indice) {
+                const hora = turno.hora;
+                const disponible = turno.disponible;
+                const clave = `${barbero}|${fecha}|${hora}`;
+                const safeHour = hora.replace(/[^a-zA-Z0-9]/g, "");
+                const radioId = `hora-${fecha}-${safeHour}`;
+                const checkboxId = `aviso-${barbero}-${fecha}-${safeHour}`;
+                const suscrito = suscripcionesTurnos.includes(clave);
 
-        select.innerHTML = "";
+                const card = document.createElement("div");
+                card.className = `horario-item ${disponible ? "horario-libre" : "horario-ocupado"}`;
+                card.innerHTML = `
+                    <div class="horario-principal">
+                        <input class="form-check-input horario-radio" type="radio" name="hora_visual" id="${radioId}" value="${hora}" ${disponible ? "" : "disabled"} ${disponible && indice === 0 ? "checked" : ""}>
+                        <label for="${radioId}" class="horario-hora ${disponible ? "" : "tachado"}">
+                            <i class="bi ${disponible ? "bi-clock" : "bi-lock-fill"}"></i>
+                            ${hora}
+                        </label>
+                        <span class="horario-estado ${disponible ? "estado-libre" : "estado-ocupado-texto"}">${disponible ? "Disponible" : "No disponible"}</span>
+                    </div>
+                    <div class="horario-aviso">
+                        ${disponible ? `
+                            <span class="aviso-no-necesario"><i class="bi bi-check-circle"></i> Puedes reservarlo</span>
+                        ` : `
+                            <div class="form-check aviso-check">
+                                <input class="form-check-input aviso-turno-checkbox" type="checkbox" id="${checkboxId}" ${suscrito ? "checked" : ""}
+                                    data-barbero="${barbero}" data-fecha="${fecha}" data-hora="${hora}">
+                                <label class="form-check-label" for="${checkboxId}">
+                                    Notificarme si se libera este turno
+                                </label>
+                            </div>
+                        `}
+                    </div>`;
+                horariosTurnos.appendChild(card);
+            });
 
-        if (horarios.length === 0) {
+            const primerLibre = horariosTurnos.querySelector(".horario-radio:not(:disabled)");
+            if (primerLibre) horaInput.value = primerLibre.value;
 
-            select.innerHTML =
-                "<option value=''>No hay horarios disponibles</option>";
-
-            return;
-
-        }
-
-        horarios.forEach(function (hora) {
-
-            const option = document.createElement("option");
-
-            option.value = hora;
-            option.textContent = hora;
-
-            select.appendChild(option);
-
+            horariosTurnos.querySelectorAll(".horario-radio").forEach(radio => {
+                radio.addEventListener("change", () => {
+                    if (radio.checked) horaInput.value = radio.value;
+                });
+            });
+            conectarCheckboxesSuscripcion();
+        })
+        .catch(function () {
+            mostrarHorariosVacios("No fue posible cargar los horarios. Inténtalo nuevamente.", "bi-exclamation-triangle");
         });
+}
 
+function conectarCheckboxesSuscripcion() {
+    document.querySelectorAll(".aviso-turno-checkbox").forEach(function (checkbox) {
+        if (checkbox.dataset.conectado === "true") return;
+        checkbox.dataset.conectado = "true";
+
+        checkbox.addEventListener("change", function () {
+            const estadoNuevo = checkbox.checked;
+            const data = new URLSearchParams({
+                barbero: checkbox.dataset.barbero,
+                fecha: checkbox.dataset.fecha,
+                hora: checkbox.dataset.hora,
+                duracion_total: calcularDuracionActual(),
+                suscrito: estadoNuevo ? "true" : "false"
+            });
+
+            checkbox.disabled = true;
+            fetch("{% url 'notificaciones:suscribirse_turno' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                },
+                body: data.toString()
+            })
+            .then(response => response.json().then(body => ({ok: response.ok, body: body})))
+            .then(function (resultado) {
+                checkbox.disabled = false;
+                if (!resultado.ok || !resultado.body.ok) {
+                    checkbox.checked = !estadoNuevo;
+                    alert(resultado.body.error || "No fue posible guardar la suscripción.");
+                    return;
+                }
+
+                const clave = `${checkbox.dataset.barbero}|${checkbox.dataset.fecha}|${checkbox.dataset.hora}`;
+                const index = suscripcionesTurnos.indexOf(clave);
+                if (estadoNuevo && index === -1) suscripcionesTurnos.push(clave);
+                if (!estadoNuevo && index >= 0) suscripcionesTurnos.splice(index, 1);
+            })
+            .catch(function () {
+                checkbox.disabled = false;
+                checkbox.checked = !estadoNuevo;
+                alert("No fue posible guardar la suscripción. Inténtalo nuevamente.");
+            });
+        });
     });
+}
 
+function getCookie(name) {
+    const cookies = document.cookie ? document.cookie.split(";") : [];
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + "=")) return decodeURIComponent(cookie.substring(name.length + 1));
+    }
+    return "";
 }
 
 document.querySelectorAll(".servicio-radio").forEach(function (radio) {
-
     radio.addEventListener("change", function () {
-
         calcularTotal();
         cargarHorarios();
-
     });
-
 });
 
 document.querySelectorAll("input[name='adicionales']").forEach(function (check) {
-
     check.addEventListener("change", function () {
-
         calcularTotal();
         cargarHorarios();
-
     });
-
 });
 
-document.getElementById("fecha").addEventListener("change", cargarHorarios);
-document.getElementById("barbero").addEventListener("change", cargarHorarios);
+barberoInput.addEventListener("change", function () {
+    const actual = fechaInput.value ? fechaDesdeISO(fechaInput.value) : hoyLocal;
+    const siguiente = (!esFechaPasada(actual) && esDiaLaboral(actual)) ? actual : buscarPrimeraFechaLaboral(hoyLocal);
+    fechaElegida = fechaISO(siguiente);
+    fechaInput.value = fechaElegida;
+    mesCalendario = siguiente.getMonth();
+    anioCalendario = siguiente.getFullYear();
+    renderCalendario();
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${siguiente.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+    cargarHorarios();
+});
 
 calcularTotal();
 

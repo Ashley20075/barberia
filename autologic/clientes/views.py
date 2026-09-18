@@ -19,6 +19,7 @@ from clientes.models import Cliente
 from inventario.models import Producto
 from inventario.utils import registrar_movimiento
 from clientes.verificacion import enviar_correo_confirmacion, leer_token
+from notificaciones.models import SuscripcionTurno
 
 
 class CorreoNoEntregado(Exception):
@@ -53,6 +54,15 @@ def panel_cliente(request):
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
 
+    # ✅ IMPORTANTE: list(...) para que json_script pueda serializarlo.
+    # Un QuerySet no es serializable a JSON directamente; una lista de
+    # diccionarios sí.
+    suscripciones_turnos = list(
+        SuscripcionTurno.objects.filter(
+            usuario=request.user
+        ).values("barbero_id", "fecha", "hora")
+    )
+
     return render(request, "dashboard_cliente.html", {
         "nombre": cliente.nombre,
         "proximos": proximos,
@@ -62,7 +72,9 @@ def panel_cliente(request):
         "productos": productos,
         "cliente": cliente,
         "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
+        "suscripciones_turnos": suscripciones_turnos,
     })
+
 
 @login_required(login_url='login')
 def vaciar_historial_cliente(request):
@@ -162,7 +174,7 @@ def agendar_cita(request):
             cliente = Cliente.objects.get(user=request.user)
             barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
             servicio = Servicio.objects.get(id=request.POST.get("servicio"))
-            duracion_total = int(request.POST.get("duracion_total", 35))
+            duracion_total = int(request.POST.get("duracion_total", 40))
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
             hora_obj = datetime.strptime(hora, "%I:%M %p").time()
@@ -233,10 +245,8 @@ def agendar_cita(request):
                     duracion_total=duracion_total,
                     estado="Pendiente",
                 )
-                
+
                 # Descontar stock de productos seleccionados.
-                # Se hace con registrar_movimiento() para que la salida quede
-                # visible en el historial de inventario.
                 for nombre_producto in productos_seleccionados:
                     producto = Producto.objects.filter(nombre=nombre_producto.strip()).first()
                     if producto and producto.stock_actual > 0:
@@ -251,8 +261,14 @@ def agendar_cita(request):
                         except ValueError:
                             pass
 
-            # Crea el evento en el calendario del admin y del barbero (si están conectados)
-            # -> Esto ya lo hace automáticamente la señal post_save en googlecalendar/signals.py
+                # Si el cliente estaba siguiendo ese turno, ya no necesita
+                # recibir un aviso de liberación de su propia cita.
+                SuscripcionTurno.objects.filter(
+                    usuario=request.user,
+                    barbero=barbero,
+                    fecha=fecha_obj,
+                    hora=hora,
+                ).delete()
 
             messages.success(request, f"✅ Cita agendada exitosamente con {barbero.nombre}.")
             return redirect("panel_cliente")
@@ -292,10 +308,6 @@ def cancelar_cita_cliente(request, id):
             cita.estado = "Cancelada"
             cita.save()
 
-        # El evento se borra automáticamente de Google Calendar
-        # (señal post_save en googlecalendar/signals.py, ya que el estado
-        # "Cancelada" no es un estado activo).
-
         messages.success(request, "✅ Cita cancelada exitosamente.")
 
     return redirect("panel_cliente")
@@ -311,9 +323,6 @@ def registro(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        # Todo lo que el usuario ya escribió se devuelve a la plantilla para
-        # que el formulario no se vacíe cuando algo falla. Las contraseñas
-        # NO se devuelven, a propósito (no se reenvían al navegador).
         datos = {
             "nombre": nombre,
             "apellido": apellido,
@@ -350,10 +359,7 @@ def registro(request):
         try:
             with transaction.atomic():
                 # La cuenta nace DESACTIVADA. Solo se activa cuando la
-                # persona abre el enlace que le llega a ese correo: es la
-                # única forma de saber que la dirección existe de verdad
-                # y es suya. Validar el formato no basta, "x@gmail.com"
-                # tiene formato perfecto y puede no existir.
+                # persona abre el enlace que le llega a ese correo.
                 user = User.objects.create_user(
                     username=email,
                     email=email,
@@ -374,8 +380,6 @@ def registro(request):
                 enviado = enviar_correo_confirmacion(request, user)
 
                 if not enviado:
-                    # No se pudo entregar: se deshace el registro para no
-                    # dejar una cuenta muerta que bloquee ese correo.
                     raise CorreoNoEntregado(email)
 
             messages.success(
@@ -404,8 +408,6 @@ def registro(request):
 def confirmar_correo(request, token):
     """
     Activa la cuenta cuando la persona abre el enlace que le llegó.
-    Que este enlace se haya podido abrir demuestra que el correo existe
-    y que quien se registró tiene acceso a él.
     """
     uid = leer_token(token)
 
@@ -459,6 +461,7 @@ def cuenta_eliminada(request):
 
 @login_required(login_url="login")
 def horarios_disponibles(request):
+    """Devuelve todos los bloques de horario, indicando cuáles están libres."""
     fecha = request.GET.get("fecha")
     barbero_id = request.GET.get("barbero")
     adicionales = request.GET.getlist("adicionales")
@@ -471,21 +474,68 @@ def horarios_disponibles(request):
     except ValueError:
         return JsonResponse([], safe=False)
 
-    barbero = get_object_or_404(
-        Barbero,
-        id=barbero_id,
-        activo=True
-    )
+    barbero = get_object_or_404(Barbero, id=barbero_id, activo=True)
 
-    duracion = 35
+    try:
+        duracion = int(request.GET.get("duracion_total"))
+    except (TypeError, ValueError):
+        duracion = 40   # 👈 CAMBIO: antes 35
+        if "Arreglo de barba" in adicionales:
+            duracion += 5
+        if "Cejas" in adicionales:
+            duracion += 5
+        if "Diseño y líneas" in adicionales:
+            duracion += 5
 
-    if "Arreglo de barba" in adicionales:
-        duracion += 5
-    if "Cejas" in adicionales:
-        duracion += 5
-    if "Diseño y líneas" in adicionales:
-        duracion += 5
+    if not barbero.es_dia_laboral(fecha_obj) or barbero.es_dia_descanso(fecha_obj):
+        return JsonResponse([], safe=False)
 
-    horarios = barbero.horarios_disponibles(fecha_obj, duracion)
+    import datetime as dt
+    from django.utils import timezone
 
-    return JsonResponse(horarios, safe=False)
+    inicio = dt.datetime.combine(fecha_obj, barbero.jornada_inicio)
+    fin = dt.datetime.combine(fecha_obj, barbero.jornada_fin)
+
+    citas = list(Cita.objects.filter(
+        barbero=barbero,
+        fecha=fecha_obj,
+        estado__in=["Pendiente", "Confirmada"],
+    ))
+
+    ahora = timezone.localtime()
+    resultados = []
+
+    while inicio + dt.timedelta(minutes=duracion) <= fin:
+        fin_nueva = inicio + dt.timedelta(minutes=duracion)
+        disponible = True
+
+        # Los horarios que ya pasaron hoy tampoco se pueden reservar.
+        if fecha_obj == ahora.date() and inicio.time() <= ahora.time():
+            disponible = False
+
+        for cita in citas:
+            try:
+                inicio_cita = dt.datetime.combine(
+                    fecha_obj,
+                    dt.datetime.strptime(cita.hora, "%I:%M %p").time(),
+                )
+            except (TypeError, ValueError):
+                continue
+
+            # 👈 CAMBIO: antes 35
+            fin_cita = inicio_cita + dt.timedelta(minutes=(cita.duracion_total or 40))
+
+            if inicio < fin_cita and fin_nueva > inicio_cita:
+                disponible = False
+                break
+
+        resultados.append({
+            "hora": inicio.strftime("%I:%M %p"),
+            "disponible": disponible,
+        })
+        # Cada opción representa el inicio de una cita. Avanzamos exactamente
+        # la duración seleccionada para no marcar el siguiente horario como
+        # ocupado cuando una cita dura más de 40 minutos por adicionales.
+        inicio += dt.timedelta(minutes=duracion)
+
+    return JsonResponse(resultados, safe=False)

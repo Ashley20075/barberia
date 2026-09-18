@@ -3,14 +3,7 @@ from django.db import models
 
 
 class Notificacion(models.Model):
-    """
-    Aviso persistente para un usuario (cliente o barbero). A diferencia
-    de los `messages` de Django (que solo se ven una vez, justo después
-    de la acción de quien la ejecuta), esto queda guardado para que la
-    OTRA persona involucrada también se entere — por ejemplo, si el
-    barbero cancela una cita, el cliente debe enterarse aunque no haya
-    sido quien hizo la acción.
-    """
+    """Aviso persistente para un usuario."""
 
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -35,3 +28,35 @@ class Notificacion(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username}: {self.mensaje[:40]}"
+
+
+class SuscripcionTurno(models.Model):
+    """Cliente que quiere ser avisado cuando se libere un turno concreto."""
+
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="suscripciones_turnos",
+    )
+    barbero = models.ForeignKey(
+        "barberos.Barbero",
+        on_delete=models.CASCADE,
+        related_name="suscripciones_turnos",
+    )
+    fecha = models.DateField()
+    hora = models.CharField(max_length=20)
+    creada = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["fecha", "hora"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "barbero", "fecha", "hora"],
+                name="unique_suscripcion_turno_usuario",
+            )
+        ]
+        verbose_name = "Suscripción a turno"
+        verbose_name_plural = "Suscripciones a turnos"
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.barbero.nombre} - {self.fecha} {self.hora}"

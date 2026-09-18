@@ -99,10 +99,10 @@ class Barbero(models.Model):
                     ).time()
                 )
 
-                duracion = cita.duracion_total or 35
+                duracion_cita = cita.duracion_total or 35
 
                 fin_cita = inicio_cita + datetime.timedelta(
-                    minutes=duracion + self.tiempo_entre_citas
+                    minutes=duracion_cita
                 )
 
                 if inicio < fin_cita and fin_nueva > inicio_cita:

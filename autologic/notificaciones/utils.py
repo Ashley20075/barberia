@@ -11,10 +11,10 @@ def notificar(usuario, mensaje, cita=None):
 
 
 def usuario_de_barbero(barbero):
-    """Devuelve el User (cuenta de login) que corresponde a un Barbero, si existe."""
+    """Devuelve el User que corresponde a un Barbero, si existe."""
     if not barbero:
         return None
-    return User.objects.filter(email=barbero.email).first()
+    return User.objects.filter(email=barbero.email, is_active=True).first()
 
 
 def usuario_de_cliente(cliente):
@@ -22,3 +22,9 @@ def usuario_de_cliente(cliente):
     if not cliente:
         return None
     return getattr(cliente, "user", None)
+
+
+def notificar_administradores(mensaje, cita=None):
+    """Notifica a todas las cuentas administradoras (superusuarios)."""
+    for administrador in User.objects.filter(is_superuser=True, is_active=True):
+        notificar(administrador, mensaje, cita=cita)
