@@ -162,7 +162,19 @@
 
 <section id="desarrolladores" class="desarrolladores py-5">
     <div class="container">
-        <div class="text-center mb-5">
+
+        <button type="button" class="btn-desarrolladores-toggle" id="btnDevsToggle"
+            aria-expanded="false" aria-controls="devsContenido">
+            <span class="btn-desarrolladores-texto">
+                <i class="bi bi-people-fill"></i>
+                ¿Deseas conocer nuestro equipo de desarrolladores?
+            </span>
+            <i class="bi bi-chevron-down flecha-devs"></i>
+        </button>
+
+        <div class="devs-contenido" id="devsContenido">
+
+        <div class="text-center mb-5 mt-4">
             <h2>Nuestros Desarrolladores</h2>
             <p class="text-light-brown">
                 Conoce al equipo encargado del desarrollo de nuestra plataforma.
@@ -171,18 +183,20 @@
 
         <div class="row g-4 justify-content-center">
 
-            <!-- Camilo -->
             <div class="col-md-6 col-lg-4">
                 <div class="card-desarrollador text-center">
                     <div class="desarrollador-img-wrapper">
                         <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
                             alt="Camilo"
-                                class="desarrollador-img">
+                            class="desarrollador-img">
                     </div>
 
                     <div class="desarrollador-info">
                         <h3>Camilo</h3>
                         <p class="rol">Desarrollador</p>
+                    </div>
+
+                    <div class="desarrollador-detalle">
                         <p>
                             Encargado del desarrollo y funcionamiento
                             de la plataforma web.
@@ -191,18 +205,20 @@
                 </div>
             </div>
 
-            <!-- Samuel -->
             <div class="col-md-6 col-lg-4">
                 <div class="card-desarrollador text-center">
                     <div class="desarrollador-img-wrapper">
                         <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
-                            alt="Camilo"
-                                class="desarrollador-img">
+                            alt="Samuel"
+                            class="desarrollador-img">
                     </div>
 
                     <div class="desarrollador-info">
                         <h3>Samuel</h3>
                         <p class="rol">Desarrollador</p>
+                    </div>
+
+                    <div class="desarrollador-detalle">
                         <p>
                             Participó en el desarrollo y construcción
                             de la plataforma web.
@@ -211,18 +227,20 @@
                 </div>
             </div>
 
-            <!-- Yampol -->
             <div class="col-md-6 col-lg-4">
                 <div class="card-desarrollador text-center">
                     <div class="desarrollador-img-wrapper">
                         <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
-                            alt="Camilo"
-                                class="desarrollador-img">
+                            alt="Yampol"
+                            class="desarrollador-img">
                     </div>
 
                     <div class="desarrollador-info">
                         <h3>Yampol</h3>
                         <p class="rol">Desarrollador</p>
+                    </div>
+
+                    <div class="desarrollador-detalle">
                         <p>
                             Participó en el desarrollo y construcción
                             de la plataforma web.
@@ -231,18 +249,20 @@
                 </div>
             </div>
 
-            <!-- Felipe -->
             <div class="col-md-6 col-lg-4">
                 <div class="card-desarrollador text-center">
                     <div class="desarrollador-img-wrapper">
-                       <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
-                            alt="Camilo"
-                                class="desarrollador-img">
+                        <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
+                            alt="Felipe"
+                            class="desarrollador-img">
                     </div>
 
                     <div class="desarrollador-info">
                         <h3>Felipe</h3>
                         <p class="rol">Desarrollador</p>
+                    </div>
+
+                    <div class="desarrollador-detalle">
                         <p>
                             Participó en el desarrollo y construcción
                             de la plataforma web.
@@ -251,18 +271,20 @@
                 </div>
             </div>
 
-            <!-- Ashley -->
             <div class="col-md-6 col-lg-4">
                 <div class="card-desarrollador text-center">
                     <div class="desarrollador-img-wrapper">
                         <img src="{% static 'fotos_desarrolladores/9010.jpg' %}"
-                            alt="Camilo"
-                                class="desarrollador-img">
+                            alt="Ashley"
+                            class="desarrollador-img">
                     </div>
 
                     <div class="desarrollador-info">
                         <h3>Ashley</h3>
                         <p class="rol">Desarrolladora</p>
+                    </div>
+
+                    <div class="desarrollador-detalle">
                         <p>
                             Participó en el desarrollo y construcción
                             de la plataforma web.
@@ -272,9 +294,10 @@
             </div>
 
         </div>
+
+        </div>
     </div>
 </section>
-```
 
 
 <section id="testimonios" class="testimonios py-5">
@@ -383,6 +406,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.addEventListener("scroll", actualizarMenu);
     actualizarMenu();
+});
+</script>
+
+<script>
+/* Despliega/oculta toda la sección de desarrolladores al hacer clic
+   en la pregunta "¿Deseas conocer nuestro equipo de desarrolladores?" */
+const btnDevsToggle = document.getElementById("btnDevsToggle");
+const devsContenido = document.getElementById("devsContenido");
+
+btnDevsToggle.addEventListener("click", function () {
+
+    const abierto = devsContenido.classList.toggle("abierto");
+    btnDevsToggle.setAttribute("aria-expanded", abierto);
+
+    devsContenido.style.maxHeight = abierto
+        ? devsContenido.scrollHeight + "px"
+        : "0px";
+
+});
+
+window.addEventListener("resize", function () {
+
+    if (devsContenido.classList.contains("abierto")) {
+        devsContenido.style.maxHeight = devsContenido.scrollHeight + "px";
+    }
+
+});
+</script>
+
+<script>
+/* En escritorio la descripción se despliega solo con :hover (CSS).
+   Este script es el respaldo para pantallas táctiles, donde no existe hover:
+   al tocar la tarjeta, se abre; al tocar otra, se cierra la anterior. */
+document.querySelectorAll(".card-desarrollador").forEach(function (tarjeta) {
+
+    tarjeta.addEventListener("click", function () {
+
+        const yaAbierta = tarjeta.classList.contains("abierta");
+
+        document.querySelectorAll(".card-desarrollador.abierta").forEach(function (otra) {
+            otra.classList.remove("abierta");
+        });
+
+        if (!yaAbierta) {
+            tarjeta.classList.add("abierta");
+        }
+
+    });
+
 });
 </script>
 </body>
