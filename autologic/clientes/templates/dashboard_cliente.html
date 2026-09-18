@@ -171,54 +171,102 @@
             <h4 class="text-yellow mb-4"><i class="bi bi-calendar-plus"></i> Nueva cita</h4>
             <form method="POST" action="{% url 'agendar_cita' %}">
                 {% csrf_token %}
-                <div class="row g-3">
 
-                    <div class="col-md-4">
-                        <label class="form-label-custom">✂️ Cortes</label>
-                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
-                            {% for servicio in servicios %}
-                            <div class="form-check mb-2">
-                                <input class="form-check-input servicio-radio" type="radio" name="servicio"
-                                    value="{{ servicio.id }}" id="serv{{ servicio.id }}"
-                                    data-precio="{{ servicio.precio }}" {% if forloop.first %}checked{% endif %}>
-                                <label class="form-check-label text-light" for="serv{{ servicio.id }}">
-                                    ✂️ {{ servicio.nombre }}
-                                    <small class="text-yellow">${{ servicio.precio|floatformat:0 }}</small>
-                                </label>
-                            </div>
-                            {% endfor %}
+                <!-- Corte -->
+                <section class="nc-bloque" aria-labelledby="ncTituloCorte">
+                    <h5 class="nc-seccion" id="ncTituloCorte"><i class="bi bi-scissors"></i> Elige tu corte</h5>
+                    <div class="nc-opciones nc-opciones-cortes" role="radiogroup" aria-labelledby="ncTituloCorte">
+                        {% for servicio in servicios %}
+                        <div class="nc-opcion">
+                            <input class="nc-input servicio-radio" type="radio" name="servicio"
+                                value="{{ servicio.id }}" id="serv{{ servicio.id }}"
+                                data-precio="{{ servicio.precio }}" {% if forloop.first %}checked{% endif %}>
+                            <label class="nc-card" for="serv{{ servicio.id }}">
+                                <span class="nc-icono"><i class="bi bi-scissors"></i></span>
+                                <span class="nc-texto">
+                                    <span class="nc-nombre">{{ servicio.nombre }}</span>
+                                    <span class="nc-desc">{{ servicio.descripcion }}</span>
+                                </span>
+                                <span class="nc-lado">
+                                    <span class="nc-precio">${{ servicio.precio|floatformat:"0g" }}</span>
+                                    <span class="nc-marca nc-marca-radio"><i class="bi bi-check-lg"></i></span>
+                                </span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- Adicionales -->
+                <section class="nc-bloque" aria-labelledby="ncTituloExtras">
+                    <h5 class="nc-seccion" id="ncTituloExtras">
+                        <i class="bi bi-plus-circle"></i> Adicionales
+                        <span class="nc-opcional">Opcional</span>
+                    </h5>
+                    <div class="nc-opciones nc-opciones-extras" role="group" aria-labelledby="ncTituloExtras">
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="checkbox" name="adicionales"
+                                value="Arreglo de barba" data-precio="5000" id="chkBarba">
+                            <label class="nc-extra" for="chkBarba">
+                                <span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>
+                                <span class="nc-nombre">Arreglo de barba</span>
+                                <span class="nc-precio-extra">+$5.000</span>
+                            </label>
+                        </div>
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="checkbox" name="adicionales"
+                                value="Cejas" data-precio="5000" id="chkCejas">
+                            <label class="nc-extra" for="chkCejas">
+                                <span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>
+                                <span class="nc-nombre">Cejas</span>
+                                <span class="nc-precio-extra">+$5.000</span>
+                            </label>
+                        </div>
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="checkbox" name="adicionales"
+                                value="Diseño y líneas" data-precio="5000" id="chkDiseno">
+                            <label class="nc-extra" for="chkDiseno">
+                                <span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>
+                                <span class="nc-nombre">Diseño / líneas</span>
+                                <span class="nc-precio-extra">+$5.000</span>
+                            </label>
                         </div>
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label-custom">➕ Adicionales</label>
-                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="adicionales"
-                                    value="Arreglo de barba" data-precio="5000" id="chkBarba">
-                                <label class="form-check-label text-light" for="chkBarba">
-                                    ✂️ Arreglo de barba <small class="text-yellow">$5.000</small>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="adicionales" value="Cejas"
-                                    data-precio="5000" id="chkCejas">
-                                <label class="form-check-label text-light" for="chkCejas">
-                                    👁️ Cejas <small class="text-yellow">$5.000</small>
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="adicionales"
-                                    value="Diseño y líneas" data-precio="5000" id="chkDiseno">
-                                <label class="form-check-label text-light" for="chkDiseno">
-                                    🎨 Diseño / líneas <small class="text-yellow">$5.000</small>
-                                </label>
-                            </div>
+                </section>
+                <!-- Barbero -->
+                <section class="nc-bloque" aria-labelledby="ncTituloBarbero">
+                    <h5 class="nc-seccion" id="ncTituloBarbero"><i class="bi bi-person-badge"></i> Barbero</h5>
+                    <div class="nc-opciones nc-opciones-cortes" role="radiogroup" aria-labelledby="ncTituloBarbero">
+                        {% for barbero in barberos %}
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="radio" name="barbero"
+                                value="{{ barbero.id }}" id="barbero{{ barbero.id }}"
+                                data-dias-laborales="{{ barbero.dias_laborales }}" {% if forloop.first %}checked{% endif %}>
+                            <label class="nc-card nc-card-barbero" for="barbero{{ barbero.id }}">
+                                {% if barbero.imagen_url %}
+                                <span class="nc-icono nc-icono-foto"><img src="{{ barbero.imagen_url }}" alt="" loading="lazy" referrerpolicy="no-referrer"></span>
+                                {% else %}
+                                <span class="nc-icono"><i class="bi bi-person-fill"></i></span>
+                                {% endif %}
+                                <span class="nc-texto">
+                                    <span class="nc-nombre">{{ barbero.nombre }}</span>
+                                    <span class="nc-desc">{{ barbero.especialidad }}</span>
+                                </span>
+                                <span class="nc-lado">
+                                    <span class="nc-marca nc-marca-radio"><i class="bi bi-check-lg"></i></span>
+                                </span>
+                            </label>
                         </div>
+                        {% empty %}
+                        <p class="text-light-brown mb-0">No hay barberos disponibles por ahora.</p>
+                        {% endfor %}
                     </div>
+                </section>
 
+                <!-- Fecha y horario -->
+                <div class="row g-4 nc-bloque">
                     <div class="col-md-6">
-                        <label class="form-label-custom">📅 Fecha</label>
+                        <span class="nc-seccion"><i class="bi bi-calendar3"></i> Fecha</span>
                         <div class="calendario-turnos" id="calendarioTurnos">
                             <div class="calendario-cabecera">
                                 <button type="button" class="calendario-nav" id="mesAnterior" aria-label="Mes anterior">
@@ -243,7 +291,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label-custom">⏰ Horarios</label>
+                        <span class="nc-seccion"><i class="bi bi-clock"></i> Horarios</span>
                         <input type="hidden" name="hora" id="hora" required>
                         <div class="horarios-turnos" id="horariosTurnos">
                             <div class="horarios-vacio">
@@ -255,46 +303,25 @@
                             <i class="bi bi-info-circle"></i> Los horarios tachados no se pueden reservar. Puedes activar el aviso para recibir una notificación cuando se liberen.
                         </div>
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label-custom">💈 Barbero</label>
-                        <select
-    class="form-select bg-dark-input"
-    name="barbero"
-    id="barbero">
-                            {% for barbero in barberos %}
-                            <option value="{{ barbero.id }}" data-dias-laborales="{{ barbero.dias_laborales }}">{{ barbero.nombre }} - {{ barbero.especialidad }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-primario);">
-
-                            <div class="d-flex justify-content-between">
-                                <span class="text-light-brown">Total:</span>
-                                <strong class="text-yellow" id="totalPagar">$0</strong>
-                            </div>
-
-                            <hr>
-
-                            <div class="d-flex justify-content-between">
-                                <span class="text-light-brown">Tiempo estimado:</span>
-                                <strong class="text-yellow" id="tiempoEstimado">40 minutos</strong>
-                            </div>
-
-                        </div>
-                    </div>
-
                 </div>
-                <div class="mt-4 d-flex gap-2 justify-content-end">
-                    <button type="button" class="btn btn-secondary" id="btnCancelarForm">Cancelar</button>
-                    <input
-    type="hidden"
-    name="duracion_total"
-    id="duracion_total"
-    value="40">
-                    <button type="submit" class="btn btn-primary-custom">Reservar</button>
+
+                <!-- Resumen y acciones -->
+                <div class="nc-resumen">
+                    <dl class="nc-totales">
+                        <div>
+                            <dt>Total</dt>
+                            <dd class="nc-total" id="totalPagar">$0</dd>
+                        </div>
+                        <div>
+                            <dt>Tiempo estimado</dt>
+                            <dd id="tiempoEstimado">40 minutos</dd>
+                        </div>
+                    </dl>
+                    <div class="nc-acciones">
+                        <button type="button" class="btn btn-secondary" id="btnCancelarForm">Cancelar</button>
+                        <input type="hidden" name="duracion_total" id="duracion_total" value="40">
+                        <button type="submit" class="btn btn-primary-custom">Reservar</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -552,7 +579,14 @@ const formulario = document.getElementById("formularioTurno");
 const btnCancelar = document.getElementById("btnCancelarForm");
 const fechaInput = document.getElementById("fecha");
 const horaInput = document.getElementById("hora");
-const barberoInput = document.getElementById("barbero");
+const barberoInput = {
+    selectedIndex: 0,
+    get options() { return [document.querySelector("input[name='barbero']:checked")]; },
+    get value() { return document.querySelector("input[name='barbero']:checked")?.value || ""; },
+    addEventListener(tipo, fn) {
+        document.querySelectorAll("input[name='barbero']").forEach(r => r.addEventListener(tipo, fn));
+    }
+};
 const calendarioDias = document.getElementById("calendarioDias");
 const calendarioMes = document.getElementById("calendarioMes");
 const calendarioAnio = document.getElementById("calendarioAnio");
