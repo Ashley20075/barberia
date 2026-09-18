@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from clientes.models import Cliente
+from administracion.models import Sitio
 
 def login_view(request):
     if request.method == 'POST':
@@ -15,7 +16,7 @@ def login_view(request):
 
         # Los datos ya escritos se devuelven SIEMPRE a la plantilla, para que
         # el formulario no se vacíe cuando hay un error de validación.
-        datos = {'email': email}
+        datos = {'email': email, 'sitio': Sitio.obtener()}
 
         # ---- 1. El correo no puede venir vacío ----
         if not email:
@@ -106,7 +107,7 @@ def login_view(request):
         # CLIENTE (por defecto)
         return redirect('panel_cliente')
 
-    return render(request, 'login.html')
+    return render(request, 'login.html', {'sitio': Sitio.obtener()})
 
 def logout_view(request):
     logout(request)

@@ -36,38 +36,29 @@
 </nav>
 
 <main>
-<section id="inicio" class="hero">
-    <div class="container">
+<section id="inicio" class="hero hero-fondos">
+    <div class="hero-background" aria-hidden="true">
+        <div class="hero-bg-slide active" style="background-image: url('{{ sitio.hero_imagen_1 }}');"></div>
+        <div class="hero-bg-slide" style="background-image: url('{{ sitio.hero_imagen_2 }}');"></div>
+        <div class="hero-bg-slide" style="background-image: url('{{ sitio.hero_imagen_3 }}');"></div>
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="container hero-content">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="badge-custom">{{ sitio.eslogan }}</div>
-                <h1 class="display-4 fw-bold">{{ sitio.hero_titulo }}</h1>
-                <p class="lead">{{ sitio.hero_descripcion }}</p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="{% url 'login' %}" class="btn btn-primary-custom">Agendar turno</a>
-                    <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#modalEstilos">Ver estilos</button>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center mt-5 mt-lg-0">
-                <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            <div class="col-lg-7">
+                <div class="hero-copy-panel">
+                    <div class="badge-custom">{{ sitio.eslogan }}</div>
+                    <h1 class="display-4 fw-bold">{{ sitio.hero_titulo }}</h1>
+                    <p class="lead">{{ sitio.hero_descripcion }}</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{% url 'login' %}" class="btn btn-primary-custom">Agendar turno</a>
+                        <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#modalEstilos">Ver estilos</button>
                     </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{{ sitio.hero_imagen_1 }}" class="hero-img w-100 rounded-3" alt="Barbería">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{{ sitio.hero_imagen_2 }}" class="hero-img w-100 rounded-3" alt="Corte de cabello">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{{ sitio.hero_imagen_3 }}" class="hero-img w-100 rounded-3" alt="Barbero trabajando">
-                        </div>
+                    <div class="hero-mini-info mt-4">
+                        <span><i class="bi bi-scissors"></i> Estilo profesional</span>
+                        <span><i class="bi bi-clock"></i> Atención personalizada</span>
+                        <span><i class="bi bi-star-fill"></i> Calidad y detalle</span>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
                 </div>
             </div>
         </div>

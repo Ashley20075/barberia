@@ -4203,3 +4203,82 @@ body {
         grid-column: auto;
     }
 }
+
+/* =========================================================
+   FONDOS FOTOGRÁFICOS DINÁMICOS - HOME Y LOGIN
+   Las imágenes vienen de Sitio.hero_imagen_1/2/3,
+   por lo tanto siguen siendo editables desde Django Admin.
+========================================================= */
+.hero-fondos {
+    position: relative;
+    min-height: 720px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-fondo);
+}
+
+.hero-fondos .hero-background,
+.hero-fondos .hero-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-fondos .hero-background { z-index: -3; }
+.hero-fondos .hero-overlay { z-index: -2; background: linear-gradient(90deg, rgba(5,4,3,.88) 0%, rgba(8,7,5,.70) 42%, rgba(8,7,5,.28) 100%); }
+
+.hero-bg-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.04);
+    transition: opacity 1s ease, transform 7s ease;
+}
+.hero-bg-slide.active { opacity: 1; transform: scale(1); }
+
+.hero-content { position: relative; z-index: 2; }
+.hero-copy-panel {
+    max-width: 760px;
+    padding: 2rem;
+    border-radius: 28px;
+    background: rgba(11,10,8,.42);
+    border: 1px solid rgba(244,197,66,.20);
+    box-shadow: 0 25px 70px rgba(0,0,0,.28);
+    backdrop-filter: blur(5px);
+}
+.hero-fondos .hero h1, .hero-fondos h1 { color: #fff; }
+.hero-fondos .lead { color: #f1e8dd; }
+.hero-mini-info { display:flex; flex-wrap:wrap; gap:1.1rem; color:#f5efe6; font-size:.9rem; }
+.hero-mini-info span { display:inline-flex; align-items:center; gap:.35rem; }
+.hero-mini-info i { color: var(--color-amarillo); }
+.hero-dots { position:absolute; z-index:3; bottom:28px; left:50%; transform:translateX(-50%); display:flex; gap:9px; }
+.hero-dots button { width:10px; height:10px; padding:0; border:0; border-radius:50%; background:rgba(255,255,255,.55); transition:.25s; }
+.hero-dots button.active { width:28px; border-radius:20px; background:var(--color-amarillo); }
+
+.login-page { position:relative; min-height:100vh; overflow-x:hidden; background:var(--color-fondo); }
+.login-background, .login-background-overlay { position:fixed; inset:0; z-index:0; }
+.login-background { overflow:hidden; }
+.login-bg-slide { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transform:scale(1.04); transition:opacity 1s ease, transform 7s ease; }
+.login-bg-slide.active { opacity:1; transform:scale(1); }
+.login-background-overlay { background:linear-gradient(135deg, rgba(5,4,3,.88), rgba(11,10,8,.62)); }
+.login-page .theme-toggle-floating { z-index:10; }
+.login-page .registro-wrapper { position:relative; z-index:2; min-height:100vh; background:transparent !important; }
+.login-page .login-card-fondo { background:rgba(30,26,21,.78); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-color:rgba(244,197,66,.38); box-shadow:0 30px 80px rgba(0,0,0,.45); }
+
+[data-theme="light"] .hero-fondos .hero-overlay { background:linear-gradient(90deg, rgba(255,252,247,.90) 0%, rgba(255,250,244,.72) 45%, rgba(255,250,244,.30) 100%); }
+[data-theme="light"] .hero-copy-panel { background:rgba(255,255,255,.72); border-color:rgba(143,106,14,.22); }
+[data-theme="light"] .hero-fondos h1 { color:#2B241E; }
+[data-theme="light"] .hero-fondos .lead { color:#4f4338; }
+[data-theme="light"] .hero-mini-info { color:#40362e; }
+[data-theme="light"] .login-background-overlay { background:linear-gradient(135deg, rgba(247,243,236,.88), rgba(247,243,236,.60)); }
+[data-theme="light"] .login-page .login-card-fondo { background:rgba(255,255,255,.82); color:#2B241E; }
+
+@media (max-width: 768px) {
+    .hero-fondos { min-height: 650px; padding: 70px 0; }
+    .hero-copy-panel { padding:1.35rem; }
+    .hero-fondos h1 { font-size:2.35rem; }
+    .hero-mini-info { flex-direction:column; gap:.55rem; }
+}

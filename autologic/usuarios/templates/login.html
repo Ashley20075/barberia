@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
-<body>
+<body class="login-page">
+    <div class="login-background" aria-hidden="true">
+        <div class="login-bg-slide active" style="background-image: url('{{ sitio.hero_imagen_1 }}');"></div>
+        <div class="login-bg-slide" style="background-image: url('{{ sitio.hero_imagen_2 }}');"></div>
+        <div class="login-bg-slide" style="background-image: url('{{ sitio.hero_imagen_3 }}');"></div>
+    </div>
+    <div class="login-background-overlay" aria-hidden="true"></div>
     <button
     type="button"
     id="themeToggle"
@@ -19,7 +25,7 @@
     <i class="bi bi-moon-fill"></i>
 </button>
     <div class="registro-wrapper">
-        <div class="registro-card">
+        <div class="registro-card login-card-fondo">
             <div class="text-center mb-4">
                 <h1 class="display-5 fw-bold">Barber<span style="color:#C9A87C;">Springfield</span></h1>
                 <p class="text-light-brown">

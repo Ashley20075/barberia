@@ -630,3 +630,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }, true);
 
 })();
+/* =====================================================
+   FONDOS DINÁMICOS — HOME Y LOGIN
+   Cambia la fotografía suavemente sin recargar la página.
+===================================================== */
+
+(function () {
+    function iniciarSlideshow(selector, intervalo) {
+        var slides = Array.prototype.slice.call(
+            document.querySelectorAll(selector)
+        );
+
+        if (slides.length <= 1) {
+            return;
+        }
+
+        var indice = 0;
+
+        setInterval(function () {
+            slides[indice].classList.remove('active');
+            indice = (indice + 1) % slides.length;
+            slides[indice].classList.add('active');
+        }, intervalo);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        iniciarSlideshow('.hero-bg-slide', 6500);
+        iniciarSlideshow('.login-bg-slide', 6500);
+    });
+})();
