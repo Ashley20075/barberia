@@ -1,0 +1,231 @@
+body {
+    background: #0b0b0b;
+    color: #fff;
+}
+
+.ia-subtitle {
+    max-width: 680px;
+}
+
+.ia-badge {
+    display: inline-block;
+    border: 1px solid rgba(255, 193, 7, .5);
+    color: #ffc107;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: .8rem;
+    letter-spacing: .08em;
+}
+
+.ia-card {
+    background: #151515;
+    border: 1px solid #2b2b2b;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .25);
+}
+
+.upload-zone {
+    border: 2px dashed #555;
+    border-radius: 16px;
+    padding: 45px 20px;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    transition: .2s ease;
+}
+
+.upload-zone:hover {
+    border-color: #ffc107;
+    background: rgba(255, 193, 7, .04);
+}
+
+.preview-image {
+    width: 100%;
+    max-height: 330px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: #000;
+}
+
+.recommendation-card {
+    background: #0e0e0e;
+    border: 1px solid #292929;
+    border-left: 4px solid #ffc107;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.recommendation-card h5 {
+    color: #ffc107;
+}
+
+.maintenance {
+    font-size: .72rem;
+    border: 1px solid #555;
+    border-radius: 999px;
+    padding: 4px 9px;
+    color: #ddd;
+}
+
+.ia-observaciones,
+.ia-disclaimer {
+    background: #101010;
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.ia-observaciones li {
+    margin-bottom: 4px;
+}
+
+.empty-result {
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =====================================================
+   AUTOLOGIC AI - MODO CLARO
+===================================================== */
+
+html[data-theme="light"] body {
+    background: #f5f5f5;
+    color: #212529;
+}
+
+html[data-theme="light"] .ia-card {
+    background: #ffffff;
+    color: #212529;
+    border-color: #dee2e6;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .10);
+}
+
+html[data-theme="light"] .ia-subtitle {
+    color: #6c757d;
+}
+
+html[data-theme="light"] .upload-zone {
+    background: #ffffff;
+    color: #212529;
+    border-color: #adb5bd;
+}
+
+html[data-theme="light"] .upload-zone:hover {
+    background: #fffaf0;
+    border-color: #ffc107;
+}
+
+html[data-theme="light"] .upload-zone h4 {
+    color: #212529;
+}
+
+html[data-theme="light"] .upload-zone p {
+    color: #6c757d;
+}
+
+html[data-theme="light"] .upload-zone span {
+    color: #6c757d;
+}
+
+html[data-theme="light"] .preview-image {
+    background: #f1f1f1;
+}
+
+html[data-theme="light"] .recommendation-card {
+    background: #ffffff;
+    color: #212529;
+    border-color: #dee2e6;
+    border-left-color: #ffc107;
+}
+
+html[data-theme="light"] .recommendation-card h5 {
+    color: #b88600;
+}
+
+html[data-theme="light"] .ia-observaciones {
+    background: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+html[data-theme="light"] .ia-disclaimer {
+    background: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+html[data-theme="light"] .ia-card label {
+    color: #212529;
+}
+
+html[data-theme="light"] .ia-card .text-secondary {
+    color: #6c757d !important;
+}
+
+html[data-theme="light"] .empty-result {
+    color: #212529;
+}
+
+html[data-theme="light"] .maintenance {
+    color: #6c757d;
+    border-color: #adb5bd;
+}
+
+html[data-theme="light"] .ia-card .btn-outline-light {
+    color: #212529;
+    border-color: #adb5bd;
+}
+
+html[data-theme="light"] .ia-card .btn-outline-light:hover {
+    background: #f1f1f1;
+    color: #212529;
+}
+
+
+/* =====================================================
+   AUTOLOGIC AI - MODO OSCURO
+===================================================== */
+
+html:not([data-theme="light"]) .ia-card {
+    background: #151515;
+    color: #fff;
+}
+
+html:not([data-theme="light"]) .upload-zone {
+    background: #151515;
+    color: #fff;
+}
+
+html:not([data-theme="light"]) .recommendation-card {
+    background: #0e0e0e;
+    color: #fff;
+}
+
+html:not([data-theme="light"]) .ia-observaciones,
+html:not([data-theme="light"]) .ia-disclaimer {
+    background: #101010;
+    color: #fff;
+}
+
+
+/* =====================================================
+   CORRECCIÓN DE TEXTO EN MODO CLARO
+===================================================== */
+
+html[data-theme="light"] .ia-card p,
+html[data-theme="light"] .ia-card li,
+html[data-theme="light"] .ia-card span,
+html[data-theme="light"] .ia-card small {
+    color: #212529;
+}
+
+html[data-theme="light"] .ia-card .text-muted {
+    color: #6c757d !important;
+}
+
+html[data-theme="light"] .ia-card .text-white {
+    color: #212529 !important;
+}

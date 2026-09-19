@@ -36,24 +36,7 @@
                         {% endif %}
                     </a>
 
-                    <a href="{% url 'panel_cliente' %}" class="nav-btn active">
-                        <i class="bi bi-person"></i> Mi Perfil
-                    </a>
-
-                    <a href="{% url 'editar_perfil' %}" class="nav-btn">
-                        <i class="bi bi-gear"></i> Editar Perfil
-                    </a>
-                    <button
-                        type="button"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        title="Cambiar tema"
-                        aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
+                    <a href="{% url 'panel_cliente' %}" class="nav-btn active"> <i class="bi bi-person"></i> Mi Perfil </a> <a href="{% url 'editar_perfil' %}" class="nav-btn"> <i class="bi bi-gear"></i> Editar Perfil </a> <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn"> <i class="bi bi-stars"></i> AutoAI </a> <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema"> <i class="bi bi-moon-fill"></i> </button> <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion"> <i class="bi bi-box-arrow-right"></i> Cerrar Sesión </button>
                 </div>
             </div>
         </div>
@@ -138,6 +121,8 @@
                 <button class="btn btn-primary-custom" id="btnAgendar">
                     <i class="bi bi-calendar-plus"></i> Agendar cita
                 </button>
+       
+</div>
             </div>
         </div>
 

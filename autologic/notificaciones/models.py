@@ -10,7 +10,7 @@ class Notificacion(models.Model):
         on_delete=models.CASCADE,
         related_name="notificaciones",
     )
-    mensaje = models.CharField(max_length=255)
+    mensaje = models.TextField()
     cita = models.ForeignKey(
         "citas.Cita",
         on_delete=models.SET_NULL,

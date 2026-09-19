@@ -83,6 +83,175 @@
     background-color: #FFFFFF !important;
     color: #2B241E !important;
 }
+
+        /* =========================
+           AUTOAI - DISEÑO OSCURO
+           ========================= */
+        .autoai-modal {
+            background: #17130f !important;
+            color: #f5efe6 !important;
+            border: 1px solid rgba(218, 165, 65, .35) !important;
+            border-radius: 18px !important;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,.65) !important;
+        }
+
+        .autoai-modal .modal-header {
+            background: linear-gradient(135deg, #211b14, #302313) !important;
+            border-bottom: 1px solid rgba(218, 165, 65, .25) !important;
+            padding: 1.2rem 1.5rem;
+        }
+
+        .autoai-modal .modal-title {
+            color: #f0bd4f !important;
+            font-weight: 700;
+        }
+
+        .autoai-modal .modal-body {
+            background: #17130f !important;
+            color: #f5efe6 !important;
+            padding: 1.5rem;
+        }
+
+        .autoai-modal .modal-footer {
+            background: #211b14 !important;
+            border-top: 1px solid rgba(218, 165, 65, .25) !important;
+            padding: 1rem 1.5rem;
+        }
+
+        .autoai-modal h6,
+        .autoai-modal h5,
+        .autoai-modal strong {
+            color: #f0bd4f !important;
+        }
+
+        .autoai-modal p,
+        .autoai-modal .autoai-detail-text {
+            color: #e8dfd3 !important;
+        }
+
+        .autoai-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .autoai-info-item,
+        .autoai-section,
+        .autoai-recomendacion {
+            background: #211b14 !important;
+            border: 1px solid rgba(218, 165, 65, .18) !important;
+            border-radius: 14px;
+        }
+
+        .autoai-info-item {
+            padding: 1rem;
+        }
+
+        .autoai-label,
+        .autoai-section-title {
+            color: #f0bd4f !important;
+        }
+
+        .autoai-observaciones {
+            display: grid;
+            gap: .65rem;
+        }
+
+        .autoai-observacion {
+            background: #2a2219 !important;
+            border-left: 3px solid #d9a441 !important;
+            color: #eee5d9 !important;
+            padding: .8rem 1rem;
+            border-radius: 8px;
+        }
+
+        .autoai-section {
+            padding: 1.15rem;
+            margin-bottom: 1rem;
+        }
+
+        .autoai-recomendaciones {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .autoai-recomendacion {
+            padding: 1.15rem;
+        }
+
+        .autoai-recomendacion-title {
+            color: #f0bd4f !important;
+            margin-bottom: 1rem;
+        }
+
+        .autoai-detail {
+            background: #2a2219 !important;
+            border-radius: 10px;
+            padding: .85rem 1rem;
+            margin-top: .7rem;
+        }
+
+        .autoai-detail-title,
+        .autoai-pedido-title {
+            color: #f0bd4f !important;
+            font-weight: 700;
+            margin-bottom: .35rem;
+        }
+
+        .autoai-pedido {
+            background: rgba(218, 165, 65, .08) !important;
+            border: 1px solid rgba(218, 165, 65, .25) !important;
+            border-radius: 10px;
+            padding: .9rem 1rem;
+            margin-top: .8rem;
+        }
+
+        .autoai-pedido-text {
+            color: #f3eadf !important;
+            font-style: italic;
+            margin-top: .35rem;
+        }
+
+        .autoai-btn {
+            background: linear-gradient(135deg, #d9a441, #f0bd4f) !important;
+            border: none !important;
+            color: #17130f !important;
+            border-radius: 10px !important;
+            font-weight: 700 !important;
+            padding: .45rem .8rem !important;
+            transition: .2s ease;
+        }
+
+        .autoai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(218,165,65,.28);
+        }
+
+        .autoai-btn-cerrar {
+            background: #342b21 !important;
+            border: 1px solid rgba(255,255,255,.12) !important;
+            color: #f5efe6 !important;
+            border-radius: 10px !important;
+            padding: .55rem 1.1rem !important;
+        }
+
+        .autoai-btn-cerrar:hover {
+            background: #43372a !important;
+            color: #fff !important;
+        }
+
+        @media (max-width: 576px) {
+            .autoai-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .autoai-modal .modal-body {
+                padding: 1rem;
+            }
+        }
+
     </style>
 </head>
 <body class="tema-barbero">
@@ -286,255 +455,457 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for cita in proximas_citas %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td><strong>{{ cita.cliente.nombre }}</strong></td>
-                                <td>
-                                    {{ cita.servicio.nombre }}
-                                    {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
-                                    <br><small class="text-light-brown">➕ {{ cita.adicionales }}</small>
-                                    {% endif %}
-                                </td>
-                                <td>{{ cita.fecha|date:"d/m/Y" }}</td>
-                                <td>{{ cita.hora }}</td>
-                                <td>
-                                    {% if cita.estado == "Pendiente" %}
-                                        <span class="badge-pendiente">
-                                            <i class="bi bi-clock"></i> Pendiente
-                                        </span>
-                                    {% elif cita.estado == "Confirmada" %}
-                                        <span class="badge-confirmada">
-                                            <i class="bi bi-check-circle"></i> Confirmada
-                                        </span>
-                                    {% elif cita.estado == "Finalizada" %}
-                                        <span class="badge-finalizada">
-                                            <i class="bi bi-flag-fill"></i> Finalizada
-                                        </span>
-                                    {% elif cita.estado == "Cancelada" %}
-                                        <span class="badge-cancelada">
-                                            <i class="bi bi-x-circle"></i> Cancelada
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if cita.estado == "Pendiente" %}
-                                        <div class="d-flex gap-1 flex-wrap">
-                                            <a href="{% url 'barberos:confirmar_cita' cita.id %}" 
-                                               class="btn btn-success btn-sm"
-                                               data-confirmar="¿Confirmar esta cita?" data-confirmar-titulo="Confirmar cita" data-confirmar-boton="Sí, confirmar">
-                                                <i class="bi bi-check-circle"></i> Confirmar
-                                            </a>
-                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" 
-                                               class="btn btn-outline-danger btn-sm"
-                                               data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
-                                                <i class="bi bi-x-circle"></i> Cancelar
-                                            </a>
-                                        </div>
-                                    {% elif cita.estado == "Confirmada" %}
-                                        <div class="d-flex gap-1 flex-wrap">
-                                            <a href="{% url 'barberos:finalizar_cita' cita.id %}" 
-                                               class="btn btn-info btn-sm"
-                                               data-confirmar="¿Finalizar esta cita?" data-confirmar-titulo="Finalizar cita" data-confirmar-boton="Sí, finalizar">
-                                                <i class="bi bi-flag-fill"></i> Finalizar
-                                            </a>
-                                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" 
-                                               class="btn btn-outline-danger btn-sm"
-                                               data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
-                                                <i class="bi bi-x-circle"></i> Cancelar
-                                            </a>
-                                        </div>
-                                    {% else %}
-                                        <span class="text-light-brown">—</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center text-light-brown py-5">
-                                    <i class="bi bi-calendar-x fs-1 d-block mb-3" style="color: var(--color-texto-secundario);"></i>
-                                    <h5>No hay citas registradas</h5>
-                                    <p class="mb-0">Las citas aparecerán aquí cuando los clientes agenden.</p>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                           {% for cita in proximas_citas %}
+<tr>
+    <td>{{ forloop.counter }}</td>
 
-        <!-- ==================================================== -->
-        <!-- FICHA DEL BARBERO + HISTORIAL                        -->
-        <!-- Antes el historial vivía dentro de una col-md-6      -->
-        <!-- compartida con un bloque que repetía las mismas      -->
-        <!-- cifras de las tarjetas de arriba: la tabla salía     -->
-        <!-- estrecha y el dato duplicado. Ahora la ficha va      -->
-        <!-- estrecha, el historial ancho, y el modal fuera de    -->
-        <!-- la rejilla.                                          -->
-        <!-- ==================================================== -->
-        <div class="row g-4 mt-2">
+    <td>
+        <strong>{{ cita.cliente.nombre }}</strong>
+    </td>
 
-            <div class="col-lg-4">
-                <div class="card-custom">
-                    <div class="card-header-custom">
-                        <span><i class="bi bi-info-circle"></i> Información</span>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="py-2 border-bottom border-secondary">
-                                <i class="bi bi-person text-yellow"></i>
-                                <span class="text-light-brown">Barbero:</span>
-                                <strong class="text-white">{{ user.first_name }} {{ user.last_name }}</strong>
-                            </li>
-                            <li class="py-2 border-bottom border-secondary">
-                                <i class="bi bi-envelope text-yellow"></i>
-                                <span class="text-light-brown">Email:</span>
-                                <strong class="text-white">{{ user.email }}</strong>
-                            </li>
-                            <li class="py-2">
-                                <i class="bi bi-calendar text-yellow"></i>
-                                <span class="text-light-brown">Fecha:</span>
-                                <strong class="text-white">{% now "d/m/Y" %}</strong>
-                            </li>
-                            {% if barbero %}
-                            <li class="py-2 border-top border-secondary">
-                                <i class="bi bi-clock text-yellow"></i>
-                                <span class="text-light-brown">Jornada:</span>
-                                <strong class="text-white">{{ barbero.jornada_inicio|time:"H:i" }} - {{ barbero.jornada_fin|time:"H:i" }}</strong>
-                            </li>
-                            <li class="py-2">
-                                <i class="bi bi-calendar-week text-yellow"></i>
-                                <span class="text-light-brown">Descanso:</span>
-                                <strong class="text-white">{{ barbero.get_dia_descanso_display }}</strong>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <td>
+        {{ cita.servicio.nombre }}
 
-            <div class="col-lg-8">
-                <div class="card-custom mt-4">
+        {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
+            <br>
+            <small class="text-light-brown">
+                ➕ {{ cita.adicionales }}
+            </small>
+        {% endif %}
+    </td>
 
-                    <!-- ENCABEZADO -->
-                    <div class="card-header-custom d-flex justify-content-between align-items-center">
+    <td>
+        {{ cita.fecha|date:"d/m/Y" }}
+    </td>
 
-                        <span>
-                            <i class="bi bi-clock-history"></i>
-                            Historial de citas
-                        </span>
+    <td>
+        {{ cita.hora }}
+    </td>
 
-                        <!-- BOTÓN VACIAR HISTORIAL -->
-                        <button
-                            type="button"
-                            class="btn btn-sm btn-outline-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalVaciarHistorialBarbero"
-                            title="Vaciar historial">
+    <td>
+        {% if cita.estado == "Pendiente" %}
 
-                            <i class="bi bi-trash3"></i>
+            <span class="badge-pendiente">
+                <i class="bi bi-clock"></i>
+                Pendiente
+            </span>
 
-                        </button>
+        {% elif cita.estado == "Confirmada" %}
 
-                    </div>
+            <span class="badge-confirmada">
+                <i class="bi bi-check-circle"></i>
+                Confirmada
+            </span>
+
+        {% elif cita.estado == "Finalizada" %}
+
+            <span class="badge-finalizada">
+                <i class="bi bi-flag-fill"></i>
+                Finalizada
+            </span>
+
+        {% elif cita.estado == "Cancelada" %}
+
+            <span class="badge-cancelada">
+                <i class="bi bi-x-circle"></i>
+                Cancelada
+            </span>
+
+        {% endif %}
+    </td>
+
+    <!-- ========================================================= -->
+    <!-- ACCIONES -->
+    <!-- ========================================================= -->
+
+   <td>
+    <div class="d-flex gap-1 flex-wrap">
+
+        <!-- ANÁLISIS AUTOAI -->
+        {% if cita.analisis_ia %}
+            <button
+                type="button"
+                class="btn btn-warning btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAnalisis{{ cita.id }}">
+
+                <i class="bi bi-stars"></i>
+                Análisis AutoAI
+
+            </button>
+        {% endif %}
 
 
-                    <!-- TABLA -->
-                    <div class="table-responsive">
+        <!-- CITAS PENDIENTES -->
+        {% if cita.estado == "Pendiente" %}
 
-                        <table class="table table-custom mb-0">
+            <a
+                href="{% url 'barberos:confirmar_cita' cita.id %}"
+                class="btn btn-success btn-sm"
+                data-confirmar="¿Confirmar esta cita?"
+                data-confirmar-titulo="Confirmar cita"
+                data-confirmar-boton="Sí, confirmar">
 
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Servicio</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
+                <i class="bi bi-check-circle"></i>
+                Confirmar
 
-
-                            <tbody>
-
-                                {% for cita in historial_citas %}
-
-                                <tr>
-
-                                    <td>
-                                        {{ cita.cliente.nombre }}
-                                    </td>
-
-                                    <td>
-                                        {{ cita.servicio.nombre }}
-                                    </td>
-
-                                    <td>
-                                        {{ cita.fecha|date:"d/m/Y" }}
-                                    </td>
-
-                                    <td>
-                                        {{ cita.hora }}
-                                    </td>
-
-                                    <td>
-
-                                        {% if cita.estado == "Finalizada" %}
-
-                                            <span class="badge-finalizada">
-                                                Finalizada
-                                            </span>
-
-                                        {% else %}
-
-                                            <span class="badge-cancelada">
-                                                Cancelada
-                                            </span>
-
-                                        {% endif %}
-
-                                    </td>
-
-                                </tr>
-
-                                {% empty %}
-
-                                <tr>
-
-                                    <td colspan="5" class="text-center">
-
-                                        No hay historial.
-
-                                    </td>
-
-                                </tr>
-
-                                {% endfor %}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
+            </a>
 
 
-                    <!-- PAGINACIÓN -->
-                    <div class="card-body">
+            <a
+                href="{% url 'barberos:cancelar_cita' cita.id %}"
+                class="btn btn-outline-danger btn-sm"
+                data-confirmar="¿Cancelar esta cita?"
+                data-confirmar-titulo="Cancelar cita"
+                data-confirmar-boton="Sí, cancelar"
+                data-confirmar-peligro>
 
-                        {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
+                <i class="bi bi-x-circle"></i>
+                Cancelar
 
-                    </div>
+            </a>
 
-                </div>
-            </div>
 
-        </div>
+        <!-- CITAS CONFIRMADAS -->
+        {% elif cita.estado == "Confirmada" %}
+
+            <a
+                href="{% url 'barberos:finalizar_cita' cita.id %}"
+                class="btn btn-info btn-sm"
+                data-confirmar="¿Finalizar esta cita?"
+                data-confirmar-titulo="Finalizar cita"
+                data-confirmar-boton="Sí, finalizar">
+
+                <i class="bi bi-flag-fill"></i>
+                Finalizar
+
+            </a>
+
+
+            <a
+                href="{% url 'barberos:cancelar_cita' cita.id %}"
+                class="btn btn-outline-danger btn-sm"
+                data-confirmar="¿Cancelar esta cita?"
+                data-confirmar-titulo="Cancelar cita"
+                data-confirmar-boton="Sí, cancelar"
+                data-confirmar-peligro>
+
+                <i class="bi bi-x-circle"></i>
+                Cancelar
+
+            </a>
+
+        {% endif %}
 
     </div>
+</td>
 
-    <!-- El modal va fuera del contenedor: anidado dentro de la
-         rejilla su fondo se superponía mal a la tarjeta. -->
+</tr>
+
+
+<!-- ============================================================= -->
+<!-- MODAL DEL ANÁLISIS AUTOAI -->
+<!-- ============================================================= -->
+
+{% if cita.analisis_ia %}
+<div class="modal fade"
+     id="modalAnalisis{{ cita.id }}"
+     tabindex="-1"
+     aria-labelledby="modalAnalisisLabel{{ cita.id }}"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content autoai-modal">
+
+            <!-- ENCABEZADO -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAnalisisLabel{{ cita.id }}">
+                    <i class="bi bi-stars"></i>
+                    Análisis AutoAI
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                </button>
+            </div>
+
+
+            <!-- CONTENIDO -->
+            <div class="modal-body">
+
+                <!-- CLIENTE -->
+                <div class="mb-4">
+                    <h6>
+                        <i class="bi bi-person"></i>
+                        Cliente
+                    </h6>
+
+                    <p class="mb-0">
+                        <strong>{{ cita.cliente.nombre }}</strong>
+                    </p>
+                </div>
+
+
+                <!-- SERVICIO -->
+                <div class="mb-4">
+                    <h6>
+                        <i class="bi bi-scissors"></i>
+                        Servicio reservado
+                    </h6>
+
+                    <p class="mb-0">
+                        {{ cita.servicio.nombre }}
+                    </p>
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+                {% if cita.analisis_ia.observaciones %}
+
+                <div class="mb-4">
+
+                    <h6>
+                        <i class="bi bi-search"></i>
+                        Observaciones
+                    </h6>
+
+                    <div class="p-3 rounded"
+                         style="background: #f8f9fa;">
+
+                        {% for observacion in cita.analisis_ia.observaciones %}
+
+                            <p class="mb-2">
+                                {{ observacion }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- RECOMENDACIONES -->
+                {% if cita.analisis_ia.recomendaciones %}
+
+                <div class="mb-4">
+
+                    <h6>
+                        <i class="bi bi-stars"></i>
+                        Recomendaciones de corte
+                    </h6>
+
+
+                    {% for recomendacion in cita.analisis_ia.recomendaciones %}
+
+                    <div class="card mb-3"
+                         style="border: 1px solid #e5e5e5; border-radius: 10px;">
+
+                        <div class="card-body">
+
+                            <!-- NOMBRE DEL CORTE -->
+                            <h5 class="mb-3">
+                                <i class="bi bi-scissors"></i>
+                                {{ recomendacion.nombre }}
+                            </h5>
+
+
+                            <!-- MOTIVO -->
+                            {% if recomendacion.motivo %}
+
+                            <div class="mb-3">
+
+                                <strong>
+                                    <i class="bi bi-lightbulb"></i>
+                                    ¿Por qué?
+                                </strong>
+
+                                <p class="mb-0 mt-1">
+                                    {{ recomendacion.motivo }}
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            <!-- MANTENIMIENTO -->
+                            {% if recomendacion.mantenimiento %}
+
+                            <div class="mb-3">
+
+                                <strong>
+                                    <i class="bi bi-calendar-check"></i>
+                                    Mantenimiento
+                                </strong>
+
+                                <p class="mb-0 mt-1">
+                                    {{ recomendacion.mantenimiento }}
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            <!-- CÓMO PEDÍRSELO AL BARBERO -->
+                            {% if recomendacion.pedido_barbero %}
+
+                            <div class="p-3 rounded"
+                                 style="background: #f8f9fa;">
+
+                                <strong>
+                                    <i class="bi bi-chat-left-text"></i>
+                                    Cómo pedírselo al barbero
+                                </strong>
+
+                                <p class="mb-0 mt-2">
+                                    "{{ recomendacion.pedido_barbero }}"
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- MANTENIMIENTO GENERAL -->
+                {% if cita.analisis_ia.mantenimiento %}
+
+                <div class="mb-4">
+
+                    <h6>
+                        <i class="bi bi-calendar-check"></i>
+                        Mantenimiento general
+                    </h6>
+
+                    <div class="p-3 rounded"
+                         style="background: #f8f9fa;">
+
+                        {{ cita.analisis_ia.mantenimiento }}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- CÓMO PEDIRLO -->
+                {% if cita.analisis_ia.como_pedirlo %}
+
+                <div class="mb-4">
+
+                    <h6>
+                        <i class="bi bi-chat-left-text"></i>
+                        Cómo pedir el corte
+                    </h6>
+
+                    <div class="p-3 rounded"
+                         style="background: #f8f9fa;">
+
+                        {{ cita.analisis_ia.como_pedirlo }}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- DISCLAIMER -->
+                {% if cita.analisis_ia.disclaimer %}
+
+                <div class="alert alert-secondary mt-4">
+
+                    <small>
+                        <i class="bi bi-info-circle"></i>
+                        {{ cita.analisis_ia.disclaimer }}
+                    </small>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PIE -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% empty %}
+
+<tr>
+    <td
+        colspan="7"
+        class="text-center text-light-brown py-5"
+    >
+
+        <i
+            class="bi bi-calendar-x fs-1 d-block mb-3"
+            style="color: var(--color-texto-secundario);"
+        ></i>
+
+        <h5>
+            No hay citas registradas
+        </h5>
+
+        <p class="mb-0">
+            Las citas aparecerán aquí cuando los clientes agenden.
+        </p>
+
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+                </table>
+
+            </div> <!-- /.table-responsive -->
+
+
+            <!-- PAGINACIÓN -->
+            <div class="card-body">
+
+                {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
+
+            </div>
+
+        </div> <!-- /.card-custom -->
+
+    </div> <!-- cierre contenedor de la sección -->
+
+
+    <!-- El modal va fuera del contenedor -->
     <div
         class="modal fade"
         id="modalVaciarHistorialBarbero"
@@ -545,18 +916,14 @@
 
             <div class="modal-content modal-content-custom">
 
-
-                <!-- ENCABEZADO -->
                 <div class="modal-header modal-header-custom">
 
                     <h5 class="modal-title text-yellow">
 
                         <i class="bi bi-trash3"></i>
-
                         Vaciar historial
 
                     </h5>
-
 
                     <button
                         type="button"
@@ -568,32 +935,24 @@
                 </div>
 
 
-                <!-- CUERPO -->
                 <div class="modal-body text-center py-4">
 
                     <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-inline-block"></i>
-
 
                     <h5>
                         ¿Vaciar tu historial?
                     </h5>
 
-
                     <p class="text-light-brown mb-0">
-
                         Se ocultarán todas las citas finalizadas
                         y canceladas de tu historial.
-
                     </p>
 
                 </div>
 
 
-                <!-- BOTONES -->
                 <div class="modal-footer modal-footer-custom">
 
-
-                    <!-- CANCELAR -->
                     <button
                         type="button"
                         class="btn btn-secondary"
@@ -604,7 +963,6 @@
                     </button>
 
 
-                    <!-- CONFIRMAR -->
                     <form
                         method="POST"
                         action="{% url 'barberos:vaciar_historial_barbero' %}"
@@ -612,13 +970,11 @@
 
                         {% csrf_token %}
 
-
                         <button
                             type="submit"
                             class="btn btn-danger">
 
                             <i class="bi bi-trash3"></i>
-
                             Vaciar historial
 
                         </button>
@@ -635,6 +991,8 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
+
 </body>
 </html>

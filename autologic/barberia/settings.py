@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'googlecalendar',
     'notificaciones',
+    'ia_estilo',
 ]
 
 MIDDLEWARE = [

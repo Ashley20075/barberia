@@ -9,9 +9,11 @@ from .models import Barbero
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Image
-from reportlab.lib.styles import getSampleStyleSheet
+from django.views.decorators.cache import never_cache
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Image # pyright: ignore[reportMissingModuleSource]
+from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from django.conf import settings
+from twilio.rest import Client # type: ignore
 import os
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
@@ -20,6 +22,7 @@ from clientes.models import Cliente
 from googlecalendar.models import CuentaGoogle
 from citas.paginacion import paginar
 
+@never_cache
 @login_required(login_url='login')
 def panel_barbero(request):
 

@@ -20,6 +20,7 @@ from inventario.models import Producto
 from inventario.utils import registrar_movimiento
 from clientes.verificacion import enviar_correo_confirmacion, leer_token
 from notificaciones.models import SuscripcionTurno
+from notificaciones.utils import notificar, usuario_de_barbero
 
 
 class CorreoNoEntregado(Exception):
@@ -170,17 +171,46 @@ def agendar_cita(request):
         adicionales_str = ", ".join(adicionales) if adicionales else "Ninguno"
         productos_str = ", ".join(productos_seleccionados) if productos_seleccionados else "Ninguno"
 
+        # ============================================================
+        # AUTOAI
+        # Recuperamos el análisis que el cliente realizó anteriormente.
+        # Si no existe, simplemente se guarda como un diccionario vacío.
+        # ============================================================
+        analisis_ia = request.session.get("analisis_ia", {})
+
         try:
             cliente = Cliente.objects.get(user=request.user)
-            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
-            servicio = Servicio.objects.get(id=request.POST.get("servicio"))
-            duracion_total = int(request.POST.get("duracion_total", 40))
+
+            barbero = Barbero.objects.get(
+                id=request.POST.get("barbero"),
+                activo=True
+            )
+
+            servicio = Servicio.objects.get(
+                id=request.POST.get("servicio")
+            )
+
+            duracion_total = int(
+                request.POST.get("duracion_total", 40)
+            )
+
             fecha = request.POST.get("fecha")
             hora = request.POST.get("hora")
-            hora_obj = datetime.strptime(hora, "%I:%M %p").time()
 
-            hora_apertura = datetime.strptime("08:00 AM", "%I:%M %p").time()
-            hora_cierre = datetime.strptime("05:15 PM", "%I:%M %p").time()
+            hora_obj = datetime.strptime(
+                hora,
+                "%I:%M %p"
+            ).time()
+
+            hora_apertura = datetime.strptime(
+                "08:00 AM",
+                "%I:%M %p"
+            ).time()
+
+            hora_cierre = datetime.strptime(
+                "05:15 PM",
+                "%I:%M %p"
+            ).time()
 
             if hora_obj < hora_apertura or hora_obj > hora_cierre:
                 messages.error(
@@ -189,21 +219,45 @@ def agendar_cita(request):
                 )
                 return redirect("panel_cliente")
 
-        except (Cliente.DoesNotExist, Barbero.DoesNotExist, Servicio.DoesNotExist, ValueError):
-            messages.error(request, "❌ Datos inválidos al agendar la cita.")
+        except (
+            Cliente.DoesNotExist,
+            Barbero.DoesNotExist,
+            Servicio.DoesNotExist,
+            ValueError
+        ):
+            messages.error(
+                request,
+                "❌ Datos inválidos al agendar la cita."
+            )
             return redirect("panel_cliente")
 
-        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+        fecha_obj = datetime.strptime(
+            fecha,
+            "%Y-%m-%d"
+        ).date()
+
+        # ============================================================
+        # VALIDAR DÍA LABORAL DEL BARBERO
+        # ============================================================
 
         if not barbero.es_dia_laboral(fecha_obj):
-            messages.error(request, f"❌ {barbero.nombre} no trabaja en esa fecha.")
+            messages.error(
+                request,
+                f"❌ {barbero.nombre} no trabaja en esa fecha."
+            )
             return redirect("panel_cliente")
 
         if barbero.es_dia_descanso(fecha_obj):
-            messages.error(request, f"❌ {barbero.nombre} tiene descanso en esa fecha.")
+            messages.error(
+                request,
+                f"❌ {barbero.nombre} tiene descanso en esa fecha."
+            )
             return redirect("panel_cliente")
 
-        # Un cliente solo puede tener una cita pendiente o confirmada por día
+        # ============================================================
+        # UN CLIENTE SOLO PUEDE TENER UNA CITA POR DÍA
+        # ============================================================
+
         cita_existente = Cita.objects.filter(
             cliente=cliente,
             fecha=fecha,
@@ -211,12 +265,24 @@ def agendar_cita(request):
         ).exists()
 
         if cita_existente:
-            messages.error(request, "❌ Ya tienes una cita programada para este día.")
+            messages.error(
+                request,
+                "❌ Ya tienes una cita programada para este día."
+            )
             return redirect("panel_cliente")
 
-        # Validación de solapamiento de horarios para el barbero
-        inicio_nueva = datetime.strptime(hora, "%I:%M %p")
-        fin_nueva = inicio_nueva + timedelta(minutes=duracion_total)
+        # ============================================================
+        # VALIDAR SOLAPAMIENTO DE HORARIOS
+        # ============================================================
+
+        inicio_nueva = datetime.strptime(
+            hora,
+            "%I:%M %p"
+        )
+
+        fin_nueva = inicio_nueva + timedelta(
+            minutes=duracion_total
+        )
 
         citas_barbero = Cita.objects.filter(
             barbero=barbero,
@@ -225,15 +291,29 @@ def agendar_cita(request):
         )
 
         for cita in citas_barbero:
-            inicio = datetime.strptime(cita.hora, "%I:%M %p")
-            fin = inicio + timedelta(minutes=cita.duracion_total)
+            inicio = datetime.strptime(
+                cita.hora,
+                "%I:%M %p"
+            )
+
+            fin = inicio + timedelta(
+                minutes=cita.duracion_total
+            )
 
             if inicio_nueva < fin and fin_nueva > inicio:
-                messages.error(request, "❌ Ese horario se cruza con otra cita reservada.")
+                messages.error(
+                    request,
+                    "❌ Ese horario se cruza con otra cita reservada."
+                )
                 return redirect("panel_cliente")
+
+        # ============================================================
+        # CREAR CITA
+        # ============================================================
 
         try:
             with transaction.atomic():
+
                 nueva_cita = Cita.objects.create(
                     cliente=cliente,
                     servicio=servicio,
@@ -244,12 +324,26 @@ def agendar_cita(request):
                     hora=hora,
                     duracion_total=duracion_total,
                     estado="Pendiente",
+                
+
+                    # ================================================
+                    # GUARDAR ANÁLISIS DE AUTOAI EN LA CITA
+                    # ================================================
+                    analisis_ia=analisis_ia,
                 )
 
-                # Descontar stock de productos seleccionados.
+                # ====================================================
+                # DESCONTAR STOCK DE PRODUCTOS
+                # ====================================================
+
                 for nombre_producto in productos_seleccionados:
-                    producto = Producto.objects.filter(nombre=nombre_producto.strip()).first()
+
+                    producto = Producto.objects.filter(
+                        nombre=nombre_producto.strip()
+                    ).first()
+
                     if producto and producto.stock_actual > 0:
+
                         try:
                             registrar_movimiento(
                                 producto=producto,
@@ -258,27 +352,94 @@ def agendar_cita(request):
                                 usuario=request.user,
                                 nota=f'Uso en cita de {cliente.nombre}',
                             )
+
                         except ValueError:
                             pass
 
-                # Si el cliente estaba siguiendo ese turno, ya no necesita
-                # recibir un aviso de liberación de su propia cita.
+                # ====================================================
+                # ELIMINAR SUSCRIPCIÓN AL TURNO
+                # ====================================================
+
                 SuscripcionTurno.objects.filter(
                     usuario=request.user,
                     barbero=barbero,
                     fecha=fecha_obj,
                     hora=hora,
                 ).delete()
+                # ==========================================
+                # EL ANÁLISIS YA FUE ASOCIADO A LA CITA
+                # ==========================================
+                request.session.pop("analisis_ia", None)
+                request.session.modified = True
 
-            messages.success(request, f"✅ Cita agendada exitosamente con {barbero.nombre}.")
+                # ====================================================
+                # NOTIFICAR AL BARBERO
+                # ====================================================
+
+                usuario_barbero = usuario_de_barbero(barbero)
+
+                if usuario_barbero:
+
+                    mensaje_barbero = (
+                        f"🆕 Nueva cita: {cliente.nombre} "
+                        f"el {fecha_obj.strftime('%d/%m/%Y')} "
+                        f"a las {hora}. "
+                        f"Servicio: {servicio.nombre}."
+                    )
+
+                    # Si existe análisis de AutoAI,
+                    # se informa al barbero.
+                    if analisis_ia:
+
+                        mensaje_barbero += (
+                            " El cliente realizó un análisis con AutoAI. "
+                            "Puedes consultar el análisis en la cita."
+                        )
+
+                    notificar(
+                        usuario_barbero,
+                        mensaje_barbero,
+                        cita=nueva_cita
+                    )
+
+            # ========================================================
+            # LIMPIAR EL ANÁLISIS DE LA SESIÓN
+            # ========================================================
+            #
+            # Esto evita que el mismo análisis se reutilice
+            # accidentalmente para otra cita.
+            # ========================================================
+
+            request.session.pop(
+                "analisis_ia",
+                None
+            )
+
+            request.session.modified = True
+
+            messages.success(
+                request,
+                f"✅ Cita agendada exitosamente con {barbero.nombre}."
+            )
+
             return redirect("panel_cliente")
 
         except ValidationError as e:
-            messages.error(request, f"❌ {e.messages[0]}")
+
+            messages.error(
+                request,
+                f"❌ {e.messages[0]}"
+            )
+
             return redirect("panel_cliente")
 
         except IntegrityError:
-            messages.error(request, "❌ Ese horario ya fue reservado.")
+
+            messages.error(
+                request,
+                "❌ Ese horario ya fue reservado."
+            )
+
             return redirect("panel_cliente")
 
     return redirect("panel_cliente")

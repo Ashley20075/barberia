@@ -2039,7 +2039,7 @@ body {
     border-left: 3px solid #F4C542;
 }
 
-//* =========================================================
+/* =========================================================
    PAGINACIÓN - TEMA CLARO
 ========================================================= */
 
@@ -4281,4 +4281,302 @@ body {
     .hero-copy-panel { padding:1.35rem; }
     .hero-fondos h1 { font-size:2.35rem; }
     .hero-mini-info { flex-direction:column; gap:.55rem; }
+}
+
+/* =========================================================
+   AUTOAI - MODAL DEL BARBERO
+   Diseño integrado con el dashboard
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   MODAL PRINCIPAL
+   --------------------------------------------------------- */
+
+.autoai-modal {
+    background-color: #1E1A15 !important;
+    color: #F5EFE6 !important;
+    border: 1px solid #3F2E22 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.autoai-header {
+    background-color: #0B0A08 !important;
+    border-bottom: 1px solid #3F2E22 !important;
+    padding: 18px 22px !important;
+}
+
+.autoai-title {
+    color: #F4C542 !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+
+.autoai-title i {
+    margin-right: 7px;
+}
+
+.autoai-close {
+    filter: invert(1) grayscale(1) brightness(2);
+    opacity: .75;
+}
+
+.autoai-close:hover {
+    opacity: 1;
+}
+
+
+/* ---------------------------------------------------------
+   BODY
+   --------------------------------------------------------- */
+
+.autoai-body {
+    background-color: #1E1A15 !important;
+    color: #F5EFE6 !important;
+    padding: 24px !important;
+}
+
+
+/* ---------------------------------------------------------
+   INFORMACIÓN DEL CLIENTE
+   --------------------------------------------------------- */
+
+.autoai-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.autoai-info-item {
+    background-color: #2A211B !important;
+    border: 1px solid #3F2E22;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.autoai-info-item strong {
+    display: block;
+    color: #F5EFE6 !important;
+    margin-top: 5px;
+}
+
+.autoai-label {
+    display: block;
+    color: #C9A87C !important;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+.autoai-label i {
+    margin-right: 5px;
+    color: #F4C542;
+}
+
+
+/* ---------------------------------------------------------
+   SECCIONES
+   --------------------------------------------------------- */
+
+.autoai-section {
+    margin-top: 24px;
+}
+
+.autoai-section-title {
+    color: #F4C542 !important;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.autoai-section-title i {
+    margin-right: 6px;
+}
+
+
+/* ---------------------------------------------------------
+   OBSERVACIONES
+   --------------------------------------------------------- */
+
+.autoai-observaciones {
+    background-color: #2A211B !important;
+    border: 1px solid #3F2E22;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.autoai-observacion {
+    color: #C9A87C !important;
+    font-size: .92rem;
+    line-height: 1.5;
+    padding: 3px 0;
+}
+
+
+/* ---------------------------------------------------------
+   RECOMENDACIONES
+   --------------------------------------------------------- */
+
+.autoai-recomendaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.autoai-recomendacion {
+    background-color: #2A211B !important;
+    border: 1px solid #3F2E22 !important;
+    border-radius: 9px;
+    padding: 18px;
+}
+
+
+/* Título de cada corte */
+
+.autoai-recomendacion-title {
+    color: #F5EFE6 !important;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 18px 0;
+}
+
+.autoai-recomendacion-title i {
+    color: #F4C542;
+    margin-right: 6px;
+}
+
+
+/* ---------------------------------------------------------
+   DETALLES
+   --------------------------------------------------------- */
+
+.autoai-detail {
+    margin-bottom: 15px;
+}
+
+.autoai-detail-title {
+    color: #F5EFE6 !important;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.autoai-detail-title i {
+    color: #F4C542;
+    margin-right: 6px;
+}
+
+.autoai-detail-text {
+    color: #C9A87C !important;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   PEDIDO AL BARBERO
+   --------------------------------------------------------- */
+
+.autoai-pedido {
+    background-color: #211C17 !important;
+    border: 1px solid #3F2E22 !important;
+    border-radius: 7px;
+    padding: 13px 15px;
+    margin-top: 16px;
+}
+
+.autoai-pedido-title {
+    color: #F4C542 !important;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.autoai-pedido-title i {
+    margin-right: 5px;
+}
+
+.autoai-pedido-text {
+    color: #C9A87C !important;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
+
+.autoai-footer {
+    background-color: #0B0A08 !important;
+    border-top: 1px solid #3F2E22 !important;
+    padding: 14px 22px !important;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÓN CERRAR
+   --------------------------------------------------------- */
+
+.autoai-btn-cerrar {
+    background-color: #2A211B !important;
+    border: 1px solid #3F2E22 !important;
+    color: #F5EFE6 !important;
+    border-radius: 6px;
+    padding: 7px 15px;
+}
+
+.autoai-btn-cerrar:hover {
+    background-color: #3F2E22 !important;
+    border-color: #F4C542 !important;
+    color: #F4C542 !important;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .autoai-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .autoai-body {
+        padding: 16px !important;
+    }
+
+    .autoai-recomendacion {
+        padding: 15px;
+    }
+
+}
+
+/* CORREGIR CAJAS BLANCAS DEL PRIMER MODAL AUTOAI */
+
+.modal .p-3.rounded[style*="#f8f9fa"] {
+    background: #211C17 !important;
+    color: #F5EFE6 !important;
+    border: 1px solid #3F2E22 !important;
+}
+
+.modal .p-3.rounded[style*="#f8f9fa"] p,
+.modal .p-3.rounded[style*="#f8f9fa"] strong {
+    color: #F5EFE6 !important;
+}
+
+.modal .card[style*="#e5e5e5"] {
+    background: #2A211B !important;
+    border-color: #3F2E22 !important;
+    color: #F5EFE6 !important;
+}
+
+.modal .card[style*="#e5e5e5"] .card-body,
+.modal .card[style*="#e5e5e5"] p,
+.modal .card[style*="#e5e5e5"] strong,
+.modal .card[style*="#e5e5e5"] h5 {
+    color: #F5EFE6 !important;
 }
