@@ -5427,3 +5427,105 @@ body {
 .estilos-modal-footer .btn {
     display: none !important;
 }
+
+/* =====================================================
+   AUTOLOGIC AI - CHAT EXCLUSIVO DE CORTE
+===================================================== */
+
+.ia-chat {
+    border-top: 1px solid #2b2b2b;
+    padding-top: 18px;
+}
+
+.ia-chat-header {
+    margin-bottom: 12px;
+}
+
+.ia-chat-messages {
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-right: 4px;
+}
+
+.ia-chat-message {
+    border-radius: 12px;
+    padding: 10px 12px;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.ia-chat-ai {
+    background: #101010;
+    border: 1px solid #292929;
+}
+
+.ia-chat-user {
+    background: rgba(255, 193, 7, .10);
+    border: 1px solid rgba(255, 193, 7, .35);
+    align-self: flex-end;
+    max-width: 90%;
+}
+
+.ia-chat-error {
+    border-color: #7a2d2d;
+}
+
+.ia-chat-form {
+    display: flex;
+    gap: 8px;
+}
+
+.ia-chat-form .form-control {
+    background: #0e0e0e;
+    border-color: #333;
+    color: #fff;
+}
+
+.ia-chat-form .form-control:focus {
+    background: #0e0e0e;
+    color: #fff;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 .2rem rgba(255, 193, 7, .12);
+}
+
+
+@media (max-width: 576px) {
+
+    .ia-chat-form {
+        flex-direction: column;
+    }
+
+    .ia-chat-form .btn-modern {
+        width: 100%;
+    }
+
+}
+
+
+/* MODO CLARO */
+
+html[data-theme="light"] .ia-chat {
+    border-top-color: #dee2e6;
+}
+
+html[data-theme="light"] .ia-chat-ai {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #212529;
+}
+
+html[data-theme="light"] .ia-chat-user {
+    background: #fffaf0;
+    border-color: rgba(184, 134, 0, .35);
+    color: #212529;
+}
+
+html[data-theme="light"] .ia-chat-form .form-control {
+    background: #fff;
+    color: #212529;
+    border-color: #adb5bd;
+}

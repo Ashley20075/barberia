@@ -265,10 +265,81 @@
                         {% endfor %}
 
 
-                        <div class="ia-disclaimer mt-4">
-                            <i class="bi bi-info-circle"></i>
-                            {{ resultado.aviso }}
-                        </div>
+                       <div class="ia-chat mt-4">
+
+    <div class="ia-chat-header">
+
+        <h5 class="mb-1">
+            <i class="bi bi-chat-dots text-yellow"></i>
+            Pregunta sobre tu corte
+        </h5>
+
+        <p class="small text-secondary mb-0">
+            AutoAI solo responde sobre cabello, barba, cejas y estilo.
+        </p>
+
+    </div>
+
+
+    <div
+        class="ia-chat-messages"
+        id="chatMessages"
+    >
+
+        <div class="ia-chat-message ia-chat-ai">
+
+            <strong>AutoAI:</strong>
+
+            Pregúntame qué corte, peinado, barba,
+            cejas o ajuste podría funcionar según
+            el análisis.
+
+        </div>
+
+    </div>
+
+
+    <form
+        id="chatCorteForm"
+        class="ia-chat-form"
+    >
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            id="chatCorteInput"
+            class="form-control"
+            maxlength="500"
+            autocomplete="off"
+            placeholder="Ej.: ¿Cómo podría pedir este corte al barbero?"
+            required
+        >
+
+        <button
+            type="submit"
+            class="btn-modern"
+            id="chatCorteBtn"
+        >
+
+            <i class="bi bi-send"></i>
+            Enviar
+
+        </button>
+
+    </form>
+
+
+    <div class="small text-secondary mt-2">
+
+        <i class="bi bi-shield-check"></i>
+
+        El chat está limitado a recomendaciones relacionadas
+        con el corte, cabello, barba y cejas.
+
+    </div>
+
+</div>
 
 
                     {% else %}
@@ -351,6 +422,187 @@
                 '<span class="spinner-border spinner-border-sm me-2"></span>Analizando...';
         });
     </script>
+    <script>
+
+const chatCorteForm =
+    document.getElementById('chatCorteForm');
+
+const chatCorteInput =
+    document.getElementById('chatCorteInput');
+
+const chatCorteBtn =
+    document.getElementById('chatCorteBtn');
+
+const chatMessages =
+    document.getElementById('chatMessages');
+
+
+if (chatCorteForm) {
+
+    const csrftoken =
+        chatCorteForm.querySelector(
+            '[name=csrfmiddlewaretoken]'
+        ).value;
+
+
+    chatCorteForm.addEventListener(
+        'submit',
+        async (event) => {
+
+            event.preventDefault();
+
+
+            const pregunta =
+                chatCorteInput.value.trim();
+
+
+            if (!pregunta) {
+                return;
+            }
+
+
+            agregarMensajeChat(
+                'Tú',
+                pregunta,
+                'ia-chat-user'
+            );
+
+
+            chatCorteInput.value = '';
+
+            chatCorteInput.disabled = true;
+
+            chatCorteBtn.disabled = true;
+
+            chatCorteBtn.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1"></span>Consultando...';
+
+
+            try {
+
+                const response = await fetch(
+                    "{% url 'ia_estilo:chat_corte' %}",
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type':
+                                'application/json',
+
+                            'X-CSRFToken':
+                                csrftoken,
+
+                            'X-Requested-With':
+                                'XMLHttpRequest'
+                        },
+
+                        body: JSON.stringify({
+                            pregunta: pregunta
+                        })
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.ok
+                ) {
+
+                    throw new Error(
+                        data.error ||
+                        'No se pudo consultar AutoAI.'
+                    );
+
+                }
+
+
+                agregarMensajeChat(
+                    'AutoAI',
+                    data.respuesta,
+                    'ia-chat-ai'
+                );
+
+
+            } catch (error) {
+
+                agregarMensajeChat(
+                    'AutoAI',
+                    error.message ||
+                    'No se pudo obtener una respuesta.',
+                    'ia-chat-ai ia-chat-error'
+                );
+
+
+            } finally {
+
+                chatCorteInput.disabled =
+                    false;
+
+                chatCorteBtn.disabled =
+                    false;
+
+                chatCorteBtn.innerHTML =
+                    '<i class="bi bi-send"></i> Enviar';
+
+                chatCorteInput.focus();
+
+            }
+
+        }
+    );
+
+}
+
+
+function agregarMensajeChat(
+    autor,
+    texto,
+    clase
+) {
+
+    if (!chatMessages) {
+        return;
+    }
+
+
+    const message =
+        document.createElement('div');
+
+    message.className =
+        `ia-chat-message ${clase}`;
+
+
+    const strong =
+        document.createElement('strong');
+
+    strong.textContent =
+        `${autor}: `;
+
+
+    const content =
+        document.createElement('span');
+
+    content.textContent =
+        texto;
+
+
+    message.appendChild(strong);
+
+    message.appendChild(content);
+
+    chatMessages.appendChild(message);
+
+
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+
+}
+
+</script>
 
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
 

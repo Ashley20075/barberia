@@ -177,6 +177,7 @@ def editar_perfil(request):
 @login_required(login_url='login')
 def agendar_cita(request):
     if request.method == "POST":
+        analisis_ia = request.session.get("analisis_ia", {})
         adicionales = request.POST.getlist("adicionales")
         productos_seleccionados = request.POST.getlist("productos")
 

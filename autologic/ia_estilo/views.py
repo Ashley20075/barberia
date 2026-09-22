@@ -1,10 +1,13 @@
 import base64
+import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.http import JsonResponse
 
-from .services import analizar_foto
+
+from .services import analizar_foto, recomendar_sobre_corte
 
 
 @login_required(login_url='login')
@@ -74,3 +77,92 @@ def recomendador(request):
             'foto_preview': foto_preview,
         }
     )
+@login_required(login_url='login')
+def chat_corte(request):
+
+    if request.method != 'POST':
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': 'Método no permitido.'
+            },
+            status=405
+        )
+
+    try:
+        payload = json.loads(
+            request.body or '{}'
+        )
+
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': 'Solicitud inválida.'
+            },
+            status=400
+        )
+
+    pregunta = str(
+        payload.get('pregunta', '')
+    ).strip()
+
+    # Recuperamos el análisis que hizo AutoAI
+    resultado = request.session.get(
+        'analisis_ia'
+    )
+
+    if not resultado:
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': 'Primero realiza el análisis con AutoAI.'
+            },
+            status=400
+        )
+
+    try:
+
+        respuesta = recomendar_sobre_corte(
+            pregunta,
+            resultado
+        )
+
+        return JsonResponse(
+            {
+                'ok': True,
+                **respuesta
+            }
+        )
+
+    except ValueError as exc:
+
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': str(exc)
+            },
+            status=400
+        )
+
+    except RuntimeError as exc:
+
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': str(exc)
+            },
+            status=502
+        )
+
+    except Exception:
+
+        return JsonResponse(
+            {
+                'ok': False,
+                'error': (
+                    'Ocurrió un error al consultar AutoAI.'
+                )
+            },
+            status=500
+        )
