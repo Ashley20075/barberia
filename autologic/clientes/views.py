@@ -190,6 +190,13 @@ def agendar_cita(request):
         # ============================================================
         analisis_ia = request.session.get("analisis_ia", {})
 
+        # Copiar explícitamente la conversación de AutoAI a la cita.
+        # Esto evita depender de una mutación interna del diccionario de sesión.
+        historial_chat = request.session.get("autoai_chat", [])
+        if historial_chat:
+            analisis_ia = dict(analisis_ia)
+            analisis_ia["comentarios_cliente"] = list(historial_chat)
+
         try:
             cliente = Cliente.objects.get(user=request.user)
 
@@ -382,6 +389,7 @@ def agendar_cita(request):
                 # EL ANÁLISIS YA FUE ASOCIADO A LA CITA
                 # ==========================================
                 request.session.pop("analisis_ia", None)
+                request.session.pop("autoai_chat", None)
                 request.session.modified = True
 
                 # ====================================================
@@ -424,6 +432,10 @@ def agendar_cita(request):
 
             request.session.pop(
                 "analisis_ia",
+                None
+            )
+            request.session.pop(
+                "autoai_chat",
                 None
             )
 

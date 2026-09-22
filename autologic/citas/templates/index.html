@@ -366,30 +366,272 @@
     </div>
 </footer>
 
-<!-- Modal de estilos: también usa los servicios registrados por el administrador -->
-<div class="modal fade" id="modalEstilos" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header modal-header-custom">
-                <h3 class="modal-title text-yellow"><i class="bi bi-scissors"></i> {{ sitio.servicios_titulo }}</h3>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <p>{{ sitio.servicios_subtitulo }}</p>
-                <div class="row">
-                    {% for servicio in servicios %}
-                    <div class="col-md-6 mb-3">
-                        <h6 class="text-yellow">{{ servicio.nombre }}</h6>
-                        <p>{{ servicio.descripcion }}</p>
-                    </div>
-                    {% endfor %}
+<!-- =====================================================
+     MODAL / CARRUSEL DE ESTILOS
+===================================================== -->
+
+<div class="modal fade estilos-modal" id="modalEstilos" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+
+        <div class="modal-content estilos-modal-content">
+
+            <!-- CABECERA -->
+
+            <div class="modal-header estilos-modal-header">
+
+                <div>
+                    <span class="estilos-modal-eyebrow">
+                        <i class="bi bi-scissors"></i>
+                        BARBERSPRINGFIELD
+                    </span>
+
+                    <h3 class="modal-title">
+                        Nuestros estilos
+                    </h3>
+
+                    <p>
+                        Encuentra el corte que mejor representa tu estilo.
+                    </p>
                 </div>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar">
+                </button>
+
             </div>
-            <div class="modal-footer modal-footer-custom">
-                <button class="btn btn-secondary-custom" data-bs-dismiss="modal">Cerrar</button>
+
+
+            <!-- CUERPO -->
+
+            <div class="modal-body estilos-modal-body">
+
+                {% if servicios %}
+
+                <div
+                    id="carruselEstilos"
+                    class="carousel slide estilos-carousel"
+                    data-bs-interval="false"
+                    data-bs-touch="true">
+
+                    <!-- INDICADORES -->
+
+                    <div class="carousel-indicators estilos-indicators">
+
+                        {% for servicio in servicios %}
+
+                        <button
+                            type="button"
+                            data-bs-target="#carruselEstilos"
+                            data-bs-slide-to="{{ forloop.counter0 }}"
+                            class="{% if forloop.first %}active{% endif %}"
+                            aria-current="{% if forloop.first %}true{% endif %}"
+                            aria-label="Estilo {{ forloop.counter }}">
+                        </button>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- SLIDES -->
+
+                    <div class="carousel-inner">
+
+                        {% for servicio in servicios %}
+
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+
+                            <div class="estilo-slide">
+
+                                <!-- IMAGEN -->
+
+                                <div class="estilo-imagen-container">
+
+                                    {% if servicio.imagen %}
+
+                                    <img
+                                        src="{{ servicio.imagen }}"
+                                        alt="{{ servicio.nombre }}"
+                                        class="estilo-imagen"
+                                        loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+
+                                    {% else %}
+
+                                    <div class="estilo-imagen-placeholder">
+
+                                        <i class="bi bi-scissors"></i>
+
+                                        <span>
+                                            Imagen no disponible
+                                        </span>
+
+                                    </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- INFORMACIÓN -->
+
+                                <div class="estilo-informacion">
+
+                                    <span class="estilo-numero">
+                                        {{ forloop.counter|stringformat:"02d" }}
+                                    </span>
+
+                                    <h2>
+                                        {{ servicio.nombre }}
+                                    </h2>
+
+                                    <div class="estilo-linea"></div>
+
+                                    <p class="estilo-descripcion">
+                                        {{ servicio.descripcion }}
+                                    </p>
+
+
+                                    <div class="estilo-datos">
+
+                                        <div class="estilo-dato">
+
+                                            <i class="bi bi-cash-stack"></i>
+
+                                            <div>
+                                                <small>Precio</small>
+
+                                                <strong>
+                                                    ${{ servicio.precio|floatformat:"0g" }}
+                                                </strong>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="estilo-dato">
+
+                                            <i class="bi bi-clock"></i>
+
+                                            <div>
+                                                <small>Duración</small>
+
+                                                <strong>
+                                                    {{ servicio.duracion }} min
+                                                </strong>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <a
+                                        href="{% url 'login' %}"
+                                        class="btn btn-primary-custom estilo-reservar">
+
+                                        Reservar este estilo
+
+                                        <i class="bi bi-arrow-right"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- ANTERIOR -->
+
+                    <button
+                        class="carousel-control-prev estilo-control"
+                        type="button"
+                        data-bs-target="#carruselEstilos"
+                        data-bs-slide="prev">
+
+                        <span class="estilo-control-icon">
+                            <i class="bi bi-chevron-left"></i>
+                        </span>
+
+                        <span class="visually-hidden">
+                            Anterior
+                        </span>
+
+                    </button>
+
+
+                    <!-- SIGUIENTE -->
+
+                    <button
+                        class="carousel-control-next estilo-control"
+                        type="button"
+                        data-bs-target="#carruselEstilos"
+                        data-bs-slide="next">
+
+                        <span class="estilo-control-icon">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+
+                        <span class="visually-hidden">
+                            Siguiente
+                        </span>
+
+                    </button>
+
+                </div>
+
+                {% else %}
+
+                <div class="estilos-vacio">
+
+                    <i class="bi bi-scissors"></i>
+
+                    <h4>No hay estilos disponibles</h4>
+
+                    <p>
+                        Próximamente agregaremos nuestros estilos.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
             </div>
+
+
+            <!-- PIE -->
+
+            <div class="modal-footer estilos-modal-footer">
+
+                <span>
+                    <i class="bi bi-hand-index-thumb"></i>
+                    Desliza para explorar los estilos
+                </span>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary-custom"
+                    data-bs-dismiss="modal">
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
         </div>
+
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

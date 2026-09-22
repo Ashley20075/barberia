@@ -4725,3 +4725,705 @@ body {
 .aviso-google-calendar .alert-link {
     color: var(--color-primario);
 }
+
+/* =====================================================
+   CARRUSEL DE ESTILOS
+===================================================== */
+
+.estilos-modal .modal-dialog {
+    max-width: 1100px;
+}
+
+.estilos-modal-content {
+    background:
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(244, 197, 66, 0.08),
+            transparent 35%
+        ),
+        var(--color-fondo-card, #1E1A15);
+
+    border: 1px solid rgba(201, 168, 124, 0.25);
+    border-radius: 28px;
+    overflow: hidden;
+    color: #F5EFE6;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.estilos-modal-header {
+    border-bottom: 1px solid rgba(201, 168, 124, 0.18);
+    padding: 1.5rem 2rem;
+    background: rgba(15, 12, 10, 0.55);
+}
+
+.estilos-modal-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    color: #F4C542;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 0.4rem;
+}
+
+.estilos-modal-header h3 {
+    margin: 0;
+
+    color: #FFD966;
+
+    font-family: 'Playfair Display', Georgia, serif;
+
+    font-size: 2rem;
+}
+
+.estilos-modal-header p {
+    margin: 0.35rem 0 0;
+
+    color: #C9A87C;
+
+    font-size: 0.9rem;
+}
+
+
+/* =====================================================
+   CUERPO
+===================================================== */
+
+.estilos-modal-body {
+    padding: 0;
+}
+
+
+/* =====================================================
+   CARRUSEL
+===================================================== */
+
+/*
+   IMPORTANTE:
+   Todos los slides tendrán exactamente la misma altura.
+   Así el modal no cambia de tamaño al pasar de una imagen
+   a otra.
+*/
+
+.estilos-carousel {
+    position: relative;
+
+    height: 520px;
+
+    overflow: hidden;
+}
+
+.estilos-carousel .carousel-inner {
+    height: 100%;
+}
+
+.estilos-carousel .carousel-item {
+    height: 100%;
+}
+
+
+/* =====================================================
+   SLIDE
+===================================================== */
+
+.estilo-slide {
+    display: grid;
+
+    grid-template-columns: 1.05fr 0.95fr;
+
+    width: 100%;
+    height: 520px;
+    min-height: 520px;
+}
+
+
+/* =====================================================
+   IMAGEN
+===================================================== */
+
+.estilo-imagen-container {
+    position: relative;
+
+    width: 100%;
+    height: 520px;
+    min-height: 520px;
+
+    overflow: hidden;
+
+    background: #0F0C0A;
+}
+
+.estilo-imagen-container::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 60%,
+            rgba(15, 12, 10, 0.8) 100%
+        );
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/*
+   TODAS las imágenes tendrán exactamente
+   el mismo espacio disponible.
+*/
+
+.estilo-imagen {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition: transform 0.8s ease;
+}
+
+
+/* Pequeño efecto al mostrar el slide */
+
+.carousel-item.active .estilo-imagen {
+    transform: scale(1.02);
+}
+
+
+/* =====================================================
+   PLACEHOLDER
+===================================================== */
+
+.estilo-imagen-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 1rem;
+
+    color: #C9A87C;
+
+    background:
+        radial-gradient(
+            circle,
+            #3F2E22,
+            #0F0C0A 70%
+        );
+}
+
+.estilo-imagen-placeholder i {
+    font-size: 5rem;
+
+    color: #F4C542;
+}
+
+.estilo-imagen-placeholder span {
+    font-size: 0.9rem;
+}
+
+
+/* =====================================================
+   INFORMACIÓN
+===================================================== */
+
+.estilo-informacion {
+    position: relative;
+
+    width: 100%;
+    height: 520px;
+    min-height: 520px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 3rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(63, 46, 34, 0.55),
+            rgba(15, 12, 10, 0.9)
+        );
+}
+
+.estilo-numero {
+    color: rgba(244, 197, 66, 0.45);
+
+    font-size: 0.85rem;
+    font-weight: 800;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 0.5rem;
+}
+
+.estilo-informacion h2 {
+    margin: 0;
+
+    color: #FFD966;
+
+    font-family: 'Playfair Display', Georgia, serif;
+
+    font-size: 2.5rem;
+
+    line-height: 1.1;
+}
+
+.estilo-linea {
+    width: 55px;
+    height: 3px;
+
+    background: #F4C542;
+
+    margin: 1.25rem 0;
+}
+
+.estilo-descripcion {
+    color: #D4C9BC;
+
+    font-size: 1rem;
+
+    line-height: 1.65;
+
+    margin-bottom: 2rem;
+
+    /*
+       Evita que una descripción demasiado larga
+       cambie el tamaño del slide.
+    */
+
+    max-width: 420px;
+}
+
+
+/* =====================================================
+   DATOS
+===================================================== */
+
+.estilo-datos {
+    display: flex;
+
+    gap: 2rem;
+
+    margin-bottom: 2rem;
+
+    flex-wrap: wrap;
+}
+
+.estilo-dato {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+}
+
+.estilo-dato > i {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: rgba(244, 197, 66, 0.1);
+
+    color: #F4C542;
+
+    font-size: 1.1rem;
+}
+
+.estilo-dato small {
+    display: block;
+
+    color: #9F8D78;
+
+    font-size: 0.72rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.estilo-dato strong {
+    display: block;
+
+    color: #F5EFE6;
+
+    font-size: 1rem;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   BOTÓN
+===================================================== */
+
+.estilo-reservar {
+    align-self: flex-start;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+}
+
+.estilo-reservar i {
+    transition: transform 0.25s ease;
+}
+
+.estilo-reservar:hover i {
+    transform: translateX(4px);
+}
+
+
+/* =====================================================
+   CONTROLES
+===================================================== */
+
+.estilo-control {
+    width: 58px;
+
+    opacity: 1;
+
+    top: auto;
+
+    bottom: 20px;
+
+    height: 55px;
+
+    z-index: 10;
+}
+
+.carousel-control-prev.estilo-control {
+    left: 15px;
+}
+
+.carousel-control-next.estilo-control {
+    right: 15px;
+}
+
+.estilo-control-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: rgba(15, 12, 10, 0.85);
+
+    border: 1px solid rgba(244, 197, 66, 0.35);
+
+    color: #F4C542;
+
+    backdrop-filter: blur(5px);
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.estilo-control:hover .estilo-control-icon {
+    background: #F4C542;
+
+    color: #0F0C0A;
+
+    transform: scale(1.08);
+}
+
+
+/* =====================================================
+   INDICADORES
+===================================================== */
+
+.estilos-indicators {
+    position: absolute;
+
+    left: auto;
+    right: 3rem;
+
+    bottom: 1.7rem;
+
+    width: auto;
+
+    margin: 0;
+
+    gap: 7px;
+
+    z-index: 8;
+}
+
+.estilos-indicators button {
+    width: 25px;
+    height: 4px;
+
+    margin: 0;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background-color: rgba(245, 239, 230, 0.35);
+
+    opacity: 1;
+
+    transition:
+        width 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.estilos-indicators button.active {
+    width: 45px;
+
+    background-color: #F4C542;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.estilos-modal-footer {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    border-top: 1px solid rgba(201, 168, 124, 0.18);
+
+    padding: 1rem 1.5rem;
+
+    background: rgba(15, 12, 10, 0.55);
+}
+
+.estilos-modal-footer span {
+    color: #9F8D78;
+
+    font-size: 0.78rem;
+}
+
+.estilos-modal-footer span i {
+    color: #F4C542;
+
+    margin-right: 0.35rem;
+}
+
+
+/* =====================================================
+   SIN ESTILOS
+===================================================== */
+
+.estilos-vacio {
+    min-height: 350px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.estilos-vacio i {
+    color: #F4C542;
+
+    font-size: 3rem;
+
+    margin-bottom: 1rem;
+}
+
+.estilos-vacio h4 {
+    color: #F5EFE6;
+}
+
+.estilos-vacio p {
+    color: #9F8D78;
+}
+
+
+/* =====================================================
+   RESPONSIVE - TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .estilos-carousel {
+        height: auto;
+
+        overflow: visible;
+    }
+
+    .estilos-carousel .carousel-inner {
+        height: auto;
+    }
+
+    .estilos-carousel .carousel-item {
+        height: auto;
+    }
+
+
+    .estilo-slide {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        height: auto;
+        min-height: 0;
+    }
+
+
+    .estilo-imagen-container {
+        height: 350px;
+        min-height: 350px;
+    }
+
+
+    .estilo-imagen-placeholder {
+        min-height: 350px;
+    }
+
+
+    .estilo-informacion {
+        height: auto;
+        min-height: 330px;
+
+        padding: 2.5rem 2rem 4rem;
+    }
+
+
+    .estilo-informacion h2 {
+        font-size: 2rem;
+    }
+
+
+    .estilos-indicators {
+        right: 2rem;
+        bottom: 1.5rem;
+    }
+
+
+    .estilo-control {
+        bottom: 1rem;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVE - CELULAR
+===================================================== */
+
+@media (max-width: 576px) {
+
+    .estilos-modal .modal-dialog {
+        margin: 0.5rem;
+    }
+
+
+    .estilos-modal-content {
+        border-radius: 20px;
+    }
+
+
+    .estilos-modal-header {
+        padding: 1.2rem;
+    }
+
+
+    .estilos-modal-header h3 {
+        font-size: 1.5rem;
+    }
+
+
+    .estilo-imagen-container {
+        height: 280px;
+        min-height: 280px;
+    }
+
+
+    .estilo-imagen-placeholder {
+        min-height: 280px;
+    }
+
+
+    .estilo-informacion {
+        min-height: 330px;
+
+        padding: 2rem 1.4rem 4.5rem;
+    }
+
+
+    .estilo-informacion h2 {
+        font-size: 1.8rem;
+    }
+
+
+    .estilo-descripcion {
+        font-size: 0.9rem;
+    }
+
+
+    .estilo-datos {
+        gap: 1rem;
+
+        flex-wrap: wrap;
+    }
+
+
+    .estilos-modal-footer span {
+        display: none;
+    }
+
+
+    .estilos-modal-footer {
+        justify-content: flex-end;
+    }
+
+}
+
+/* Ocultar botón Cerrar del modal de estilos */
+.estilos-modal-footer .btn {
+    display: none !important;
+}

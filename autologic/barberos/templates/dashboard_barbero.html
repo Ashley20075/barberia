@@ -87,9 +87,10 @@
     color: #2B241E !important;
 }
 
-        /* =========================
-           AUTOAI - DISEÑO OSCURO
-           ========================= */
+        /* =====================================================
+           AUTOAI - MODAL DEL ANÁLISIS
+           ===================================================== */
+
         .autoai-modal {
             background: #17130f !important;
             color: #f5efe6 !important;
@@ -105,9 +106,16 @@
             padding: 1.2rem 1.5rem;
         }
 
-        .autoai-modal .modal-title {
+        .autoai-modal .modal-title,
+        .autoai-modal h6,
+        .autoai-modal h5,
+        .autoai-modal strong,
+        .autoai-label,
+        .autoai-section-title,
+        .autoai-recomendacion-title,
+        .autoai-detail-title,
+        .autoai-pedido-title {
             color: #f0bd4f !important;
-            font-weight: 700;
         }
 
         .autoai-modal .modal-body {
@@ -120,12 +128,6 @@
             background: #211b14 !important;
             border-top: 1px solid rgba(218, 165, 65, .25) !important;
             padding: 1rem 1.5rem;
-        }
-
-        .autoai-modal h6,
-        .autoai-modal h5,
-        .autoai-modal strong {
-            color: #f0bd4f !important;
         }
 
         .autoai-modal p,
@@ -150,11 +152,6 @@
 
         .autoai-info-item {
             padding: 1rem;
-        }
-
-        .autoai-label,
-        .autoai-section-title {
-            color: #f0bd4f !important;
         }
 
         .autoai-observaciones {
@@ -184,11 +181,6 @@
             padding: 1.15rem;
         }
 
-        .autoai-recomendacion-title {
-            color: #f0bd4f !important;
-            margin-bottom: 1rem;
-        }
-
         .autoai-detail {
             background: #2a2219 !important;
             border-radius: 10px;
@@ -198,7 +190,6 @@
 
         .autoai-detail-title,
         .autoai-pedido-title {
-            color: #f0bd4f !important;
             font-weight: 700;
             margin-bottom: .35rem;
         }
@@ -243,6 +234,147 @@
         .autoai-btn-cerrar:hover {
             background: #43372a !important;
             color: #fff !important;
+        }
+
+        /* =====================================================
+           COMENTARIOS DEL CLIENTE A AUTOAI
+           ===================================================== */
+
+        .autoai-client-comments-list {
+            display: grid;
+            gap: .75rem;
+        }
+
+        .autoai-client-comment {
+            background: #2a2219 !important;
+            border: 1px solid rgba(218, 165, 65, .20) !important;
+            border-radius: 12px;
+            padding: .9rem 1rem;
+        }
+
+        .autoai-client-comment-label {
+            color: #f0bd4f !important;
+            font-size: .82rem;
+            font-weight: 700;
+            margin-bottom: .35rem;
+            display: block;
+        }
+
+        .autoai-client-comment-text {
+            color: #eee5d9 !important;
+        }
+
+        .autoai-client-comment-response {
+            margin-top: .75rem;
+            padding-top: .7rem;
+            border-top: 1px solid rgba(218, 165, 65, .14);
+        }
+
+        .autoai-client-comment-response p {
+            color: #e8dfd3 !important;
+        }
+
+        /* =====================================================
+           AUTOAI - MODO CLARO
+           ===================================================== */
+
+        [data-theme="light"] .autoai-modal {
+            background: #ffffff !important;
+            color: #2b241e !important;
+            border-color: #e5d7bb !important;
+            box-shadow: 0 20px 60px rgba(43, 36, 30, .16) !important;
+        }
+
+        [data-theme="light"] .autoai-modal .modal-header {
+            background: linear-gradient(135deg, #fffaf0, #f7edd9) !important;
+            border-bottom-color: #eadfc9 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .modal-body {
+            background: #ffffff !important;
+            color: #2b241e !important;
+        }
+
+        [data-theme="light"] .autoai-modal .modal-footer {
+            background: #fffaf0 !important;
+            border-top-color: #eadfc9 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .modal-title,
+        [data-theme="light"] .autoai-modal h6,
+        [data-theme="light"] .autoai-modal h5,
+        [data-theme="light"] .autoai-modal strong,
+        [data-theme="light"] .autoai-modal .autoai-label,
+        [data-theme="light"] .autoai-modal .autoai-section-title,
+        [data-theme="light"] .autoai-modal .autoai-recomendacion-title,
+        [data-theme="light"] .autoai-modal .autoai-detail-title,
+        [data-theme="light"] .autoai-modal .autoai-pedido-title,
+        [data-theme="light"] .autoai-modal .autoai-client-comment-label {
+            color: #8a6500 !important;
+        }
+
+        [data-theme="light"] .autoai-modal p,
+        [data-theme="light"] .autoai-modal .autoai-detail-text,
+        [data-theme="light"] .autoai-modal .autoai-client-comment-text,
+        [data-theme="light"] .autoai-modal .autoai-client-comment-response p,
+        [data-theme="light"] .autoai-modal .autoai-observacion,
+        [data-theme="light"] .autoai-modal .autoai-detail,
+        [data-theme="light"] .autoai-modal .autoai-pedido-text {
+            color: #40382f !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-info-item,
+        [data-theme="light"] .autoai-modal .autoai-section,
+        [data-theme="light"] .autoai-modal .autoai-recomendacion {
+            background: #fffdf8 !important;
+            color: #2b241e !important;
+            border-color: #eadfc9 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-observacion,
+        [data-theme="light"] .autoai-modal .autoai-detail,
+        [data-theme="light"] .autoai-modal .autoai-client-comment {
+            background: #f8f5ef !important;
+            border-color: #e6dac6 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-observacion {
+            border-left-color: #c89418 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-pedido {
+            background: #fffaf0 !important;
+            border-color: #ead7a8 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-client-comment-response {
+            border-top-color: #eadfc9 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-btn-cerrar {
+            background: #f1ede6 !important;
+            border-color: #d8cfc1 !important;
+            color: #40382f !important;
+        }
+
+        [data-theme="light"] .autoai-modal .autoai-btn-cerrar:hover {
+            background: #e8e1d7 !important;
+            color: #2b241e !important;
+        }
+
+        [data-theme="light"] .autoai-modal .btn-close {
+            filter: none;
+            opacity: .65;
+        }
+
+        [data-theme="light"] .autoai-modal .alert {
+            background: #f8f5ef !important;
+            color: #5a5147 !important;
+            border-color: #e6dac6 !important;
+        }
+
+        [data-theme="light"] .autoai-modal .alert * {
+            color: #5a5147 !important;
         }
 
         @media (max-width: 576px) {
@@ -628,7 +760,7 @@
                 </h5>
 
                 <button type="button"
-                        class="btn-close btn-close-white"
+                        class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Cerrar">
                 </button>
@@ -674,12 +806,11 @@
                         Observaciones
                     </h6>
 
-                    <div class="p-3 rounded"
-                         style="background: #f8f9fa;">
+                    <div class="autoai-observaciones">
 
                         {% for observacion in cita.analisis_ia.observaciones %}
 
-                            <p class="mb-2">
+                            <p class="autoai-observacion mb-0">
                                 {{ observacion }}
                             </p>
 
@@ -705,8 +836,7 @@
 
                     {% for recomendacion in cita.analisis_ia.recomendaciones %}
 
-                    <div class="card mb-3"
-                         style="border: 1px solid #e5e5e5; border-radius: 10px;">
+                    <div class="autoai-recomendacion">
 
                         <div class="card-body">
 
@@ -758,8 +888,7 @@
                             <!-- CÓMO PEDÍRSELO AL BARBERO -->
                             {% if recomendacion.pedido_barbero %}
 
-                            <div class="p-3 rounded"
-                                 style="background: #f8f9fa;">
+                            <div class="autoai-pedido">
 
                                 <strong>
                                     <i class="bi bi-chat-left-text"></i>
@@ -795,8 +924,7 @@
                         Mantenimiento general
                     </h6>
 
-                    <div class="p-3 rounded"
-                         style="background: #f8f9fa;">
+                    <div class="autoai-detail">
 
                         {{ cita.analisis_ia.mantenimiento }}
 
@@ -817,8 +945,7 @@
                         Cómo pedir el corte
                     </h6>
 
-                    <div class="p-3 rounded"
-                         style="background: #f8f9fa;">
+                    <div class="autoai-detail">
 
                         {{ cita.analisis_ia.como_pedirlo }}
 
@@ -827,6 +954,51 @@
                 </div>
 
                 {% endif %}
+
+
+                <!-- COMENTARIOS DEL CLIENTE A AUTOAI -->
+                {% if cita.analisis_ia.comentarios_cliente %}
+                <div class="autoai-section autoai-client-comments">
+                    <div class="autoai-section-title">
+                        <i class="bi bi-chat-left-text"></i>
+                        Conversación del cliente con AutoAI
+                    </div>
+
+                    <div class="autoai-client-comments-list">
+                        {% for comentario in cita.analisis_ia.comentarios_cliente %}
+                        <div class="autoai-client-comment">
+                            <div class="autoai-client-comment-label">
+                                <i class="bi bi-person"></i>
+                                Cliente escribió
+                            </div>
+                            <p class="autoai-client-comment-text mb-0">
+                                {{ comentario.comentario }}
+                            </p>
+
+                            {% if comentario.respuesta_ia %}
+                            <div class="autoai-client-comment-response">
+                                <span class="autoai-client-comment-label">
+                                    <i class="bi bi-stars"></i>
+                                    AutoAI respondió
+                                </span>
+                                <p class="mb-0">{{ comentario.respuesta_ia }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+
+                <div class="autoai-section autoai-client-comments autoai-client-comments-empty">
+                    <div class="autoai-section-title">
+                        <i class="bi bi-chat-left-text"></i>
+                        Conversación del cliente con AutoAI
+                    </div>
+                    <p class="mb-0">El cliente no realizó preguntas adicionales a AutoAI antes de agendar esta cita.</p>
+                </div>
+
+{% endif %}
 
 
                 <!-- DISCLAIMER -->
@@ -850,7 +1022,7 @@
             <div class="modal-footer">
 
                 <button type="button"
-                        class="btn btn-secondary"
+                        class="btn autoai-btn-cerrar"
                         data-bs-dismiss="modal">
 
                     Cerrar

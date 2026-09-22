@@ -25,10 +25,19 @@ class SuscriptorNewsletter(models.Model):
 
 class Servicio(models.Model):
     nombre = models.CharField(max_length=100)
+
     descripcion = models.TextField()
+
     precio = models.PositiveIntegerField()
+
     duracion = models.PositiveIntegerField(
         help_text="Duración en minutos"
+    )
+
+    imagen = models.URLField(
+        blank=True,
+        default="",
+        help_text="URL de la imagen del estilo o corte"
     )
 
     def __str__(self):
