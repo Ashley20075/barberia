@@ -6,467 +6,507 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario - BarberSpringfield</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+
     <style>
         /* ========== ESTILOS GENERALES ========== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    background-color: var(--color-fondo);
-    color: var(--color-texto);
-    font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
-}
+        body {
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+        }
 
-/* ========== NAVBAR ========== */
-.navbar-custom {
-    background-color: var(--color-fondo);
-    border-bottom: 2px solid var(--color-primario);
-    padding: 0.8rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1050;
-}
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background-color: var(--color-fondo);
+            border-bottom: 2px solid var(--color-primario);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+        }
 
-.navbar-brand-custom {
-    font-family: 'Playfair Display', 'Georgia', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--color-primario) !important;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .navbar-brand-custom {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-primario) !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.navbar-brand-custom span {
-    color: var(--color-texto-secundario);
-}
+        .navbar-brand-custom span {
+            color: var(--color-texto-secundario);
+        }
 
-.navbar-brand-custom img {
-    height: 40px;
-    width: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-}
+        .navbar-brand-custom img {
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
 
-.nav-btn {
-    background: transparent;
-    border: 2px solid var(--color-borde);
-    color: var(--color-texto) !important;
-    padding: 0.5rem 1.2rem;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--color-borde);
+            color: var(--color-texto) !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
-.nav-btn:hover {
-    background-color: var(--color-borde);
-    border-color: var(--color-primario);
-    transform: scale(1.02);
-}
+        .nav-btn:hover {
+            background-color: var(--color-borde);
+            border-color: var(--color-primario);
+            transform: scale(1.02);
+        }
 
-.nav-btn.active {
-    background-color: var(--color-primario);
-    border-color: var(--color-primario);
-    color: #0B0A08 !important;
-    box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.3);
-}
+        .nav-btn.active {
+            background-color: var(--color-primario);
+            border-color: var(--color-primario);
+            color: #0B0A08 !important;
+            box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.3);
+        }
 
-.btn-logout-custom {
-    background: transparent;
-    border: 2px solid var(--color-borde);
-    color: var(--color-texto);
-    padding: 0.5rem 1.2rem;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+        .btn-logout-custom {
+            background: transparent;
+            border: 2px solid var(--color-borde);
+            color: var(--color-texto);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
-.btn-logout-custom:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: white;
-}
+        .btn-logout-custom:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
 
-.user-info-custom {
-    background-color: var(--color-fondo-card);
-    padding: 0.5rem 1rem;
-    border-radius: 40px;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: var(--color-texto);
-}
+        .user-info-custom {
+            background-color: var(--color-fondo-card);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--color-texto);
+        }
 
-.user-info-custom i {
-    color: var(--color-primario);
-    font-size: 1.2rem;
-}
+        .user-info-custom i {
+            color: var(--color-primario);
+            font-size: 1.2rem;
+        }
 
-/* ========== BARRA DE ACCIONES ========== */
-.action-bar-sticky {
-    position: sticky;
-    top: 76px;
-    z-index: 1040;
-    background: var(--color-fondo);
-    padding: 18px 0;
-    border-bottom: 3px solid var(--color-primario);
-    margin-bottom: 25px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
+        /* ========== BARRA DE ACCIONES ========== */
+        .action-bar-sticky {
+            position: sticky;
+            top: 76px;
+            z-index: 1040;
+            background: var(--color-fondo);
+            padding: 18px 0;
+            border-bottom: 3px solid var(--color-primario);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
 
-.btn-group-modern {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    justify-content: center;
-    align-items: center;
-}
+        .btn-group-modern {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            align-items: center;
+        }
 
-.btn-modern {
-    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%);
-    border: none;
-    border-radius: 50px;
-    padding: 14px 28px;
-    color: #0B0A08;
-    font-weight: 700;
-    font-size: 15px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(var(--color-primario-rgb), 0.35);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    text-decoration: none;
-    min-width: 180px;
-    flex: 1 1 auto;
-    letter-spacing: 0.3px;
-    position: relative;
-    overflow: hidden;
-}
+        .btn-modern {
+            background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            color: #0B0A08;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(var(--color-primario-rgb), 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            min-width: 180px;
+            flex: 0 1 auto;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
 
-.btn-modern::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-}
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
 
-.btn-modern:hover::before {
-    left: 100%;
-}
+        .btn-modern:hover::before {
+            left: 100%;
+        }
 
-.btn-modern:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 8px 30px rgba(var(--color-primario-rgb), 0.5);
-    background: linear-gradient(135deg, var(--color-primario-claro) 0%, var(--color-primario) 100%);
-}
+        .btn-modern:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(var(--color-primario-rgb), 0.5);
+            background: linear-gradient(135deg, var(--color-primario-claro) 0%, var(--color-primario) 100%);
+        }
 
-/* ========== TARJETAS DE ESTADÍSTICAS ========== */
-.stat-card {
-    background-color: var(--color-fondo-secundario);
-    border-radius: 20px;
-    border-left: 4px solid var(--color-primario);
-    transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%;
-    padding: 1.5rem;
-    text-align: center;
-}
+        /* ========== TARJETAS DE ESTADÍSTICAS ========== */
+        .stat-card {
+            background-color: var(--color-fondo-secundario);
+            border-radius: 20px;
+            border-left: 4px solid var(--color-primario);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            padding: 1.5rem;
+            text-align: center;
+        }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px -5px rgba(var(--color-primario-rgb), 0.2);
-}
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(var(--color-primario-rgb), 0.2);
+        }
 
-.stat-card i {
-    color: var(--color-primario);
-    font-size: 2.5rem;
-}
+        .stat-card i {
+            color: var(--color-primario);
+            font-size: 2.5rem;
+        }
 
-.stat-card h5 {
-    color: var(--color-primario-claro);
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+        .stat-card h5 {
+            color: var(--color-primario-claro);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.stat-card h2 {
-    color: var(--color-primario);
-    font-size: 2.2rem;
-    font-weight: bold;
-}
+        .stat-card h2 {
+            color: var(--color-primario);
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
 
-/* ========== MODALES ========== */
-.modal-content-custom {
-    background-color: var(--color-fondo-secundario) !important;
-    border: 1px solid rgba(var(--color-primario-rgb), 0.3) !important;
-}
+        /* ========== MODALES ========== */
+        .modal-content-custom {
+            background-color: var(--color-fondo-secundario) !important;
+            border: 1px solid rgba(var(--color-primario-rgb), 0.3) !important;
+        }
 
-.modal-header-custom {
-    border-bottom: 2px solid var(--color-primario) !important;
-    padding: 1rem 1.5rem;
-}
+        .modal-header-custom {
+            border-bottom: 2px solid var(--color-primario) !important;
+            padding: 1rem 1.5rem;
+        }
 
-.modal-footer-custom {
-    border-top: 2px solid var(--color-primario) !important;
-    padding: 1rem 1.5rem;
-}
+        .modal-footer-custom {
+            border-top: 2px solid var(--color-primario) !important;
+            padding: 1rem 1.5rem;
+        }
 
-.bg-dark-input {
-    background-color: var(--color-fondo-card) !important;
-    border: 1px solid var(--color-borde) !important;
-    color: var(--color-texto) !important;
-}
+        .bg-dark-input {
+            background-color: var(--color-fondo-card) !important;
+            border: 1px solid var(--color-borde) !important;
+            color: var(--color-texto) !important;
+        }
 
-.bg-dark-input:focus {
-    background-color: var(--color-hover-card) !important;
-    border-color: var(--color-primario) !important;
-    box-shadow: 0 0 0 0.2rem rgba(var(--color-primario-rgb), 0.25);
-}
+        .bg-dark-input:focus {
+            background-color: var(--color-hover-card) !important;
+            border-color: var(--color-primario) !important;
+            box-shadow: 0 0 0 0.2rem rgba(var(--color-primario-rgb), 0.25);
+        }
 
-.form-label-custom {
-    color: var(--color-primario-claro);
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
+        .form-label-custom {
+            color: var(--color-primario-claro);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
 
-/* ========== UTILIDADES ========== */
-.text-yellow {
-    color: var(--color-primario) !important;
-}
-.text-light-brown {
-    color: var(--color-texto-secundario) !important;
-}
+        /* ========== UTILIDADES ========== */
+        .text-yellow {
+            color: var(--color-primario) !important;
+        }
 
-/* ========== RESPONSIVE ========== */
-@media (max-width: 768px) {
-    .navbar-brand-custom {
-        font-size: 1.3rem;
-    }
-    .nav-btn, .btn-logout-custom {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.8rem;
-    }
-    .action-bar-sticky {
-        top: 70px;
-        padding: 12px 0;
-    }
-    .btn-modern {
-        font-size: 13px;
-        padding: 11px 18px;
-        min-width: 140px;
-    }
-    .stat-card h2 {
-        font-size: 1.8rem;
-    }
-}
+        .text-light-brown {
+            color: var(--color-texto-secundario) !important;
+        }
 
-@media (max-width: 576px) {
-    .btn-group-modern {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    .btn-modern {
-        font-size: 14px;
-        padding: 13px 20px;
-        min-width: unset;
-        width: 100%;
-    }
-    .stat-card {
-        padding: 1rem;
-    }
-    .stat-card h2 {
-        font-size: 1.5rem;
-    }
-}
-/* ========== TABLAS - ESTILO OSCURO COMO REPORTES ========== */
-.card-custom {
-    background-color: var(--color-fondo-secundario) !important;
-    border-radius: 20px !important;
-    border: 1px solid rgba(var(--color-primario-rgb), 0.2) !important;
-    margin-bottom: 2rem;
-    overflow: hidden;
-}
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .navbar-brand-custom {
+                font-size: 1.3rem;
+            }
 
-.card-header-custom {
-    background-color: var(--color-fondo) !important;
-    border-bottom: 2px solid var(--color-primario) !important;
-    padding: 1rem 1.25rem;
-    font-weight: 600;
-    color: var(--color-primario-claro) !important;
-}
+            .nav-btn,
+            .btn-logout-custom {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.8rem;
+            }
 
-.table-custom {
-    background-color: var(--color-fondo-secundario) !important;
-    margin-bottom: 0;
-}
+            .action-bar-sticky {
+                top: 70px;
+                padding: 12px 0;
+            }
 
-.table-custom thead th {
-    color: var(--color-primario-claro) !important;
-    border-bottom: 2px solid var(--color-primario) !important;
-    font-weight: 600 !important;
-    padding: 0.75rem 1rem;
-    background-color: var(--color-fondo) !important;
-}
+            .btn-modern {
+                font-size: 13px;
+                padding: 11px 18px;
+                min-width: 140px;
+            }
 
-.table-custom tbody td {
-    color: var(--color-texto) !important;
-    vertical-align: middle;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(63, 46, 34, 0.3) !important;
-    background-color: var(--color-fondo-secundario) !important;
-}
+            .stat-card h2 {
+                font-size: 1.8rem;
+            }
+        }
 
-.table-custom tbody tr {
-    background-color: var(--color-fondo-secundario) !important;
-    transition: background-color 0.2s ease;
-}
+        @media (max-width: 576px) {
+            /* Antes cada boton ocupaba todo el ancho con mucho padding
+               vertical, apilados uno debajo del otro: entre los 3
+               ("Agregar Producto", "Ver Historial", "Reportes") se comian
+               media pantalla antes de llegar a cualquier contenido. Con 2
+               columnas y menos relleno entran en bastante menos alto. */
+            .btn-group-modern {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
 
-.table-custom tbody tr:hover td {
-    background-color: var(--color-fondo-card) !important;
-}
+            .btn-modern {
+                font-size: 12.5px;
+                padding: 9px 10px;
+                min-width: unset;
+                width: 100%;
+                box-shadow: none;
+            }
 
-.table-custom tbody tr:hover {
-    background-color: var(--color-fondo-card) !important;
-}
+            .stat-card {
+                padding: 1rem;
+            }
 
-/* ========== BOTONES EN TABLA ========== */
-.table-custom .btn-outline-warning {
-    color: var(--color-primario) !important;
-    border-color: var(--color-primario) !important;
-}
+            .stat-card h2 {
+                font-size: 1.5rem;
+            }
+        }
 
-.table-custom .btn-outline-warning:hover {
-    background-color: var(--color-primario) !important;
-    color: #0B0A08 !important;
-}
+        /* ========== TABLAS - ESTILO OSCURO COMO REPORTES ========== */
+        .card-custom {
+            background-color: var(--color-fondo-secundario) !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(var(--color-primario-rgb), 0.2) !important;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
 
-.table-custom .btn-outline-info {
-    color: #0dcaf0 !important;
-    border-color: #0dcaf0 !important;
-}
+        .card-header-custom {
+            background-color: var(--color-fondo) !important;
+            border-bottom: 2px solid var(--color-primario) !important;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            color: var(--color-primario-claro) !important;
+        }
 
-.table-custom .btn-outline-info:hover {
-    background-color: #0dcaf0 !important;
-    color: #0B0A08 !important;
-}
+        .table-custom {
+            background-color: var(--color-fondo-secundario) !important;
+            margin-bottom: 0;
+        }
 
-.table-custom .btn-outline-danger {
-    color: #dc3545 !important;
-    border-color: #dc3545 !important;
-}
+        .table-custom thead th {
+            color: var(--color-primario-claro) !important;
+            border-bottom: 2px solid var(--color-primario) !important;
+            font-weight: 600 !important;
+            padding: 0.75rem 1rem;
+            background-color: var(--color-fondo) !important;
+        }
 
-.table-custom .btn-outline-danger:hover {
-    background-color: #dc3545 !important;
-    color: #fff !important;
-}
+        .table-custom tbody td {
+            color: var(--color-texto) !important;
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(63, 46, 34, 0.3) !important;
+            background-color: var(--color-fondo-secundario) !important;
+        }
 
-.table-custom .btn-group .btn {
-    transition: all 0.2s ease;
-}
+        .table-custom tbody tr {
+            background-color: var(--color-fondo-secundario) !important;
+            transition: background-color 0.2s ease;
+        }
 
-.table-custom .btn-group .btn:hover {
-    transform: scale(1.1);
-}
+        .table-custom tbody tr:hover td {
+            background-color: var(--color-fondo-card) !important;
+        }
 
-/* ========== BADGES ========== */
-.badge-stock-bajo {
-    background-color: #dc3545 !important;
-    color: white !important;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
+        .table-custom tbody tr:hover {
+            background-color: var(--color-fondo-card) !important;
+        }
 
-.badge-stock-medio {
-    background-color: #ffc107 !important;
-    color: #0B0A08 !important;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
+        /* ========== BOTONES EN TABLA ========== */
+        .table-custom .btn-outline-warning {
+            color: var(--color-primario) !important;
+            border-color: var(--color-primario) !important;
+        }
 
-.badge-stock-bueno {
-    background-color: #198754 !important;
-    color: white !important;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-}
+        .table-custom .btn-outline-warning:hover {
+            background-color: var(--color-primario) !important;
+            color: #0B0A08 !important;
+        }
 
-/* ========== BADGES MOVIMIENTOS ========== */
-.badge.bg-success {
-    background-color: #198754 !important;
-    color: white !important;
-}
+        .table-custom .btn-outline-info {
+            color: #0dcaf0 !important;
+            border-color: #0dcaf0 !important;
+        }
 
-.badge.bg-warning {
-    background-color: #ffc107 !important;
-    color: #0B0A08 !important;
-}
+        .table-custom .btn-outline-info:hover {
+            background-color: #0dcaf0 !important;
+            color: #0B0A08 !important;
+        }
 
-.badge.bg-info {
-    background-color: #0dcaf0 !important;
-    color: #0B0A08 !important;
-}
+        .table-custom .btn-outline-danger {
+            color: #dc3545 !important;
+            border-color: #dc3545 !important;
+        }
+
+        .table-custom .btn-outline-danger:hover {
+            background-color: #dc3545 !important;
+            color: #fff !important;
+        }
+
+        .table-custom .btn-group .btn {
+            transition: all 0.2s ease;
+        }
+
+        .table-custom .btn-group .btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* ========== BADGES ========== */
+        .badge-stock-bajo,
+        .badge-stock-medio,
+        .badge-stock-bueno {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .badge-stock-bajo {
+            background-color: #dc3545 !important;
+            color: white !important;
+        }
+
+        .badge-stock-medio {
+            background-color: #ffc107 !important;
+            color: #0B0A08 !important;
+        }
+
+        .badge-stock-bueno {
+            background-color: #198754 !important;
+            color: white !important;
+        }
+
+        /* ========== BADGES MOVIMIENTOS ========== */
+        .badge.bg-success {
+            background-color: #198754 !important;
+            color: white !important;
+        }
+
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #0B0A08 !important;
+        }
+
+        .badge.bg-info {
+            background-color: #0dcaf0 !important;
+            color: #0B0A08 !important;
+        }
     </style>
 </head>
 
 <body class="tema-admin">
 
-    <!-- ========== NAVBAR ========== -->
+     <!-- ========== NAVBAR ========== -->
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+
                 <div class="navbar-brand-custom">
-    <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
-</div>
+                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
+                    Barber <span>Springfield</span>
+                </div>
+
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <div class="user-info-custom">
-                        <i class="bi bi-person-circle"></i>
-                        <span>{{ user.username }}</span>
-                    </div>
+
+                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
+                        <i class="bi bi-bell"></i>
+                        {% if notificaciones_no_leidas %}
+                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
+                    </a>
+
+
                     <a href="{% url 'administracion:panel_admin' %}" class="nav-btn">
                         <i class="bi bi-speedometer2"></i> Panel Admin
                     </a>
+
                     <a href="{% url 'inventario:dashboard' %}" class="nav-btn active">
                         <i class="bi bi-boxes"></i> Inventario
                     </a>
-                    <button
-                        type="button"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        title="Cambiar tema"
-                        aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+
+                    <a href="{% url 'administracion:cierre_caja' %}" class="nav-btn">
+                        <i class="bi bi-cash-coin"></i> Cierre de Caja
+                    </a>
+
+
+                    <button class="btn-logout-custom"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalCerrarSesion">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
+
+
+                    <button type="button"
+                            id="themeToggle"
+                            class="theme-toggle"
+                            title="Cambiar tema"
+                            aria-label="Cambiar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -476,23 +516,29 @@ body {
     <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
+
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body text-center py-4">
                     <i class="bi bi-check-circle-fill text-yellow fs-1 mb-3 d-inline-block"></i>
                     <p class="fs-5">¿Estás seguro que deseas cerrar sesión?</p>
                     <p class="text-light-brown">Serás redirigido al inicio.</p>
                 </div>
+
                 <div class="modal-footer modal-footer-custom">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;" onclick="window.location.href='{% url 'logout' %}'">
+                    <button class="btn-modern"
+                            style="min-width:auto; padding:10px 30px; flex:0 1 auto;"
+                            onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -517,10 +563,10 @@ body {
         <!-- Mensajes -->
         {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle"></i> {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             {% endfor %}
         {% endif %}
 
@@ -528,24 +574,29 @@ body {
         <div class="action-bar-sticky">
             <div class="container">
                 <div class="btn-group-modern">
+
                     <button class="btn-modern" data-bs-toggle="modal" data-bs-target="#modalAgregarProducto">
                         <i class="bi bi-box-seam"></i>
                         <span>Agregar Producto</span>
                     </button>
+
                     <a href="{% url 'inventario:historial' %}" class="btn-modern">
                         <i class="bi bi-clock-history"></i>
                         <span>Ver Historial</span>
                     </a>
+
                     <a href="#reportes" class="btn-modern">
                         <i class="bi bi-file-earmark-bar-graph"></i>
                         <span>Reportes</span>
                     </a>
+
                 </div>
             </div>
         </div>
 
         <!-- ========== TARJETAS DE ESTADÍSTICAS ========== -->
         <div class="row g-4 mb-4">
+
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card text-center">
                     <i class="bi bi-box-seam"></i>
@@ -553,6 +604,7 @@ body {
                     <h2>{{ total_productos }}</h2>
                 </div>
             </div>
+
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card text-center" style="border-left-color: #198754;">
                     <i class="bi bi-check-circle" style="color: #198754;"></i>
@@ -560,6 +612,7 @@ body {
                     <h2>{{ stock_total }}</h2>
                 </div>
             </div>
+
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card text-center" style="border-left-color: #dc3545;">
                     <i class="bi bi-exclamation-triangle" style="color: #dc3545;"></i>
@@ -567,6 +620,7 @@ body {
                     <h2 class="text-danger">{{ productos_bajo_stock }}</h2>
                 </div>
             </div>
+
             <div class="col-md-3 col-sm-6">
                 <div class="stat-card text-center" style="border-left-color: #0d6efd;">
                     <i class="bi bi-arrow-left-right" style="color: #0d6efd;"></i>
@@ -574,14 +628,17 @@ body {
                     <h2>{{ ultimos_movimientos|length }}</h2>
                 </div>
             </div>
+
         </div>
 
         <!-- ========== TABLA DE PRODUCTOS ========== -->
-        <div class="card-custom">
+        <div class="card-custom mb-4">
+
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-list-ul"></i> Productos Registrados</span>
                 <span class="badge bg-warning text-dark">{{ productos|length }} productos</span>
             </div>
+
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-custom table-hover mb-0">
@@ -598,164 +655,179 @@ body {
                         </thead>
                         <tbody>
                             {% for producto in productos %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>
-                                    <strong>{{ producto.nombre }}</strong>
-                                    {% if producto.descripcion %}
-                                    <br><small class="text-light-brown">{{ producto.descripcion|truncatechars:30 }}</small>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="fw-bold {% if producto.stock_actual <= producto.stock_minimo %}text-danger{% endif %}">
-                                        {{ producto.stock_actual }}
-                                    </span>
-                                </td>
-                                <td>{{ producto.stock_minimo }}</td>
-                                <td>${{ producto.precio_unitario|floatformat:2 }}</td>
-                                <td>
-                                    {% if producto.stock_actual <= 0 %}
-                                        <span class="badge-stock-bajo"><i class="bi bi-x-circle"></i> Agotado</span>
-                                    {% elif producto.stock_actual <= producto.stock_minimo %}
-                                        <span class="badge-stock-bajo"><i class="bi bi-exclamation-circle"></i> Bajo stock</span>
-                                    {% elif producto.stock_actual <= producto.stock_minimo|add:"5" %}
-                                        <span class="badge-stock-medio"><i class="bi bi-dash-circle"></i> Medio</span>
-                                    {% else %}
-                                        <span class="badge-stock-bueno"><i class="bi bi-check-circle"></i> Suficiente</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <button type="button" 
-                                            class="btn btn-warning" 
-                                            title="Registrar movimiento"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#modalMovimiento"
-                                            data-id="{{ producto.id }}"
-                                            data-nombre="{{ producto.nombre }}"
-                                            data-stock="{{ producto.stock_actual }}">
-                                            <i class="bi bi-arrow-left-right"></i>
-                                        </button>
-                                        <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-info" title="Editar">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <button type="button"
-                                            class="btn btn-outline-danger"
-                                            title="Eliminar"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalEliminarProducto"
-                                            data-id="{{ producto.id }}"
-                                            data-nombre="{{ producto.nombre }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <strong>{{ producto.nombre }}</strong>
+                                        {% if producto.descripcion %}
+                                            <br><small class="text-light-brown">{{ producto.descripcion|truncatechars:30 }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold {% if producto.stock_actual <= producto.stock_minimo %}text-danger{% endif %}">
+                                            {{ producto.stock_actual }}
+                                        </span>
+                                    </td>
+                                    <td>{{ producto.stock_minimo }}</td>
+                                    <td>${{ producto.precio_unitario|floatformat:2 }}</td>
+                                    <td>
+                                        {% if producto.stock_actual <= 0 %}
+                                            <span class="badge-stock-bajo"><i class="bi bi-x-circle"></i> Agotado</span>
+                                        {% elif producto.stock_actual <= producto.stock_minimo %}
+                                            <span class="badge-stock-bajo"><i class="bi bi-exclamation-circle"></i> Bajo stock</span>
+                                        {% elif producto.stock_actual <= producto.stock_minimo|add:"5" %}
+                                            <span class="badge-stock-medio"><i class="bi bi-dash-circle"></i> Medio</span>
+                                        {% else %}
+                                            <span class="badge-stock-bueno"><i class="bi bi-check-circle"></i> Suficiente</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+
+                                            <button type="button"
+                                                    class="btn btn-warning"
+                                                    title="Registrar movimiento"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalMovimiento"
+                                                    data-id="{{ producto.id }}"
+                                                    data-nombre="{{ producto.nombre }}"
+                                                    data-stock="{{ producto.stock_actual }}">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </button>
+
+                                            <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-info" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger"
+                                                    title="Eliminar"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEliminarProducto"
+                                                    data-id="{{ producto.id }}"
+                                                    data-nombre="{{ producto.nombre }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+                                </tr>
                             {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center text-light-brown py-5">
-                                    <i class="bi bi-box-seam fs-1 d-block mb-3" style="color: var(--color-texto-secundario);"></i>
-                                    <h5>No hay productos registrados</h5>
-                                    <p class="mb-0">Haz clic en "Agregar Producto" para comenzar.</p>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="7" class="text-center text-light-brown py-5">
+                                        <i class="bi bi-box-seam fs-1 d-block mb-3" style="color: var(--color-texto-secundario);"></i>
+                                        <h5>No hay productos registrados</h5>
+                                        <p class="mb-0">Haz clic en "Agregar Producto" para comenzar.</p>
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
 
         <!-- ========== ÚLTIMOS MOVIMIENTOS ========== -->
         {% if ultimos_movimientos %}
-        <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-clock-history"></i> Últimos Movimientos</span>
-                <span class="badge bg-info text-dark">{{ ultimos_movimientos|length }} registros</span>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-custom table-sm table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Tipo</th>
-                                <th>Cantidad</th>
-                                <th>Proveedor</th>
-                                <th>Usuario</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for mov in ultimos_movimientos %}
-                            <tr>
-                                <td>{{ mov.producto.nombre }}</td>
-                                <td>
-                                    <span class="badge {% if mov.tipo == 'ENTRADA' %}bg-success{% elif mov.tipo == 'SALIDA' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">
-                                        <i class="bi {% if mov.tipo == 'ENTRADA' %}bi-arrow-down{% elif mov.tipo == 'SALIDA' %}bi-arrow-up{% else %}bi-pencil{% endif %}"></i>
-                                        {{ mov.get_tipo_display }}
-                                    </span>
-                                </td>
-                                <td>{{ mov.cantidad }}</td>
-                                <td>{{ mov.proveedor|default:"-" }}</td>
-                                <td>{{ mov.usuario.username|default:"Sistema" }}</td>
-                                <td>{{ mov.fecha|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="card-custom">
+
+                <div class="card-header-custom d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-clock-history"></i> Últimos Movimientos</span>
+                    <span class="badge bg-info text-dark">{{ ultimos_movimientos|length }} registros</span>
                 </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-custom table-sm table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Proveedor</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mov in ultimos_movimientos %}
+                                    <tr>
+                                        <td>{{ mov.producto.nombre }}</td>
+                                        <td>
+                                            <span class="badge {% if mov.tipo == 'ENTRADA' %}bg-success{% elif mov.tipo == 'SALIDA' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">
+                                                <i class="bi {% if mov.tipo == 'ENTRADA' %}bi-arrow-down{% elif mov.tipo == 'SALIDA' %}bi-arrow-up{% else %}bi-pencil{% endif %}"></i>
+                                                {{ mov.get_tipo_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ mov.cantidad }}</td>
+                                        <td>{{ mov.proveedor|default:"-" }}</td>
+                                        <td>{{ mov.usuario.username|default:"Sistema" }}</td>
+                                        <td>{{ mov.fecha|date:"d/m/Y H:i" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
-        </div>
         {% endif %}
 
         <!-- ========== REPORTES ========== -->
-<div id="reportes" class="card-custom">
-    <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <span><i class="bi bi-file-earmark-bar-graph"></i> Reportes de Inventario</span>
-        <a href="{% url 'inventario:reporte_pdf' %}" class="btn btn-danger btn-sm">
-            <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
-        </a>
-    </div>
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="p-3 bg-dark rounded border border-secondary">
-                    <h6 class="text-yellow"><i class="bi bi-exclamation-triangle"></i> Productos con bajo stock</h6>
-                    <ul class="list-unstyled mb-0">
-                        {% for p in productos %}
-                            {% if p.stock_actual <= p.stock_minimo %}
-                            <li class="text-light-brown py-1">
-                                <span class="text-danger">●</span> {{ p.nombre }} - Stock: {{ p.stock_actual }}
-                            </li>
-                            {% endif %}
-                        {% empty %}
-                            <li class="text-light-brown">No hay productos con bajo stock.</li>
-                        {% endfor %}
-                    </ul>
+        <div id="reportes" class="card-custom">
+
+            <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span><i class="bi bi-file-earmark-bar-graph"></i> Reportes de Inventario</span>
+                <a href="{% url 'inventario:reporte_pdf' %}" class="btn btn-danger btn-sm">
+                    <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-dark rounded border border-secondary">
+                            <h6 class="text-yellow"><i class="bi bi-exclamation-triangle"></i> Productos con bajo stock</h6>
+                            <ul class="list-unstyled mb-0">
+                                {% for p in productos %}
+                                    {% if p.stock_actual <= p.stock_minimo %}
+                                        <li class="text-light-brown py-1">
+                                            <span class="text-danger">●</span> {{ p.nombre }} - Stock: {{ p.stock_actual }}
+                                        </li>
+                                    {% endif %}
+                                {% empty %}
+                                    <li class="text-light-brown">No hay productos con bajo stock.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-dark rounded border border-secondary">
+                            <h6 class="text-yellow"><i class="bi bi-check-circle"></i> Resumen de stock</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="text-light-brown py-1">
+                                    <span class="text-success">●</span> Stock total: <strong class="text-white">{{ stock_total }}</strong>
+                                </li>
+                                <li class="text-light-brown py-1">
+                                    <span class="text-warning">●</span> Productos activos: <strong class="text-white">{{ total_productos }}</strong>
+                                </li>
+                                <li class="text-light-brown py-1">
+                                    <span class="text-danger">●</span> Productos críticos: <strong class="text-white">{{ productos_bajo_stock }}</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="p-3 bg-dark rounded border border-secondary">
-                    <h6 class="text-yellow"><i class="bi bi-check-circle"></i> Resumen de stock</h6>
-                    <ul class="list-unstyled mb-0">
-                        <li class="text-light-brown py-1">
-                            <span class="text-success">●</span> Stock total: <strong class="text-white">{{ stock_total }}</strong>
-                        </li>
-                        <li class="text-light-brown py-1">
-                            <span class="text-warning">●</span> Productos activos: <strong class="text-white">{{ total_productos }}</strong>
-                        </li>
-                        <li class="text-light-brown py-1">
-                            <span class="text-danger">●</span> Productos críticos: <strong class="text-white">{{ productos_bajo_stock }}</strong>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+
         </div>
-    </div>
-</div>
 
     </div><!-- /.container py-4 -->
+
 
     <!-- ======================================================================== -->
     <!-- ========== MODALES ========== -->
@@ -765,21 +837,26 @@ body {
     <div class="modal fade" id="modalAgregarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
+
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow"><i class="bi bi-plus-circle"></i> Nuevo Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <form method="POST" action="{% url 'inventario:agregar' %}">
                     {% csrf_token %}
+
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label-custom">Nombre del producto *</label>
                             <input type="text" name="nombre" class="form-control bg-dark-input" required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label-custom">Descripción</label>
                             <textarea name="descripcion" class="form-control bg-dark-input" rows="3"></textarea>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock inicial *</label>
@@ -790,11 +867,13 @@ body {
                                 <input type="number" name="stock_minimo" class="form-control bg-dark-input" required min="0" value="5">
                             </div>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label-custom">Precio unitario *</label>
                             <input type="number" name="precio_unitario" class="form-control bg-dark-input" required step="0.01" min="0">
                         </div>
                     </div>
+
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
@@ -802,6 +881,7 @@ body {
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -810,21 +890,26 @@ body {
     <div class="modal fade" id="modalEditarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
+
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <form method="POST" id="formEditarProducto">
                     {% csrf_token %}
+
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label-custom">Nombre del producto *</label>
                             <input type="text" name="nombre" id="editProductoNombre" class="form-control bg-dark-input" required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label-custom">Descripción</label>
                             <textarea name="descripcion" id="editProductoDescripcion" class="form-control bg-dark-input" rows="3"></textarea>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock actual *</label>
@@ -835,11 +920,13 @@ body {
                                 <input type="number" name="stock_minimo" id="editProductoMinimo" class="form-control bg-dark-input" required min="0">
                             </div>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label-custom">Precio unitario *</label>
                             <input type="number" name="precio_unitario" id="editProductoPrecio" class="form-control bg-dark-input" required step="0.01" min="0">
                         </div>
                     </div>
+
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
@@ -847,6 +934,7 @@ body {
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -855,20 +943,24 @@ body {
     <div class="modal fade" id="modalMovimiento" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
+
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow"><i class="bi bi-arrow-left-right"></i> Registrar Movimiento</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <form method="POST" id="formMovimiento">
                     {% csrf_token %}
+
                     <div class="modal-body">
+
                         <div class="alert alert-info bg-dark text-light-brown border-warning">
                             <i class="bi bi-info-circle"></i>
                             Producto: <strong class="text-yellow" id="movimientoProductoNombre"></strong>
                             <br>
                             Stock actual: <strong class="text-white" id="movimientoStockActual"></strong>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label-custom">Tipo de movimiento *</label>
                             <select name="tipo" id="movimientoTipo" class="form-select bg-dark-input" required>
@@ -877,28 +969,30 @@ body {
                                 <option value="AJUSTE">⚙️ Ajuste (Corregir stock)</option>
                             </select>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label-custom">Cantidad *</label>
                             <input type="number" name="cantidad" id="movimientoCantidad" class="form-control bg-dark-input" required min="1">
                             <small class="text-light-brown" id="movimientoAyudaCantidad">Ingresa la cantidad para entrada/salida o el nuevo stock para ajuste</small>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label-custom">Proveedor</label>
                             <input type="text" name="proveedor" id="movimientoProveedor" class="form-control bg-dark-input" placeholder="Nombre del proveedor (opcional)">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label-custom">Fecha del movimiento</label>
                             <input type="datetime-local" name="fecha" id="movimientoFecha" class="form-control bg-dark-input">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label-custom">Nota (opcional)</label>
                             <textarea name="nota" id="movimientoNota" class="form-control bg-dark-input" rows="2" placeholder="Observaciones del movimiento"></textarea>
                         </div>
+
                     </div>
+
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
@@ -906,6 +1000,7 @@ body {
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -914,37 +1009,45 @@ body {
     <div class="modal fade" id="modalEliminarProducto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-danger">
+
                 <div class="modal-header modal-header-danger">
                     <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle"></i> Eliminar Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <form method="POST" id="formEliminarProducto">
                     {% csrf_token %}
+
                     <div class="modal-body text-center">
                         <i class="bi bi-trash3 text-danger fs-1 mb-3 d-inline-block"></i>
                         <p class="fs-5">¿Estás seguro de eliminar este producto?</p>
                         <p class="text-light-brown">Producto: <strong class="text-white" id="eliminarProductoNombre"></strong></p>
                         <p class="text-warning small">⚠️ Esta acción no se puede deshacer.</p>
                     </div>
+
                     <div class="modal-footer modal-footer-danger">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-danger-modern">Eliminar Producto</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 
     <!-- ========== SCRIPTS ========== -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         // ===== MODAL EDITAR PRODUCTO =====
-        document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
+        document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function (e) {
             const btn = e.relatedTarget;
+
             // El modal tambien puede abrirse por JS (al restaurar un
             // formulario tras un error). En ese caso no hay boton de
             // origen y no se debe sobrescribir lo que el usuario escribio.
             if (!btn) { return; }
+
             document.getElementById('editProductoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editProductoDescripcion').value = btn.dataset.descripcion || '';
             document.getElementById('editProductoStock').value = btn.dataset.stock || 0;
@@ -954,12 +1057,14 @@ body {
         });
 
         // ===== MODAL MOVIMIENTO =====
-        document.getElementById('modalMovimiento').addEventListener('show.bs.modal', function(e) {
+        document.getElementById('modalMovimiento').addEventListener('show.bs.modal', function (e) {
             const btn = e.relatedTarget;
+
             // El modal tambien puede abrirse por JS (al restaurar un
             // formulario tras un error). En ese caso no hay boton de
             // origen y no se debe sobrescribir lo que el usuario escribio.
             if (!btn) { return; }
+
             document.getElementById('movimientoProductoNombre').textContent = btn.dataset.nombre || 'Producto';
             document.getElementById('movimientoStockActual').textContent = btn.dataset.stock || 0;
             document.getElementById('formMovimiento').action = `/inventario/movimiento/${btn.dataset.id}/`;
@@ -967,7 +1072,7 @@ body {
             document.getElementById('movimientoCantidad').value = '';
             document.getElementById('movimientoProveedor').value = '';
             document.getElementById('movimientoNota').value = '';
-            
+
             // Establecer fecha actual
             const now = new Date();
             const year = now.getFullYear();
@@ -979,7 +1084,7 @@ body {
         });
 
         // Cambiar texto de ayuda según tipo de movimiento
-        document.getElementById('movimientoTipo').addEventListener('change', function() {
+        document.getElementById('movimientoTipo').addEventListener('change', function () {
             const ayuda = document.getElementById('movimientoAyudaCantidad');
             if (this.value === 'AJUSTE') {
                 ayuda.textContent = 'Ingresa el NUEVO stock que deseas establecer';
@@ -989,18 +1094,21 @@ body {
         });
 
         // ===== MODAL ELIMINAR PRODUCTO =====
-        document.getElementById('modalEliminarProducto').addEventListener('show.bs.modal', function(e) {
+        document.getElementById('modalEliminarProducto').addEventListener('show.bs.modal', function (e) {
             const btn = e.relatedTarget;
+
             // El modal tambien puede abrirse por JS (al restaurar un
             // formulario tras un error). En ese caso no hay boton de
             // origen y no se debe sobrescribir lo que el usuario escribio.
             if (!btn) { return; }
+
             document.getElementById('eliminarProductoNombre').textContent = btn.dataset.nombre || 'Producto';
             document.getElementById('formEliminarProducto').action = `/inventario/eliminar/${btn.dataset.id}/`;
         });
     </script>
 
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
+
 </body>
 
 </html>

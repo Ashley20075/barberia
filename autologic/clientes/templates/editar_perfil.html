@@ -13,52 +13,50 @@
 </head>
 
 <body class="tema-cliente">
-
+<!-- ========== NAVBAR UNIFICADA ========== -->
     <nav class="navbar-custom">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
-            <div class="navbar-brand-custom">
-                <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
-            </div>
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
 
-            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="navbar-brand-custom">
+                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
+                    Barber <span>Springfield</span>
+                </div>
 
-                <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
-                    <i class="bi bi-bell"></i>
-                    {% if notificaciones_no_leidas %}
-                        <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
-                    {% endif %}
-                </a>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                <a href="{% url 'panel_cliente' %}" class="nav-btn">
-                    <i class="bi bi-person"></i> Mi Perfil
-                </a>
+                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
+                        <i class="bi bi-bell"></i>
+                        {% if notificaciones_no_leidas %}
+                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
+                    </a>
 
-                <a href="{% url 'editar_perfil' %}" class="nav-btn active">
-                    <i class="bi bi-gear"></i> Editar Perfil
-                </a>
+                    <a href="{% url 'panel_cliente' %}" class="nav-btn">
+                        <i class="bi bi-person"></i> Mi Perfil
+                    </a>
 
-                <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn">
-                    <i class="bi bi-stars"></i> AutoAI
-                </a>
+                    <a href="{% url 'editar_perfil' %}" class="nav-btn active">
+                        <i class="bi bi-gear"></i> Editar Perfil
+                    </a>
 
-                <button
-                    type="button"
-                    id="themeToggle"
-                    class="theme-toggle"
-                    title="Cambiar tema"
-                    aria-label="Cambiar tema">
-                    <i class="bi bi-moon-fill"></i>
-                </button>
+                    <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn">
+                        <i class="bi bi-stars"></i> AutoAI
+                    </a>
 
-                <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                </button>
+                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
 
+                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+
+
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">

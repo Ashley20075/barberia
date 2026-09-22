@@ -51,23 +51,37 @@ def login_view(request):
             )
             return render(request, 'login.html', datos)
 
+        # La confirmación del correo es la fuente de verdad para las cuentas
+        # creadas desde el registro o por el administrador. No usamos
+        # last_login para distinguir estados porque una cuenta recién
+        # confirmada todavía no ha iniciado sesión y last_login seguirá en None.
+        cliente = Cliente.objects.filter(user=usuario).first()
         if not usuario.is_active:
-            # Una cuenta recién registrada está inactiva hasta que la
-            # persona abre el enlace que le llegó por correo. Se
-            # distingue de una cuenta desactivada por la barbería, que
-            # ya llegó a iniciar sesión alguna vez.
-            if usuario.last_login is None:
+            if cliente is not None and not cliente.correo_confirmado:
                 messages.error(
                     request,
-                    '❌ Todavía no has confirmado tu correo. Busca el mensaje '
-                    'que te enviamos a "%s" y abre el enlace para activar '
-                    'tu cuenta.' % email
+                    '❌ Todavía no has confirmado tu correo. Revisa la bandeja '
+                    'de "%s" (y la carpeta de spam) o pide que te lo '
+                    'reenviemos.' % email
                 )
+                datos['mostrar_reenvio'] = True
             else:
                 messages.error(
                     request,
                     '❌ Esta cuenta está desactivada. Comunícate con la barbería.'
                 )
+            return render(request, 'login.html', datos)
+
+        # Una cuenta de cliente solo puede iniciar sesión si ya confirmó
+        # el correo. Esto mantiene la regla incluso si alguien cambia
+        # is_active manualmente desde otro lugar.
+        if cliente is not None and not cliente.correo_confirmado:
+            messages.error(
+                request,
+                '❌ Todavía no has confirmado tu correo. Revisa tu bandeja y abre '
+                'el enlace de confirmación.'
+            )
+            datos['mostrar_reenvio'] = True
             return render(request, 'login.html', datos)
 
         # Esta cuenta se creó con "Continuar con Google" y nunca tuvo
@@ -84,9 +98,10 @@ def login_view(request):
             return render(request, 'login.html', datos)
 
         # ---- 4. El correo existe: ahora sí se valida la contraseña ----
-        user = authenticate(request, username=usuario.username, password=password)
-
-        if user is None:
+        # Validamos directamente contra el usuario encontrado por correo.
+        # Así no dependemos de que el username coincida exactamente con el
+        # correo ni de un backend de autenticación personalizado.
+        if not usuario.check_password(password):
             messages.error(
                 request,
                 '❌ La contraseña es incorrecta. Inténtalo de nuevo o usa '
@@ -94,7 +109,8 @@ def login_view(request):
             )
             return render(request, 'login.html', datos)
 
-        login(request, user)
+        login(request, usuario)
+        user = usuario
 
         # SUPERUSUARIO → Admin
         if user.is_superuser:

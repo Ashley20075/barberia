@@ -17,6 +17,7 @@ from citas.models import Cita, Servicio
 from citas.paginacion import paginar
 from clientes.models import Cliente
 from inventario.models import Producto
+from googlecalendar.models import CuentaGoogle
 from inventario.utils import registrar_movimiento
 from clientes.verificacion import enviar_correo_confirmacion, leer_token
 from notificaciones.models import SuscripcionTurno
@@ -74,6 +75,10 @@ def panel_cliente(request):
         "cliente": cliente,
         "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
         "suscripciones_turnos": suscripciones_turnos,
+        # Antes solo el admin y el barbero podían conectar su Google
+        # Calendar; el cliente no tenía ni el botón. Por eso sus citas
+        # nunca le llegaban a SU calendario (sí al del barbero/admin).
+        "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
     })
 
 
@@ -155,8 +160,15 @@ def editar_perfil(request):
             messages.success(request, '✅ Perfil actualizado exitosamente.')
             return redirect('panel_cliente')
 
-        except Exception as e:
-            messages.error(request, f'❌ Error al actualizar: {str(e)}')
+        except IntegrityError:
+            messages.error(
+                request,
+                '❌ Esa cédula ya está registrada por otra cuenta.'
+            )
+            return redirect('editar_perfil')
+
+        except Exception:
+            messages.error(request, '❌ No se pudo actualizar el perfil. Intentá de nuevo.')
             return redirect('editar_perfil')
 
     return render(request, 'editar_perfil.html', {'cliente': cliente})
@@ -536,6 +548,7 @@ def registro(request):
                     cedula=cedula,
                     telefono=telefono,
                     email=email,
+                    correo_confirmado=False,
                 )
 
                 enviado = enviar_correo_confirmacion(request, user)
@@ -554,13 +567,28 @@ def registro(request):
         except CorreoNoEntregado:
             messages.error(
                 request,
-                '❌ No pudimos entregar el correo de confirmación en "%s". '
-                'Revisa que la dirección exista y esté bien escrita.' % email
+                '❌ No pudimos enviar el correo de confirmación a "%s". '
+                'Revisa la configuración SMTP y vuelve a intentarlo.' % email
+            )
+            return render(request, "registro.html", datos)
+
+        except IntegrityError:
+            # Pasa si dos envíos del formulario llegan casi al mismo
+            # tiempo (doble clic, o el navegador reenvía el POST): la
+            # comprobación de "¿ya existe este correo?" de arriba pasa
+            # para los dos, y el segundo choca al guardar. Antes esto
+            # se mostraba tal cual ("UNIQUE constraint failed..."), un
+            # mensaje de base de datos que no le dice nada al usuario.
+            messages.error(
+                request,
+                "❌ Ya existe una cuenta con ese correo o esa cédula. "
+                "Si ya te registraste, iniciá sesión en vez de volver a "
+                "hacerlo."
             )
             return render(request, "registro.html", datos)
 
         except Exception as e:
-            messages.error(request, f"Error al crear usuario: {e}")
+            messages.error(request, "❌ No se pudo crear la cuenta. Intentá de nuevo.")
             return render(request, "registro.html", datos)
 
     return render(request, "registro.html")
@@ -586,17 +614,60 @@ def confirmar_correo(request, token):
         messages.error(request, "❌ Esa cuenta ya no existe.")
         return redirect("registro")
 
-    if user.is_active:
+    # La confirmación del enlace debe dejar los DOS estados sincronizados:
+    # correo_confirmado=True e is_active=True. Esto evita que una cuenta
+    # quede en un estado intermedio si fue creada por el administrador.
+    cliente = Cliente.objects.filter(user=user).first()
+
+    if cliente is not None and cliente.correo_confirmado and user.is_active:
         messages.info(request, "Tu cuenta ya estaba confirmada. Inicia sesión.")
         return redirect("login")
 
     user.is_active = True
     user.save(update_fields=["is_active"])
 
+    if cliente is not None:
+        cliente.correo_confirmado = True
+        cliente.save(update_fields=["correo_confirmado"])
+
     messages.success(
         request,
-        "✅ Correo confirmado. Ya puedes iniciar sesión."
+        "✅ Correo confirmado correctamente. Tu cuenta ya está habilitada. Ya puedes iniciar sesión con tu correo y contraseña."
     )
+    return redirect("login")
+
+
+def reenviar_confirmacion(request):
+    """
+    Vuelve a mandar el correo de confirmación a una cuenta que aún no
+    lo abrió. Pensada para el botón "Reenviar" que aparece en el login
+    cuando alguien intenta entrar con una cuenta sin confirmar.
+    """
+    if request.method != "POST":
+        return redirect("login")
+
+    email = (request.POST.get("email") or "").strip()
+
+    # Se responde igual exista o no la cuenta, para no revelar qué
+    # correos están registrados.
+    generico = (
+        'Si "%s" tiene una cuenta pendiente de confirmar, te '
+        'acabamos de reenviar el enlace.' % email
+    )
+
+    usuario = User.objects.filter(email__iexact=email, is_active=False).first()
+
+    if usuario is not None and usuario.last_login is None:
+        if enviar_correo_confirmacion(request, usuario):
+            messages.success(request, "✅ " + generico)
+        else:
+            messages.error(
+                request,
+                '❌ No pudimos enviar el correo a "%s". Revisa la configuración SMTP.' % email
+            )
+    else:
+        messages.info(request, generico)
+
     return redirect("login")
 
 

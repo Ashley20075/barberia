@@ -17,7 +17,7 @@ from twilio.rest import Client # type: ignore
 import os
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from clientes.models import Cliente
 from googlecalendar.models import CuentaGoogle
 from citas.paginacion import paginar
@@ -280,8 +280,15 @@ def editar_perfil_barbero(request):
             messages.success(request, "✅ Perfil actualizado correctamente.")
             return redirect("barberos:panel_barbero")
 
-        except Exception as e:
-            messages.error(request, f"❌ {e}")
+        except IntegrityError:
+            messages.error(
+                request,
+                "❌ Ese correo o esa cédula ya están en uso por otra cuenta."
+            )
+            return redirect("barberos:editar_perfil_barbero")
+
+        except Exception:
+            messages.error(request, "❌ No se pudo actualizar el perfil. Intentá de nuevo.")
             return redirect("barberos:editar_perfil_barbero")
 
     nombre = barbero.nombre.split()

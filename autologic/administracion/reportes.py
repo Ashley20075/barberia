@@ -11,6 +11,8 @@ fecha_fin (ambas inclusive) y, opcionalmente, por una franja horaria
 (hora_inicio/hora_fin) que se aplica dentro de cada día del rango.
 """
 
+from datetime import datetime
+
 from citas.models import Cita
 
 
@@ -20,10 +22,17 @@ def calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio=None, hora_fin=Non
     finalizados (con sus ingresos), citas canceladas y citas que
     quedaron pendientes/confirmadas sin resolver en ese período.
 
-    Si se indican hora_inicio y hora_fin (strings "HH:MM"), el rango
-    horario se aplica dentro de cada día del período. `hora` se guarda
-    como texto con formato "HH:MM", por lo que la comparación de
-    strings coincide con el orden cronológico.
+    Si se indican hora_inicio y hora_fin, el rango horario se aplica
+    dentro de cada día del período.
+
+    OJO: `hora_inicio`/`hora_fin` llegan del <input type="time"> del
+    filtro en formato 24 horas ("14:30"), pero `Cita.hora` se guarda
+    como texto en formato 12 horas con AM/PM ("02:30 PM") -son cosas
+    que agenda_cita crea con strptime(..., "%I:%M %p"). Comparar esas
+    dos cadenas de texto directamente (hora__gte=hora_inicio) nunca
+    coincide con el orden real del día: por eso el filtro de horas del
+    cierre de caja no traía resultados. Se convierte todo a objetos
+    `time` antes de comparar.
     """
 
     citas_del_rango = (
@@ -32,12 +41,31 @@ def calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio=None, hora_fin=Non
         .order_by("fecha", "hora")
     )
 
+    rango_horario = None
     if hora_inicio and hora_fin:
-        citas_del_rango = citas_del_rango.filter(hora__gte=hora_inicio, hora__lte=hora_fin)
+        try:
+            rango_horario = (
+                datetime.strptime(hora_inicio, "%H:%M").time(),
+                datetime.strptime(hora_fin, "%H:%M").time(),
+            )
+        except ValueError:
+            rango_horario = None
 
-    finalizadas = citas_del_rango.filter(estado="Finalizada")
-    canceladas = citas_del_rango.filter(estado="Cancelada")
-    pendientes = citas_del_rango.filter(estado__in=["Pendiente", "Confirmada"])
+    if rango_horario:
+        desde, hasta = rango_horario
+        citas_filtradas = []
+        for cita in citas_del_rango:
+            try:
+                hora_cita = datetime.strptime(cita.hora, "%I:%M %p").time()
+            except (ValueError, TypeError):
+                continue
+            if desde <= hora_cita <= hasta:
+                citas_filtradas.append(cita)
+        citas_del_rango = citas_filtradas
+
+    finalizadas = [c for c in citas_del_rango if c.estado == "Finalizada"]
+    canceladas = [c for c in citas_del_rango if c.estado == "Cancelada"]
+    pendientes = [c for c in citas_del_rango if c.estado in ("Pendiente", "Confirmada")]
 
     total_ingresos = sum(cita.servicio.precio for cita in finalizadas)
 
@@ -57,9 +85,9 @@ def calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio=None, hora_fin=Non
         "finalizadas": finalizadas,
         "canceladas": canceladas,
         "pendientes": pendientes,
-        "total_finalizadas": finalizadas.count(),
-        "total_canceladas": canceladas.count(),
-        "total_pendientes": pendientes.count(),
+        "total_finalizadas": len(finalizadas),
+        "total_canceladas": len(canceladas),
+        "total_pendientes": len(pendientes),
         "total_ingresos": total_ingresos,
         "por_barbero": por_barbero,
     }

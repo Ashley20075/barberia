@@ -24,11 +24,14 @@
     <nav class="navbar-custom">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+
                 <div class="navbar-brand-custom">
-    <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
-<span class="role-badge">Mi Cuenta</span>
-</div>
+                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
+                    Barber <span>Springfield</span>
+                </div>
+
                 <div class="d-flex align-items-center gap-2 flex-wrap">
+
                     <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
                         <i class="bi bi-bell"></i>
                         {% if notificaciones_no_leidas %}
@@ -36,34 +39,30 @@
                         {% endif %}
                     </a>
 
-                    <a href="{% url 'panel_cliente' %}" class="nav-btn active"> <i class="bi bi-person"></i> Mi Perfil </a> <a href="{% url 'editar_perfil' %}" class="nav-btn"> <i class="bi bi-gear"></i> Editar Perfil </a> <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn"> <i class="bi bi-stars"></i> AutoAI </a> <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema"> <i class="bi bi-moon-fill"></i> </button> <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion"> <i class="bi bi-box-arrow-right"></i> Cerrar Sesión </button>
+                    <a href="{% url 'panel_cliente' %}" class="nav-btn active">
+                        <i class="bi bi-person"></i> Mi Perfil
+                    </a>
+
+                    <a href="{% url 'editar_perfil' %}" class="nav-btn">
+                        <i class="bi bi-gear"></i> Editar Perfil
+                    </a>
+
+                    <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn">
+                        <i class="bi bi-stars"></i> AutoAI
+                    </a>
+
+                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
+
+                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+
                 </div>
             </div>
         </div>
     </nav>
-
-    <!-- ========== MODAL CERRAR SESIÓN ========== -->
-    <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title text-yellow"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-check-circle-fill text-yellow fs-1 mb-3 d-inline-block"></i>
-                    <p class="fs-5">¿Estás seguro que deseas cerrar sesión?</p>
-                    <p class="text-light-brown">Serás redirigido al inicio.</p>
-                </div>
-                <div class="modal-footer modal-footer-custom">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn-modern" onclick="window.location.href='{% url 'logout' %}'">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ========== CONTENIDO ========== -->
     <div class="container py-4">
@@ -126,6 +125,30 @@
             </div>
         </div>
 
+        <!-- Google Calendar del cliente -->
+        <div class="aviso-google-calendar d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+            <div>
+                <i class="bi bi-calendar3"></i>
+                {% if cuenta_google %}
+                    Conectado con <strong>{{ cuenta_google.email_google }}</strong>. Tus citas se agregan a ESE Google Calendar (ábrelo con esa misma cuenta en
+                    <a href="https://calendar.google.com/" target="_blank" rel="noopener" class="alert-link">calendar.google.com</a>).
+                {% else %}
+                    Conectá tu Google Calendar para que tus citas te aparezcan ahí automáticamente. Podés usar cualquier Gmail tuyo, no tiene que coincidir con tu correo de esta cuenta.
+                {% endif %}
+            </div>
+            {% if cuenta_google %}
+                <form method="post" action="{% url 'googlecalendar:desconectar' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'panel_cliente' %}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Desconectar</button>
+                </form>
+            {% else %}
+                <a href="{% url 'googlecalendar:conectar' %}?next={% url 'panel_cliente' %}" class="btn btn-sm btn-warning">
+                    Conectar Google Calendar
+                </a>
+            {% endif %}
+        </div>
+
         <!-- Tarjetas de estadísticas -->
         <div class="row g-4 mb-5">
             <div class="col-6 col-md-4">
@@ -150,6 +173,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Formulario nuevo turno -->
         <div id="formularioTurno" class="form-turno mb-5" style="display: none;">
@@ -447,8 +471,6 @@
 </div>
 
         </div><!-- /.row #turnos -->
-
-    </div><!-- /.container py-4 -->
 
 
 <!-- ===================================================== -->

@@ -163,11 +163,27 @@ def _usuario_barbero(cita):
     return User.objects.filter(email=cita.barbero.email).first()
 
 
+def _usuario_cliente(cita):
+    """
+    Devuelve el User del cliente que reservó la cita, si tiene cuenta
+    propia. Los clientes que un admin carga a mano (alguien que llegó
+    a la barbería sin cuenta) no tienen user, así que esto devuelve
+    None para ellos y sincronizar_cita simplemente no hace nada -no
+    hay a dónde mandar el evento.
+    """
+    cliente = getattr(cita, "cliente", None)
+    return getattr(cliente, "user", None)
+
+
 def sincronizar_cita(cita):
     """
     Crea o actualiza el evento de esta cita en:
       - el calendario de cada administrador conectado
       - el calendario del barbero asignado, si tiene cuenta conectada
+      - el calendario del propio cliente, si reservó con una cuenta
+        conectada a Google (antes esto no pasaba: el cliente nunca
+        recibía sus propias citas en su calendario, solo el barbero
+        y el admin las veían ahí)
 
     Debe llamarse cada vez que una cita se crea, o cambia de barbero,
     fecha, hora, servicio o pasa a un estado activo (Pendiente/Confirmada).
@@ -183,6 +199,10 @@ def sincronizar_cita(cita):
     barbero_user = _usuario_barbero(cita)
     if barbero_user:
         _crear_o_actualizar_para_usuario(cita, barbero_user)
+
+    cliente_user = _usuario_cliente(cita)
+    if cliente_user:
+        _crear_o_actualizar_para_usuario(cita, cliente_user)
 
 
 def usuario_de_barbero(barbero):

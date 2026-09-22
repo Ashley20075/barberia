@@ -1,4 +1,5 @@
 import os
+import certifi
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -20,6 +21,17 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
+
+# En algunas instalaciones de Python 3.14 sobre macOS, la librería ssl
+# no encuentra automáticamente el almacén de certificados del sistema.
+# Django crea el contexto TLS del SMTP usando ssl.create_default_context(),
+# que respeta SSL_CERT_FILE. Usamos el bundle CA de certifi para que
+# STARTTLS pueda validar correctamente el certificado de smtp.gmail.com
+# sin desactivar la verificación SSL.
+os.environ["SSL_CERT_FILE"] = certifi.where()
+# Evita que una variable SSL_CERT_DIR heredada de macOS interfiera con
+# el bundle CA que acabamos de fijar para Python 3.14.
+os.environ.pop("SSL_CERT_DIR", None)
 
 
 # Quick-start development settings - unsuitable for production
@@ -85,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notificaciones.context_processors.notificaciones_no_leidas',
             ],
         },
     },
@@ -204,12 +217,22 @@ MESSAGE_TAGS = {
 # imprime en la consola donde corre runserver, y ahi mismo se puede
 # copiar el enlace de confirmacion para probar el registro.
 #
-# En produccion hay que definir estas variables de entorno:
-#   EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
-# (para Gmail hace falta una "contrasena de aplicacion", no la del
-# correo; se crea desde la cuenta de Google con verificacion en dos
-# pasos activada).
-if DEBUG and not os.getenv('EMAIL_HOST'):
+# Para que los correos SI lleguen de verdad hay que definir, en el
+# archivo .env (junto a manage.py, ver .env.example):
+#   EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+# (para Gmail hace falta una contrasena de aplicacion, no la del
+# correo normal; se crea desde la cuenta de Google, con la verificacion
+# en dos pasos activada, en myaccount.google.com/apppasswords).
+#
+# OJO: antes esto se activaba solo si tambien se definia EMAIL_HOST a
+# mano. Si solo se ponian el usuario y la contrasena (lo mas natural,
+# porque EMAIL_HOST ya tiene un valor por defecto razonable para Gmail),
+# el proyecto se quedaba en el backend de consola sin avisar, y el
+# correo de confirmacion nunca llegaba a ningun lado. Ahora basta con
+# poner el usuario y la contrasena.
+if os.getenv('EMAIL_HOST_USER') and os.getenv('EMAIL_HOST_PASSWORD'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+elif DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -220,6 +243,8 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', '1') == '1'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_TIMEOUT = 15
+
+PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', '').strip()
 
 DEFAULT_FROM_EMAIL = os.getenv(
     'DEFAULT_FROM_EMAIL',

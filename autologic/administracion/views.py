@@ -4,10 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from citas.models import Cita, Servicio
 from clientes.models import Cliente
+from clientes.verificacion import enviar_correo_confirmacion
+from clientes.views import CorreoNoEntregado
 from barberos.models import Barbero
 from inventario.models import Producto
 from inventario.utils import registrar_movimiento
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle, Spacer
@@ -212,8 +215,21 @@ def activar_usuario(request, id):
         return redirect('administracion:panel_admin')
     
     usuario = get_object_or_404(User, id=id)
+
+    # Una cuenta creada por el administrador y pendiente de verificación
+    # NO puede activarse manualmente. Debe abrir primero el enlace enviado
+    # al correo; ese enlace es el que confirma que la dirección existe.
+    cliente = Cliente.objects.filter(user=usuario).first()
+    if cliente is not None and not cliente.correo_confirmado:
+        messages.error(
+            request,
+            f'⚠️ El usuario "{usuario.username}" todavía no ha confirmado su correo. '
+            'Debe abrir el enlace recibido antes de poder activar la cuenta.'
+        )
+        return redirect('administracion:panel_admin')
+
     usuario.is_active = True
-    usuario.save()
+    usuario.save(update_fields=['is_active'])
     messages.success(request, f'✅ El usuario "{usuario.username}" fue activado.')
     return redirect('administracion:panel_admin')
 
@@ -243,25 +259,59 @@ def crear_usuario(request):
         if Cliente.objects.filter(cedula=cedula).exists():
             messages.error(request, '❌ La cédula ya está registrada')
             return redirect('administracion:panel_admin')
-        
+
         try:
-            user = User.objects.create_user(
-                username=email,
-                email=email,
-                password=password,
-                first_name=nombre,
-                last_name=apellido
+            with transaction.atomic():
+                # Igual que en el autorregistro: la cuenta nace
+                # desactivada y solo se activa cuando la persona abre
+                # el enlace que le llega por correo. Antes, un usuario
+                # creado desde acá quedaba activo de una y nunca
+                # confirmaba que ese correo existiera de verdad.
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=password,
+                    first_name=nombre,
+                    last_name=apellido,
+                    is_active=False,
+                )
+                Cliente.objects.create(
+                    user=user,
+                    nombre=f"{nombre} {apellido}",
+                    cedula=cedula,
+                    telefono=telefono,
+                    email=email,
+                    correo_confirmado=False,
+                )
+
+                enviado = enviar_correo_confirmacion(request, user)
+
+                if not enviado:
+                    raise CorreoNoEntregado(email)
+
+            messages.success(
+                request,
+                '✅ Usuario "%s %s" creado. Le enviamos un correo a %s para '
+                'que confirme la cuenta antes de poder iniciar sesión.'
+                % (nombre, apellido, email)
             )
-            Cliente.objects.create(
-                user=user,
-                nombre=f"{nombre} {apellido}",
-                cedula=cedula,
-                telefono=telefono,
-                email=email
+
+        except CorreoNoEntregado:
+            messages.error(
+                request,
+                '❌ No pudimos enviar el correo de confirmación a "%s". '
+                'Revisa la configuración SMTP y vuelve a intentarlo.' % email
             )
-            messages.success(request, f'✅ Usuario "{nombre} {apellido}" creado correctamente.')
-        except Exception as e:
-            messages.error(request, f'❌ {e}')
+
+        except IntegrityError:
+            messages.error(
+                request,
+                '❌ Ya existe una cuenta con ese correo o esa cédula.'
+            )
+
+        except Exception:
+            messages.error(request, '❌ No se pudo crear el usuario. Intentá de nuevo.')
+
         return redirect('administracion:panel_admin')
     return redirect('administracion:panel_admin')
 
@@ -431,8 +481,14 @@ def editar_barbero(request, id):
             barbero.save()
             messages.success(request, f'✅ Barbero "{barbero.nombre}" actualizado correctamente.')
             
-        except Exception as e:
-            messages.error(request, f'❌ Error al actualizar: {str(e)}')
+        except IntegrityError:
+            messages.error(
+                request,
+                '❌ Ese correo o esa cédula ya están en uso por otro barbero.'
+            )
+
+        except Exception:
+            messages.error(request, '❌ No se pudo actualizar el barbero. Intentá de nuevo.')
         
         return redirect('administracion:panel_admin')
     
@@ -895,3 +951,126 @@ def vaciar_historial_admin(request):
         )
 
     return redirect("administracion:panel_admin")
+
+
+@login_required
+def agendar_cita_admin(request):
+    """
+    El administrador agenda una cita a nombre de un cliente.
+
+    Cubre el caso de alguien que llega a la barbería sin cuenta en la
+    página: en vez de obligarlo a registrarse, el admin carga su
+    nombre y teléfono ahí mismo (se crea un Cliente sin usuario
+    asociado, solo para dejar constancia) y agenda su turno igual que
+    a cualquier otro cliente. Reutiliza las mismas reglas que ya
+    valía el agendamiento del cliente (día laboral, día de descanso,
+    solapamiento de horarios), para que una cita creada desde acá no
+    rompa la agenda del barbero.
+    """
+    if not request.user.is_superuser:
+        messages.error(request, "No tienes permisos para acceder a esta sección.")
+        return redirect("inicio")
+
+    if request.method == "POST":
+        adicionales = request.POST.getlist("adicionales")
+        adicionales_str = ", ".join(adicionales) if adicionales else "Ninguno"
+
+        tipo_cliente = request.POST.get("tipo_cliente", "registrado")
+
+        # -------------------------------------------------- Cliente
+        if tipo_cliente == "nuevo":
+            nombre_nuevo = (request.POST.get("cliente_nuevo_nombre") or "").strip()
+            telefono_nuevo = (request.POST.get("cliente_nuevo_telefono") or "").strip()
+            cedula_nueva = (request.POST.get("cliente_nuevo_cedula") or "").strip() or None
+
+            if not nombre_nuevo:
+                messages.error(request, "❌ Escribí el nombre del cliente.")
+                return redirect("administracion:agendar_cita_admin")
+
+            if cedula_nueva and Cliente.objects.filter(cedula=cedula_nueva).exists():
+                messages.error(request, "❌ Ya hay un cliente registrado con esa cédula.")
+                return redirect("administracion:agendar_cita_admin")
+
+            cliente = Cliente.objects.create(
+                user=None,
+                nombre=nombre_nuevo,
+                telefono=telefono_nuevo or None,
+                cedula=cedula_nueva,
+            )
+        else:
+            try:
+                cliente = Cliente.objects.get(id=request.POST.get("cliente"))
+            except (Cliente.DoesNotExist, ValueError, TypeError):
+                messages.error(request, "❌ Elegí un cliente válido.")
+                return redirect("administracion:agendar_cita_admin")
+
+        # -------------------------------------------------- Resto de datos
+        try:
+            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
+            servicio = Servicio.objects.get(id=request.POST.get("servicio"))
+            duracion_total = int(request.POST.get("duracion_total", 40))
+            fecha = request.POST.get("fecha")
+            hora = request.POST.get("hora")
+            datetime.strptime(hora, "%I:%M %p")
+        except (Barbero.DoesNotExist, Servicio.DoesNotExist, ValueError, TypeError):
+            messages.error(request, "❌ Datos inválidos al agendar la cita.")
+            return redirect("administracion:agendar_cita_admin")
+
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+
+        if not barbero.es_dia_laboral(fecha_obj) or barbero.es_dia_descanso(fecha_obj):
+            messages.error(request, f"❌ {barbero.nombre} no trabaja ese día.")
+            return redirect("administracion:agendar_cita_admin")
+
+        if Cita.objects.filter(cliente=cliente, fecha=fecha,
+                                estado__in=["Pendiente", "Confirmada"]).exists():
+            messages.error(request, "❌ Ese cliente ya tiene una cita ese día.")
+            return redirect("administracion:agendar_cita_admin")
+
+        inicio_nueva = datetime.strptime(hora, "%I:%M %p")
+        fin_nueva = inicio_nueva + timedelta(minutes=duracion_total)
+
+        for cita in Cita.objects.filter(barbero=barbero, fecha=fecha,
+                                         estado__in=["Pendiente", "Confirmada"]):
+            inicio = datetime.strptime(cita.hora, "%I:%M %p")
+            fin = inicio + timedelta(minutes=cita.duracion_total or 40)
+            if inicio_nueva < fin and fin_nueva > inicio:
+                messages.error(request, "❌ Ese horario se cruza con otra cita del barbero.")
+                return redirect("administracion:agendar_cita_admin")
+
+        with transaction.atomic():
+            Cita.objects.create(
+                cliente=cliente,
+                servicio=servicio,
+                barbero=barbero,
+                adicionales=adicionales_str,
+                productos="Ninguno",
+                fecha=fecha,
+                hora=hora,
+                duracion_total=duracion_total,
+                estado="Pendiente",
+            )
+
+        messages.success(
+            request,
+            f"✅ Cita agendada para {cliente.nombre} con {barbero.nombre}."
+        )
+        return redirect("administracion:panel_admin")
+
+    return render(request, "administracion/agendar_cita.html", {
+        # Antes esto listaba TODOS los Cliente, incluidos los que
+        # ademas son barberos o administradores (alguien puede haberse
+        # registrado como cliente antes de pasar a formar parte del
+        # equipo). Se excluyen los correos que ya pertenecen a un
+        # barbero o a un superusuario, para que el desplegable solo
+        # muestre clientes de verdad.
+        "clientes": Cliente.objects.exclude(
+            email__in=Barbero.objects.values_list("email", flat=True)
+        ).exclude(
+            user__is_staff=True
+        ).exclude(
+            user__is_superuser=True
+        ).order_by("nombre"),
+        "barberos": Barbero.objects.filter(activo=True).order_by("nombre"),
+        "servicios": Servicio.objects.all().order_by("id"),
+    })

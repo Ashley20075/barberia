@@ -7,13 +7,9 @@
     <title>{{ sitio.nombre_marca }} | {{ sitio.eslogan|striptags }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
-<body class="pagina-inicio">
-<div class="hz-progreso" aria-hidden="true"><div class="hz-progreso-barra" id="hzProgresoBarra"></div></div>
+<body>
 <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
 <div class="navbar-brand-custom">
@@ -26,7 +22,6 @@
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                <li class="nav-item"><a class="nav-link" href="#proceso">Cómo funciona</a></li>
                 <li class="nav-item"><a class="nav-link" href="#barberos">Barberos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#nosotros">Nosotros</a></li>
                 <li class="nav-item"><a class="nav-link" href="#testimonios">Opiniones</a></li>
@@ -40,35 +35,37 @@
     </div>
 </nav>
 
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <main>
-<section id="inicio" class="hero hero-fondos hz-hero-fondo">
+<section id="inicio" class="hero hero-fondos">
     <div class="hero-background" aria-hidden="true">
         <div class="hero-bg-slide active" style="background-image: url('{{ sitio.hero_imagen_1 }}');"></div>
         <div class="hero-bg-slide" style="background-image: url('{{ sitio.hero_imagen_2 }}');"></div>
         <div class="hero-bg-slide" style="background-image: url('{{ sitio.hero_imagen_3 }}');"></div>
     </div>
     <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="hz-hero-spotlight" aria-hidden="true"></div>
-    <div class="hz-sparkles" aria-hidden="true">
-        <span class="hz-sparkle" style="top:14%; left:62%; animation-delay:0s;"></span>
-        <span class="hz-sparkle" style="top:30%; left:80%; animation-delay:.7s;"></span>
-        <span class="hz-sparkle" style="top:52%; left:68%; animation-delay:1.4s;"></span>
-        <span class="hz-sparkle" style="top:68%; left:88%; animation-delay:2.1s;"></span>
-        <span class="hz-sparkle" style="top:22%; left:93%; animation-delay:2.8s;"></span>
-        <span class="hz-sparkle" style="top:80%; left:58%; animation-delay:1.9s;"></span>
-    </div>
     <div class="container hero-content">
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-lg-7">
-                <div class="hero-copy-panel hz-reveal">
-                    <div class="hz-placa"><i class="bi bi-stars"></i> {{ sitio.eslogan }}</div>
-                    <h1 class="display-4 fw-bold hz-brillo-texto">{{ sitio.hero_titulo }}</h1>
+                <div class="hero-copy-panel">
+                    <div class="badge-custom">{{ sitio.eslogan }}</div>
+                    <h1 class="display-4 fw-bold">{{ sitio.hero_titulo }}</h1>
                     <p class="lead">{{ sitio.hero_descripcion }}</p>
                     <div class="d-flex gap-3 flex-wrap">
                         <a href="{% url 'login' %}" class="btn btn-primary-custom">Agendar turno</a>
                         <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#modalEstilos">Ver estilos</button>
                     </div>
-                    <div class="hz-hero-chips mt-4">
+                    <div class="hero-mini-info mt-4">
                         <span><i class="bi bi-scissors"></i> Estilo profesional</span>
                         <span><i class="bi bi-clock"></i> Atención personalizada</span>
                         <span><i class="bi bi-star-fill"></i> Calidad y detalle</span>
@@ -79,113 +76,54 @@
     </div>
 </section>
 
-<div class="hz-marquee" aria-hidden="true">
-    <div class="hz-marquee-track">
-        <span>Corte clásico</span><i class="bi bi-scissors"></i>
-        <span>Fade</span><i class="bi bi-scissors"></i>
-        <span>Barba</span><i class="bi bi-scissors"></i>
-        <span>Afeitado premium</span><i class="bi bi-scissors"></i>
-        <span>Diseño personalizado</span><i class="bi bi-scissors"></i>
-        <span>AsesorIA</span><i class="bi bi-scissors"></i>
-        <span>Corte clásico</span><i class="bi bi-scissors"></i>
-        <span>Fade</span><i class="bi bi-scissors"></i>
-        <span>Barba</span><i class="bi bi-scissors"></i>
-        <span>Afeitado premium</span><i class="bi bi-scissors"></i>
-        <span>Diseño personalizado</span><i class="bi bi-scissors"></i>
-        <span>Asesoria de imagen con</span><i class="bi bi-scissors"></i>
-    </div>
-</div>
-
-<section id="servicios" class="servicios py-5 hz-textura">
+<section id="servicios" class="servicios py-5">
     <div class="container">
-        <div class="hz-titulo-seccion hz-reveal">
+        <div class="text-center mb-5">
             <h2>{{ sitio.servicios_titulo }}</h2>
             <p class="text-light-brown">{{ sitio.servicios_subtitulo }}</p>
         </div>
-        <div class="hz-lista-precios">
+        <div class="row g-4">
             {% for servicio in servicios %}
-            <div class="hz-ticket hz-reveal">
-                {% if forloop.first %}<span class="hz-ticket-destacado">Más pedido</span>{% endif %}
-                <div class="hz-ticket-icono"><i class="bi bi-scissors"></i></div>
-                <div class="hz-ticket-cuerpo">
-                    <div class="hz-ticket-linea">
-                        <span class="hz-ticket-nombre">{{ servicio.nombre }}</span>
-                        <span class="hz-ticket-precio">${{ servicio.precio|floatformat:"0g" }}</span>
-                    </div>
-                    <p class="hz-ticket-desc">{{ servicio.descripcion }}</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="card-servicio">
+                    <i class="bi bi-scissors"></i>
+                    <h3>{{ servicio.nombre }}</h3>
+                    <p>{{ servicio.descripcion }}</p>
+                    <div class="precio">${{ servicio.precio }}</div>
+                    <a href="{% url 'login' %}" class="btn btn-outline-custom btn-sm mt-2">Reservar</a>
                 </div>
-                <a href="{% url 'login' %}" class="hz-ticket-reservar">Reservar <i class="bi bi-arrow-right"></i></a>
             </div>
             {% empty %}
-            <div class="text-center text-light-brown">No hay servicios disponibles.</div>
+            <div class="col-12 text-center text-light-brown">No hay servicios disponibles.</div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section id="proceso" class="hz-proceso py-5 hz-textura">
+<section id="barberos" class="barberos py-5">
     <div class="container">
-        <div class="hz-titulo-seccion hz-reveal">
-            <h2>¿Cómo funciona?</h2>
-            <p class="text-light-brown">Agenda tu cita en 4 pasos, sin complicaciones</p>
-        </div>
-        <div class="hz-pasos">
-            <div class="hz-paso hz-reveal">
-                <div class="hz-paso-numero">01</div>
-                <i class="bi bi-search hz-paso-icono"></i>
-                <h3>Elige tu servicio</h3>
-                <p>Explora el menú y escoge el corte o tratamiento que quieres.</p>
-            </div>
-            <div class="hz-paso hz-reveal">
-                <div class="hz-paso-numero">02</div>
-                <i class="bi bi-person-badge hz-paso-icono"></i>
-                <h3>Elige tu barbero</h3>
-                <p>Selecciona al profesional de tu preferencia según su especialidad.</p>
-            </div>
-            <div class="hz-paso hz-reveal">
-                <div class="hz-paso-numero">03</div>
-                <i class="bi bi-calendar-check hz-paso-icono"></i>
-                <h3>Escoge fecha y hora</h3>
-                <p>Elige el horario disponible que mejor se ajuste a tu día.</p>
-            </div>
-            <div class="hz-paso hz-reveal">
-                <div class="hz-paso-numero">04</div>
-                <i class="bi bi-emoji-sunglasses hz-paso-icono"></i>
-                <h3>Disfruta tu corte</h3>
-                <p>Llega, relájate y sal con el mejor estilo de la ciudad.</p>
-            </div>
-        </div>
-        <div class="text-center mt-5 hz-reveal">
-            <a href="{% url 'login' %}" class="btn btn-primary-custom">Reservar mi cita</a>
-        </div>
-    </div>
-</section>
-
-<section id="barberos" class="barberos py-5 hz-textura">
-    <div class="container">
-        <div class="hz-titulo-seccion hz-reveal">
+        <div class="text-center mb-5">
             <h2>{{ sitio.barberos_titulo }}</h2>
             <p class="text-light-brown">{{ sitio.barberos_subtitulo }}</p>
         </div>
         <div class="row g-4">
             {% for barbero in barberos_inicio %}
-            <div class="col-md-6 col-lg-4 hz-reveal">
-                <div class="hz-barbero-poster">
-                    <div class="hz-barbero-foto-wrap">
+            <div class="col-md-6 col-lg-4">
+                <div class="card-barbero">
+                    <div class="barbero-img-wrapper">
                         {% if barbero.imagen_url %}
-                            <img src="{{ barbero.imagen_url }}" alt="{{ barbero.nombre }}" class="hz-barbero-foto">
+                            <img src="{{ barbero.imagen_url }}" alt="{{ barbero.nombre }}" class="barbero-img">
                         {% else %}
-                            <img src="{% static 'logo.jpeg' %}" alt="{{ barbero.nombre }}" class="hz-barbero-foto">
+                            <img src="{% static 'logo.jpeg' %}" alt="{{ barbero.nombre }}" class="barbero-img">
                         {% endif %}
-                        <div class="hz-barbero-scrim" aria-hidden="true"></div>
-                        <div class="hz-barbero-rating"><i class="bi bi-star-fill"></i> {{ barbero.calificacion }}</div>
-                        <div class="hz-barbero-nombre-overlay">
-                            <h3>{{ barbero.nombre }}</h3>
-                            <p>{{ barbero.especialidad }}</p>
-                        </div>
                     </div>
-                    <div class="hz-barbero-pie">
-                        <span>{{ barbero.numero_resenas }} reseñas</span>
+                    <div class="barbero-info">
+                        <h3>{{ barbero.nombre }}</h3>
+                        <p class="especialidad">{{ barbero.especialidad }}</p>
+                        <div class="calificacion">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            <span>{{ barbero.calificacion }} ({{ barbero.numero_resenas }} reseñas)</span>
+                        </div>
                         {% if barbero.instagram or barbero.facebook or barbero.whatsapp %}
                         <div class="barbero-social">
                             {% if barbero.instagram %}<a href="{{ barbero.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
@@ -203,38 +141,21 @@
     </div>
 </section>
 
-
-<section id="nosotros" class="nosotros py-5 hz-textura">
+<section id="nosotros" class="nosotros py-5">
     <div class="container">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-6 hz-reveal">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
                 <h2>{{ sitio.nosotros_titulo }}</h2>
                 <p>{{ sitio.nosotros_parrafo_1 }}</p>
                 <p>{{ sitio.nosotros_parrafo_2 }}</p>
-                <ul class="hz-checklist list-unstyled">
-                    <li><i class="bi bi-check-circle-fill"></i>{{ sitio.nosotros_punto_1 }}</li>
-                    <li><i class="bi bi-check-circle-fill"></i>{{ sitio.nosotros_punto_2 }}</li>
-                    <li><i class="bi bi-check-circle-fill"></i>{{ sitio.nosotros_punto_3 }}</li>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_1 }}</li>
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_2 }}</li>
+                    <li><i class="bi bi-check-circle-fill text-yellow me-2"></i>{{ sitio.nosotros_punto_3 }}</li>
                 </ul>
-                <div class="hz-stats">
-                    <div class="hz-stat">
-                        <strong data-contador="{{ barberos_inicio|length }}">0</strong>
-                        <span>Barberos</span>
-                    </div>
-                    <div class="hz-stat">
-                        <strong data-contador="{{ servicios|length }}">0</strong>
-                        <span>Servicios</span>
-                    </div>
-                    <div class="hz-stat">
-                        <strong data-contador="100" data-sufijo="%">0</strong>
-                        <span>Satisfacción</span>
-                    </div>
-                </div>
             </div>
-            <div class="col-lg-6 text-center mt-4 mt-lg-0 hz-reveal">
-                <div class="hz-foto-marco">
-                    <img src="{{ sitio.nosotros_imagen }}" alt="Ambiente de la barbería">
-                </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <img src="{{ sitio.nosotros_imagen }}" alt="Ambiente de la barbería" class="img-fluid rounded-3 w-100" style="max-height:360px;object-fit:cover;">
             </div>
         </div>
     </div>
@@ -381,26 +302,20 @@
 </section>
 
 
-<section id="testimonios" class="testimonios py-5 hz-textura">
+<section id="testimonios" class="testimonios py-5">
     <div class="container">
-        <div class="hz-titulo-seccion hz-reveal">
+        <div class="text-center mb-5">
             <h2>{{ sitio.testimonios_titulo }}</h2>
             <p class="text-light-brown">{{ sitio.testimonios_subtitulo }}</p>
         </div>
-        <div class="row g-4 hz-testimonios-fila">
+        <div class="row g-4">
             {% for texto, autor in testimonios %}
-            <div class="col-md-4 hz-reveal {% cycle 'hz-testimonio-a' 'hz-testimonio-b' 'hz-testimonio-a' %}">
+            <div class="col-md-4">
                 <div class="card-testimonio">
-                    <i class="bi bi-quote hz-testimonio-marca"></i>
+                    <i class="bi bi-quote"></i>
                     <div class="estrellas">★★★★★</div>
                     <p>"{{ texto }}"</p>
-                    <div class="hz-testimonio-autor">
-                        <span class="hz-avatar-inicial">{{ autor|first }}</span>
-                        <div>
-                            <h4>{{ autor }}</h4>
-                            <span class="hz-verificado"><i class="bi bi-patch-check-fill"></i> Reseña verificada</span>
-                        </div>
-                    </div>
+                    <h4>— {{ autor }}</h4>
                 </div>
             </div>
             {% endfor %}
@@ -408,34 +323,16 @@
     </div>
 </section>
 
-<div class="hz-cta hz-textura">
-    <div class="hz-embers" aria-hidden="true">
-        <span class="hz-ember" style="left:8%; animation-delay:0s; animation-duration:6.5s;"></span>
-        <span class="hz-ember" style="left:22%; animation-delay:1.3s; animation-duration:7.5s;"></span>
-        <span class="hz-ember" style="left:38%; animation-delay:.6s; animation-duration:6s;"></span>
-        <span class="hz-ember" style="left:55%; animation-delay:2.1s; animation-duration:8s;"></span>
-        <span class="hz-ember" style="left:70%; animation-delay:1s; animation-duration:6.8s;"></span>
-        <span class="hz-ember" style="left:85%; animation-delay:2.6s; animation-duration:7s;"></span>
-        <span class="hz-ember" style="left:93%; animation-delay:.2s; animation-duration:7.2s;"></span>
-    </div>
-    <div class="container">
-        <div class="hz-cta-grid hz-reveal">
-            <div class="hz-cta-texto">
-                <i class="bi bi-scissors hz-cta-icono" aria-hidden="true"></i>
-                <h2>{{ sitio.cta_titulo }}</h2>
-                <p>{{ sitio.cta_descripcion }}</p>
-                <a href="{% url 'panel_cliente' %}" class="btn btn-cta">{{ sitio.cta_boton }}</a>
-            </div>
-            <div class="hz-cta-foto" style="background-image:url('{{ sitio.hero_imagen_3 }}');">
-                <div class="hz-cta-foto-degradado" aria-hidden="true"></div>
-            </div>
-        </div>
+<div class="cta-section py-5">
+    <div class="container text-center">
+        <h2>{{ sitio.cta_titulo }}</h2>
+        <p>{{ sitio.cta_descripcion }}</p>
+        <a href="{% url 'panel_cliente' %}" class="btn btn-cta">{{ sitio.cta_boton }}</a>
     </div>
 </div>
 </main>
 
-<footer id="contacto" class="footer py-5 hz-textura">
-    <span class="hz-footer-marca" aria-hidden="true">{{ sitio.nombre_marca }}</span>
+<footer id="contacto" class="footer py-5">
     <div class="container">
         <div class="row">
             <div class="col-md-3 mb-4">
@@ -457,263 +354,42 @@
             <div class="col-md-3 mb-4">
                 <h3>{{ sitio.noticias_titulo }}</h3>
                 <p>{{ sitio.noticias_descripcion }}</p>
-                <div class="d-flex">
-                    <input type="email" class="form-control" placeholder="Tu correo" aria-label="Tu correo">
-                    <button class="btn btn-newsletter" type="button">→</button>
-                </div>
+                <form method="POST" class="d-flex" data-conservar>
+                    {% csrf_token %}
+                    <input type="email" name="suscripcion_email" class="form-control"
+                           placeholder="Tu correo" aria-label="Tu correo" required>
+                    <button class="btn btn-newsletter" type="submit">→</button>
+                </form>
             </div>
         </div>
         <div class="copyright text-center pt-4"><p>{{ sitio.copyright_texto }}</p></div>
     </div>
 </footer>
 
-<!-- =====================================================
-     MODAL / CARRUSEL DE ESTILOS
-===================================================== -->
-
-<div class="modal fade estilos-modal" id="modalEstilos" tabindex="-1" aria-hidden="true">
-
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-
-        <div class="modal-content estilos-modal-content">
-
-            <!-- CABECERA -->
-
-            <div class="modal-header estilos-modal-header">
-
-                <div>
-                    <span class="estilos-modal-eyebrow">
-                        <i class="bi bi-scissors"></i>
-                        BARBERSPRINGFIELD
-                    </span>
-
-                    <h3 class="modal-title">
-                        Nuestros estilos
-                    </h3>
-
-                    <p>
-                        Encuentra el corte que mejor representa tu estilo.
-                    </p>
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"
-                    aria-label="Cerrar">
-                </button>
-
+<!-- Modal de estilos: también usa los servicios registrados por el administrador -->
+<div class="modal fade" id="modalEstilos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h3 class="modal-title text-yellow"><i class="bi bi-scissors"></i> {{ sitio.servicios_titulo }}</h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-
-
-            <!-- CUERPO -->
-
-            <div class="modal-body estilos-modal-body">
-
-                {% if servicios %}
-
-                <div
-                    id="carruselEstilos"
-                    class="carousel slide estilos-carousel"
-                    data-bs-interval="false"
-                    data-bs-touch="true">
-
-                    <!-- INDICADORES -->
-
-                    <div class="carousel-indicators estilos-indicators">
-
-                        {% for servicio in servicios %}
-
-                        <button
-                            type="button"
-                            data-bs-target="#carruselEstilos"
-                            data-bs-slide-to="{{ forloop.counter0 }}"
-                            class="{% if forloop.first %}active{% endif %}"
-                            aria-current="{% if forloop.first %}true{% endif %}"
-                            aria-label="Estilo {{ forloop.counter }}">
-                        </button>
-
-                        {% endfor %}
-
+            <div class="modal-body">
+                <p>{{ sitio.servicios_subtitulo }}</p>
+                <div class="row">
+                    {% for servicio in servicios %}
+                    <div class="col-md-6 mb-3">
+                        <h6 class="text-yellow">{{ servicio.nombre }}</h6>
+                        <p>{{ servicio.descripcion }}</p>
                     </div>
-
-
-                    <!-- SLIDES -->
-
-                    <div class="carousel-inner">
-
-                        {% for servicio in servicios %}
-
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-
-                            <div class="estilo-slide">
-
-                                <!-- IMAGEN -->
-
-                                <div class="estilo-imagen-container">
-
-                                    {% if servicio.imagen %}
-
-                                    <img
-                                        src="{{ servicio.imagen }}"
-                                        alt="{{ servicio.nombre }}"
-                                        class="estilo-imagen"
-                                        loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
-
-                                    {% else %}
-
-                                    <div class="estilo-imagen-placeholder">
-
-                                        <i class="bi bi-scissors"></i>
-
-                                        <span>
-                                            Imagen no disponible
-                                        </span>
-
-                                    </div>
-
-                                    {% endif %}
-
-                                </div>
-
-
-                                <!-- INFORMACIÓN -->
-
-                                <div class="estilo-informacion">
-
-                                    <span class="estilo-numero">
-                                        {{ forloop.counter|stringformat:"02d" }}
-                                    </span>
-
-                                    <h2>
-                                        {{ servicio.nombre }}
-                                    </h2>
-
-                                    <div class="estilo-linea"></div>
-
-                                    <p class="estilo-descripcion">
-                                        {{ servicio.descripcion }}
-                                    </p>
-
-
-                                    <div class="estilo-datos">
-
-                                        <div class="estilo-dato">
-
-                                            <i class="bi bi-cash-stack"></i>
-
-                                            <div>
-                                                <small>Precio</small>
-
-                                                <strong>
-                                                    ${{ servicio.precio|floatformat:"0g" }}
-                                                </strong>
-                                            </div>
-
-                                        </div>
-
-
-                                        <div class="estilo-dato">
-
-                                            <i class="bi bi-clock"></i>
-
-                                            <div>
-                                                <small>Duración</small>
-
-                                                <strong>
-                                                    {{ servicio.duracion }} min
-                                                </strong>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <a
-                                        href="{% url 'login' %}"
-                                        class="btn btn-primary-custom estilo-reservar">
-
-                                        Reservar este estilo
-
-                                        <i class="bi bi-arrow-right"></i>
-
-                                    </a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        {% endfor %}
-
-                    </div>
-
-
-                    <!-- ANTERIOR -->
-
-                    <button
-                        class="carousel-control-prev estilo-control"
-                        type="button"
-                        data-bs-target="#carruselEstilos"
-                        data-bs-slide="prev">
-
-                        <span class="estilo-control-icon">
-                            <i class="bi bi-chevron-left"></i>
-                        </span>
-
-                        <span class="visually-hidden">
-                            Anterior
-                        </span>
-
-                    </button>
-
-
-                    <!-- SIGUIENTE -->
-
-                    <button
-                        class="carousel-control-next estilo-control"
-                        type="button"
-                        data-bs-target="#carruselEstilos"
-                        data-bs-slide="next">
-
-                        <span class="estilo-control-icon">
-                            <i class="bi bi-chevron-right"></i>
-                        </span>
-
-                        <span class="visually-hidden">
-                            Siguiente
-                        </span>
-
-                    </button>
-
+                    {% endfor %}
                 </div>
-
-                {% else %}
-
-                <div class="estilos-vacio">
-
-                    <i class="bi bi-scissors"></i>
-
-                    <h4>No hay estilos disponibles</h4>
-
-                    <p>
-                        Próximamente agregaremos nuestros estilos.
-                    </p>
-
-                </div>
-
-                {% endif %}
-
             </div>
-
-
-            
+            <div class="modal-footer modal-footer-custom">
+                <button class="btn btn-secondary-custom" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
-
     </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -735,75 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", actualizarMenu);
     actualizarMenu();
 });
-</script>
-
-<script>
-/* Foco de luz que sigue el cursor sobre la foto del hero (solo escritorio con mouse).
-   En celular/tablet no hay "mousemove" real, así que ahí simplemente no se activa. */
-(function () {
-    const hero = document.getElementById("inicio");
-    if (!hero || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    hero.addEventListener("mousemove", function (e) {
-        const rect = hero.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        hero.style.setProperty("--mx", x + "%");
-        hero.style.setProperty("--my", y + "%");
-    });
-})();
-</script>
-
-<script>
-/* Revela con una animación suave las secciones/tarjetas marcadas con .hz-reveal
-   a medida que van entrando en pantalla. Si el navegador no soporta
-   IntersectionObserver, simplemente se muestran todas de una vez. */
-(function () {
-    const elementos = document.querySelectorAll(".hz-reveal");
-    if (!("IntersectionObserver" in window)) {
-        elementos.forEach(el => el.classList.add("hz-visible"));
-        return;
-    }
-    const observador = new IntersectionObserver((entradas) => {
-        entradas.forEach(entrada => {
-            if (entrada.isIntersecting) {
-                entrada.target.classList.add("hz-visible");
-                observador.unobserve(entrada.target);
-            }
-        });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-    elementos.forEach(el => observador.observe(el));
-})();
-
-/* Cuenta hacia arriba los numeros de la seccion "Nosotros" cuando aparecen en pantalla */
-(function () {
-    const contadores = document.querySelectorAll("[data-contador]");
-    if (!contadores.length) return;
-    function animar(el) {
-        const meta = parseInt(el.getAttribute("data-contador"), 10) || 0;
-        const sufijo = el.getAttribute("data-sufijo") || "";
-        const duracion = 900;
-        const inicio = performance.now();
-        function paso(ahora) {
-            const progreso = Math.min((ahora - inicio) / duracion, 1);
-            el.textContent = Math.round(progreso * meta) + sufijo;
-            if (progreso < 1) requestAnimationFrame(paso);
-        }
-        requestAnimationFrame(paso);
-    }
-    if (!("IntersectionObserver" in window)) {
-        contadores.forEach(animar);
-        return;
-    }
-    const obsContadores = new IntersectionObserver((entradas) => {
-        entradas.forEach(entrada => {
-            if (entrada.isIntersecting) {
-                animar(entrada.target);
-                obsContadores.unobserve(entrada.target);
-            }
-        });
-    }, { threshold: 0.4 });
-    contadores.forEach(el => obsContadores.observe(el));
-})();
 </script>
 
 <script>
@@ -853,93 +460,6 @@ document.querySelectorAll(".card-desarrollador").forEach(function (tarjeta) {
     });
 
 });
-</script>
-
-<div class="hz-fab-grupo">
-    <a href="{% url 'login' %}" class="hz-fab hz-fab-reservar" title="Agendar cita" aria-label="Agendar cita">
-        <i class="bi bi-calendar2-check"></i>
-    </a>
-    <button type="button" class="hz-fab hz-fab-arriba" id="hzBotonArriba" title="Volver arriba" aria-label="Volver arriba">
-        <i class="bi bi-arrow-up"></i>
-    </button>
-</div>
-
-<script>
-/* Barra delgada arriba de todo que muestra cuanto se ha bajado en la pagina */
-(function () {
-    const barra = document.getElementById("hzProgresoBarra");
-    if (!barra) return;
-    function actualizarProgreso() {
-        const alto = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const porcentaje = alto > 0 ? (window.scrollY / alto) * 100 : 0;
-        barra.style.width = porcentaje + "%";
-    }
-    window.addEventListener("scroll", actualizarProgreso, { passive: true });
-    actualizarProgreso();
-})();
-
-/* Boton flotante para volver arriba: solo aparece despues de bajar un poco */
-(function () {
-    const boton = document.getElementById("hzBotonArriba");
-    if (!boton) return;
-    function actualizarVisibilidad() {
-        boton.classList.toggle("hz-visible", window.scrollY > 560);
-    }
-    window.addEventListener("scroll", actualizarVisibilidad, { passive: true });
-    actualizarVisibilidad();
-    boton.addEventListener("click", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-})();
-
-/* Scroll suave al hacer clic en los enlaces del menu que apuntan a una seccion de esta misma pagina */
-(function () {
-    document.querySelectorAll('a[href^="#"]').forEach(function (enlace) {
-        enlace.addEventListener("click", function (e) {
-            const destinoId = this.getAttribute("href");
-            if (destinoId.length < 2) return;
-            const destino = document.querySelector(destinoId);
-            if (!destino) return;
-            e.preventDefault();
-            destino.scrollIntoView({ behavior: "smooth", block: "start" });
-            const menuAbierto = document.getElementById("navbarNav");
-            if (menuAbierto && menuAbierto.classList.contains("show")) {
-                bootstrap.Collapse.getOrCreateInstance(menuAbierto).hide();
-            }
-        });
-    });
-})();
-
-/* Leve efecto de profundidad: la foto del hero se mueve un poco mas lento que el scroll */
-(function () {
-    const fondo = document.querySelector("#inicio .hero-background");
-    const hero = document.getElementById("inicio");
-    if (!fondo || !hero || !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
-    window.addEventListener("scroll", function () {
-        const limite = hero.offsetHeight;
-        if (window.scrollY < limite) {
-            const desplazamiento = Math.min(window.scrollY * 0.15, 70);
-            fondo.style.transform = "translateY(" + desplazamiento + "px)";
-        }
-    }, { passive: true });
-})();
-
-/* Efecto 3D al mover el mouse sobre las tarjetas de los barberos */
-(function () {
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    document.querySelectorAll(".hz-barbero-poster").forEach(function (tarjeta) {
-        tarjeta.addEventListener("mousemove", function (e) {
-            const rect = tarjeta.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            tarjeta.style.transform =
-                "perspective(900px) rotateY(" + (x * 10) + "deg) rotateX(" + (-y * 10) + "deg) translateY(-6px)";
-        });
-        tarjeta.addEventListener("mouseleave", function () {
-            tarjeta.style.transform = "";
-        });
-    });
-})();
 </script>
 </body>
 </html>

@@ -23,6 +23,7 @@ urlpatterns = [
     path('editar-servicio/<int:id>/', views.editar_servicio, name='editar_servicio'),
     path('eliminar-servicio/<int:id>/', views.eliminar_servicio, name='eliminar_servicio'),
     path("certificado/<int:id>/",views.certificado_barbero_admin,name="certificado_barbero_admin"),
+    path('agendar-cita/', views.agendar_cita_admin, name='agendar_cita_admin'),
     path('cierre-caja/', views.cierre_caja, name='cierre_caja'),
     path('cierre-caja/pdf/', views.cierre_caja_pdf, name='cierre_caja_pdf'),
     path('vaciar-historial/',views.vaciar_historial_admin,name='vaciar_historial_admin'),

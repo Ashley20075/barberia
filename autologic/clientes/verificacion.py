@@ -20,6 +20,8 @@ Cómo funciona aquí
 El token usa `TimestampSigner`, así que caduca por sí mismo y no hace
 falta ni modelo nuevo ni migración.
 """
+import logging
+
 from django.conf import settings
 from django.core import signing
 from django.core.mail import send_mail
@@ -30,6 +32,8 @@ SAL = 'confirmacion-correo-barberia'
 
 # Un día para confirmar.
 VALIDEZ_SEGUNDOS = 60 * 60 * 24
+
+logger = logging.getLogger(__name__)
 
 
 def generar_token(user):
@@ -59,7 +63,8 @@ def enviar_correo_confirmacion(request, user):
     """
     token = generar_token(user)
     ruta = reverse('confirmar_correo', args=[token])
-    enlace = request.build_absolute_uri(ruta)
+    base_url = (getattr(settings, 'PUBLIC_BASE_URL', '') or '').rstrip('/')
+    enlace = f'{base_url}{ruta}' if base_url else request.build_absolute_uri(ruta)
 
     asunto = 'Confirma tu correo - Barber Springfield'
 
@@ -72,6 +77,19 @@ def enviar_correo_confirmacion(request, user):
         f'registró, simplemente ignora este mensaje.\n'
     )
 
+    # Si Django está usando el backend de consola, el mensaje NO se envía
+    # a internet: solamente aparece en la terminal. Para esta funcionalidad
+    # eso debe considerarse un fallo de configuración, no un envío exitoso.
+    backend = getattr(settings, 'EMAIL_BACKEND', '')
+    if backend == 'django.core.mail.backends.console.EmailBackend':
+        logger.error(
+            'No se envió el correo de confirmación para %s porque Django está '
+            'usando EmailBackend de consola. Configura EMAIL_HOST_USER y '
+            'EMAIL_HOST_PASSWORD en .env.',
+            user.email,
+        )
+        return False
+
     try:
         enviados = send_mail(
             asunto,
@@ -81,8 +99,10 @@ def enviar_correo_confirmacion(request, user):
             fail_silently=False,
         )
         return enviados > 0
-    except Exception:
-        # Un correo inexistente en un dominio que sí existe normalmente
-        # se rechaza más tarde (rebote), no aquí; pero un dominio
-        # inventado sí suele fallar en este punto.
+    except Exception as exc:
+        # Guardamos el error real en el log para poder diagnosticar SMTP,
+        # credenciales, TLS, DNS, etc., sin mostrar secretos al usuario.
+        logger.exception('Error enviando correo de confirmación a %s', user.email)
+        # Dejamos la causa disponible para las vistas sin exponerla en pantalla.
+        setattr(request, '_correo_confirmacion_error', exc)
         return False

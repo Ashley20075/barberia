@@ -31,9 +31,6 @@
                 <p class="text-light-brown">
     Inicio de Sesión
 </p>
-                <h3 style="color:red;">
-    {{ mensaje_prueba }}
-</h3>
             </div>
 
             {% if messages %}
@@ -45,6 +42,16 @@
                         </div>
                     {% endfor %}
                 </div>
+            {% endif %}
+
+            {% if mostrar_reenvio %}
+                <form method="POST" action="{% url 'reenviar_confirmacion' %}" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <button type="submit" class="btn btn-outline-warning w-100 py-2">
+                        <i class="bi bi-envelope-arrow-up me-2"></i>Reenviar correo de confirmación
+                    </button>
+                </form>
             {% endif %}
 
             <form method="POST" data-conservar>

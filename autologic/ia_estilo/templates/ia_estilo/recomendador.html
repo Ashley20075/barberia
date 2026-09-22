@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUTOLOGIC AI</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
@@ -21,10 +22,16 @@
                 <div class="navbar-brand-custom">
                     <img src="{% static 'logo.jpeg' %}" alt="Logo">
                     Barber <span>Springfield</span>
-                    <span class="role-badge">AUTOLOGIC AI</span>
                 </div>
 
                 <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
+                        <i class="bi bi-bell"></i>
+                        {% if notificaciones_no_leidas %}
+                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
+                    </a>
 
                     <a href="{% url 'panel_cliente' %}" class="nav-btn">
                         <i class="bi bi-person"></i> Mi Perfil
@@ -33,24 +40,18 @@
                     <a href="{% url 'editar_perfil' %}" class="nav-btn">
                         <i class="bi bi-gear"></i> Editar Perfil
                     </a>
-                    <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn active">
-    <i class="bi bi-stars"></i> AutoAI
-</a>
 
-                    <button
-                        type="button"
-                        id="themeToggle"
-                        class="theme-toggle"
-                        title="Cambiar tema"
-                        aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
+                    <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn active">
+                        <i class="bi bi-stars"></i> AutoAI
+                    </a>
+
+
+                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
 
-                    <button
-                        class="btn-logout-custom"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalCerrarSesion">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
+                        <i class="bi bi-moon-fill"></i>
                     </button>
 
                 </div>
@@ -69,15 +70,10 @@
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </h5>
 
-                    <button
-                        type="button"
-                        class="btn-close btn-close-white"
-                        data-bs-dismiss="modal">
-                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body text-center py-4">
-
                     <i class="bi bi-check-circle-fill text-yellow fs-1 mb-3 d-inline-block"></i>
 
                     <p class="fs-5">
@@ -87,24 +83,17 @@
                     <p class="text-light-brown">
                         Serás redirigido al inicio.
                     </p>
-
                 </div>
 
                 <div class="modal-footer modal-footer-custom">
-
-                    <button
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancelar
                     </button>
 
-                    <button
-                        class="btn-modern"
-                        onclick="window.location.href='{% url 'logout' %}'">
+                    <button class="btn-modern" onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i>
                         Cerrar Sesión
                     </button>
-
                 </div>
 
             </div>
@@ -116,7 +105,6 @@
     <main class="container py-5">
 
         <div class="text-center mb-5">
-
             <span class="ia-badge">
                 <i class="bi bi-stars"></i> AUTOLOGIC AI
             </span>
@@ -128,7 +116,6 @@
             <p class="lead text-secondary mx-auto ia-subtitle">
                 Sube una foto y recibe recomendaciones orientativas de estilos de cabello.
             </p>
-
         </div>
 
 
@@ -145,22 +132,16 @@
 
             <!-- ========== SUBIR FOTO ========== -->
             <div class="col-lg-6">
-
                 <div class="ia-card p-4 h-100">
 
-                    <form
-                        method="post"
-                        enctype="multipart/form-data"
-                        id="iaForm">
-
+                    <form method="post" enctype="multipart/form-data" id="iaForm">
                         {% csrf_token %}
 
-                        <label
-    for="foto"
-    class="upload-zone {% if foto_preview %}d-none{% endif %}"
-    id="uploadZone">
+                        <label for="foto"
+                               class="upload-zone {% if foto_preview %}d-none{% endif %}"
+                               id="uploadZone">
 
-                            <i class="bi bi-camera fs-1 text-warning"></i>
+                            <i class="bi bi-camera fs-1 text-yellow"></i>
 
                             <h4 class="mt-3">
                                 Selecciona una fotografía
@@ -174,122 +155,90 @@
                                 JPG, PNG o WEBP · máximo 5 MB
                             </span>
 
-                            <input
-                                type="file"
-                                name="foto"
-                                id="foto"
-                                accept="image/jpeg,image/png,image/webp"
-                                hidden
-                                required>
-
+                            <input type="file"
+                                   name="foto"
+                                   id="foto"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   hidden
+                                   required>
                         </label>
 
 
-                        <div
-    id="previewBox"
-    class="text-center mt-3 {% if not foto_preview %}d-none{% endif %}">
+                        <div id="previewBox"
+                             class="text-center mt-3 {% if not foto_preview %}d-none{% endif %}">
 
-    <img
-        
-    id="previewBox"
-    class="text-center mt-3 {% if not foto_preview %}d-none{% endif %}">
+                            <img id="preview"
+                                 class="preview-image"
+                                 src="{% if foto_preview %}{{ foto_preview }}{% endif %}"
+                                 alt="Vista previa de la fotografía">
 
-    <img
-        id="preview"
-        class="preview-image"
-        src="{% if foto_preview %}{{ foto_preview }}{% endif %}"
-        alt="Vista previa de la fotografía">
-
-    <button
-        type="button"
-        class="btn btn-sm btn-outline-light mt-2"
-        id="removePhoto">
-
-        Cambiar fotografía
-
-    </button>
-
-</div>
-
-
-                        <div class="form-check mt-4">
-
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                name="acepto_privacidad"
-                                id="acepto_privacidad"
-                                required>
-
-                            <label
-                                class="form-check-label small text-secondary"
-                                for="acepto_privacidad">
-
-                                Entiendo que la fotografía se enviará temporalmente a un servicio externo de IA
-                                para generar la recomendación y que AUTOLOGIC no la guarda en su base de datos.
-
-                            </label>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-light mt-2"
+                                    id="removePhoto">
+                                Cambiar fotografía
+                            </button>
 
                         </div>
 
 
-                        <button
-                            class="btn btn-warning w-100 fw-bold mt-4 py-3"
-                            type="submit"
-                            id="analyzeBtn">
+                        <div class="form-check mt-4">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="acepto_privacidad"
+                                   id="acepto_privacidad"
+                                   required>
 
+                            <label class="form-check-label small text-secondary" for="acepto_privacidad">
+                                Entiendo que la fotografía se enviará temporalmente a un servicio externo de IA
+                                para generar la recomendación y que AUTOLOGIC no la guarda en su base de datos.
+                            </label>
+                        </div>
+
+
+                        <button class="btn-modern w-100 fw-bold mt-4 py-3"
+                                type="submit"
+                                id="analyzeBtn">
                             <i class="bi bi-stars"></i>
                             Analizar mi estilo
-
                         </button>
 
                     </form>
 
                 </div>
-
             </div>
 
 
             <!-- ========== RESULTADO ========== -->
             <div class="col-lg-6">
-
-                 <div class="ia-card p-4 h-100" id="resultadoIA">
+                <div class="ia-card p-4 h-100" id="resultadoIA">
 
                     {% if resultado %}
 
                         <h3 class="mb-4">
-                            <i class="bi bi-scissors text-warning"></i>
+                            <i class="bi bi-scissors text-yellow"></i>
                             Recomendaciones
                         </h3>
 
 
                         {% if resultado.observaciones %}
-
                             <div class="ia-observaciones mb-4">
-
-                                <h6 class="text-warning">
+                                <h6 class="text-yellow">
                                     Observaciones visibles
                                 </h6>
 
                                 <ul class="mb-0">
-
                                     {% for item in resultado.observaciones %}
                                         <li>{{ item }}</li>
                                     {% endfor %}
-
                                 </ul>
-
                             </div>
-
                         {% endif %}
 
 
                         {% for corte in resultado.recomendaciones %}
-
                             <div class="recommendation-card mb-3">
 
                                 <div class="d-flex justify-content-between align-items-start gap-2">
-
                                     <h5 class="mb-1">
                                         {{ forloop.counter }}. {{ corte.nombre }}
                                     </h5>
@@ -297,7 +246,6 @@
                                     <span class="maintenance">
                                         {{ corte.mantenimiento }}
                                     </span>
-
                                 </div>
 
                                 <p class="text-secondary mb-2">
@@ -310,29 +258,23 @@
                                 </div>
 
                             </div>
-
                         {% empty %}
-
                             <p>
                                 No se encontraron recomendaciones.
                             </p>
-
                         {% endfor %}
 
 
                         <div class="ia-disclaimer mt-4">
-
                             <i class="bi bi-info-circle"></i>
                             {{ resultado.aviso }}
-
                         </div>
 
 
                     {% else %}
 
                         <div class="empty-result text-center">
-
-                            <i class="bi bi-person-bounding-box fs-1 text-warning"></i>
+                            <i class="bi bi-person-bounding-box fs-1 text-yellow"></i>
 
                             <h4 class="mt-3">
                                 Tu resultado aparecerá aquí
@@ -342,13 +284,11 @@
                                 La IA analizará solamente características visibles en la foto
                                 y te propondrá tres estilos.
                             </p>
-
                         </div>
 
                     {% endif %}
 
                 </div>
-
             </div>
 
         </div>
@@ -357,74 +297,62 @@
 
 
     <!-- ========== SCRIPTS ========== -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-
-    const foto = document.getElementById('foto');
-    const preview = document.getElementById('preview');
-    const previewBox = document.getElementById('previewBox');
-    const uploadZone = document.getElementById('uploadZone');
-    const removePhoto = document.getElementById('removePhoto');
-    const form = document.getElementById('iaForm');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-
-
-    foto.addEventListener('change', () => {
-
-        const file = foto.files[0];
-
-        if (!file) return;
-
-        preview.src = URL.createObjectURL(file);
-
-        previewBox.classList.remove('d-none');
-
-        uploadZone.classList.add('d-none');
-
-    });
+        const foto = document.getElementById('foto');
+        const preview = document.getElementById('preview');
+        const previewBox = document.getElementById('previewBox');
+        const uploadZone = document.getElementById('uploadZone');
+        const removePhoto = document.getElementById('removePhoto');
+        const form = document.getElementById('iaForm');
+        const analyzeBtn = document.getElementById('analyzeBtn');
 
 
-    removePhoto.addEventListener('click', () => {
-    foto.value = '';
-    preview.src = '';
-    previewBox.classList.add('d-none');
-    uploadZone.classList.remove('d-none');
+        foto.addEventListener('change', () => {
+            const file = foto.files[0];
+            if (!file) return;
 
-    // Borrar las recomendaciones anteriores
-    const resultadoIA = document.getElementById('resultadoIA');
-
-    resultadoIA.innerHTML = `
-        <div class="empty-result text-center">
-            <i class="bi bi-person-bounding-box fs-1 text-warning"></i>
-
-            <h4 class="mt-3">
-                Tu resultado aparecerá aquí
-            </h4>
-
-            <p class="text-secondary">
-                La IA analizará solamente características visibles en la foto
-                y te propondrá tres estilos.
-            </p>
-        </div>
-    `;
-});
+            preview.src = URL.createObjectURL(file);
+            previewBox.classList.remove('d-none');
+            uploadZone.classList.add('d-none');
+        });
 
 
-    form.addEventListener('submit', () => {
+        removePhoto.addEventListener('click', () => {
+            foto.value = '';
+            preview.src = '';
+            previewBox.classList.add('d-none');
+            uploadZone.classList.remove('d-none');
 
-        analyzeBtn.disabled = true;
+            // Borrar las recomendaciones anteriores
+            const resultadoIA = document.getElementById('resultadoIA');
 
-        analyzeBtn.innerHTML =
-            '<span class="spinner-border spinner-border-sm me-2"></span>Analizando...';
+            resultadoIA.innerHTML = `
+                <div class="empty-result text-center">
+                    <i class="bi bi-person-bounding-box fs-1 text-yellow"></i>
 
-    });
+                    <h4 class="mt-3">
+                        Tu resultado aparecerá aquí
+                    </h4>
 
+                    <p class="text-secondary">
+                        La IA analizará solamente características visibles en la foto
+                        y te propondrá tres estilos.
+                    </p>
+                </div>
+            `;
+        });
+
+
+        form.addEventListener('submit', () => {
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span>Analizando...';
+        });
     </script>
 
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
 
 </body>
 </html>
-

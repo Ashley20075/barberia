@@ -1,0 +1,474 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita - BarberSpringfield</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body class="tema-admin">
+
+
+    <!-- MODAL CERRAR SESIÓN -->
+    <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title text-yellow"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-check-circle-fill text-yellow fs-1 mb-3 d-inline-block"></i>
+                    <p class="fs-5">¿Estás seguro que deseas cerrar sesión?</p>
+                    <p class="text-light-brown">Serás redirigido al inicio.</p>
+                </div>
+                <div class="modal-footer modal-footer-custom">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;" onclick="window.location.href='{% url 'logout' %}'">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-yellow" style="font-family:'Playfair Display',serif;">
+                <i class="bi bi-calendar-plus"></i> Agendar Cita
+            </h1>
+            <a href="{% url 'administracion:panel_admin' %}" class="btn-secondary-custom">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card-custom">
+            <div class="card-header-custom">
+                <span><i class="bi bi-calendar-plus"></i> Nueva cita</span>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" id="formAgendarAdmin">
+                    {% csrf_token %}
+
+                    <!-- Paso 1: tipo de cliente -->
+                    <label class="form-label-custom mb-2">👤 1. Cliente</label>
+                    <div class="d-flex gap-3 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tipo_cliente" id="tipoRegistrado"
+                                value="registrado" checked>
+                            <label class="form-check-label" for="tipoRegistrado">Cliente registrado</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tipo_cliente" id="tipoNuevo"
+                                value="nuevo">
+                            <label class="form-check-label" for="tipoNuevo">
+                                Llegó sin cuenta (registrar en el momento)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="bloqueClienteRegistrado" class="mb-4">
+                        <select name="cliente" id="cliente" class="form-select bg-dark-input">
+                            <option value="">Elegí un cliente</option>
+                            {% for cliente in clientes %}
+                            <option value="{{ cliente.id }}">
+                                {{ cliente.nombre }}{% if not cliente.registrado %} (sin cuenta){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="bloqueClienteNuevo" class="row g-3 mb-4" style="display:none;">
+                        <div class="col-md-5">
+                            <label class="form-label-custom">Nombre completo</label>
+                            <input type="text" name="cliente_nuevo_nombre" id="cliente_nuevo_nombre"
+                                class="form-control bg-dark-input" placeholder="Nombre y apellido">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-custom">Teléfono</label>
+                            <input type="tel" name="cliente_nuevo_telefono"
+                                class="form-control bg-dark-input" placeholder="Opcional">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label-custom">Cédula</label>
+                            <input type="text" name="cliente_nuevo_cedula"
+                                class="form-control bg-dark-input" placeholder="Opcional">
+                        </div>
+                        <div class="col-12">
+                            <small class="text-light-brown">
+                                <i class="bi bi-info-circle"></i>
+                                Queda un registro de esta persona, pero no se crea una cuenta ni una contraseña:
+                                no va a poder iniciar sesión en la página con estos datos.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2: servicio y adicionales -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label-custom">✂️ 2. Servicio</label>
+                            <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
+                                {% for servicio in servicios %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input servicio-radio" type="radio" name="servicio"
+                                        value="{{ servicio.id }}" id="serv{{ servicio.id }}"
+                                        data-precio="{{ servicio.precio }}" {% if forloop.first %}checked{% endif %}>
+                                    <label class="form-check-label" for="serv{{ servicio.id }}">
+                                        ✂️ {{ servicio.nombre }}
+                                        <small class="text-yellow">${{ servicio.precio|floatformat:0 }}</small>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom">➕ Adicionales</label>
+                            <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="adicionales"
+                                        value="Arreglo de barba" data-precio="5000" id="chkBarba">
+                                    <label class="form-check-label" for="chkBarba">
+                                        ✂️ Arreglo de barba <small class="text-yellow">$5.000</small>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="adicionales" value="Cejas"
+                                        data-precio="5000" id="chkCejas">
+                                    <label class="form-check-label" for="chkCejas">
+                                        👁️ Cejas <small class="text-yellow">$5.000</small>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="adicionales"
+                                        value="Diseño y líneas" data-precio="5000" id="chkDiseno">
+                                    <label class="form-check-label" for="chkDiseno">
+                                        🎨 Diseño / líneas <small class="text-yellow">$5.000</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Paso 3: barbero -->
+                    <label class="form-label-custom mb-2">💈 3. Barbero</label>
+                    <select class="form-select bg-dark-input mb-4" name="barbero" id="barbero">
+                        {% for barbero in barberos %}
+                        <option value="{{ barbero.id }}" data-dias-laborales="{{ barbero.dias_laborales }}">
+                            {{ barbero.nombre }} - {{ barbero.especialidad }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Paso 4: fecha y hora -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label-custom">📅 4. Fecha</label>
+                            <div class="calendario-turnos" id="calendarioTurnos">
+                                <div class="calendario-cabecera">
+                                    <button type="button" class="calendario-nav" id="mesAnterior" aria-label="Mes anterior">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <div>
+                                        <div class="calendario-mes" id="calendarioMes">-</div>
+                                        <small class="text-light-brown" id="calendarioAnio">-</small>
+                                    </div>
+                                    <button type="button" class="calendario-nav" id="mesSiguiente" aria-label="Mes siguiente">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="calendario-semana">
+                                    <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span>
+                                    <span>Jue</span><span>Vie</span><span>Sáb</span>
+                                </div>
+                                <div class="calendario-dias" id="calendarioDias"></div>
+                            </div>
+                            <input type="hidden" name="fecha" id="fecha" required>
+                            <div class="fecha-seleccionada mt-2" id="fechaSeleccionada">Selecciona una fecha para ver los turnos.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-custom">⏰ Horarios</label>
+                            <input type="hidden" name="hora" id="hora" required>
+                            <div class="horarios-turnos" id="horariosTurnos">
+                                <div class="horarios-vacio">
+                                    <i class="bi bi-calendar2-week"></i>
+                                    <span>Selecciona primero una fecha.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="duracion_total" id="duracion_total" value="40">
+
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn-modern">
+                            <i class="bi bi-check-circle"></i> Agendar Cita
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+const fechaInput = document.getElementById("fecha");
+const horaInput = document.getElementById("hora");
+const barberoInput = document.getElementById("barbero");
+const calendarioDias = document.getElementById("calendarioDias");
+const calendarioMes = document.getElementById("calendarioMes");
+const calendarioAnio = document.getElementById("calendarioAnio");
+const fechaSeleccionada = document.getElementById("fechaSeleccionada");
+const horariosTurnos = document.getElementById("horariosTurnos");
+
+let mesCalendario, anioCalendario, fechaElegida = null;
+
+const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+const diasSemana = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
+const hoy = new Date();
+const hoyLocal = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+function fechaISO(fecha) {
+    const y = fecha.getFullYear();
+    const m = String(fecha.getMonth() + 1).padStart(2, "0");
+    const d = String(fecha.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+}
+function fechaDesdeISO(valor) {
+    const [y, m, d] = valor.split("-").map(Number);
+    return new Date(y, m - 1, d);
+}
+function diasLaboralesSeleccionados() {
+    const opcion = barberoInput.options[barberoInput.selectedIndex];
+    const dias = (opcion?.dataset.diasLaborales || "LUN,MAR,MIE,JUE,VIE,SAB")
+        .split(",").map(d => d.trim().toUpperCase());
+    return new Set(dias);
+}
+function esDiaLaboral(fecha) {
+    return diasLaboralesSeleccionados().has(diasSemana[fecha.getDay()]);
+}
+function esFechaPasada(fecha) {
+    return fecha < hoyLocal;
+}
+
+function renderCalendario() {
+    calendarioMes.textContent = meses[mesCalendario];
+    calendarioAnio.textContent = anioCalendario;
+    calendarioDias.innerHTML = "";
+
+    const primerDia = new Date(anioCalendario, mesCalendario, 1).getDay();
+    const cantidadDias = new Date(anioCalendario, mesCalendario + 1, 0).getDate();
+
+    for (let i = 0; i < primerDia; i++) {
+        const vacio = document.createElement("span");
+        vacio.className = "calendario-dia vacio";
+        calendarioDias.appendChild(vacio);
+    }
+
+    for (let dia = 1; dia <= cantidadDias; dia++) {
+        const fecha = new Date(anioCalendario, mesCalendario, dia);
+        const boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "calendario-dia";
+        boton.textContent = dia;
+
+        const iso = fechaISO(fecha);
+        boton.dataset.fecha = iso;
+
+        if (fecha.getDay() === 0) boton.classList.add("domingo");
+        if (fecha.toDateString() === hoyLocal.toDateString()) boton.classList.add("hoy");
+        if (fechaElegida === iso) boton.classList.add("seleccionado");
+
+        const noLaboral = !esDiaLaboral(fecha);
+        const pasada = esFechaPasada(fecha);
+        if (noLaboral || pasada) {
+            boton.disabled = true;
+            boton.classList.add("no-disponible");
+            boton.title = pasada ? "Fecha anterior" : "Día no laboral";
+        } else {
+            boton.addEventListener("click", () => seleccionarFecha(iso));
+        }
+        calendarioDias.appendChild(boton);
+    }
+}
+
+function seleccionarFecha(iso) {
+    const fecha = fechaDesdeISO(iso);
+    if (esFechaPasada(fecha) || !esDiaLaboral(fecha)) return;
+
+    fechaElegida = iso;
+    fechaInput.value = iso;
+    horaInput.value = "";
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${fecha.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+    renderCalendario();
+    cargarHorarios();
+}
+
+function buscarPrimeraFechaLaboral(fechaBase) {
+    const fecha = new Date(fechaBase);
+    for (let i = 0; i < 370; i++) {
+        if (!esFechaPasada(fecha) && esDiaLaboral(fecha)) return fecha;
+        fecha.setDate(fecha.getDate() + 1);
+    }
+    return fechaBase;
+}
+
+function inicializarCalendario() {
+    const fechaInicial = fechaElegida ? fechaDesdeISO(fechaElegida) : buscarPrimeraFechaLaboral(hoyLocal);
+    fechaElegida = fechaISO(fechaInicial);
+    fechaInput.value = fechaElegida;
+    mesCalendario = fechaInicial.getMonth();
+    anioCalendario = fechaInicial.getFullYear();
+    renderCalendario();
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${fechaInicial.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+    cargarHorarios();
+}
+
+function cambiarMes(cambio) {
+    const nuevaFecha = new Date(anioCalendario, mesCalendario + cambio, 1);
+    const limiteMes = new Date(hoyLocal.getFullYear(), hoyLocal.getMonth(), 1);
+    if (nuevaFecha < limiteMes) return;
+    mesCalendario = nuevaFecha.getMonth();
+    anioCalendario = nuevaFecha.getFullYear();
+    renderCalendario();
+}
+
+document.getElementById("mesAnterior").addEventListener("click", () => cambiarMes(-1));
+document.getElementById("mesSiguiente").addEventListener("click", () => cambiarMes(1));
+
+function calcularDuracionActual() {
+    let duracion = 40;
+    document.querySelectorAll("input[name='adicionales']:checked").forEach(() => duracion += 5);
+    document.getElementById("duracion_total").value = duracion;
+    return duracion;
+}
+
+function mostrarHorariosVacios(texto, icono = "bi-calendar2-week") {
+    horariosTurnos.innerHTML = `
+        <div class="horarios-vacio">
+            <i class="bi ${icono}"></i>
+            <span>${texto}</span>
+        </div>`;
+}
+
+function cargarHorarios() {
+    const fecha = fechaInput.value;
+    const barbero = barberoInput.value;
+    if (!fecha || !barbero) {
+        mostrarHorariosVacios("Selecciona primero una fecha y un barbero.");
+        return;
+    }
+
+    const params = new URLSearchParams({
+        fecha: fecha,
+        barbero: barbero,
+        duracion_total: calcularDuracionActual()
+    });
+
+    mostrarHorariosVacios("Cargando horarios...", "bi-hourglass-split");
+
+    fetch(`/cliente/horarios/?${params.toString()}`)
+        .then(response => response.json())
+        .then(function (horarios) {
+            horariosTurnos.innerHTML = "";
+
+            if (!horarios.length) {
+                mostrarHorariosVacios("No hay horarios para esta fecha.", "bi-calendar-x");
+                return;
+            }
+
+            horarios.forEach(function (turno, indice) {
+                const hora = turno.hora;
+                const disponible = turno.disponible;
+                const safeHour = hora.replace(/[^a-zA-Z0-9]/g, "");
+                const radioId = `hora-${fecha}-${safeHour}`;
+
+                const card = document.createElement("div");
+                card.className = `horario-item ${disponible ? "horario-libre" : "horario-ocupado"}`;
+                card.innerHTML = `
+                    <div class="horario-principal">
+                        <input class="form-check-input horario-radio" type="radio" name="hora_visual" id="${radioId}" value="${hora}" ${disponible ? "" : "disabled"} ${disponible && indice === 0 ? "checked" : ""}>
+                        <label for="${radioId}" class="horario-hora ${disponible ? "" : "tachado"}">
+                            <i class="bi ${disponible ? "bi-clock" : "bi-lock-fill"}"></i>
+                            ${hora}
+                        </label>
+                        <span class="horario-estado ${disponible ? "estado-libre" : "estado-ocupado-texto"}">${disponible ? "Disponible" : "Ocupado"}</span>
+                    </div>`;
+                horariosTurnos.appendChild(card);
+            });
+
+            const primerLibre = horariosTurnos.querySelector(".horario-radio:not(:disabled)");
+            if (primerLibre) horaInput.value = primerLibre.value;
+
+            horariosTurnos.querySelectorAll(".horario-radio").forEach(radio => {
+                radio.addEventListener("change", () => {
+                    if (radio.checked) horaInput.value = radio.value;
+                });
+            });
+        })
+        .catch(function () {
+            mostrarHorariosVacios("No fue posible cargar los horarios. Inténtalo nuevamente.", "bi-exclamation-triangle");
+        });
+}
+
+document.querySelectorAll(".servicio-radio").forEach(function (radio) {
+    radio.addEventListener("change", cargarHorarios);
+});
+document.querySelectorAll("input[name='adicionales']").forEach(function (check) {
+    check.addEventListener("change", cargarHorarios);
+});
+
+barberoInput.addEventListener("change", function () {
+    const actual = fechaInput.value ? fechaDesdeISO(fechaInput.value) : hoyLocal;
+    const siguiente = (!esFechaPasada(actual) && esDiaLaboral(actual)) ? actual : buscarPrimeraFechaLaboral(hoyLocal);
+    fechaElegida = fechaISO(siguiente);
+    fechaInput.value = fechaElegida;
+    mesCalendario = siguiente.getMonth();
+    anioCalendario = siguiente.getFullYear();
+    renderCalendario();
+    fechaSeleccionada.innerHTML = `<i class="bi bi-calendar-check"></i> ${siguiente.toLocaleDateString("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"})}`;
+    cargarHorarios();
+});
+
+// Alterna entre "cliente registrado" y "llegó sin cuenta"
+const tipoRegistrado = document.getElementById("tipoRegistrado");
+const tipoNuevo = document.getElementById("tipoNuevo");
+const bloqueRegistrado = document.getElementById("bloqueClienteRegistrado");
+const bloqueNuevo = document.getElementById("bloqueClienteNuevo");
+const selectCliente = document.getElementById("cliente");
+const inputNombreNuevo = document.getElementById("cliente_nuevo_nombre");
+
+function actualizarTipoCliente() {
+    const esNuevo = tipoNuevo.checked;
+    bloqueRegistrado.style.display = esNuevo ? "none" : "block";
+    bloqueNuevo.style.display = esNuevo ? "flex" : "none";
+    selectCliente.required = !esNuevo;
+    inputNombreNuevo.required = esNuevo;
+}
+tipoRegistrado.addEventListener("change", actualizarTipoCliente);
+tipoNuevo.addEventListener("change", actualizarTipoCliente);
+actualizarTipoCliente();
+
+inicializarCalendario();
+
+    </script>
+    <script src="{% static 'js/ui-mejoras.js' %}"></script>
+</body>
+</html>

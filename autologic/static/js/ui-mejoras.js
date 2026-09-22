@@ -236,6 +236,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return window.location.pathname + window.location.search;
     }
 
+    /* Para el scroll usamos solo el path, sin el "?...": paginar,
+       filtrar o cambiar de pestaña dentro de la misma pantalla
+       cambia el query string A PROPOSITO (?pagina=2, ?estado=...).
+       Comparar con el query incluido hacia que esos casos NUNCA
+       coincidieran con la pagina guardada, y el scroll se perdia
+       cada vez que se usaba la paginacion. */
+    function rutaBaseActual() {
+        return window.location.pathname;
+    }
+
     function guardar(clave, valor) {
         try {
             sessionStorage.setItem(clave, JSON.stringify(valor));
@@ -290,17 +300,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* =================================================
        1. GUARDAR SCROLL ANTES DE CAMBIAR DE PAGINA
+       -------------------------------------------------
+       "beforeunload" no es confiable en varios navegadores
+       de celular (Safari de iOS, algunos de Android): a
+       veces no se dispara para una navegacion comun, asi
+       que el scroll nunca quedaba guardado ahi. Se guarda
+       por TRES caminos distintos para que alguno funcione
+       siempre:
+         a) cada vez que el usuario scrollea (con un
+            pequeno retraso, para no saturar);
+         b) en "pagehide" y "beforeunload", los dos, por si
+            alguno no aplica en el navegador de turno;
+         c) justo antes de que el modal de confirmacion
+            dispare la navegacion (ver mas abajo), que es
+            el momento exacto en que sabemos que se va a
+            cambiar de pagina.
     ================================================= */
 
-    window.addEventListener('beforeunload', function () {
+    function guardarScrollActual() {
         var y = window.scrollY ||
                 document.documentElement.scrollTop ||
                 0;
+        guardar(CLAVE_SCROLL, { ruta: rutaBaseActual(), y: y });
+    }
 
-        if (y > 0) {
-            guardar(CLAVE_SCROLL, { ruta: rutaActual(), y: y });
-        }
-    });
+    var guardadoPendiente = null;
+    window.addEventListener('scroll', function () {
+        if (guardadoPendiente) { clearTimeout(guardadoPendiente); }
+        guardadoPendiente = setTimeout(guardarScrollActual, 150);
+    }, { passive: true });
+
+    window.addEventListener('beforeunload', guardarScrollActual);
+    window.addEventListener('pagehide', guardarScrollActual);
+
+    /* Se expone para que el modal de confirmacion (mas abajo en este
+       mismo archivo) pueda llamarlo justo antes de navegar. */
+    window._guardarScrollBarberia = guardarScrollActual;
 
 
     /* =================================================
@@ -314,6 +349,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!formulario || formulario.tagName !== 'FORM') {
             return;
         }
+
+        // Mismo momento seguro que en el modal de confirmacion: se
+        // guarda el scroll apenas se sabe que la pagina va a cambiar.
+        guardarScrollActual();
 
         var metodo = (formulario.getAttribute('method') || 'get')
             .toLowerCase();
@@ -465,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (scrollGuardado &&
-                scrollGuardado.ruta === rutaActual() &&
+                scrollGuardado.ruta === rutaBaseActual() &&
                 scrollGuardado.y) {
                 window.scrollTo(0, scrollGuardado.y);
             }
@@ -612,6 +651,13 @@ document.addEventListener('DOMContentLoaded', function () {
                    original (seguir el enlace o enviar el formulario). */
                 disparador.dataset.confirmado = '1';
 
+                // Guarda el scroll ANTES de navegar: es el momento mas
+                // seguro posible, no depende de que el navegador
+                // dispare beforeunload/pagehide a tiempo.
+                if (window._guardarScrollBarberia) {
+                    window._guardarScrollBarberia();
+                }
+
                 if (disparador.tagName === 'A' && disparador.href) {
                     window.location.href = disparador.href;
                     return;
@@ -658,4 +704,56 @@ document.addEventListener('DOMContentLoaded', function () {
         iniciarSlideshow('.hero-bg-slide', 6500);
         iniciarSlideshow('.login-bg-slide', 6500);
     });
+})();
+
+
+/* =====================================================
+   MENU HAMBURGUESA PARA LAS NAVBARS DE LOS PANELES
+   -----------------------------------------------------
+   .navbar-custom (barbero, cliente, admin, inventario,
+   cierre de caja, agendar cita...) nunca tuvo colapso
+   para pantallas chicas: todos los botones (campana,
+   usuario, enlaces, tema, cerrar sesion) iban en una
+   sola fila que en el celular se amontonaba, se cortaba
+   o directamente tapaba otros botones al cargar.
+
+   Esto NO toca el HTML de cada plantilla: busca el
+   patron que ya usan todas (marca + fila de botones) y
+   le inyecta un boton de hamburguesa por JS, asi la
+   correccion aplica en todos los paneles a la vez.
+===================================================== */
+(function () {
+
+    function armarNavbar(nav) {
+        var fila = nav.querySelector('.d-flex.align-items-center.justify-content-between');
+        if (!fila) { return; }
+
+        var marca = fila.querySelector('.navbar-brand-custom');
+        var acciones = fila.querySelector(':scope > div.d-flex.align-items-center');
+        if (!marca || !acciones || acciones === marca) { return; }
+
+        acciones.classList.add('nav-acciones');
+
+        var boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'nav-hamburguesa';
+        boton.setAttribute('aria-label', 'Abrir menú');
+        boton.setAttribute('aria-expanded', 'false');
+        boton.innerHTML = '<i class="bi bi-list"></i>';
+
+        boton.addEventListener('click', function () {
+            var abierto = acciones.classList.toggle('nav-acciones-abierto');
+            boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+            boton.innerHTML = abierto ?
+                '<i class="bi bi-x-lg"></i>' :
+                '<i class="bi bi-list"></i>';
+        });
+
+        marca.insertAdjacentElement('afterend', boton);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('nav.navbar-custom').forEach(armarNavbar);
+    });
+
 })();

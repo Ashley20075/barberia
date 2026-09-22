@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('registro/', views.registro, name='registro'),
     path('confirmar-correo/<str:token>/', views.confirmar_correo, name='confirmar_correo'),
+    path('reenviar-confirmacion/', views.reenviar_confirmacion, name='reenviar_confirmacion'),
     path('logout/', views.logout_view, name='logout'),
     path('cliente/horarios/',views.horarios_disponibles,name='horarios_disponibles'),
     path('cliente/vaciar-historial/',views.vaciar_historial_cliente,name='vaciar_historial_cliente'),
