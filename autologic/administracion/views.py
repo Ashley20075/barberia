@@ -78,37 +78,224 @@ def panel_admin(request):
 
 @login_required
 def editar_inicio(request):
-    """Actualiza todo el contenido editable de la página pública de inicio."""
+    """
+    Actualiza el contenido editable de la página de inicio.
+
+    Las imágenes pueden venir de:
+    1. Una URL.
+    2. Un archivo seleccionado desde el dispositivo.
+
+    Para cada imagen solamente se utiliza la fuente seleccionada.
+    """
+
     if not request.user.is_superuser:
-        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        messages.error(
+            request,
+            'No tienes permisos para realizar esta acción.'
+        )
         return redirect('inicio')
 
     sitio = Sitio.obtener()
+
     if request.method != 'POST':
         return redirect('administracion:panel_admin')
 
+    # ============================================================
+    # CAMPOS DE TEXTO
+    # ============================================================
+
     campos = [
-        'nombre_marca', 'eslogan', 'hero_titulo', 'hero_descripcion',
-        'hero_imagen_1', 'hero_imagen_2', 'hero_imagen_3',
-        'servicios_titulo', 'servicios_subtitulo', 'barberos_titulo', 'barberos_subtitulo',
-        'nosotros_titulo', 'nosotros_parrafo_1', 'nosotros_parrafo_2',
-        'nosotros_punto_1', 'nosotros_punto_2', 'nosotros_punto_3', 'nosotros_imagen',
-        'testimonios_titulo', 'testimonios_subtitulo', 'testimonio_1', 'testimonio_1_autor',
-        'testimonio_2', 'testimonio_2_autor', 'testimonio_3', 'testimonio_3_autor',
-        'cta_titulo', 'cta_descripcion', 'cta_boton', 'footer_descripcion', 'horario',
-        'direccion', 'telefono', 'email', 'noticias_titulo', 'noticias_descripcion',
+        'nombre_marca',
+        'eslogan',
+        'hero_titulo',
+        'hero_descripcion',
+
+        'servicios_titulo',
+        'servicios_subtitulo',
+
+        'barberos_titulo',
+        'barberos_subtitulo',
+
+        'nosotros_titulo',
+        'nosotros_parrafo_1',
+        'nosotros_parrafo_2',
+        'nosotros_punto_1',
+        'nosotros_punto_2',
+        'nosotros_punto_3',
+
+        'testimonios_titulo',
+        'testimonios_subtitulo',
+        'testimonio_1',
+        'testimonio_1_autor',
+        'testimonio_2',
+        'testimonio_2_autor',
+        'testimonio_3',
+        'testimonio_3_autor',
+
+        'cta_titulo',
+        'cta_descripcion',
+        'cta_boton',
+
+        'footer_descripcion',
+        'horario',
+        'direccion',
+        'telefono',
+        'email',
+
+        'noticias_titulo',
+        'noticias_descripcion',
         'copyright_texto',
     ]
+
     for campo in campos:
         if campo in request.POST:
-            setattr(sitio, campo, request.POST.get(campo, '').strip())
+            valor = request.POST.get(campo, '').strip()
+            setattr(sitio, campo, valor)
+
+    # ============================================================
+    # FUNCIÓN AUXILIAR PARA IMÁGENES
+    # ============================================================
+
+    def procesar_imagen(
+        fuente,
+        campo_url,
+        campo_archivo,
+        archivo_subido
+    ):
+        """
+        Guarda únicamente la fuente seleccionada.
+
+        Si se selecciona URL:
+        - Guarda la URL.
+        - No utiliza el archivo.
+
+        Si se selecciona archivo:
+        - Guarda el archivo.
+        - No utiliza la URL.
+        """
+
+        if fuente == Sitio.FUENTE_ARCHIVO:
+            if archivo_subido:
+                setattr(
+                    sitio,
+                    campo_archivo,
+                    archivo_subido
+                )
+
+            setattr(
+                sitio,
+                campo_url,
+                getattr(sitio, campo_url)
+            )
+
+        else:
+            url = request.POST.get(
+                campo_url,
+                ''
+            ).strip()
+
+            setattr(
+                sitio,
+                campo_url,
+                url
+            )
+
+    # ============================================================
+    # IMAGEN PORTADA 1
+    # ============================================================
+
+    fuente_1 = request.POST.get(
+        'hero_imagen_1_fuente',
+        Sitio.FUENTE_URL
+    )
+
+    procesar_imagen(
+        fuente_1,
+        'hero_imagen_1_url',
+        'hero_imagen_1_archivo',
+        request.FILES.get('hero_imagen_1_archivo')
+    )
+
+    sitio.hero_imagen_1_fuente = fuente_1
+
+    # ============================================================
+    # IMAGEN PORTADA 2
+    # ============================================================
+
+    fuente_2 = request.POST.get(
+        'hero_imagen_2_fuente',
+        Sitio.FUENTE_URL
+    )
+
+    procesar_imagen(
+        fuente_2,
+        'hero_imagen_2_url',
+        'hero_imagen_2_archivo',
+        request.FILES.get('hero_imagen_2_archivo')
+    )
+
+    sitio.hero_imagen_2_fuente = fuente_2
+
+    # ============================================================
+    # IMAGEN PORTADA 3
+    # ============================================================
+
+    fuente_3 = request.POST.get(
+        'hero_imagen_3_fuente',
+        Sitio.FUENTE_URL
+    )
+
+    procesar_imagen(
+        fuente_3,
+        'hero_imagen_3_url',
+        'hero_imagen_3_archivo',
+        request.FILES.get('hero_imagen_3_archivo')
+    )
+
+    sitio.hero_imagen_3_fuente = fuente_3
+
+    # ============================================================
+    # IMAGEN DE "NOSOTROS"
+    # ============================================================
+
+    fuente_nosotros = request.POST.get(
+        'nosotros_imagen_fuente',
+        Sitio.FUENTE_URL
+    )
+
+    procesar_imagen(
+        fuente_nosotros,
+        'nosotros_imagen_url',
+        'nosotros_imagen_archivo',
+        request.FILES.get('nosotros_imagen_archivo')
+    )
+
+    sitio.nosotros_imagen_fuente = fuente_nosotros
+
+    # ============================================================
+    # GUARDAR
+    # ============================================================
 
     try:
         sitio.full_clean()
         sitio.save()
-        messages.success(request, '✅ La información de la página de inicio fue actualizada correctamente.')
+
+        messages.success(
+            request,
+            '✅ La información de la página de inicio fue actualizada correctamente.'
+        )
+
     except ValidationError as e:
-        messages.error(request, f'❌ No se pudo guardar la información: {e.messages[0]}')
+        if e.messages:
+            messages.error(
+                request,
+                f'❌ No se pudo guardar la información: {e.messages[0]}'
+            )
+        else:
+            messages.error(
+                request,
+                '❌ No se pudo guardar la información.'
+            )
 
     return redirect('administracion:panel_admin')
 

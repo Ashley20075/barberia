@@ -55,6 +55,156 @@
         .modal-body-scroll::-webkit-scrollbar-track {background: var(--color-fondo-secundario); border-radius: 10px;}
         .modal-body-scroll::-webkit-scrollbar-thumb {background: var(--color-primario); border-radius: 10px;}
         .modal-body-scroll::-webkit-scrollbar-thumb:hover {background: var(--color-primario-claro);}
+        /* ============================================================
+   EDITOR DE PÁGINA DE INICIO
+   COMPATIBLE CON MODO OSCURO Y MODO CLARO
+   ============================================================ */
+
+#modalEditarInicio .modal-content {
+    background: var(--color-fondo-card) !important;
+    color: var(--color-texto) !important;
+    border: 1px solid var(--color-borde) !important;
+}
+
+#modalEditarInicio .modal-header {
+    background: var(--color-fondo-secundario) !important;
+    color: var(--color-texto) !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+}
+
+#modalEditarInicio .modal-body {
+    background: var(--color-fondo-card) !important;
+    color: var(--color-texto) !important;
+}
+
+#modalEditarInicio .modal-footer {
+    background: var(--color-fondo-secundario) !important;
+    border-top: 1px solid var(--color-borde) !important;
+}
+
+#modalEditarInicio .section-editor {
+    background: var(--color-fondo-secundario) !important;
+    border-color: var(--color-borde) !important;
+}
+
+#modalEditarInicio .section-editor h6 {
+    color: var(--color-primario) !important;
+}
+
+#modalEditarInicio .form-label-custom {
+    color: var(--color-texto) !important;
+}
+
+#modalEditarInicio .form-control,
+#modalEditarInicio .form-select {
+    background-color: var(--color-fondo-card) !important;
+    color: var(--color-texto) !important;
+    border-color: var(--color-borde) !important;
+}
+
+#modalEditarInicio .form-control::placeholder {
+    color: var(--color-texto-secundario) !important;
+}
+
+#modalEditarInicio .form-control:focus,
+#modalEditarInicio .form-select:focus {
+    background-color: var(--color-fondo-card) !important;
+    color: var(--color-texto) !important;
+    border-color: var(--color-primario) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primario-rgb), 0.15) !important;
+}
+
+/* Texto secundario del editor */
+#modalEditarInicio .text-light-brown {
+    color: var(--color-texto-secundario) !important;
+}
+
+/* Backdrop del modal */
+.modal-backdrop.show {
+    opacity: 0.35 !important;
+}
+
+/* ============================================================
+   SELECTOR URL / DISPOSITIVO
+   ============================================================ */
+
+.selector-fuente-imagen {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.selector-fuente-imagen .btn {
+    border-radius: 10px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.selector-fuente-imagen .btn-check:checked + .btn {
+    background: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
+    color: #0B0A08 !important;
+}
+
+.selector-fuente-imagen .btn-outline-warning {
+    color: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
+}
+
+.selector-fuente-imagen .btn-outline-warning:hover {
+    background: var(--color-primario) !important;
+    color: #0B0A08 !important;
+}
+
+/* Campos de imagen */
+.campo-imagen-fuente {
+    transition: opacity 0.2s ease;
+}
+
+.campo-imagen-fuente.desactivado {
+    opacity: 0.45;
+}
+
+.campo-imagen-fuente input:disabled {
+    cursor: not-allowed;
+}
+
+/* Vista previa */
+.preview-imagen-editor {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--color-borde);
+    margin-top: 10px;
+}
+
+/* Modo claro */
+[data-theme="light"] #modalEditarInicio .modal-content,
+body.light-mode #modalEditarInicio .modal-content {
+    background: var(--color-fondo-card) !important;
+    color: var(--color-texto) !important;
+}
+
+[data-theme="light"] #modalEditarInicio .modal-body,
+body.light-mode #modalEditarInicio .modal-body {
+    background: var(--color-fondo-card) !important;
+}
+
+[data-theme="light"] #modalEditarInicio .section-editor,
+body.light-mode #modalEditarInicio .section-editor {
+    background: var(--color-fondo-secundario) !important;
+}
+
+[data-theme="light"] #modalEditarInicio .form-control,
+[data-theme="light"] #modalEditarInicio .form-select,
+body.light-mode #modalEditarInicio .form-control,
+body.light-mode #modalEditarInicio .form-select {
+    background-color: #FFFFFF !important;
+    color: #222222 !important;
+    border-color: #D6C7B8 !important;
+}
     </style>
 </head>
 
@@ -822,7 +972,11 @@
                     <h5 class="modal-title text-yellow"><i class="bi bi-house-gear"></i> Editar página de inicio</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="{% url 'administracion:editar_inicio' %}">
+                <form
+    method="POST"
+    action="{% url 'administracion:editar_inicio' %}"
+    enctype="multipart/form-data"
+>
                     {% csrf_token %}
                     <div class="modal-body modal-body-scroll">
                         <div class="section-editor">
@@ -847,17 +1001,266 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">Imagen portada 1</label>
-                                    <input type="url" name="hero_imagen_1" value="{{ sitio.hero_imagen_1 }}" class="form-control bg-dark-input">
-                                </div>
+    <label class="form-label-custom">
+        Imagen portada 1
+    </label>
+
+    <div class="selector-fuente-imagen">
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_1_fuente"
+            id="heroImagen1Url"
+            value="url"
+            {% if sitio.hero_imagen_1_fuente == 'url' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen1Url"
+        >
+            <i class="bi bi-link-45deg"></i>
+            URL
+        </label>
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_1_fuente"
+            id="heroImagen1Archivo"
+            value="archivo"
+            {% if sitio.hero_imagen_1_fuente == 'archivo' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen1Archivo"
+        >
+            <i class="bi bi-upload"></i>
+            Dispositivo
+        </label>
+
+    </div>
+
+    <div
+        id="contenedorHeroImagen1Url"
+        class="campo-imagen-fuente"
+    >
+        <input
+            type="url"
+            name="hero_imagen_1_url"
+            id="hero_imagen_1_url"
+            value="{{ sitio.hero_imagen_1_url }}"
+            class="form-control"
+            placeholder="https://ejemplo.com/imagen.jpg"
+        >
+    </div>
+
+    <div
+        id="contenedorHeroImagen1Archivo"
+        class="campo-imagen-fuente mt-2"
+    >
+        <input
+            type="file"
+            name="hero_imagen_1_archivo"
+            id="hero_imagen_1_archivo"
+            class="form-control"
+            accept="image/*"
+        >
+
+        {% if sitio.hero_imagen_1_fuente == 'archivo' and sitio.hero_imagen_1_archivo %}
+            <small class="text-light-brown d-block mt-2">
+                <i class="bi bi-check-circle"></i>
+                Ya hay una imagen del dispositivo guardada.
+            </small>
+        {% endif %}
+    </div>
+
+    {% if sitio.hero_imagen_1 %}
+        <img
+            src="{{ sitio.hero_imagen_1 }}"
+            alt="Vista previa portada 1"
+            class="preview-imagen-editor"
+        >
+    {% endif %}
+</div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">Imagen portada 2</label>
-                                    <input type="url" name="hero_imagen_2" value="{{ sitio.hero_imagen_2 }}" class="form-control bg-dark-input">
-                                </div>
+    <label class="form-label-custom">
+        Imagen portada 2
+    </label>
+
+    <div class="selector-fuente-imagen">
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_2_fuente"
+            id="heroImagen2Url"
+            value="url"
+            {% if sitio.hero_imagen_2_fuente == 'url' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen2Url"
+        >
+            <i class="bi bi-link-45deg"></i>
+            URL
+        </label>
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_2_fuente"
+            id="heroImagen2Archivo"
+            value="archivo"
+            {% if sitio.hero_imagen_2_fuente == 'archivo' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen2Archivo"
+        >
+            <i class="bi bi-upload"></i>
+            Dispositivo
+        </label>
+
+    </div>
+
+    <div
+        id="contenedorHeroImagen2Url"
+        class="campo-imagen-fuente"
+    >
+        <input
+            type="url"
+            name="hero_imagen_2_url"
+            id="hero_imagen_2_url"
+            value="{{ sitio.hero_imagen_2_url }}"
+            class="form-control"
+            placeholder="https://ejemplo.com/imagen.jpg"
+        >
+    </div>
+
+    <div
+        id="contenedorHeroImagen2Archivo"
+        class="campo-imagen-fuente mt-2"
+    >
+        <input
+            type="file"
+            name="hero_imagen_2_archivo"
+            id="hero_imagen_2_archivo"
+            class="form-control"
+            accept="image/*"
+        >
+
+        {% if sitio.hero_imagen_2_fuente == 'archivo' and sitio.hero_imagen_2_archivo %}
+            <small class="text-light-brown d-block mt-2">
+                <i class="bi bi-check-circle"></i>
+                Ya hay una imagen del dispositivo guardada.
+            </small>
+        {% endif %}
+    </div>
+
+    {% if sitio.hero_imagen_2 %}
+        <img
+            src="{{ sitio.hero_imagen_2 }}"
+            alt="Vista previa portada 2"
+            class="preview-imagen-editor"
+        >
+    {% endif %}
+</div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">Imagen portada 3</label>
-                                    <input type="url" name="hero_imagen_3" value="{{ sitio.hero_imagen_3 }}" class="form-control bg-dark-input">
-                                </div>
+    <label class="form-label-custom">
+        Imagen portada 3
+    </label>
+
+    <div class="selector-fuente-imagen">
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_3_fuente"
+            id="heroImagen3Url"
+            value="url"
+            {% if sitio.hero_imagen_3_fuente == 'url' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen3Url"
+        >
+            <i class="bi bi-link-45deg"></i>
+            URL
+        </label>
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="hero_imagen_3_fuente"
+            id="heroImagen3Archivo"
+            value="archivo"
+            {% if sitio.hero_imagen_3_fuente == 'archivo' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="heroImagen3Archivo"
+        >
+            <i class="bi bi-upload"></i>
+            Dispositivo
+        </label>
+
+    </div>
+
+    <div
+        id="contenedorHeroImagen3Url"
+        class="campo-imagen-fuente"
+    >
+        <input
+            type="url"
+            name="hero_imagen_3_url"
+            id="hero_imagen_3_url"
+            value="{{ sitio.hero_imagen_3_url }}"
+            class="form-control"
+            placeholder="https://ejemplo.com/imagen.jpg"
+        >
+    </div>
+
+    <div
+        id="contenedorHeroImagen3Archivo"
+        class="campo-imagen-fuente mt-2"
+    >
+        <input
+            type="file"
+            name="hero_imagen_3_archivo"
+            id="hero_imagen_3_archivo"
+            class="form-control"
+            accept="image/*"
+        >
+
+        {% if sitio.hero_imagen_3_fuente == 'archivo' and sitio.hero_imagen_3_archivo %}
+            <small class="text-light-brown d-block mt-2">
+                <i class="bi bi-check-circle"></i>
+                Ya hay una imagen del dispositivo guardada.
+            </small>
+        {% endif %}
+    </div>
+
+    {% if sitio.hero_imagen_3 %}
+        <img
+            src="{{ sitio.hero_imagen_3 }}"
+            alt="Vista previa portada 3"
+            class="preview-imagen-editor"
+        >
+    {% endif %}
+</div>
                             </div>
                         </div>
                         <div class="section-editor">
@@ -913,8 +1316,95 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label-custom">Imagen de Nosotros</label>
-                                <input type="url" name="nosotros_imagen" value="{{ sitio.nosotros_imagen }}" class="form-control bg-dark-input">
+                                <div class="mb-3">
+
+    <label class="form-label-custom">
+        Imagen de "Más que una barbería, un legado"
+    </label>
+
+    <div class="selector-fuente-imagen">
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="nosotros_imagen_fuente"
+            id="nosotrosImagenUrl"
+            value="url"
+            {% if sitio.nosotros_imagen_fuente == 'url' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="nosotrosImagenUrl"
+        >
+            <i class="bi bi-link-45deg"></i>
+            URL
+        </label>
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="nosotros_imagen_fuente"
+            id="nosotrosImagenArchivo"
+            value="archivo"
+            {% if sitio.nosotros_imagen_fuente == 'archivo' %}checked{% endif %}
+            autocomplete="off"
+        >
+
+        <label
+            class="btn btn-outline-warning"
+            for="nosotrosImagenArchivo"
+        >
+            <i class="bi bi-upload"></i>
+            Dispositivo
+        </label>
+
+    </div>
+
+    <div
+        id="contenedorNosotrosImagenUrl"
+        class="campo-imagen-fuente"
+    >
+        <input
+            type="url"
+            name="nosotros_imagen_url"
+            id="nosotros_imagen_url"
+            value="{{ sitio.nosotros_imagen_url }}"
+            class="form-control"
+            placeholder="https://ejemplo.com/imagen.jpg"
+        >
+    </div>
+
+    <div
+        id="contenedorNosotrosImagenArchivo"
+        class="campo-imagen-fuente mt-2"
+    >
+        <input
+            type="file"
+            name="nosotros_imagen_archivo"
+            id="nosotros_imagen_archivo"
+            class="form-control"
+            accept="image/*"
+        >
+
+        {% if sitio.nosotros_imagen_fuente == 'archivo' and sitio.nosotros_imagen_archivo %}
+            <small class="text-light-brown d-block mt-2">
+                <i class="bi bi-check-circle"></i>
+                Ya hay una imagen del dispositivo guardada.
+            </small>
+        {% endif %}
+    </div>
+
+    {% if sitio.nosotros_imagen %}
+        <img
+            src="{{ sitio.nosotros_imagen }}"
+            alt="Vista previa de Nosotros"
+            class="preview-imagen-editor"
+        >
+    {% endif %}
+
+</div>
                             </div>
                         </div>
                         <div class="section-editor">
@@ -1469,6 +1959,143 @@
             document.getElementById('editServicioDuracion').value = btn.dataset.duracion || 0;
             document.getElementById('formEditarServicio').action = btn.dataset.url || '';
         });
+        // ============================================================
+// EDITOR DE IMÁGENES DEL HOME
+// URL <-> DISPOSITIVO
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    function configurarSelectorImagen(
+        nombreFuente,
+        contenedorUrlId,
+        contenedorArchivoId,
+        inputUrlId,
+        inputArchivoId
+    ) {
+        const radios = document.querySelectorAll(
+            'input[name="' + nombreFuente + '"]'
+        );
+
+        const contenedorUrl = document.getElementById(
+            contenedorUrlId
+        );
+
+        const contenedorArchivo = document.getElementById(
+            contenedorArchivoId
+        );
+
+        const inputUrl = document.getElementById(
+            inputUrlId
+        );
+
+        const inputArchivo = document.getElementById(
+            inputArchivoId
+        );
+
+        if (
+            !radios.length ||
+            !contenedorUrl ||
+            !contenedorArchivo ||
+            !inputUrl ||
+            !inputArchivo
+        ) {
+            return;
+        }
+
+        function actualizar() {
+
+            const seleccionado = document.querySelector(
+                'input[name="' + nombreFuente + '"]:checked'
+            );
+
+            if (!seleccionado) {
+                return;
+            }
+
+            if (seleccionado.value === 'url') {
+
+                contenedorUrl.style.display = 'block';
+                contenedorArchivo.style.display = 'none';
+
+                inputUrl.disabled = false;
+                inputArchivo.disabled = true;
+
+                contenedorUrl.classList.remove(
+                    'desactivado'
+                );
+
+                contenedorArchivo.classList.add(
+                    'desactivado'
+                );
+
+            } else {
+
+                contenedorUrl.style.display = 'none';
+                contenedorArchivo.style.display = 'block';
+
+                inputUrl.disabled = true;
+                inputArchivo.disabled = false;
+
+                contenedorUrl.classList.add(
+                    'desactivado'
+                );
+
+                contenedorArchivo.classList.remove(
+                    'desactivado'
+                );
+            }
+        }
+
+        radios.forEach(function (radio) {
+
+            radio.addEventListener(
+                'change',
+                actualizar
+            );
+
+        });
+
+        actualizar();
+    }
+
+
+    configurarSelectorImagen(
+        'hero_imagen_1_fuente',
+        'contenedorHeroImagen1Url',
+        'contenedorHeroImagen1Archivo',
+        'hero_imagen_1_url',
+        'hero_imagen_1_archivo'
+    );
+
+
+    configurarSelectorImagen(
+        'hero_imagen_2_fuente',
+        'contenedorHeroImagen2Url',
+        'contenedorHeroImagen2Archivo',
+        'hero_imagen_2_url',
+        'hero_imagen_2_archivo'
+    );
+
+
+    configurarSelectorImagen(
+        'hero_imagen_3_fuente',
+        'contenedorHeroImagen3Url',
+        'contenedorHeroImagen3Archivo',
+        'hero_imagen_3_url',
+        'hero_imagen_3_archivo'
+    );
+
+
+    configurarSelectorImagen(
+        'nosotros_imagen_fuente',
+        'contenedorNosotrosImagenUrl',
+        'contenedorNosotrosImagenArchivo',
+        'nosotros_imagen_url',
+        'nosotros_imagen_archivo'
+    );
+
+});
     </script>
     <script src="{% static 'js/ui-mejoras.js' %}">
     </script>
