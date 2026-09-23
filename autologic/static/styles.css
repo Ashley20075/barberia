@@ -5826,3 +5826,692 @@ html[data-theme="light"] .ia-chat-form .form-control {
     border-radius: 16px;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
 }
+
+/* =========================================================
+   REDISEÑO PAGINA DE INICIO (pagina-inicio)
+   Todo lo de aqui abajo solo aplica dentro de body.pagina-inicio,
+   para no afectar el resto de paginas del sistema.
+   ========================================================= */
+.pagina-inicio {
+    --hz-acento2: #B23B3B;
+    --hz-acento2-claro: #D46B63;
+    overflow-x: hidden;
+}
+[data-theme="light"] .pagina-inicio {
+    --hz-acento2: #9C3131;
+    --hz-acento2-claro: #B4534B;
+}
+
+.footer { position: relative; overflow: hidden; }
+.hz-footer-marca {
+    position: absolute;
+    bottom: -0.35em;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight: 900;
+    font-size: 9vw;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--color-texto);
+    opacity: .035;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+}
+
+/* Revelado progresivo al hacer scroll */
+.hz-reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+.hz-reveal.hz-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    .hz-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Titulos de seccion: un poco mas grandes y con una regla corta abajo,
+   en vez del generico "eyebrow" en mayusculas sostenidas repetido arriba de cada titulo. */
+.pagina-inicio h2 {
+    font-size: 2.35rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+.hz-titulo-seccion { max-width: 640px; margin: 0 auto 3rem; text-align: center; }
+.hz-titulo-seccion h2 { position: relative; display: inline-block; padding-bottom: .6rem; }
+.hz-titulo-seccion h2::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 56px;
+    height: 3px;
+    transform: translateX(-50%);
+    background: var(--color-amarillo);
+    border-radius: 3px;
+}
+
+/* ===================== HERO (fondo de foto completo) ===================== */
+.hz-hero-fondo { position: relative; }
+.hz-placa {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(244,197,66,.13);
+    border: 1px solid rgba(244,197,66,.35);
+    color: var(--color-amarillo-claro);
+    padding: .45rem 1rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: .82rem;
+    letter-spacing: .04em;
+    margin-bottom: 1.2rem;
+}
+.hz-hero-chips { display: flex; flex-wrap: wrap; gap: 1.1rem; font-size: .9rem; color: #f5efe6; }
+.hz-hero-chips span { display: inline-flex; align-items: center; gap: .4rem; }
+.hz-hero-chips i { color: var(--color-amarillo); }
+[data-theme="light"] .hz-hero-chips { color: #40362e; }
+
+/* Cinta continua ("marquee") con los servicios estrella, estilo cartel de barberia */
+.hz-marquee {
+    position: relative;
+    z-index: 3;
+    overflow: hidden;
+    background: var(--color-amarillo);
+}
+[data-theme="light"] .hz-marquee { background: var(--color-amarillo); }
+.hz-marquee-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 2rem;
+    padding: .7rem 0;
+    animation: hz-marquee-desplazar 22s linear infinite;
+}
+.hz-marquee-track span {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-size: .95rem;
+    color: #1a1206;
+    white-space: nowrap;
+}
+.hz-marquee-track i { color: #1a1206; opacity: .6; }
+@keyframes hz-marquee-desplazar {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* ===================== SERVICIOS: lista tipo ticket ===================== */
+.hz-lista-precios { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: .65rem; }
+.hz-ticket {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 1.05rem 1.3rem;
+    background: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-left: 3px solid transparent;
+    border-radius: 14px;
+    transition: border-color .2s ease, transform .2s ease, background-color .2s ease;
+}
+.hz-ticket:hover { border-color: var(--color-amarillo); border-left-color: var(--color-amarillo); transform: translateX(4px); }
+.hz-ticket-destacado {
+    position: absolute;
+    top: -10px;
+    left: 1.3rem;
+    background: var(--hz-acento2);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: .2rem .6rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 14px -6px rgba(0,0,0,.5);
+}
+.hz-ticket-icono {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--color-fondo-secundario);
+    color: var(--color-amarillo);
+    font-size: 1.05rem;
+}
+.hz-ticket-cuerpo { flex: 1; min-width: 0; }
+.hz-ticket-linea { display: flex; align-items: baseline; gap: .6rem; }
+.hz-ticket-nombre { font-weight: 700; color: var(--color-texto); white-space: nowrap; }
+.hz-ticket-linea::after {
+    content: "";
+    flex: 1;
+    border-bottom: 2px dotted var(--color-borde);
+    transform: translateY(-3px);
+}
+.hz-ticket-precio { font-weight: 800; color: var(--color-amarillo); white-space: nowrap; font-size: 1.05rem; }
+.hz-ticket-desc { margin: .3rem 0 0; color: var(--color-texto-secundario); font-size: .88rem; }
+.hz-ticket-reservar {
+    flex-shrink: 0;
+    color: var(--color-texto);
+    font-weight: 600;
+    font-size: .88rem;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    opacity: .75;
+    transition: opacity .2s ease, gap .2s ease;
+}
+.hz-ticket-reservar:hover { opacity: 1; gap: .55rem; color: var(--color-amarillo); }
+
+/* ===================== PROCESO / COMO FUNCIONA ===================== */
+.hz-proceso { background: var(--color-fondo-secundario); border-bottom: 1px solid var(--color-borde); }
+.hz-pasos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.4rem;
+    position: relative;
+}
+.hz-pasos::before {
+    content: "";
+    position: absolute;
+    top: 54px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--color-borde) 0 10px, transparent 10px 18px);
+    z-index: 0;
+}
+.hz-paso {
+    position: relative;
+    z-index: 1;
+    background: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: 18px;
+    padding: 1.6rem 1.3rem 1.4rem;
+    text-align: center;
+    transition: transform .25s ease, border-color .25s ease;
+}
+.hz-paso:hover { transform: translateY(-6px); border-color: var(--color-amarillo); }
+.hz-paso-numero {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-weight: 800;
+    font-size: .95rem;
+    color: var(--color-amarillo);
+    background: rgba(244,197,66,.12);
+    border: 1px solid rgba(244,197,66,.35);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    margin: 0 auto 1rem;
+}
+.hz-paso-icono { font-size: 1.7rem; color: var(--color-texto); display: block; margin-bottom: .8rem; }
+.hz-paso h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .5rem; color: var(--color-texto); }
+.hz-paso p { font-size: .86rem; color: var(--color-texto-secundario); margin: 0; }
+
+/* ===================== BARBEROS: poster ===================== */
+.hz-barbero-poster {
+    background: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform .15s ease-out, border-color .25s ease;
+    will-change: transform;
+}
+.hz-barbero-poster:hover { transform: translateY(-6px); border-color: var(--color-amarillo); }
+.hz-barbero-foto-wrap { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+.hz-barbero-foto { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.hz-barbero-poster:hover .hz-barbero-foto { transform: scale(1.06); }
+.hz-barbero-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(5,4,3,.88) 0%, rgba(5,4,3,.05) 55%);
+}
+.hz-barbero-rating {
+    position: absolute; top: .85rem; right: .85rem;
+    background: rgba(11,10,8,.65);
+    backdrop-filter: blur(4px);
+    color: var(--color-amarillo-claro);
+    border: 1px solid rgba(244,197,66,.4);
+    padding: .3rem .65rem;
+    border-radius: 40px;
+    font-size: .82rem;
+    font-weight: 700;
+    display: flex; align-items: center; gap: .3rem;
+}
+.hz-barbero-nombre-overlay { position: absolute; left: 1.1rem; right: 1.1rem; bottom: .9rem; color: #fff; }
+.hz-barbero-nombre-overlay h3 { font-size: 1.25rem; margin: 0; color: #fff; }
+.hz-barbero-nombre-overlay p { margin: .1rem 0 0; font-size: .85rem; color: rgba(255,255,255,.75); }
+.hz-barbero-pie { padding: .85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; font-size: .85rem; }
+
+
+/* ===================== NOSOTROS ===================== */
+.hz-checklist { display: flex; flex-direction: column; gap: .6rem; margin: 1.4rem 0; }
+.hz-checklist li { display: flex; align-items: center; gap: .6rem; }
+.hz-checklist i { color: var(--color-amarillo); font-size: 1.1rem; }
+.hz-stats { display: flex; gap: 1.6rem; flex-wrap: wrap; margin-top: 1.8rem; padding-top: 1.6rem; border-top: 1px solid var(--color-borde); }
+.hz-stat strong { display: block; font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.9rem; font-weight: 800; color: var(--color-amarillo); line-height: 1; }
+.hz-stat span { font-size: .8rem; color: var(--color-texto-secundario); }
+.hz-foto-marco {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--color-borde);
+    box-shadow: 0 25px 50px -20px rgba(0,0,0,.45);
+}
+.hz-foto-marco::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 10px solid transparent;
+    background: linear-gradient(160deg, rgba(244,197,66,.55), transparent 40%) border-box;
+    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+}
+.hz-foto-marco img { display: block; width: 100%; height: 100%; max-height: 420px; object-fit: cover; }
+
+/* ===================== TESTIMONIOS escalonados ===================== */
+@media (min-width: 768px) {
+    .hz-testimonios-fila { align-items: flex-start; }
+    .hz-testimonio-b { margin-top: 2.2rem; }
+}
+.card-testimonio { position: relative; overflow: hidden; }
+.hz-testimonio-marca {
+    position: absolute;
+    top: -.6rem;
+    right: .4rem;
+    font-size: 4.5rem;
+    color: var(--color-amarillo);
+    opacity: .08;
+    pointer-events: none;
+}
+.hz-testimonio-autor { display: flex; align-items: center; gap: .7rem; margin-top: .8rem; }
+.hz-avatar-inicial {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(244,197,66,.15);
+    border: 1px solid rgba(244,197,66,.4);
+    color: var(--color-amarillo-claro);
+    font-weight: 800;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+}
+.hz-testimonio-autor h4 { margin: 0; font-size: .95rem; }
+
+/* ===================== CTA ===================== */
+.hz-cta {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--color-fondo-secundario) 0%, var(--color-fondo) 100%);
+    border-top: 1px solid var(--color-borde);
+    border-bottom: 1px solid var(--color-borde);
+    padding: 4rem 0;
+}
+.hz-cta-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: 2.5rem;
+    align-items: center;
+}
+.hz-cta-texto { position: relative; }
+.hz-cta-icono {
+    position: absolute;
+    top: -3rem; left: -1.2rem;
+    font-size: 9rem;
+    color: var(--color-texto);
+    opacity: .05;
+    transform: rotate(-18deg);
+    pointer-events: none;
+}
+.hz-cta h2 { position: relative; }
+.hz-cta-texto p { position: relative; max-width: 460px; margin: 0 0 1.6rem; color: var(--color-texto-secundario); }
+.hz-cta .btn-cta { position: relative; }
+.hz-cta-foto {
+    position: relative;
+    height: 280px;
+    border-radius: 24px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 30px 55px -22px rgba(0,0,0,.5);
+    border: 1px solid var(--color-borde);
+    overflow: hidden;
+}
+.hz-cta-foto-degradado {
+    position: absolute; inset: 0;
+    background: linear-gradient(200deg, rgba(5,4,3,.05) 30%, rgba(5,4,3,.5) 100%);
+}
+
+/* ===================== TEXTURA DE FONDO =====================
+   Para que las secciones oscuras no se vean como un bloque negro
+   plano al bajar: una trama fina de puntos + un resplandor suave
+   difuminado en una esquina. Todo muy sutil, sin llamar la atención. */
+.hz-textura { position: relative; overflow: hidden; }
+.hz-textura::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(244,197,66,.16) 1px, transparent 1.4px);
+    background-size: 26px 26px;
+    opacity: .5;
+    pointer-events: none;
+    z-index: 0;
+}
+.hz-textura::after {
+    content: "";
+    position: absolute;
+    width: 460px;
+    height: 460px;
+    border-radius: 50%;
+    filter: blur(80px);
+    top: -180px;
+    right: -160px;
+    background: radial-gradient(circle, rgba(244,197,66,.16), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+.hz-textura:nth-of-type(even)::after,
+.hz-textura.nosotros::after,
+.hz-textura.hz-cta::after {
+    top: auto;
+    right: auto;
+    bottom: -180px;
+    left: -160px;
+    background: radial-gradient(circle, rgba(201,168,124,.14), transparent 70%);
+}
+.hz-textura > .container,
+.hz-textura .hz-cta-grid {
+    position: relative;
+    z-index: 1;
+}
+[data-theme="light"] .hz-textura::before { opacity: .35; }
+[data-theme="light"] .hz-textura::after { opacity: .6; }
+
+/* ===================== BRILLO Y DETALLES "WOW" =====================
+   Un puñado de efectos con movimiento, pensados para el primer impacto
+   visual: título con brillo dorado, foco de luz que sigue el cursor,
+   destellos flotando sobre la foto, botones con barrido de luz y
+   un brillo que recorre las fotos de los barberos al pasar el mouse. */
+
+/* Titulo del hero con brillo dorado recorriendo el texto */
+.hz-brillo-texto {
+    background: linear-gradient(100deg,
+        #fff 0%, #fff 28%,
+        var(--color-amarillo-claro) 42%,
+        #fffceb 50%,
+        var(--color-amarillo-claro) 58%,
+        #fff 72%, #fff 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: hz-brillo-desplazar 5.5s ease-in-out infinite;
+}
+[data-theme="light"] .hz-brillo-texto {
+    background: linear-gradient(100deg,
+        #2B241E 0%, #2B241E 28%,
+        var(--color-amarillo) 42%,
+        #8F6A0E 50%,
+        var(--color-amarillo) 58%,
+        #2B241E 72%, #2B241E 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+@keyframes hz-brillo-desplazar {
+    0% { background-position: 220% 0; }
+    55%, 100% { background-position: -20% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hz-brillo-texto { animation: none; background-position: 0 0; }
+}
+
+/* Foco de luz que sigue el cursor sobre la foto del hero */
+.hz-hero-fondo { --mx: 60%; --my: 45%; }
+.hz-hero-spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(320px circle at var(--mx) var(--my), rgba(244,197,66,.18), transparent 62%);
+}
+
+/* Destellos flotando sobre la foto del hero */
+.hz-sparkles { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.hz-sparkle {
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, var(--color-amarillo) 55%, transparent 75%);
+    box-shadow: 0 0 10px 2px rgba(244,197,66,.75);
+    opacity: 0;
+    animation: hz-destello 3.6s ease-in-out infinite;
+}
+@keyframes hz-destello {
+    0%, 100% { opacity: 0; transform: scale(.3); }
+    50% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hz-sparkle { display: none; }
+}
+
+/* Brillo pulsante alrededor del boton principal del hero, para que llame la atencion */
+.hz-hero-fondo .btn-primary-custom {
+    position: relative;
+    animation: hz-pulso 2.4s ease-in-out infinite;
+}
+@keyframes hz-pulso {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244,197,66,.5); }
+    50% { box-shadow: 0 0 0 12px rgba(244,197,66,0); }
+}
+
+/* Barrido de luz que cruza los botones dorados al pasar el cursor */
+.pagina-inicio .btn-primary-custom,
+.pagina-inicio .btn-cta {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+.pagina-inicio .btn-primary-custom::after,
+.pagina-inicio .btn-cta::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.65), transparent);
+    transform: skewX(-18deg);
+    transition: left .55s ease;
+}
+.pagina-inicio .btn-primary-custom:hover::after,
+.pagina-inicio .btn-cta:hover::after {
+    left: 130%;
+}
+
+/* Brillo que recorre la foto de cada barbero al pasar el mouse */
+.hz-barbero-foto-wrap { position: relative; }
+.hz-barbero-foto-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.3) 50%, transparent 65%);
+    transform: translateX(-130%);
+    transition: transform .75s ease;
+}
+.hz-barbero-poster:hover .hz-barbero-foto-wrap::after { transform: translateX(130%); }
+
+/* Numeros de "Nosotros" con un leve resplandor dorado */
+.hz-stat strong { text-shadow: 0 0 18px rgba(244,197,66,.35); }
+
+/* Insignia "Más pedido" con un pulso suave para destacar el servicio estrella */
+.hz-ticket-destacado { animation: hz-pulso-chip 2.2s ease-in-out infinite; }
+@keyframes hz-pulso-chip {
+    0%, 100% { box-shadow: 0 6px 14px -6px rgba(0,0,0,.5); }
+    50% { box-shadow: 0 6px 18px -4px rgba(178,59,59,.55); }
+}
+
+/* Con scroll suave, que las secciones no queden tapadas por el menú pegajoso */
+.pagina-inicio section[id],
+.pagina-inicio footer[id] { scroll-margin-top: 90px; }
+
+/* Icono de cada servicio: un poco de vida al pasar el mouse */
+.hz-ticket-icono { transition: transform .3s ease, background-color .3s ease, color .3s ease; }
+.hz-ticket:hover .hz-ticket-icono {
+    transform: rotate(-12deg) scale(1.12);
+    background: rgba(244,197,66,.2);
+}
+
+/* Brillo pulsante en el botón principal del CTA final, igual que el del hero */
+.pagina-inicio .btn-cta { animation: hz-pulso 2.6s ease-in-out infinite; }
+
+/* Panel del hero con un resplandor dorado que respira suavemente */
+.pagina-inicio .hero-copy-panel { animation: hz-panel-resplandor 4.5s ease-in-out infinite; }
+@keyframes hz-panel-resplandor {
+    0%, 100% { box-shadow: 0 25px 70px rgba(0,0,0,.28), 0 0 0 rgba(244,197,66,0); }
+    50% { box-shadow: 0 25px 70px rgba(0,0,0,.28), 0 0 46px rgba(244,197,66,.22); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .pagina-inicio .hero-copy-panel,
+    .pagina-inicio .btn-cta,
+    .hz-hero-fondo .btn-primary-custom { animation: none; }
+}
+
+/* Barra fina arriba de todo que muestra cuanto se ha bajado en la página */
+.hz-progreso {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 1200;
+    background: rgba(255,255,255,.06);
+}
+.hz-progreso-barra {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-amarillo), #fff3c4);
+    box-shadow: 0 0 10px rgba(244,197,66,.6);
+}
+
+/* Subrayado animado en los enlaces del menú */
+.pagina-inicio .navbar .nav-link { position: relative; }
+.pagina-inicio .navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%; right: 50%;
+    bottom: -2px;
+    height: 2px;
+    background: var(--color-amarillo);
+    transition: left .25s ease, right .25s ease;
+}
+.pagina-inicio .navbar .nav-link:hover::after,
+.pagina-inicio .navbar .nav-link.active::after { left: 6%; right: 6%; }
+
+/* Botones flotantes: agendar cita y volver arriba */
+.hz-fab-grupo {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .7rem;
+}
+.hz-fab {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--color-amarillo);
+    color: #1a1206;
+    font-size: 1.25rem;
+    border: none;
+    box-shadow: 0 14px 30px -10px rgba(0,0,0,.55);
+    transition: transform .2s ease, opacity .25s ease, box-shadow .2s ease;
+    text-decoration: none;
+}
+.hz-fab:hover { transform: translateY(-3px) scale(1.05); color: #1a1206; box-shadow: 0 18px 34px -10px rgba(0,0,0,.6); }
+.hz-fab-reservar { animation: hz-pulso 2.4s ease-in-out infinite; }
+.hz-fab-arriba {
+    width: 42px; height: 42px;
+    font-size: 1.05rem;
+    background: var(--color-fondo-card);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+}
+.hz-fab-arriba.hz-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+@media (max-width: 575.98px) {
+    .hz-fab-grupo { right: 14px; bottom: 14px; }
+    .hz-fab { width: 46px; height: 46px; font-size: 1.1rem; }
+    .hz-fab-arriba { width: 38px; height: 38px; font-size: .95rem; }
+}
+
+/* Chispas ascendiendo en la sección final de "Reserva tu cita" */
+.hz-embers { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.hz-ember {
+    position: absolute;
+    bottom: -16px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,244,214,.95), rgba(244,197,66,.7) 55%, transparent 75%);
+    opacity: 0;
+    animation-name: hz-ascender;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes hz-ascender {
+    0% { transform: translateY(0) scale(.5); opacity: 0; }
+    12% { opacity: .9; }
+    85% { opacity: .35; }
+    100% { transform: translateY(-240px) scale(1.1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hz-ember { display: none; }
+}
+
+/* Insignia de "reseña verificada" bajo el nombre en cada testimonio */
+.hz-verificado {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .74rem;
+    color: var(--color-amarillo-claro);
+    opacity: .85;
+}
+
+/* Tarjetas de testimonios: un poco de vida al pasar el mouse */
+.card-testimonio { transition: transform .25s ease, border-color .25s ease; }
+.card-testimonio:hover { transform: translateY(-5px); border-color: var(--color-amarillo); }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 991.98px) {
+    .hz-pasos { grid-template-columns: repeat(2, 1fr); }
+    .hz-pasos::before { display: none; }
+    .hz-cta-grid { grid-template-columns: 1fr; }
+    .hz-cta-foto { order: -1; height: 220px; }
+}
+@media (max-width: 575.98px) {
+    .hz-ticket { flex-wrap: wrap; }
+    .hz-ticket-reservar { margin-left: 60px; }
+    .hz-stats { gap: 1.1rem 1.6rem; }
+    .hz-pasos { grid-template-columns: 1fr; }
+}
+/* Fachada: misma altura que el mapa (16:9), si no se sale de la fila */
+.fachada-barberia-imagen {
+    aspect-ratio: 16 / 9;
+    height: auto !important;
+    min-height: 0 !important;
+}

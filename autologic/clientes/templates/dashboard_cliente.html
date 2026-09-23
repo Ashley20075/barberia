@@ -15,6 +15,67 @@
         .turno-disponible-aviso:hover { border-color: var(--color-primario); }
         .turno-disponible-aviso .form-check-input:checked { background-color: var(--color-primario); border-color: var(--color-primario); }
         .estado-suscripcion { font-size: .78rem; }
+
+        /* Programa de fidelidad */
+        .fidelidad-premio {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(120deg, rgba(244,197,66,.16), rgba(244,197,66,.04));
+            border: 1px solid rgba(244,197,66,.4);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+        .fidelidad-premio i { font-size: 2.2rem; color: var(--color-amarillo); flex-shrink: 0; }
+        .fidelidad-premio h4 { font-size: 1.1rem; }
+
+        /* Insignias tipo "rosquilla" (guiño a Springfield), una por corte.
+           Grid a 10 columnas para que ocupe todo el ancho de la caja,
+           en vez de quedar amontonadas a la izquierda. */
+        .fidelidad-insignias {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: .6rem;
+            width: 100%;
+        }
+        .fidelidad-insignia {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 64px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--color-fondo-secundario);
+            border: 2px dashed var(--color-borde);
+            font-size: 1.35rem;
+            filter: grayscale(1) opacity(.4);
+            transition: transform .2s ease, filter .25s ease, border-color .25s ease, background .25s ease;
+        }
+        .fidelidad-insignia-donut { transform: translateY(1px); }
+        .fidelidad-insignia-ganada {
+            background: radial-gradient(circle at 35% 30%, #fff3c4, var(--color-amarillo) 68%);
+            border: 2px solid var(--color-amarillo);
+            filter: none;
+            box-shadow: 0 8px 16px -6px rgba(244,197,66,.65);
+            animation: hz-insignia-aparece .45s ease;
+        }
+        @keyframes hz-insignia-aparece {
+            0% { transform: scale(.4) rotate(-25deg); opacity: 0; }
+            70% { transform: scale(1.15) rotate(6deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); }
+        }
+        .fidelidad-progreso-texto { font-weight: 700; color: var(--color-amarillo); white-space: nowrap; font-size: .9rem; }
+        @media (prefers-reduced-motion: reduce) {
+            .fidelidad-insignia-ganada { animation: none; }
+        }
+        @media (max-width: 767.98px) {
+            .fidelidad-insignias { grid-template-columns: repeat(5, 1fr); }
+        }
+        @media (max-width: 400px) {
+            .fidelidad-insignias { grid-template-columns: repeat(4, 1fr); }
+        }
     </style>
 </head>
 
@@ -356,6 +417,49 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+        <!-- Programa de fidelidad: cada 10 cortes finalizados, el siguiente es gratis -->
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <div class="stat-card p-4 fidelidad-card">
+                    {% if cliente.recompensas_disponibles > 0 %}
+                    <div class="fidelidad-premio">
+                        <i class="bi bi-gift-fill"></i>
+                        <div>
+                            <h4 class="mb-1">
+                                🎉 ¡Felicitaciones!
+                                {% if cliente.recompensas_disponibles == 1 %}
+                                    Tienes 1 corte gratis disponible.
+                                {% else %}
+                                    Tienes {{ cliente.recompensas_disponibles }} cortes gratis disponibles.
+                                {% endif %}
+                            </h4>
+                            <p class="mb-0 text-light-brown">Coméntaselo a tu barbero al agendar o al llegar a tu próxima cita.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                        <h5 class="text-yellow mb-0"><i class="bi bi-award"></i> Mis cortes</h5>
+                        <span class="text-light-brown small">{{ cliente.cortes_completados }} cortes realizados en total</span>
+                    </div>
+
+                    <div class="fidelidad-insignias" role="img" aria-label="{{ cliente.cortes_para_recompensa }} de 10 cortes hacia tu próximo corte gratis">
+                        {% for _ in "0123456789" %}
+                        <div class="fidelidad-insignia{% if forloop.counter <= cliente.cortes_para_recompensa %} fidelidad-insignia-ganada{% endif %}"
+                            title="Corte {{ forloop.counter }} de 10">
+                            <span class="fidelidad-insignia-donut">🍩</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <p class="fidelidad-progreso-texto mt-2 mb-0">{{ cliente.cortes_para_recompensa }} / 10 rosquillas de Springfield conseguidas</p>
+
+                    <p class="text-light-brown small mb-0 mt-2">
+                        <i class="bi bi-info-circle"></i> Cada 10 cortes finalizados, el siguiente es gratis.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Lista de turnos -->

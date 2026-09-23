@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -21,6 +20,12 @@ class Cliente(models.Model):
     # el correo pendiente. Las cuentas existentes se consideran confirmadas
     # mediante el valor por defecto de la migración.
     correo_confirmado = models.BooleanField(default=True)
+
+    # Programa de fidelidad: cada 10 cortes finalizados, el siguiente
+    # queda gratis.
+    cortes_completados = models.PositiveIntegerField(default=0)
+    cortes_para_recompensa = models.PositiveIntegerField(default=0)
+    recompensas_disponibles = models.PositiveIntegerField(default=0)
 
     @property
     def registrado(self):

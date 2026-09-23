@@ -21,6 +21,7 @@ from django.db import IntegrityError, transaction
 from clientes.models import Cliente
 from googlecalendar.models import CuentaGoogle
 from citas.paginacion import paginar
+from notificaciones.utils import notificar, usuario_de_cliente
 
 @never_cache
 @login_required(login_url='login')
@@ -198,6 +199,32 @@ def finalizar_cita(request, id):
     if cita.estado == "Confirmada":
         cita.estado = "Finalizada"
         cita.save()
+
+        # ============================================================
+        # PROGRAMA DE FIDELIDAD: cada 10 cortes finalizados, el
+        # siguiente corte queda gratis para el cliente.
+        # ============================================================
+        cliente = cita.cliente
+        cliente.cortes_completados += 1
+        cliente.cortes_para_recompensa += 1
+
+        gano_recompensa = False
+        if cliente.cortes_para_recompensa >= 10:
+            cliente.cortes_para_recompensa = 0
+            cliente.recompensas_disponibles += 1
+            gano_recompensa = True
+
+        cliente.save()
+
+        if gano_recompensa:
+            usuario_cliente = usuario_de_cliente(cliente)
+            notificar(
+                usuario_cliente,
+                '🎉 ¡Felicitaciones! Completaste 10 cortes. '
+                'Tu próximo corte será gratis.',
+                cita=cita,
+            )
+
         messages.success(
             request,
             f'✅ Cita de {cita.cliente.nombre} finalizada.'
