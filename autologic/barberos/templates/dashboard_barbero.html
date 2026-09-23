@@ -12,59 +12,18 @@
         
         .nav-btn.active { background-color: var(--color-primario); border-color: var(--color-primario); color: #0B0A08 !important; box-shadow: 0 0 20px rgba(var(--color-primario-rgb),0.3); }
 
-        /* ESTADÍSTICAS CENTRADAS */
+        /* El estilo de .stat-card se unifica de forma global en
+           static/styles.css (sección "UNIFICACIÓN VISUAL"), con el mismo
+           diseño usado en el panel de administrador y alineado con
+           "Agendar cita" del panel de cliente: tarjeta con fondo sólido,
+           borde de 1px, esquinas redondeadas y realce en amarillo al
+           pasar el mouse, en vez de las cajas cuadradas con franja lateral. */
         .stat-card {
-            background-color: var(--color-fondo-secundario);
-            border-radius: 20px;
-            border-left: 4px solid var(--color-primario);
-            padding: 1.5rem 0.5rem;
-            text-align: center;
-            height: 100%;
-            min-height: 140px;
-            transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(var(--color-primario-rgb),0.2);
-        }
-
-        .stat-card i {
-            color: var(--color-primario);
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card h5 {
-            color: var(--color-primario-claro);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0.3rem 0;
-        }
-
-        .stat-card h2 {
-            color: var(--color-primario);
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        @media (max-width: 768px) {
-            .stat-card {
-                min-height: 120px;
-                padding: 1rem 0.5rem;
-            }
-            .stat-card h2 {
-                font-size: 1.6rem;
-            }
-            .stat-card i {
-                font-size: 1.8rem;
-            }
+            min-height: 150px;
         }
 
 
@@ -747,40 +706,40 @@ html[data-theme="light"] .autoai-modal .alert * {
         {% endif %}
 
         <!-- ESTADÍSTICAS CENTRADAS -->
-        <div class="row g-4 mb-5 justify-content-center">
+        <div class="row g-4 gy-4 mb-5 justify-content-center">
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stat-card">
-                    <i class="bi bi-calendar-event"></i>
+                <div class="stat-card citas">
+                    <div class="icon-wrapper"><i class="bi bi-calendar-event"></i></div>
                     <h5>Total Citas</h5>
                     <h2>{{ total_citas }}</h2>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stat-card" style="border-left-color: #ffc107;">
-                    <i class="bi bi-clock-history" style="color: #ffc107;"></i>
+                <div class="stat-card servicios">
+                    <div class="icon-wrapper"><i class="bi bi-clock-history"></i></div>
                     <h5>Pendientes</h5>
-                    <h2 class="text-warning">{{ citas_pendientes }}</h2>
+                    <h2>{{ citas_pendientes }}</h2>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stat-card" style="border-left-color: #198754;">
-                    <i class="bi bi-check-circle" style="color: #198754;"></i>
+                <div class="stat-card barberos">
+                    <div class="icon-wrapper"><i class="bi bi-check-circle"></i></div>
                     <h5>Confirmadas</h5>
-                    <h2 class="text-success">{{ citas_confirmadas }}</h2>
+                    <h2>{{ citas_confirmadas }}</h2>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stat-card" style="border-left-color: #dc3545;">
-                    <i class="bi bi-x-circle" style="color: #dc3545;"></i>
+                <div class="stat-card" style="--color-primario:#dc3545; --color-primario-rgb:220,53,69;">
+                    <div class="icon-wrapper"><i class="bi bi-x-circle"></i></div>
                     <h5>Canceladas</h5>
-                    <h2 class="text-danger">{{ citas_canceladas }}</h2>
+                    <h2>{{ citas_canceladas }}</h2>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-6">
-                <div class="stat-card" style="border-left-color: #0dcaf0;">
-                    <i class="bi bi-flag-fill" style="color: #0dcaf0;"></i>
+                <div class="stat-card" style="--color-primario:#0dcaf0; --color-primario-rgb:13,202,240;">
+                    <div class="icon-wrapper"><i class="bi bi-flag-fill"></i></div>
                     <h5>Finalizadas</h5>
-                    <h2 class="text-info">{{ citas_finalizadas }}</h2>
+                    <h2>{{ citas_finalizadas }}</h2>
                 </div>
             </div>
         </div>
@@ -825,170 +784,57 @@ html[data-theme="light"] .autoai-modal .alert * {
                     {{ proximas_citas|length }} citas
                 </span>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-custom table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Cliente</th>
-                                <th>Servicio</th>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           {% for cita in proximas_citas %}
-<tr>
-    <td>{{ forloop.counter }}</td>
+            <!-- Lista de citas estilo unificado (cita-card), igual a "Agendar cita" -->
+            <div class="p-3">
+                {% for cita in proximas_citas %}
+                <div class="cita-card {% if cita.estado == 'Confirmada' %}cita-card--confirmada{% endif %}">
+                    <div class="cita-icono"><i class="bi bi-person"></i></div>
+                    <div class="cita-info">
+                        <span class="cita-titulo">{{ cita.cliente.nombre }}</span>
+                        <span class="cita-meta">
+                            <span><i class="bi bi-scissors"></i> {{ cita.servicio.nombre }}</span>
+                            <span><i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }}</span>
+                            <span><i class="bi bi-alarm"></i> {{ cita.hora }}</span>
+                        </span>
+                        {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
+                        <span class="cita-extra"><i class="bi bi-plus-circle"></i> {{ cita.adicionales }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="cita-acciones">
+                        {% if cita.estado == "Pendiente" %}
+                            <span class="badge-pendiente"><i class="bi bi-clock"></i> Pendiente</span>
+                        {% elif cita.estado == "Confirmada" %}
+                            <span class="badge-confirmada"><i class="bi bi-check-circle"></i> Confirmada</span>
+                        {% elif cita.estado == "Finalizada" %}
+                            <span class="badge-finalizada"><i class="bi bi-flag-fill"></i> Finalizada</span>
+                        {% elif cita.estado == "Cancelada" %}
+                            <span class="badge-cancelada"><i class="bi bi-x-circle"></i> Cancelada</span>
+                        {% endif %}
+                        <div class="d-flex gap-1 flex-wrap justify-content-end">
+                            {% if cita.analisis_ia %}
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalAnalisis{{ cita.id }}">
+                                <i class="bi bi-stars"></i> AutoAI
+                            </button>
+                            {% endif %}
+                            {% if cita.estado == "Pendiente" %}
+                            <a href="{% url 'barberos:confirmar_cita' cita.id %}" class="btn btn-success btn-sm" data-confirmar="¿Confirmar esta cita?" data-confirmar-titulo="Confirmar cita" data-confirmar-boton="Sí, confirmar">
+                                <i class="bi bi-check-circle"></i> Confirmar
+                            </a>
+                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            {% elif cita.estado == "Confirmada" %}
+                            <a href="{% url 'barberos:finalizar_cita' cita.id %}" class="btn btn-info btn-sm" data-confirmar="¿Finalizar esta cita?" data-confirmar-titulo="Finalizar cita" data-confirmar-boton="Sí, finalizar">
+                                <i class="bi bi-flag-fill"></i> Finalizar
+                            </a>
+                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
 
-    <td>
-        <strong>{{ cita.cliente.nombre }}</strong>
-    </td>
-
-    <td>
-        {{ cita.servicio.nombre }}
-
-        {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
-            <br>
-            <small class="text-light-brown">
-                ➕ {{ cita.adicionales }}
-            </small>
-        {% endif %}
-    </td>
-
-    <td>
-        {{ cita.fecha|date:"d/m/Y" }}
-    </td>
-
-    <td>
-        {{ cita.hora }}
-    </td>
-
-    <td>
-        {% if cita.estado == "Pendiente" %}
-
-            <span class="badge-pendiente">
-                <i class="bi bi-clock"></i>
-                Pendiente
-            </span>
-
-        {% elif cita.estado == "Confirmada" %}
-
-            <span class="badge-confirmada">
-                <i class="bi bi-check-circle"></i>
-                Confirmada
-            </span>
-
-        {% elif cita.estado == "Finalizada" %}
-
-            <span class="badge-finalizada">
-                <i class="bi bi-flag-fill"></i>
-                Finalizada
-            </span>
-
-        {% elif cita.estado == "Cancelada" %}
-
-            <span class="badge-cancelada">
-                <i class="bi bi-x-circle"></i>
-                Cancelada
-            </span>
-
-        {% endif %}
-    </td>
-
-    <!-- ========================================================= -->
-    <!-- ACCIONES -->
-    <!-- ========================================================= -->
-
-   <td>
-    <div class="d-flex gap-1 flex-wrap">
-
-        <!-- ANÁLISIS AUTOAI -->
-        {% if cita.analisis_ia %}
-            <button
-                type="button"
-                class="btn btn-warning btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#modalAnalisis{{ cita.id }}">
-
-                <i class="bi bi-stars"></i>
-                Análisis AutoAI
-
-            </button>
-        {% endif %}
-
-
-        <!-- CITAS PENDIENTES -->
-        {% if cita.estado == "Pendiente" %}
-
-            <a
-                href="{% url 'barberos:confirmar_cita' cita.id %}"
-                class="btn btn-success btn-sm"
-                data-confirmar="¿Confirmar esta cita?"
-                data-confirmar-titulo="Confirmar cita"
-                data-confirmar-boton="Sí, confirmar">
-
-                <i class="bi bi-check-circle"></i>
-                Confirmar
-
-            </a>
-
-
-            <a
-                href="{% url 'barberos:cancelar_cita' cita.id %}"
-                class="btn btn-outline-danger btn-sm"
-                data-confirmar="¿Cancelar esta cita?"
-                data-confirmar-titulo="Cancelar cita"
-                data-confirmar-boton="Sí, cancelar"
-                data-confirmar-peligro>
-
-                <i class="bi bi-x-circle"></i>
-                Cancelar
-
-            </a>
-
-
-        <!-- CITAS CONFIRMADAS -->
-        {% elif cita.estado == "Confirmada" %}
-
-            <a
-                href="{% url 'barberos:finalizar_cita' cita.id %}"
-                class="btn btn-info btn-sm"
-                data-confirmar="¿Finalizar esta cita?"
-                data-confirmar-titulo="Finalizar cita"
-                data-confirmar-boton="Sí, finalizar">
-
-                <i class="bi bi-flag-fill"></i>
-                Finalizar
-
-            </a>
-
-
-            <a
-                href="{% url 'barberos:cancelar_cita' cita.id %}"
-                class="btn btn-outline-danger btn-sm"
-                data-confirmar="¿Cancelar esta cita?"
-                data-confirmar-titulo="Cancelar cita"
-                data-confirmar-boton="Sí, cancelar"
-                data-confirmar-peligro>
-
-                <i class="bi bi-x-circle"></i>
-                Cancelar
-
-            </a>
-
-        {% endif %}
-
-    </div>
-</td>
-
-</tr>
-
-
-<!-- ============================================================= -->
 <!-- MODAL DEL ANÁLISIS AUTOAI -->
 <!-- ============================================================= -->
 
@@ -1286,36 +1132,15 @@ html[data-theme="light"] .autoai-modal .alert * {
 </div>
 {% endif %}
 
-{% empty %}
+                {% empty %}
+                <div class="text-center text-light-brown py-5">
+                    <i class="bi bi-calendar-x fs-1 d-block mb-3" style="color: var(--color-texto-secundario);"></i>
+                    <h5>No hay citas registradas</h5>
+                    <p class="mb-0">Las citas aparecerán aquí cuando los clientes agenden.</p>
+                </div>
+                {% endfor %}
+            </div>
 
-<tr>
-    <td
-        colspan="7"
-        class="text-center text-light-brown py-5"
-    >
-
-        <i
-            class="bi bi-calendar-x fs-1 d-block mb-3"
-            style="color: var(--color-texto-secundario);"
-        ></i>
-
-        <h5>
-            No hay citas registradas
-        </h5>
-
-        <p class="mb-0">
-            Las citas aparecerán aquí cuando los clientes agenden.
-        </p>
-
-    </td>
-</tr>
-
-{% endfor %}
-
-</tbody>
-                </table>
-
-            </div> <!-- /.table-responsive -->
 
 
             <!-- PAGINACIÓN -->

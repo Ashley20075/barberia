@@ -362,6 +362,25 @@
                 </form>
             </div>
         </div>
+        {% if sitio.mapa_embed_url or sitio.fachada_imagen %}
+        <div class="row mt-2 mb-4 g-4">
+            {% if sitio.mapa_embed_url %}
+            <div class="col-md-6">
+                <h3 class="mb-3"><i class="bi bi-geo-alt"></i> Cómo llegar</h3>
+                <div class="ratio ratio-16x9 mapa-ubicacion-caja">
+                    <iframe src="{{ sitio.mapa_embed_url }}" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Ubicación de {{ sitio.nombre_marca }}"></iframe>
+                </div>
+            </div>
+            {% endif %}
+            {% if sitio.fachada_imagen %}
+            <div class="col-md-6">
+                <h3 class="mb-3"><i class="bi bi-shop"></i> Nuestra barbería</h3>
+                <img src="{{ sitio.fachada_imagen }}" alt="Fachada de {{ sitio.nombre_marca }}" class="fachada-barberia-imagen">
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
         <div class="copyright text-center pt-4"><p>{{ sitio.copyright_texto }}</p></div>
     </div>
 </footer>

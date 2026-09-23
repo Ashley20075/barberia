@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
+from urllib.parse import parse_qs, quote, unquote, urlparse
+import re
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
@@ -75,6 +77,71 @@ def panel_admin(request):
         "notificaciones_no_leidas": Notificacion.objects.filter(usuario=request.user, leida=False).count(),
     }
     return render(request, 'administracion/panel_administrador.html', context)
+
+def normalizar_mapa_google_maps(valor):
+    """
+    Acepta las formas más comunes de Google Maps que puede pegar el administrador:
+
+    1. URL del iframe generado por "Compartir > Insertar un mapa".
+    2. URL normal de Google Maps (maps/place, maps/search, etc.).
+    3. Código HTML completo de un <iframe>.
+
+    Google recomienda colocar la URL de incrustación en el src de un iframe.
+    Si se pega una URL normal de Maps, intentamos convertirla a un mapa embebido
+    usando las coordenadas o el término de búsqueda disponible en la URL.
+    """
+    valor = (valor or '').strip()
+    if not valor:
+        return ''
+
+    # Si el administrador pega el iframe completo, extraemos únicamente src.
+    match = re.search(
+        r'<iframe[^>]+src=["\']([^"\']+)["\'][^>]*>',
+        valor,
+        flags=re.IGNORECASE,
+    )
+    if match:
+        valor = match.group(1).strip()
+
+    # Ya es una URL de embed. Se conserva tal cual.
+    if '/maps/embed' in valor:
+        return valor
+
+    parsed = urlparse(valor)
+    host = (parsed.netloc or '').lower()
+
+    # No intentamos transformar enlaces que no sean de Google Maps.
+    if 'google.' not in host and 'maps.app.goo.gl' not in host and 'goo.gl' not in host:
+        return valor
+
+    # Enlaces /maps/search/?api=1&query=... o URLs con ?q=...
+    query_params = parse_qs(parsed.query)
+    termino = (
+        query_params.get('query', [None])[0]
+        or query_params.get('q', [None])[0]
+    )
+
+    # Los enlaces /maps/place/... suelen contener las coordenadas después de @.
+    coordenadas = re.search(
+        r'@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)',
+        valor,
+    )
+    if coordenadas:
+        termino = f'{coordenadas.group(1)},{coordenadas.group(2)}'
+
+    # Si no hay query, intentamos obtener el nombre/dirección de /maps/place/...
+    if not termino and '/maps/place/' in parsed.path:
+        parte = parsed.path.split('/maps/place/', 1)[1].split('/')[0]
+        termino = unquote(parte).replace('+', ' ')
+
+    if termino:
+        # output=embed permite mostrar el mapa directamente en un iframe.
+        return f'https://www.google.com/maps?q={quote(termino)}&output=embed'
+
+    # Los enlaces cortos maps.app.goo.gl necesitan ser resueltos por el navegador.
+    # Se conserva la URL para no guardar una dirección inventada.
+    return valor
+
 
 @login_required
 def editar_inicio(request):
@@ -141,6 +208,7 @@ def editar_inicio(request):
         'direccion',
         'telefono',
         'email',
+        'mapa_embed_url',
 
         'noticias_titulo',
         'noticias_descripcion',
@@ -150,6 +218,8 @@ def editar_inicio(request):
     for campo in campos:
         if campo in request.POST:
             valor = request.POST.get(campo, '').strip()
+            if campo == 'mapa_embed_url':
+                valor = normalizar_mapa_google_maps(valor)
             setattr(sitio, campo, valor)
 
     # ============================================================
@@ -271,6 +341,24 @@ def editar_inicio(request):
     )
 
     sitio.nosotros_imagen_fuente = fuente_nosotros
+
+    # ============================================================
+    # IMAGEN DE FACHADA (EXTERIOR DE LA BARBERÍA)
+    # ============================================================
+
+    fuente_fachada = request.POST.get(
+        'fachada_imagen_fuente',
+        Sitio.FUENTE_URL
+    )
+
+    procesar_imagen(
+        fuente_fachada,
+        'fachada_imagen_url',
+        'fachada_imagen_archivo',
+        request.FILES.get('fachada_imagen_archivo')
+    )
+
+    sitio.fachada_imagen_fuente = fuente_fachada
 
     # ============================================================
     # GUARDAR

@@ -5529,3 +5529,300 @@ html[data-theme="light"] .ia-chat-form .form-control {
     color: #212529;
     border-color: #adb5bd;
 }
+
+/* =========================================================================
+   UNIFICACIÓN VISUAL — estilo de referencia: "Agendar cita" (panel cliente)
+   Esta sección es la autoridad final de estilo para tarjetas y cajas
+   compartidas entre los paneles de Cliente, Barbero y Administrador.
+   Se declara al final del archivo a propósito para prevalecer sobre
+   definiciones anteriores con la misma especificidad.
+========================================================================= */
+
+/* --- Tarjeta contenedora genérica (paneles, filtros, listados, formularios) --- */
+.card-custom,
+.stat-card,
+.turno-card,
+.form-turno {
+    background-color: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
+
+.card-custom,
+.form-turno {
+    padding: 1.5rem;
+}
+
+/* --- Encabezado de tarjeta --- */
+.card-header-custom {
+    background-color: var(--color-fondo-secundario);
+    color: var(--color-amarillo-claro, var(--color-primario-claro));
+    border-bottom: 1px solid var(--color-borde);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 1rem 1.25rem;
+    font-weight: 700;
+}
+
+/* --- Tarjeta de turno individual (próximas citas / historial) --- */
+.turno-card {
+    border-radius: 14px;
+    transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+.turno-card:hover {
+    border-color: var(--color-amarillo);
+    background-color: var(--color-hover-card);
+    transform: translateY(-2px);
+}
+
+/* --- Tarjetas de estadísticas (dashboards de cliente, barbero, admin, inventario) --- */
+.stat-card {
+    padding: 1.6rem 1.25rem;
+    text-align: center;
+    height: 100%;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-amarillo);
+    box-shadow: 0 12px 28px -6px rgba(var(--color-primario-rgb), 0.28);
+}
+
+.stat-card .icon-wrapper {
+    width: 58px;
+    height: 58px;
+    background: rgba(var(--color-primario-rgb), 0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.9rem;
+    transition: background-color .25s ease, transform .25s ease;
+}
+
+.stat-card:hover .icon-wrapper {
+    background: rgba(var(--color-primario-rgb), 0.22);
+    transform: scale(1.05);
+}
+
+.stat-card > i {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+.stat-card i {
+    color: var(--color-amarillo);
+    font-size: 2rem;
+}
+
+.stat-card h5 {
+    color: var(--color-texto-secundario);
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin: .3rem 0 .2rem;
+}
+
+.stat-card h2, .stat-card h3 {
+    color: var(--color-amarillo);
+    font-weight: 800;
+    margin: 0;
+}
+
+.stat-card h2 { font-size: 2.1rem; }
+.stat-card h3 { font-size: 1.7rem; }
+
+.stat-card p {
+    color: var(--color-texto-secundario);
+}
+
+/* Variantes de color por categoría: solo tiñen ícono y valor,
+   nunca un borde lateral grueso, para mantener la caja uniforme
+   con el resto de tarjetas de la aplicación. */
+.stat-card.citas i, .stat-card.citas h2, .stat-card.citas h3 { color: #4c8dff; }
+.stat-card.citas .icon-wrapper { background: rgba(76, 141, 255, .14); }
+.stat-card.barberos i, .stat-card.barberos h2, .stat-card.barberos h3 { color: #2fb875; }
+.stat-card.barberos .icon-wrapper { background: rgba(47, 184, 117, .14); }
+.stat-card.servicios i, .stat-card.servicios h2, .stat-card.servicios h3 { color: #f0b90b; }
+.stat-card.servicios .icon-wrapper { background: rgba(240, 185, 11, .14); }
+.stat-card.productos i, .stat-card.productos h2, .stat-card.productos h3 { color: var(--color-amarillo); }
+
+/* Espaciado uniforme entre tarjetas de estadísticas en todos los paneles */
+.row.fila-stats,
+.row > [class*="col-"] > .stat-card {
+    margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+    .stat-card { padding: 1.25rem 1rem; }
+    .stat-card h2 { font-size: 1.7rem; }
+    .stat-card i { font-size: 1.7rem; }
+    .stat-card .icon-wrapper { width: 48px; height: 48px; }
+}
+
+
+/* =========================================================================
+   TARJETA DE CITA — mismo lenguaje visual que las tarjetas de "Agendar
+   cita" (.nc-card): ícono circular, título, meta y acciones a la derecha.
+   Se usa en "Próximas citas" e "Historial" del panel de cliente.
+========================================================================= */
+
+.cita-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem 1rem 1.25rem;
+    margin-bottom: .9rem;
+    background: var(--color-fondo-card);
+    border: 1px solid var(--color-borde);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+.cita-card:last-child {
+    margin-bottom: 0;
+}
+
+.cita-card:hover {
+    border-color: var(--color-amarillo);
+    transform: translateY(-2px);
+}
+
+/* Riel tipo poste de barbero: igual al de las tarjetas de servicio
+   seleccionadas en "Agendar cita", aquí usado para resaltar las citas
+   ya confirmadas. */
+.cita-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--color-amarillo) 0 5px,
+        color-mix(in srgb, var(--color-amarillo) 25%, var(--color-fondo-card)) 5px 10px
+    );
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.cita-card--confirmada {
+    background: color-mix(in srgb, var(--color-amarillo) 8%, var(--color-fondo-card));
+    border-color: var(--color-amarillo);
+}
+
+.cita-card--confirmada::before {
+    opacity: 1;
+}
+
+.cita-icono {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--color-borde);
+    background: var(--color-fondo);
+    color: var(--color-amarillo);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.cita-info {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 0;
+}
+
+.cita-titulo {
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-texto);
+}
+
+.cita-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .15rem .75rem;
+    font-size: .84rem;
+    line-height: 1.4;
+    color: var(--color-texto-secundario);
+}
+
+.cita-meta i {
+    color: var(--color-amarillo);
+    margin-right: .2rem;
+}
+
+.cita-extra {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--nc-oro-texto, var(--color-amarillo));
+}
+
+.cita-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5rem;
+}
+
+.cita-card--historial {
+    padding-top: .85rem;
+    padding-bottom: .85rem;
+}
+
+.cita-card--historial .cita-icono {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 575.98px) {
+    .cita-card {
+        grid-template-columns: auto minmax(0, 1fr);
+        row-gap: .6rem;
+    }
+
+    .cita-acciones {
+        grid-column: 2;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+/* =========================================================================
+   MAPA DE UBICACIÓN Y FACHADA — sección de dirección del homepage.
+========================================================================= */
+
+.mapa-ubicacion-caja {
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
+
+.fachada-barberia-imagen {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}

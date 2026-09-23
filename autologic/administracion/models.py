@@ -274,6 +274,37 @@ class Sitio(models.Model):
         default="barberspringfield@gmail.com"
     )
 
+    # ============================================================
+    # UBICACIÓN (MAPA Y FACHADA)
+    # ============================================================
+
+    mapa_embed_url = models.URLField(
+        blank=True,
+        default="",
+        help_text=(
+            "URL para incrustar (embed) la ubicación de Google Maps. "
+            "En Google Maps: Compartir > Insertar un mapa > copiar solo "
+            "el valor del atributo src del iframe."
+        )
+    )
+
+    fachada_imagen_url = models.URLField(
+        blank=True,
+        default=""
+    )
+
+    fachada_imagen_archivo = models.ImageField(
+        upload_to="home/",
+        blank=True,
+        null=True
+    )
+
+    fachada_imagen_fuente = models.CharField(
+        max_length=10,
+        choices=FUENTES_IMAGEN,
+        default=FUENTE_URL
+    )
+
     noticias_titulo = models.CharField(
         max_length=100,
         default="Noticias"
@@ -354,3 +385,13 @@ class Sitio(models.Model):
             return self.nosotros_imagen_archivo.url
 
         return self.nosotros_imagen_url
+
+    @property
+    def fachada_imagen(self):
+        if (
+            self.fachada_imagen_fuente == self.FUENTE_ARCHIVO
+            and self.fachada_imagen_archivo
+        ):
+            return self.fachada_imagen_archivo.url
+
+        return self.fachada_imagen_url

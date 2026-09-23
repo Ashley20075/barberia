@@ -64,6 +64,29 @@
         </div>
     </nav>
 
+    <!-- ========== MODAL CERRAR SESIÓN ========== -->
+    <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title text-yellow"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-check-circle-fill text-yellow fs-1 mb-3 d-inline-block"></i>
+                    <p class="fs-5">¿Estás seguro que deseas cerrar sesión?</p>
+                    <p class="text-light-brown">Serás redirigido al inicio.</p>
+                </div>
+                <div class="modal-footer modal-footer-custom">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn-modern" onclick="window.location.href='{% url 'logout' %}'">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== CONTENIDO ========== -->
     <div class="container py-4">
 
@@ -152,24 +175,24 @@
         <!-- Tarjetas de estadísticas -->
         <div class="row g-4 mb-5">
             <div class="col-6 col-md-4">
-                <div class="stat-card text-center p-3">
-                    <i class="bi bi-scissors fs-1"></i>
-                    <h3 class="mt-2 text-yellow">{{ proximos|length }}</h3>
-                    <p class="text-light-brown mb-0">Citas activas</p>
+                <div class="stat-card citas text-center">
+                    <div class="icon-wrapper"><i class="bi bi-scissors"></i></div>
+                    <h3 class="mt-2">{{ proximos|length }}</h3>
+                    <p class="mb-0">Citas activas</p>
                 </div>
             </div>
             <div class="col-6 col-md-4">
-                <div class="stat-card text-center p-3">
-                    <i class="bi bi-archive fs-1"></i>
-                    <h3 class="mt-2 text-yellow">{{ historial|length }}</h3>
-                    <p class="text-light-brown mb-0">Historial</p>
+                <div class="stat-card servicios text-center">
+                    <div class="icon-wrapper"><i class="bi bi-archive"></i></div>
+                    <h3 class="mt-2">{{ historial|length }}</h3>
+                    <p class="mb-0">Historial</p>
                 </div>
             </div>
             <div class="col-6 col-md-4">
-                <div class="stat-card text-center p-3">
-                    <i class="bi bi-calendar-check fs-1"></i>
-                    <h3 class="mt-2 text-yellow">{{ proximos|length }}</h3>
-                    <p class="text-light-brown mb-0">Próximas citas</p>
+                <div class="stat-card barberos text-center">
+                    <div class="icon-wrapper"><i class="bi bi-calendar-check"></i></div>
+                    <h3 class="mt-2">{{ proximos|length }}</h3>
+                    <p class="mb-0">Próximas citas</p>
                 </div>
             </div>
         </div>
@@ -344,30 +367,31 @@
                     </div>
                     <div class="p-3">
                         {% for cita in proximos %}
-                        <div class="turno-card p-3 mb-2">
-                            <div class="d-flex justify-content-between align-items-start flex-wrap">
-                                <div>
-                                    <strong class="text-yellow">{{ cita.servicio.nombre }}</strong><br>
-                                    <small class="text-light-brown">
-                                        📅 {{ cita.fecha|date:"d/m/Y" }} | ⏰ {{ cita.hora }} | 💈 {{ cita.barbero.nombre}}
-                                    </small>
-                                    {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
-                                    <small class="text-yellow d-block mt-1">➕ {{ cita.adicionales }}</small>
-                                    {% endif %}
-                                </div>
-                                <div class="mt-2 mt-sm-0 d-flex align-items-center gap-2">
-                                    {% if cita.estado == "Confirmada" %}
-                                    <span class="badge-confirmado">Confirmada</span>
-                                    {% elif cita.estado == "Pendiente" %}
-                                    <span class="badge bg-warning text-dark">Pendiente</span>
-                                    {% endif %}
-                                    <a href="{% url 'cancelar_cita_cliente' cita.id %}"
-                                        class="btn btn-sm btn-outline-danger"
-                                        data-confirmar="¿Cancelar este turno?"
-                                               data-confirmar-titulo="Cancelar turno"
-                                               data-confirmar-boton="Sí, cancelar"
-                                               data-confirmar-peligro>Cancelar</a>
-                                </div>
+                        <div class="cita-card {% if cita.estado == 'Confirmada' %}cita-card--confirmada{% endif %}">
+                            <div class="cita-icono"><i class="bi bi-scissors"></i></div>
+                            <div class="cita-info">
+                                <span class="cita-titulo">{{ cita.servicio.nombre }}</span>
+                                <span class="cita-meta">
+                                    <span><i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }}</span>
+                                    <span><i class="bi bi-alarm"></i> {{ cita.hora }}</span>
+                                    <span><i class="bi bi-person-badge"></i> {{ cita.barbero.nombre }}</span>
+                                </span>
+                                {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
+                                <span class="cita-extra"><i class="bi bi-plus-circle"></i> {{ cita.adicionales }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="cita-acciones">
+                                {% if cita.estado == "Confirmada" %}
+                                <span class="badge-confirmado">Confirmada</span>
+                                {% elif cita.estado == "Pendiente" %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                                <a href="{% url 'cancelar_cita_cliente' cita.id %}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-confirmar="¿Cancelar este turno?"
+                                           data-confirmar-titulo="Cancelar turno"
+                                           data-confirmar-boton="Sí, cancelar"
+                                           data-confirmar-peligro>Cancelar</a>
                             </div>
                         </div>
                         {% empty %}
@@ -409,25 +433,18 @@
 
             {% for cita in historial %}
 
-                <div class="turno-card p-2 mb-2">
+                <div class="cita-card cita-card--historial">
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="cita-icono"><i class="bi bi-clock-history"></i></div>
 
-                        <div>
+                    <div class="cita-info">
+                        <span class="cita-titulo">{{ cita.servicio.nombre }}</span>
+                        <span class="cita-meta">
+                            <i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
+                        </span>
+                    </div>
 
-                            <strong>
-                                {{ cita.servicio.nombre }}
-                            </strong>
-
-                            <br>
-
-                            <small class="text-light-brown">
-                                {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
-                            </small>
-
-                        </div>
-
-
+                    <div class="cita-acciones">
                         {% if cita.estado == "Finalizada" %}
 
                             <span class="badge bg-success">
@@ -441,7 +458,6 @@
                             </span>
 
                         {% endif %}
-
                     </div>
 
                 </div>

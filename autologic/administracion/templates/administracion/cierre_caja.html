@@ -178,28 +178,28 @@
         <div class="row g-3 mb-4">
             <div class="col-6 col-md-3">
                 <div class="stat-card servicios">
-                    <i class="bi bi-check2-circle"></i>
+                    <div class="icon-wrapper"><i class="bi bi-check2-circle"></i></div>
                     <h5>Servicios realizados</h5>
                     <h2>{{ total_finalizadas }}</h2>
                 </div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="stat-card" style="border-left-color:#dc3545;">
-                    <i class="bi bi-x-circle" style="color:#dc3545;"></i>
+                <div class="stat-card" style="--color-primario:#dc3545; --color-primario-rgb:220,53,69;">
+                    <div class="icon-wrapper"><i class="bi bi-x-circle"></i></div>
                     <h5>Cancelaciones</h5>
-                    <h2 style="color:#dc3545;">{{ total_canceladas }}</h2>
+                    <h2>{{ total_canceladas }}</h2>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-card citas">
-                    <i class="bi bi-hourglass-split"></i>
+                    <div class="icon-wrapper"><i class="bi bi-hourglass-split"></i></div>
                     <h5>Sin resolver</h5>
                     <h2>{{ total_pendientes }}</h2>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="stat-card productos">
-                    <i class="bi bi-cash-stack"></i>
+                    <div class="icon-wrapper"><i class="bi bi-cash-stack"></i></div>
                     <h5>Ingresos del período</h5>
                     <h2>${{ total_ingresos|floatformat:0 }}</h2>
                 </div>

@@ -186,40 +186,9 @@
             background: linear-gradient(135deg, var(--color-primario-claro) 0%, var(--color-primario) 100%);
         }
 
-        /* ========== TARJETAS DE ESTADÍSTICAS ========== */
-        .stat-card {
-            background-color: var(--color-fondo-secundario);
-            border-radius: 20px;
-            border-left: 4px solid var(--color-primario);
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 100%;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(var(--color-primario-rgb), 0.2);
-        }
-
-        .stat-card i {
-            color: var(--color-primario);
-            font-size: 2.5rem;
-        }
-
-        .stat-card h5 {
-            color: var(--color-primario-claro);
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-card h2 {
-            color: var(--color-primario);
-            font-size: 2.2rem;
-            font-weight: bold;
-        }
+        /* El estilo de .stat-card se unifica de forma global en
+           static/styles.css (sección "UNIFICACIÓN VISUAL"), alineado con
+           el diseño de "Agendar cita" del panel de cliente. */
 
         /* ========== MODALES ========== */
         .modal-content-custom {
@@ -287,9 +256,6 @@
                 min-width: 140px;
             }
 
-            .stat-card h2 {
-                font-size: 1.8rem;
-            }
         }
 
         @media (max-width: 576px) {
@@ -312,13 +278,6 @@
                 box-shadow: none;
             }
 
-            .stat-card {
-                padding: 1rem;
-            }
-
-            .stat-card h2 {
-                font-size: 1.5rem;
-            }
         }
 
         /* ========== TABLAS - ESTILO OSCURO COMO REPORTES ========== */
@@ -598,32 +557,32 @@
         <div class="row g-4 mb-4">
 
             <div class="col-md-3 col-sm-6">
-                <div class="stat-card text-center">
-                    <i class="bi bi-box-seam"></i>
+                <div class="stat-card productos text-center">
+                    <div class="icon-wrapper"><i class="bi bi-box-seam"></i></div>
                     <h5>Total Productos</h5>
                     <h2>{{ total_productos }}</h2>
                 </div>
             </div>
 
             <div class="col-md-3 col-sm-6">
-                <div class="stat-card text-center" style="border-left-color: #198754;">
-                    <i class="bi bi-check-circle" style="color: #198754;"></i>
+                <div class="stat-card barberos text-center">
+                    <div class="icon-wrapper"><i class="bi bi-check-circle"></i></div>
                     <h5>Stock Total</h5>
                     <h2>{{ stock_total }}</h2>
                 </div>
             </div>
 
             <div class="col-md-3 col-sm-6">
-                <div class="stat-card text-center" style="border-left-color: #dc3545;">
-                    <i class="bi bi-exclamation-triangle" style="color: #dc3545;"></i>
+                <div class="stat-card text-center" style="--color-primario:#dc3545; --color-primario-rgb:220,53,69;">
+                    <div class="icon-wrapper"><i class="bi bi-exclamation-triangle"></i></div>
                     <h5>Stock Bajo</h5>
-                    <h2 class="text-danger">{{ productos_bajo_stock }}</h2>
+                    <h2>{{ productos_bajo_stock }}</h2>
                 </div>
             </div>
 
             <div class="col-md-3 col-sm-6">
-                <div class="stat-card text-center" style="border-left-color: #0d6efd;">
-                    <i class="bi bi-arrow-left-right" style="color: #0d6efd;"></i>
+                <div class="stat-card citas text-center">
+                    <div class="icon-wrapper"><i class="bi bi-arrow-left-right"></i></div>
                     <h5>Movimientos</h5>
                     <h2>{{ ultimos_movimientos|length }}</h2>
                 </div>
