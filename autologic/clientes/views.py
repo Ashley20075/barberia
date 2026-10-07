@@ -86,17 +86,27 @@ def panel_cliente(request):
 def vaciar_historial_cliente(request):
     if request.method == "POST":
         cliente = get_object_or_404(Cliente, user=request.user)
-
-        Cita.objects.filter(
+        
+        
+        citas_archivadas = Cita.objects.filter(
             cliente=cliente,
-            estado__in=["Finalizada", "Cancelada"]
+            estado__in=["Finalizada", "Cancelada"],
+            historial_archivado=False
         ).update(historial_archivado=True)
-
-        messages.success(
-            request,
-            "✅ Tu historial de citas ha sido vaciado correctamente."
-        )
-
+        
+        
+        if citas_archivadas > 0:
+            messages.success(
+                request, 
+                "✅ Tu historial de citas finalizadas y canceladas ha sido vaciado correctamente."
+            )
+        else:
+            messages.warning(
+                request, 
+                "⚠️ No tienes citas finalizadas ni canceladas para archivar en tu historial. "
+                "Las citas pendientes o confirmadas no pueden ser vaciadas."
+            )
+            
     return redirect("panel_cliente")
 
 
@@ -476,24 +486,8 @@ def cancelar_cita_cliente(request, id):
     cita = get_object_or_404(Cita, id=id, cliente__user=request.user)
 
     if cita.estado != "Cancelada":
-        with transaction.atomic():
-            if cita.productos and cita.productos != "Ninguno":
-                productos = cita.productos.split(",")
-
-                for nombre_producto in productos:
-                    producto = Producto.objects.filter(nombre=nombre_producto.strip()).first()
-                    if producto:
-                        registrar_movimiento(
-                            producto=producto,
-                            tipo='ENTRADA',
-                            cantidad=1,
-                            usuario=request.user,
-                            nota=f'Devolución por cancelación de cita de {cita.cliente.nombre}',
-                        )
-
-            cita.estado = "Cancelada"
-            cita.save()
-
+        cita.estado = "Cancelada"
+        cita.save()
         messages.success(request, "✅ Cita cancelada exitosamente.")
 
     return redirect("panel_cliente")
