@@ -1518,13 +1518,8 @@ body.light-mode #modalEditarInicio .form-select {
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Hora</label>
                                 <select name="hora" id="editCitaHora" class="form-select bg-dark-input">
-                                    <option>10:00 AM</option>
-                                    <option>11:30 AM</option>
-                                    <option>01:00 PM</option>
-                                    <option>02:30 PM</option>
-                                    <option>04:00 PM</option>
-                                    <option>05:30 PM</option>
-                                </select>
+    <option value="">Selecciona primero el barbero y la fecha</option>
+</select>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -1541,6 +1536,7 @@ body.light-mode #modalEditarInicio .form-select {
                                 <option value="Pendiente">Pendiente</option>
                                 <option value="Confirmada">Confirmada</option>
                                 <option value="Cancelada">Cancelada</option>
+                                <option value="Finalizada">Finalizada</option>
                             </select>
                         </div>
                     </div>
@@ -1814,20 +1810,171 @@ body.light-mode #modalEditarInicio .form-select {
     </script>
     <script>
         // MODAL EDITAR CITA
-        document.getElementById('modalEditarCita').addEventListener('show.bs.modal', function(e) {
-            const btn = e.relatedTarget;
-            // El modal tambien puede abrirse por JS (al restaurar un
-            // formulario tras un error). En ese caso no hay boton de
-            // origen y no se debe sobrescribir lo que el usuario escribio.
-            if (!btn) { return; }
-            document.getElementById('editCitaCliente').value = btn.dataset.cliente || '';
-            document.getElementById('editCitaServicio').value = btn.dataset.servicio || '';
-            document.getElementById('editCitaFecha').value = btn.dataset.fecha || '';
-            document.getElementById('editCitaHora').value = btn.dataset.hora || '';
-            document.getElementById('editCitaBarbero').value = btn.dataset.barbero || '';
-            document.getElementById('editCitaEstado').value = btn.dataset.estado || 'Pendiente';
-            document.getElementById('formEditarCita').action = `/editar-cita/${btn.dataset.id}/`;
+        const modalEditarCita = document.getElementById('modalEditarCita');
+
+const editCitaCliente = document.getElementById('editCitaCliente');
+const editCitaServicio = document.getElementById('editCitaServicio');
+const editCitaFecha = document.getElementById('editCitaFecha');
+const editCitaHora = document.getElementById('editCitaHora');
+const editCitaBarbero = document.getElementById('editCitaBarbero');
+const editCitaEstado = document.getElementById('editCitaEstado');
+const formEditarCita = document.getElementById('formEditarCita');
+
+
+async function cargarHorariosEdicion(horaActual = '') {
+
+    const barberoId = editCitaBarbero.value;
+    const fecha = editCitaFecha.value;
+    const servicioId = editCitaServicio.value;
+
+    editCitaHora.innerHTML = '';
+
+    if (!barberoId || !fecha || !servicioId) {
+        editCitaHora.innerHTML =
+            '<option value="">Selecciona barbero, fecha y servicio</option>';
+        return;
+    }
+
+    editCitaHora.innerHTML =
+        '<option value="">Cargando horarios...</option>';
+
+    try {
+
+        const citaId = formEditarCita.dataset.citaId || '';
+
+        const url =
+            `{% url 'administracion:horarios_disponibles_editar' %}` +
+            `?barbero_id=${barberoId}` +
+            `&fecha=${fecha}` +
+            `&servicio_id=${servicioId}` +
+            `&cita_id=${citaId}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('No se pudieron consultar los horarios.');
+        }
+
+        const data = await response.json();
+
+        editCitaHora.innerHTML = '';
+
+        if (!data.horarios || data.horarios.length === 0) {
+
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent =
+                data.mensaje || 'No hay horarios disponibles';
+
+            editCitaHora.appendChild(option);
+            return;
+        }
+
+        data.horarios.forEach(horario => {
+
+            const option = document.createElement('option');
+
+            option.value = horario.value;
+            option.textContent = horario.label;
+
+            if (horaActual) {
+
+                let horaComparar = horaActual;
+
+                if (horaActual.includes(':') && horaActual.includes(' ')) {
+                    horaComparar = convertirHora12a24(horaActual);
+                }
+
+                if (horario.value === horaComparar) {
+                    option.selected = true;
+                }
+            }
+
+            editCitaHora.appendChild(option);
         });
+
+    } catch (error) {
+
+        console.error(error);
+
+        editCitaHora.innerHTML =
+            '<option value="">Error al cargar horarios</option>';
+    }
+}
+
+
+function convertirHora12a24(hora) {
+
+    const partes = hora.trim().split(' ');
+
+    if (partes.length !== 2) {
+        return hora;
+    }
+
+    const tiempo = partes[0];
+    const periodo = partes[1].toUpperCase();
+
+    let [horas, minutos] = tiempo.split(':');
+
+    horas = parseInt(horas);
+
+    if (periodo === 'PM' && horas !== 12) {
+        horas += 12;
+    }
+
+    if (periodo === 'AM' && horas === 12) {
+        horas = 0;
+    }
+
+    return `${String(horas).padStart(2, '0')}:${minutos}`;
+}
+
+
+modalEditarCita.addEventListener('show.bs.modal', function(e) {
+
+    const btn = e.relatedTarget;
+
+    if (!btn) {
+        return;
+    }
+
+    editCitaCliente.value = btn.dataset.cliente || '';
+    editCitaServicio.value = btn.dataset.servicio || '';
+    editCitaFecha.value = btn.dataset.fecha || '';
+    editCitaBarbero.value = btn.dataset.barbero || '';
+    editCitaEstado.value = btn.dataset.estado || 'Pendiente';
+
+    formEditarCita.action =
+        `/editar-cita/${btn.dataset.id}/`;
+
+    formEditarCita.dataset.citaId =
+        btn.dataset.id;
+
+    cargarHorariosEdicion(
+        btn.dataset.hora || ''
+    );
+});
+
+
+editCitaBarbero.addEventListener('change', function() {
+
+    cargarHorariosEdicion();
+
+});
+
+
+editCitaFecha.addEventListener('change', function() {
+
+    cargarHorariosEdicion();
+
+});
+
+
+editCitaServicio.addEventListener('change', function() {
+
+    cargarHorariosEdicion();
+
+});
 
         // MODAL EDITAR BARBERO
         document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {

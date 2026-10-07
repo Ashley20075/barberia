@@ -9,7 +9,7 @@ from clientes.views import CorreoNoEntregado
 from barberos.models import Barbero
 from inventario.models import Producto
 from inventario.utils import registrar_movimiento
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.db import IntegrityError, transaction
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
@@ -25,6 +25,45 @@ from .reportes import calcular_cierre_caja
 from .models import Sitio
 from citas.paginacion import paginar
 from notificaciones.models import Notificacion
+from django.http import JsonResponse
+
+
+def a_time(valor):
+    """
+    Convierte cualquier representación de hora a un objeto datetime.time.
+
+    Acepta: time, datetime o str en formatos como "09:00 AM", "9:00 AM",
+    "09:00", "09:00:00". Devuelve None si no se puede interpretar.
+    """
+    if isinstance(valor, datetime):
+        return valor.time().replace(second=0, microsecond=0)
+
+    if isinstance(valor, time):
+        return valor.replace(second=0, microsecond=0)
+
+    if isinstance(valor, str):
+        texto = valor.strip().upper().replace('.', '')
+        formatos = (
+            '%I:%M %p',
+            '%I:%M%p',
+            '%I:%M:%S %p',
+            '%H:%M',
+            '%H:%M:%S',
+        )
+        for formato in formatos:
+            try:
+                return datetime.strptime(texto, formato).time().replace(second=0, microsecond=0)
+            except ValueError:
+                continue
+
+    return None
+
+
+def formatear_hora(hora):
+    """Devuelve 'HH:MM' (24h) sin importar si hora es str, time o datetime."""
+    h = a_time(hora)
+    return h.strftime('%H:%M') if h else ''
+
 
 @login_required
 def panel_admin(request):
@@ -595,53 +634,183 @@ def editar_cita(request, id):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
-    
+
     cita = get_object_or_404(Cita, id=id)
-    if request.method == 'POST':
-        cliente_id = request.POST.get('cliente')
-        servicio_id = request.POST.get('servicio')
-        barbero_id = request.POST.get('barbero')
-        fecha = request.POST.get('fecha')
-        hora = request.POST.get('hora')
-        estado = request.POST.get('estado')
-        
-        cliente = get_object_or_404(Cliente, id=cliente_id)
-        servicio = get_object_or_404(Servicio, id=servicio_id)
-        barbero = get_object_or_404(Barbero, id=barbero_id)
-        
-        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
-        
-        if not barbero.es_dia_laboral(fecha_obj):
-            messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
-            return redirect('administracion:panel_admin')
-        
-        if barbero.es_dia_descanso(fecha_obj):
-            messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
-            return redirect('administracion:panel_admin')
-        
-        cita_existente = Cita.objects.filter(
-            barbero=barbero,
-            fecha=fecha,
-            hora=hora
-        ).exclude(id=id).exclude(estado='Cancelada').exists()
-        
-        if cita_existente:
-            messages.error(request, f'❌ El barbero ya tiene una cita en ese horario.')
-            return redirect('administracion:panel_admin')
 
-        cita.cliente = cliente
-        cita.servicio = servicio
-        cita.barbero = barbero
-        cita.fecha = fecha
-        cita.hora = hora
-        cita.estado = estado
-        cita.save()
-        # La sincronización con Google Calendar (incluida la reasignación
-        # de barbero) la hace automáticamente la señal post_save.
-
-        messages.success(request, '✅ Cita actualizada correctamente.')
+    if request.method != 'POST':
         return redirect('administracion:panel_admin')
+
+    cliente_id = request.POST.get('cliente')
+    servicio_id = request.POST.get('servicio')
+    barbero_id = request.POST.get('barbero')
+    fecha = request.POST.get('fecha')
+    hora_raw = request.POST.get('hora')
+
+    # La hora llega del selector como "HH:MM" (24h). En la base de datos
+    # la hora de la cita se guarda como texto "09:00 AM", igual que al
+    # agendar, así que la convertimos a ese formato.
+    if hora_raw:
+        hora_obj = a_time(hora_raw)
+        if hora_obj is None:
+            messages.error(
+                request,
+                '❌ La hora seleccionada no tiene un formato válido.'
+            )
+            return redirect('administracion:panel_admin')
+        hora_str = hora_obj.strftime('%I:%M %p')
+    else:
+        # Si no se envió hora, se conserva la que ya tenía la cita.
+        hora_str = cita.hora
+
+    estado = request.POST.get('estado')
+
+    estados_validos = {
+        "Pendiente",
+        "Confirmada",
+        "Cancelada",
+        "Finalizada",
+    }
+
+    if estado not in estados_validos:
+        messages.error(
+            request,
+            "❌ El estado seleccionado no es válido."
+        )
+        return redirect('administracion:panel_admin')
+
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    servicio = get_object_or_404(Servicio, id=servicio_id)
+    barbero = get_object_or_404(Barbero, id=barbero_id)
+
+    try:
+        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+    except (TypeError, ValueError):
+        messages.error(request, '❌ La fecha seleccionada no es válida.')
+        return redirect('administracion:panel_admin')
+
+    if not barbero.es_dia_laboral(fecha_obj):
+        messages.error(request, f'❌ {barbero.nombre} no trabaja en esa fecha.')
+        return redirect('administracion:panel_admin')
+
+    if barbero.es_dia_descanso(fecha_obj):
+        messages.error(request, f'❌ {barbero.nombre} tiene descanso en esa fecha.')
+        return redirect('administracion:panel_admin')
+
+    cita_existente = Cita.objects.filter(
+        barbero=barbero,
+        fecha=fecha_obj,
+        hora=hora_str
+    ).exclude(id=id).exclude(estado='Cancelada').exists()
+
+    if cita_existente:
+        messages.error(request, '❌ El barbero ya tiene una cita en ese horario.')
+        return redirect('administracion:panel_admin')
+
+    cita.cliente = cliente
+    cita.servicio = servicio
+    cita.barbero = barbero
+    cita.fecha = fecha_obj
+    cita.hora = hora_str
+    cita.estado = estado
+    cita.save()
+    # La sincronización con Google Calendar (incluida la reasignación
+    # de barbero) la hace automáticamente la señal post_save.
+
+    messages.success(request, '✅ Cita actualizada correctamente.')
     return redirect('administracion:panel_admin')
+
+@login_required
+def horarios_disponibles_editar(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {'error': 'No tienes permisos para realizar esta acción.'},
+            status=403
+        )
+
+    barbero_id = request.GET.get('barbero_id')
+    fecha = request.GET.get('fecha')
+    servicio_id = request.GET.get('servicio_id')
+    cita_id = request.GET.get('cita_id')
+
+    if not barbero_id or not fecha or not servicio_id:
+        return JsonResponse({
+            'horarios': []
+        })
+
+    try:
+        barbero = Barbero.objects.get(id=barbero_id)
+        servicio = Servicio.objects.get(id=servicio_id)
+        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+    except (Barbero.DoesNotExist, Servicio.DoesNotExist, ValueError):
+        return JsonResponse({
+            'horarios': []
+        })
+
+    # Verificar si el barbero trabaja ese día
+    if not barbero.es_dia_laboral(fecha_obj):
+        return JsonResponse({
+            'horarios': [],
+            'mensaje': f'{barbero.nombre} no trabaja en esa fecha.'
+        })
+
+    # Verificar día de descanso
+    if barbero.es_dia_descanso(fecha_obj):
+        return JsonResponse({
+            'horarios': [],
+            'mensaje': f'{barbero.nombre} tiene descanso en esa fecha.'
+        })
+
+    # Duración del servicio
+    duracion = servicio.duracion or 35
+
+    # Obtener horarios disponibles usando la lógica existente del barbero.
+    # Pueden venir como texto ("09:00 AM") o como objetos time, así que
+    # todo se normaliza a time antes de seguir.
+    horarios_originales = list(
+        barbero.horarios_disponibles(
+            fecha_obj,
+            duracion=duracion
+        ) or []
+    )
+
+    horas = {}
+    for h in horarios_originales:
+        h_time = a_time(h)
+        if h_time is not None:
+            horas[h_time] = True
+
+    # Si estamos editando una cita existente,
+    # no debemos bloquear su propia hora.
+    cita_actual = None
+
+    if cita_id:
+        try:
+            cita_actual = Cita.objects.get(id=cita_id)
+        except (Cita.DoesNotExist, ValueError):
+            cita_actual = None
+
+    if (
+        cita_actual
+        and cita_actual.barbero_id == barbero.id
+        and str(cita_actual.fecha) == str(fecha_obj)
+        and cita_actual.hora
+    ):
+        hora_cita = a_time(cita_actual.hora)
+        if hora_cita is not None:
+            horas[hora_cita] = True
+
+    # Ordenar las horas y convertir a formato visible
+    horarios_formateados = []
+
+    for hora in sorted(horas.keys()):
+        horarios_formateados.append({
+            'value': hora.strftime('%H:%M'),
+            'label': hora.strftime('%I:%M %p').lstrip('0')
+        })
+
+    return JsonResponse({
+        'horarios': horarios_formateados
+    })
 
 @login_required
 def eliminar_cita(request, id):
@@ -1049,7 +1218,6 @@ def certificado_barbero_admin(request, id):
     return response
 
 
-@login_required
 def _parsear_rango_cierre_caja(request):
     """
     Lee fecha_inicio/fecha_fin (y opcionalmente hora_inicio/hora_fin) de

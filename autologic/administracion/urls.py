@@ -12,6 +12,7 @@ urlpatterns = [
     path('desactivar-usuario/<int:id>/', views.desactivar_usuario, name='desactivar_usuario'),
     path('activar-usuario/<int:id>/', views.activar_usuario, name='activar_usuario'),
     path('editar-cita/<int:id>/', views.editar_cita, name='editar_cita'),
+    path('horarios-disponibles-editar/',views.horarios_disponibles_editar,name='horarios_disponibles_editar'),
     path('eliminar-cita/<int:id>/', views.eliminar_cita, name='eliminar_cita'),
     path('agregar-barbero/', views.agregar_barbero, name='agregar_barbero'),
     path('editar-barbero/<int:id>/', views.editar_barbero, name='editar_barbero'),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('cierre-caja/', views.cierre_caja, name='cierre_caja'),
     path('cierre-caja/pdf/', views.cierre_caja_pdf, name='cierre_caja_pdf'),
     path('vaciar-historial/',views.vaciar_historial_admin,name='vaciar_historial_admin'),
+    
 ]
