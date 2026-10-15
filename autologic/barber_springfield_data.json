@@ -1,0 +1,5679 @@
+[
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "Barberos",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$HBTJbqTCDa74rAiXZ0WRE2$5BaaEkyCX1rmLAorVx/Eb2I4OqmHkQPl6u/ZsPo18vw=",
+    "last_login": "2026-10-07T14:20:37.969Z",
+    "is_superuser": true,
+    "username": "nicool",
+    "first_name": "",
+    "last_name": "",
+    "email": "nicool@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-25T12:15:30.504Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$O7yyKmBeO3bn9HDOYzh2qI$e8NSc6xfKJOm/Z5xBwPgDb1sPDDi9d47h5UIWbuRz3w=",
+    "last_login": "2026-09-23T16:30:25.689Z",
+    "is_superuser": false,
+    "username": "yampol@gmail.com",
+    "first_name": "Yampol",
+    "last_name": "Bonilla",
+    "email": "yampol@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-31T06:51:21.573Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$VOFqgMFCnAMR5smVhmVxGe$l6elE6rXogF2n9xplFaKquFfF90T9IQEoVB3KjPn8TE=",
+    "last_login": "2026-09-23T16:27:06.336Z",
+    "is_superuser": false,
+    "username": "camilo@gmail.com",
+    "first_name": "camilo",
+    "last_name": "ladino",
+    "email": "camilo@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-07-31T08:35:22.166Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$ZeJ3VOQJnoCQfR9GS2HrdT$rm/0MxyHF8GmV8nholCRten1XVTpsYqc0LEKfXnAkPM=",
+    "last_login": "2026-10-07T16:18:26.419Z",
+    "is_superuser": false,
+    "username": "samuel@gmail.com",
+    "first_name": "samuel",
+    "last_name": "tellez",
+    "email": "samuel@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-03T03:00:50.547Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$jqa7v5LegMRzvFmPaDxjia$Q2zCVqHdBac3/kPO6pnB7hfb2KeauOZsJXcwN8v+Wms=",
+    "last_login": "2026-09-07T00:48:43.647Z",
+    "is_superuser": false,
+    "username": "alex@gmail.com",
+    "first_name": "Alex",
+    "last_name": "Rodriguez",
+    "email": "alex@gmail.com",
+    "is_staff": false,
+    "is_active": false,
+    "date_joined": "2026-08-04T23:48:15.276Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$xoKPOnNKA4GLz3hzhNtxhq$QZ8i/zASiq8kh7cFt025NEBKRA3/oc/PTMQIt8+4oCc=",
+    "last_login": "2026-09-23T16:30:40.004Z",
+    "is_superuser": false,
+    "username": "felipe@gmail.com",
+    "first_name": "Felipe",
+    "last_name": "Casas",
+    "email": "felipe@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-04T23:50:54.968Z",
+    "groups": [
+      [
+        "Barberos"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$2dpmjUWxRvQnRiiyQqkz0h$07GH4vLz7LdGhTn7EKz4McrQ2SlCUmvxXBUbKfIWTdM=",
+    "last_login": "2026-10-07T13:25:06.185Z",
+    "is_superuser": false,
+    "username": "jeison@gmail.com",
+    "first_name": "Jeison",
+    "last_name": "Cruz",
+    "email": "jeison@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-05T11:59:55.999Z",
+    "groups": [
+      [
+        "Barberos"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$wNUFqSwLWIE2EEySQA4wAY$EfRevfN+m5FRQSAD/dUaxtA1Pl7UaLC7AlMliIkSKSY=",
+    "last_login": "2026-09-23T00:34:05.997Z",
+    "is_superuser": false,
+    "username": "juan@gmail.com",
+    "first_name": "Juan",
+    "last_name": "Carlos",
+    "email": "juan@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-16T14:50:42.226Z",
+    "groups": [
+      [
+        "Barberos"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$G7Ioc3xXN7vpUddA5kmSda$mSUyMnp1j6aQIpC3cbh+8Ka3OrZWcLsqF8r56Nj3Xb4=",
+    "last_login": "2026-09-22T22:40:50.249Z",
+    "is_superuser": true,
+    "username": "felipead",
+    "first_name": "",
+    "last_name": "",
+    "email": "felipe@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-09-22T22:10:50.233Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "22qzyrjqtcqsbq823qrcghwg1ig9k4h5",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-rR1T0nMGa-1d4wCKpXwqxN0hUgpo38y8l0i4rS1tC89pJHEWWpx-t4zlwdMO6I7TrcvSp3Ues9wVedBFXjvx83K4fwcNl_atVSikQTkDwcSCVlnwtTqrIxllGYCokDeYgwLta-QAtjirMDLjwIN4fwDACTds:1wjbq4:SuTXSBOY3_kOn57mfcsktNAW4N-OjS8vKIRlWEUfb9Q",
+    "expire_date": "2026-07-28T12:02:16.438Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2ztu957fj80qq7ry7vv5tdpd24w4hxj7",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x9PGO:KGKAn9bGofxS24HnxLtGf_IIrVelH53BOHN2Yl4jA_M",
+    "expire_date": "2026-10-07T15:52:04.055Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "31h1f3ecgn25g65ilglsas8lay71grdq",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZBVKIhH731Ds7C7UjWQlPZk_LuS9KDXmcm81ITbmqet8TLNpC7qNKjDL4yYHly6oTuWW9WplnWZo-6J3m3TYyV-Xvf2b5Cx5f41yVhgQAgORNCwB3IOkj0OgATi3ZmCd18lwmR8pCBswYEJViyp9wcHxTho:1x6qik:qumCMoUcayUI4pzQSv_nnJHS17InLsGPcIWeqBaM3IE",
+    "expire_date": "2026-09-30T14:34:46.164Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4kil6pvp37ptnk4v5o53xt2efquh9snl",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCYMlNw6d4zEDoMtmpKUtqV8e7apAvd_vfef6mYtnWMW5MlTlmdFTh1-h2HxA-Zd5Lvab5VzXVel2nQu6IP2vS1ZnleDvfvYExt_NaBQDJRMQM66KFAsgAUvOeOmNGHzljbsSNbjEFGWzCQ9CYLBhCP6v0B2wM2xA:1x3NFV:NLy5ttsASsuCN4QhT_Hj6HCmGDKN1a8MoTm3oBVHXIE",
+    "expire_date": "2026-09-21T00:30:13.782Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5axfsc942ojyp8vii5ftytlh25czp4qy",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAURP-FtSHA5enSfb-BXF5SNZCUdmX8d9ukC53lnDPzJh63tfpt5MXPiVyJEOTyWwaMz9wOkh7Y7p3G3tZlDvRQ6EkHnXrKr9vp_h1UHHVfa1ksV0Kh4BK1Y1ybpAszCtyelIsCG5VDBrpEMJxJkNKIkLgBxbIlny_MKjZn:1wu8mX:C5-2Q1d0iBxRs9FxSOUZPM5n2hmlPKMiAPxt67MIsrw",
+    "expire_date": "2026-08-26T13:14:09.474Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5fwdkbc0xm831snyq9hq2wg08z9nau71",
+  "fields": {
+    "session_data": ".eJxVjEsOAiEQRO_C2pABGm1cuvcMpJuPjBpIhpmV8e5KMgtdVr1X9RKetrX4rafFz1GchVbi8FsyhUeqg8Q71VuTodV1mVkORe60y2uL6XnZ3b-DQr2MddQ5JoKEbNkRZAUBM4KdFBrLmANpVsa4kFkFIHtKymGe8BvAwlG8PzBCOGc:1x9PYo:U9G-5s1qt7Fz1kC5ICgOb-Cdw6GhPMFlCpYM9S3Evew",
+    "expire_date": "2026-10-07T16:11:06.435Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5l9we71wqles7j29joff1sewv1yazsep",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCgDA4u3XsGMoVBqgaS0q6Md7dNutDte-__twi0LiWsnecwJXERWpx-2UjxyXUX6UH13mRsdZmnUe6JPGyXt5b4dT3av4NCvWxrhAFsytawzdkZtPoMMTkEZ9WGmYzXYBwmP2StcABQno1Czypbciw-X7zCNs0:1wf6BC:gVDV3pLYxea_F2QwIoi2pwS3diMw5sWzL20pztPOycs",
+    "expire_date": "2026-07-16T01:25:26.556Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "5prtwl25ymn4tmrrudlp6icku3pmbfl9",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hAGCqUu3XsGMsMMUjVtUtqV8e7apAvd_vfef6mE21rT1mRJI6uzsqBOvyNhfsi0E77jdJt1nqd1GUnvij5o09eZ5Xk53L-Diq1-62hc9uCNDERke7IsHsQFYlsAwHZd7kxP5DCEIr0vOETnPBgOzCUO6v0B_6039w:1x3NH4:tJxwMO84nkoiEAuRihPjAIBuzKg6AEYDDe8SLqMciEA",
+    "expire_date": "2026-09-21T00:31:50.205Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "612thj0vku6jdxo7t766jkgfhrmxpqq7",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSHlDS7d-w1kgBmpGkhKuzL-uzbpQrf3nHNfLMK21rgNXOJc2JlJwU6_Y4L8wLaTcod26zz3ti5z4rvCDzr4tRd8Xg7376DCqN8apTEUwDrtnaKQvIbJaEClQ5J2Kig1ASlUSiZHxnubUBQqmTQ6K4C9PwLnOHc:1x6rhw:TjSU0qlWMBioiRBW_Pcu16gzXbRH0nzgNWYzUxhUWGk",
+    "expire_date": "2026-09-30T15:38:00.087Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6pzh1ha2bd9mwshp5vmwyn28yc9bg3uv",
+  "fields": {
+    "session_data": "e30:1wzItO:y2qXRK2e696k303LPO1TUVR7LoUPSZGuJ-FPtsu0XFI",
+    "expire_date": "2026-09-09T19:02:34.715Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "6uc4ih2w9ixpdnmhctt2c5k4hl5mf06v",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1wzjhS:JRGc5RUzWelBNjbdOp3Md1PWeCtSEhGo5YehvJEYLLw",
+    "expire_date": "2026-09-10T23:40:02.828Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "75rlrnvt8cg1qaqoqlhhdcw85d1l4var",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1Mhc:gXQ_RWBrR12kQhED5VrtQiLc6d3dhH2mOY8BYFvYmuI",
+    "expire_date": "2026-09-15T11:30:56.599Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "77d7p65ssbe7k9hukou3fq1x59izv2ub",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZBVKIhH731Ds7C7UjWQlPZk_LuS9KDXmcm81ITbmqet8TLNpC7qNKjDL4yYHly6oTuWW9WplnWZo-6J3m3TYyV-Xvf2b5Cx5f41yVhgQAgORNCwB3IOkj0OgATi3ZmCd18lwmR8pCBswYEJViyp9wcHxTho:1x9O98:CuzBHadNMp-3QQerWCpJ4zITfox2LsUuWLAczm54GAw",
+    "expire_date": "2026-10-07T14:40:30.221Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7gsbs76mgt0rtg3knn4w7vynp616ihgi",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1x1Mhc:Mz7vy20E_pGfEPLd7Y4CeEfUxtCfQu9Th3VEbtPcQrI",
+    "expire_date": "2026-09-15T11:30:56.424Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "7qvsbmzd4w1pbvv6bmbyyewazv84ved7",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmy1_GHkp4zWOvdBQeQI8VJFXF3iJQC2jczb1MZ16XmtcucR1ZnZdTpdytIT2k74Ae2-6Rpass8Fr0r-qBdXyeW1-Vw_w4q9vqtYwIG9hbER7pZJ8jkGUoxxkUH5DgNIYWIEJIjkkgFnQzBUgDyktT7A-gpOCA:1wclHk:STp5eZz5WQ3wS5AsWIGCTlDsx3ib8bSaUtOqB1JwjMg",
+    "expire_date": "2026-07-09T14:42:32.576Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8mdsud9ns7729wakp6xrz6a8z7goyk3b",
+  "fields": {
+    "session_data": ".eJx1kz1vGzEMhv8KoflwsGs7cbwlbjMlQJdObWBQEm0z1YmGPq51gvz3QvI1ObfJooGS-PLhSz6rDea03-RIYcNWrdSnmWrGQY3mJ_lyYx_R76Q14lNg3ZYn7XAb23ux5G6Gt2cJ9hj3Je92OjfzqZ0botn8ys5wttCkzXQ6W1wtZsv5crmYXKKdG6sv9BLnlrZ6cqGXhshcXV6oRqFHx5HjhlGtnpXoSKFHw-IpqtV3tUZNzgl0-QhGQhIw4iHR75QDgiUfsVWNuvuRJxOynkrMgRl-bYP4hA40kwdLW_Zs6_tbCR3CjjwFdPVLkJiCgPTo0GJVCRh3EqHDYNBKbNVDowIZ6cjbtxKflZdOB1IrdZOfnmCdU_19i5ZUozpJ3ItaqXv0ickTZI_gxO84ZVuZEI5wCJVgahIbbCBQRJfQWwGH4N7o_hKNYTr0iTx3TD4VpRt8FNWoA1m2stEYNIUS_-arHIEudWbPWwkdAfmiccByE_OBAkuoBLn0LPboybAV0Pgo9bFEcJhK5yi26qUZdWCNFDHAujg1hr8-BOnJ7LFInbkHRxgZdrL4gAGLOhrUaAUoppBN-WMF0ME2kE_0Hvo9Wf6InWJiJzCUWADfwz7ZMZTYwCBA1YkKbsvJ3YHlX_g7-VVdh6_ZsT3j_0wxoan0pek4Hrmh1bGmKYQxJ3aDLU_iEdhvT-Udx43_n_7a1a5_bPzbFmEIrE9jPrb5lOpkdV2aYfiL8usQxtfpKx14aBT2HIvOl5gwQiyrc74mIKEkxsQ9xpPjQ3VgSRP06NhiKPFAMbtUJLfs0bXq5eUPtGSy1Q:1x99o8:gMCVUFRlIS-9S7cMGDsCY9Vd7zM811-IaKAaOF8qoMM",
+    "expire_date": "2026-10-06T23:21:52.802Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "amiyllosdptmsendo4iscbzud4bsfd6n",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCYMlNw6d4zEDoMtmpKUtqV8e7apAvd_vfef6mYtnWMW5MlTlmdFTh1-h2HxA-Zd5Lvab5VzXVel2nQu6IP2vS1ZnleDvfvYExt_NaBQDJRMQM66KFAsgAUvOeOmNGHzljbsSNbjEFGWzCQ9CYLBhCP6v0B2wM2xA:1x3NXP:voXhjmfz_yvRXSeeJHWzyjGPRH05VP2Fhiu3BZfgtjo",
+    "expire_date": "2026-09-21T00:48:43.653Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "b1jpp20b0gg36lfwzz75lhwl67hm80us",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAi0IJL956BzDBTqRpISrsy3l1IutDdz38v7y0C7FsKe-U1LCQu4qzF6fdEiE_OndAD8r3IWPK2Lii7Ig9a5a0Qv66H-xdIUFPvzspEo8hEZm08adAWGaNS2nqrnXHODhM0TjiiA0M849BW86OfRvH5AhM-OMg:1x7aC8:8Rqtmhq8NRI5QxZM9BBf7KwfttQ1XhOyefeyU4b7HgA",
+    "expire_date": "2026-10-02T15:08:08.853Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "baptahb4vxwq66sa7k9hhe34hvxkivyq",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZAWYQWP3vsGsrssUjU0Ke3J-HdD0oNeZybzVhH3rcS9yRrnpK7Kq9MvI-Sn1C7SA-t90bzUbZ1J90QftulpSfK6He3foGArfZtHMp4xA8tgAbIJF-sEAhrwTlBsYPLBZwAHlM6cGcRSonHAAIjq8wX3hDi0:1wmBsm:k5Mv1r24J_IZaIYuKw1oq3SGLYpARRQlvwSnBXRYFOw",
+    "expire_date": "2026-08-04T14:55:44.173Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "dau190wnnremolvwz6vn37cpo5hw65a0",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAURO_C2hDkF7Eu3fcMBP58pGpoUtqV8e7apAvdzntvXirEdSlhbTKHEeqi7EkdfscU-SF1I7jHeps0T3WZx6Q3Re-06WGCPK-7-3dQYivf2rPPmZw34i1AXcTR91YAGLaczpQtOXHsmRjZse16SY7EGBhAnHp_AClmOSM:1x91wh:xGhgBNNAIdamqie0US5172cmPYsfmM2PorEz0OAkbQ4",
+    "expire_date": "2026-10-06T14:58:11.773Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "erowglgt0n9xgk66mjyhk5nxxffm3689",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlkbxxtsSvqcIXrOrnEAJVI-FeLuECkFtG9m3st02NbSbYvO3SDmYhyb0--Y0D903IncMd4m20_jOg_J7oo96GLbSfR5Pdy_g4KlfGuKNc7Bg7I20TGk4twwAIbXpvbeC1PoHRLBQUNVUxSXY06OSJTN-wMEBTgc:1wu7tD:vZ0JwReTV4zZP5uHNy6Jy4sxHloSTVCxUxtRkGlpP4A",
+    "expire_date": "2026-08-26T12:16:59.968Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "g4dw59ehfx7i0wmp3kzvdr3uf5lu76bu",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x3uZH:aYGhFbxfUfp2ToomeIF2OQoO4hfq_LGkRH_GDwjfTPU",
+    "expire_date": "2026-09-22T12:04:51.238Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gdc02vhy8t2akhkpbce9ynqbvbj7ydau",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAi0IJL956BzDBTqRpISrsy3l1IutDdz38v7y0C7FsKe-U1LCQu4qzF6fdEiE_OndAD8r3IWPK2Lii7Ig9a5a0Qv66H-xdIUFPvzspEo8hEZm08adAWGaNS2nqrnXHODhM0TjiiA0M849BW86OfRvH5AhM-OMg:1x9PB8:6bSmVe-Y4HYdBJlnBLH4bY45gzrqkzprEUtfttMxzMQ",
+    "expire_date": "2026-10-07T15:46:38.689Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gqlhk3f682w5jzmu8x7nmhz6p06cyjan",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAURP-FtSHA5enSfb-BXF5SNZCUdmX8d9ukC53lnDPzJh63tfpt5MXPiVyJEOTyWwaMz9wOkh7Y7p3G3tZlDvRQ6EkHnXrKr9vp_h1UHHVfa1ksV0Kh4BK1Y1ybpAszCtyelIsCG5VDBrpEMJxJkNKIkLgBxbIlny_MKjZn:1x9P6i:AXIkVb5vIXEsrYZzb9ICeQtcRHrE8TaS1xF8KVp5y1Y",
+    "expire_date": "2026-10-07T15:42:04.128Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gybb9pq43khc7oly1xooh145s0ykh3ii",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x7aNF:t0auRrFTP0oAcmCouN9g_uS1M3256b6ptvc5pSuaTSc",
+    "expire_date": "2026-10-02T15:19:37.722Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "h1d0l09xb7k03uu933gb0zz35rnkq0td",
+  "fields": {
+    "session_data": ".eJxVjMsOgjAQAP9lz6bZlRYoR-9-Q7OPKqgpCYWT8d8NCQe9zkzmDYm3dUxbzUuaDAY4N3D6hcL6zGU39uByn53OZV0mcXviDlvddbb8uhzt32DkOsIA6jVEH33juQ2oZogWmChgLxQlGLEY5Wxy89ELRmq7aB13FHpFRfh8AQH0N_E:1wxRWX:Ks7A5GS1ThP51h74rf58j7gD3ZH6RNMpvGBzPspuYb0",
+    "expire_date": "2026-09-04T15:51:17.492Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hmyvegzv9tkzpe23ejldasbo1pavebbm",
+  "fields": {
+    "session_data": ".eJyVk09vGzcQxb_KgOeFYFWyI6un2G2CADECFM2pDYRZclaiw-WsZ0ihtuHvXgwl2zLaHHJbLP-8937z-Og2WMtuU5VkE4Nbu18Wrjv92aP_TtlWwi3mLc885yKxn9mW2XFVZzccKF0d9765YIe6s3uH-dIv52HpiRbLy7DAxXlPvZ_PF-eX54vVcrU6P3uHYelDf9GvcBlo6M8u-pUn8pfvLlznMGOKGnUT0a0fHfdKskcfOZO69V_uGntKiWGs9-BZCoPnDIX-KVUQAmVFuIea48Ay0sx17vPf9eyMQiZbTuCPFwzCuWCCQEPMMWC7xw4hCAXOgTCgnf-DtQhDIJiEJ5aDF6C7GlPsBQNqOyuoW1bAvK0JhRT2UWOfSGfuW-eEPI-Uw2uUR5d57IXc2l3Vhwe4rsV1buQS9-zW7gZziZQJEkLivI2lBkBfKqaX8BZVSDEVhIQK6SWqvuSyrwTSQlicEXOhHMdIuZjOFd6y69xEIQbe9Cg9if3_mpsEnZDGBJ6EoX3VzEAZCgfTblgfsIPj9ZQDQ-JGprBkVugjZRhRPAbWmXvqTgB8wEBgThpJzgH1lMV7yzXMbVNrJmohEzeBhIUEEym0SIIKSoCT8J78rnl7bscBmdaJJLL8H4wbCvFHNALpHjP5GBh6s_piILDCvQnl6rGDQLfY4iNMaASfFSHFLQmOlA1rm9XczsvWBnlwGR9a7d7QuUZSlMMQTrH8ZiM-FOS148-9NpA1w0R3lQ74GIbUWpsYhHxhuKsGdJwSmafGirRI9Q3XgD5i-llMh9K8hrGRPj9TSv-xsDMRwEDJNAzjm5kK9Xh7LMy3zuE-qun8rgUVeDq-RbXSiLnDEveov5qaVnsWGmmcpPUGSoWjVZvd-69_fvn85eOna5sSwh5TDCjmUaidDQxDzEbg6elfVYjdWw:1x99lr:C8KjUyC8NRJiW0wOdCuoSbflvxbZM3qechz7BHxz2zo",
+    "expire_date": "2026-10-06T23:19:31.040Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hu26bylklrfiv08bemqq9i0rr7ru3fqd",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1Bjc:inT80I9hpEvk6JmVjP6Kob_qGwjiVauxJXVeQLxU4pw",
+    "expire_date": "2026-09-14T23:48:16.670Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ijczrusnb8naapj74c0bfguyilb94qaf",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x9Nfn:V4rEiSqBoh9tQgeL3W4pE-QfpUkbl4qVTJZZ0YJRs1w",
+    "expire_date": "2026-10-07T14:10:11.361Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "io3lh6oaa288s5zvkkgyssnknxvvdcog",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbLi205Jzxuitb2LA8iWclSIv6NIKaCdGc0bJty3Ou0rLdNcYAQl4fILE-YntcOUB7Z7F7m3bZmTOBJx2lXceqHX9Wz_BhXXCiOQspYjOm-C1xxTMDhYg6RNTMoNhZRhZE1aq-TZhuASycIlsyHvJMLnCwLnOHc:1x9BLW:FhgaJowSg5AJGVdxAiEplBPkj6wyvaout1JOIvzJ1KU",
+    "expire_date": "2026-10-07T01:00:26.177Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "iqzonbgq0anijid9kaf9m4h2uci8r89w",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxI2jyVJj979hpDNw1QlhaY9if8uhR70OjPMG0Lctxb2UdYwZ5hAwuWXcUzP0g-RH7HfF5GWvq0ziyMRpx3ituTyup7t36DF0WACi95ljZ6lQ6_JkpFOy6R8qWTQUVbkIiJbiqy1rrayUiwrmspImOHzBaBsNqI:1x3b5D:HC0rfAWlNQtjL4AzpOWHlDauUB0c61y8avhFW9VUSQw",
+    "expire_date": "2026-09-21T15:16:31.575Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "l47nveu23i5xiy3e49x895scr6zfu47e",
+  "fields": {
+    "session_data": ".eJxVjDsOwyAQRO9CHSE-xkDK9D4DWmA3OIlAMnYV5e6xJRdJM8W8N_NmAba1hK3jEubMrkxpdvktI6Qn1oPkB9R746nVdZkjPxR-0s6nlvF1O92_gwK97GuvrCChjDCExoMlJ0mP0e4pdHagcZRAWWjwmJMlElqSMQN6OaD0jn2--mU33w:1wtlJ6:Xk8YL04XoTca1eJL6wQOKmpuDq1EbdRPLQLfA6UMkV0",
+    "expire_date": "2026-08-25T12:10:12.936Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "lli5lovops22u1wqg4maf466cvlkzi70",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAi0IJL956BzDBTqRpISrsy3l1IutDdz38v7y0C7FsKe-U1LCQu4qzF6fdEiE_OndAD8r3IWPK2Lii7Ig9a5a0Qv66H-xdIUFPvzspEo8hEZm08adAWGaNS2nqrnXHODhM0TjiiA0M849BW86OfRvH5AhM-OMg:1xETRx:QzZ7feC7qEpUoUp7ZEkA4tparaXdsiv6-llwexNw-z4",
+    "expire_date": "2026-10-21T15:20:57.427Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "lm9c512cejsi1dytqvypc5f1upikx4r5",
+  "fields": {
+    "session_data": ".eJxVjMsKg0AMAP8l57Kgifvw2Hu_YckmabUtCq6epP9eBA_tdWaYHTJv65C3akseFXpo4PLLCsvLpkPok6fH7GSe1mUs7kjcaau7zWrv69n-DQauA_QQEyqqb9F8lHtLxipesZSmoUgopKkLKUTGkEjEohQm60IrAcVbgs8X6Ck4IA:1wewv0:F3g_elHzpJeAGMeew73MTgT3LaWr2WAIZzFFkEkJ1h0",
+    "expire_date": "2026-07-15T15:32:06.239Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "n0zsytso0mitqv7grak11n6rjzq94khm",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1wzjhM:polBVOZbS6qbtI6Vv1ThTyWTHN_98-q3VVka1mZbino",
+    "expire_date": "2026-09-10T23:39:56.820Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "nwqvqu0zd155fltosho4wvz16raizhwu",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZBVKIhH776BLOyuVA0kpT0Z_25IetDrzGTeKuK2lrh1XuJM6qJOkzr8woT5yXUYemC9N51bXZc56ZHo3XZ9a8Sv697-DQr2Mr4mGwsMCMGBCBr2QM5BtscJkEC8O1PwTgRFmIxPFIQtODDBiiX1-QIHxTho:1x7mYc:sjs1nP11E1pep8kNdeUOyi9cD7N3V8M5LbLw2v09uNw",
+    "expire_date": "2026-10-03T04:20:10.596Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "or7bfb78exl7yjecs37v26conjy2ovoa",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZBVKIhH776BLOyuVA0kpT0Z_25IetDrzGTeKuK2lrh1XuJM6qJOkzr8woT5yXUYemC9N51bXZc56ZHo3XZ9a8Sv697-DQr2Mr4mGwsMCMGBCBr2QM5BtscJkEC8O1PwTgRFmIxPFIQtODDBiiX1-QIHxTho:1x7mjf:cdw7WeyhKORFcIH4sPnOiZR5LfcKTx86LyDaMUvIf_c",
+    "expire_date": "2026-10-03T04:31:35.799Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "p9tvicp17xpkzs2dkwkuyo30k1mkgydq",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnYsde7lPQ5Q7TrDw4gR8qnQtwdIqWA9s3Me6mBt7UO25LnYUzqokCdfjfh-MhtB-nO7TbpOLV1HkXvij7oovsp5ef1cP8OKi_1W5MBNITOeuOLQPEuWQGKGABLOKNhtoJeuuBiSYAEXRBHHEioJI_q_QG5vTcg:1wclnU:87e2fyAfmMAx1_mpopKBE-ItpDR6lB1bqd5eX6ygta8",
+    "expire_date": "2026-07-09T15:15:20.123Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ppu8j3q4ne9epb5e42gb1pi0ftyg4y3d",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x9PtK:seg_CYWAEvqN4fRnKlQgcMS7BpgzS2TOhPlmXMAEUU0",
+    "expire_date": "2026-10-07T16:32:18.139Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "qqix4jycpvpzrlsqhb0lhm2jqp5drppu",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2ZBVKIhH731Ds7C7UjWQlPZk_LuS9KDXmcm81ITbmqet8TLNpC7qNKjDL4yYHly6oTuWW9WplnWZo-6J3m3TYyV-Xvf2b5Cx5f41yVhgQAgORNCwB3IOkj0OgATi3ZmCd18lwmR8pCBswYEJViyp9wcHxTho:1x9Nwb:lWD1OVvPptiOspXmYtXv_B8ynAHPTTkdaXHZhA88mDw",
+    "expire_date": "2026-10-07T14:27:33.518Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "r2xne2rn2xg0oqrzey96zqre6ebutgjs",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1MhT:WRtWgezQARC16dYo0Nv1xFcyIV3-yqm1w_BeJqz-QxE",
+    "expire_date": "2026-09-15T11:30:47.473Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "raor40a2i0vswb7e1vs41g1a9839b1zb",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxI2jyVJj979hpDNw1QlhaY9if8uhR70OjPMG0Lctxb2UdYwZ5hAwuWXcUzP0g-RH7HfF5GWvq0ziyMRpx3ituTyup7t36DF0WACi95ljZ6lQ6_JkpFOy6R8qWTQUVbkIiJbiqy1rrayUiwrmspImOHzBaBsNqI:1x3axX:t1ASXDWvEZtO7rYgD_cpzhvxRhgfNfMl1fDZpaIGqkI",
+    "expire_date": "2026-09-21T15:08:35.273Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "s0hegxnstaid7gxf5dxyha0fgc8qyp0a",
+  "fields": {
+    "session_data": ".eJxVjDsOgzAQBe_iOrLAiz-kTM8ZrN31EpNERsJQRbl7QKJI2jcz760ibmuOW5UlTkldlVeX342Qn1IOkB5Y7rPmuazLRPpQ9EmrHuYkr9vp_h1krHmvKYXWBQIk7hsUsSzeupGlJxgJfENgxAdgcR2QFc_GArepQ8O7jurzBRXFOU0:1wlwoa:kGJO9lOFnegBkkgnW1FOHntDMqjrsUAtYt7R-MMpGWY",
+    "expire_date": "2026-08-03T22:50:24.829Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "sb3r76ls9hiou1u2x16jcqnvmt26jgjs",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1BjU:u8Ga5umWvz2eJZAs6NT8Fr6Jtk_tiZIMErvtm3bH5Tw",
+    "expire_date": "2026-09-14T23:48:08.891Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "sgrc5mlgv3nf98d3p88o75ex64bwwec8",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x6UNP:7MV0ONZOtvdI56VId2ekCRYfJOwrE4iPVe50TjaAcDE",
+    "expire_date": "2026-09-29T14:43:15.265Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "t4tumftngbjwfs92c713268dhry3cexr",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1Mh2:JmI15HNArevo0I6e7sDC4yTejvFKDa7pWql9NoSioiI",
+    "expire_date": "2026-09-15T11:30:20.138Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "tgajm2ufec9tfa6bmda57q3jgrsfxgk4",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1wzupH:9R0RBH2gn-ajr4_bU21dTWIYMqu9rqt_3wepsSGHwyA",
+    "expire_date": "2026-09-11T11:32:51.100Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "tri9vt5anasdieqatklkzjlmebwwn53y",
+  "fields": {
+    "session_data": ".eJxVjEEOgjAQRe_StWloC-3g0j1naKYzg0VNSSisjHcXEha6_e-9_1YRtzXHrcoSJ1ZXZZ26_I4J6SnlIPzAcp81zWVdpqQPRZ-06mFmed1O9-8gY817bQJyR2iEhBlSB9R33hvyZLlpnRjGthkBRtcLg4UkwVJjYZe8C5DU5wsoSjhF:1wtw5M:XoI9hyXb5Y8kO0Pw69Gg281QTS2iRY8NCjQf-grMpyI",
+    "expire_date": "2026-08-25T23:40:44.628Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "uhmm6waow7pt643bhtk9mrj1drlpzi1h",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1x0k39:4RBj-f3a4WjZR2V93ngx7T8dILc3bzmxDyW5Whhr0r8",
+    "expire_date": "2026-09-13T18:14:35.369Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "v1abgwxlrwi73h2zkpra12me6oezakqd",
+  "fields": {
+    "session_data": ".eJxVjDEOAiEQAP9CbQgBYVlLe99AlgXk1EBy3FXGvxuSK7SdmcxbBNq3GvaR17AkcRHaiNMvjMTP3KZJD2r3Lrm3bV2inIk87JC3nvLrerR_g0qjzi94pWK0zmGxjLlYYodKayjaGEBEdoWJnCUCUB4jQ7HlrBJoJO3F5wv5MDfH:1wrF9R:R3Rkga8m-x02a-jm_xDeU7wMmNKBQKFtTsm9LUigfaQ",
+    "expire_date": "2026-08-18T13:25:49.681Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "v746x50j6p40m4y23no86i0atsv7407t",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1MhI:tJueGBMRP0Ds35Ya8BOokhalTe2NPq6BsO49gqKvwoQ",
+    "expire_date": "2026-09-15T11:30:36.150Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vebkhn3glt351wgig0j3sc39cp1o3fhu",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAQAP-yNbJ8HynpeYO19to4gBwpTirE31GkFNDOjOYNEfetxX2UNc4EE0gJl1-YMD9LPww9sN8Xlpe-rXNiR8JOO9htofK6nu3foOFoMIHV1QsjDUqh0QYurCNbuTMqhBCoVKN8NgG5sjUrJ7hWWjuZSDhlePHw-QLMKjZn:1x7Wtt:lF9F3qZ8VeQs2r15EEN5HXRD2p-RxKWy0gINgnrTquE",
+    "expire_date": "2026-10-02T11:37:05.375Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "wgd7ypul7nknwi7cx3xn6q08mbftlrcc",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSHlDS7d-w1kgBmpGkhKuzL-uzbpQrf3nHNfLMK21rgNXOJc2JlJwU6_Y4L8wLaTcod26zz3ti5z4rvCDzr4tRd8Xg7376DCqN8apTEUwDrtnaKQvIbJaEClQ5J2Kig1ASlUSiZHxnubUBQqmTQ6K4C9PwLnOHc:1x6pMQ:J4iiyZnhs_6OofLK_VwNoRH1y-7XeO4MsbEYmdNWroI",
+    "expire_date": "2026-09-30T13:07:38.176Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "wk7dryqhtc0mvrzann4y8l11plg8anwg",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pAi0IJL956BzDBTqRpISrsy3l1IutDdz38v7y0C7FsKe-U1LCQu4qzF6fdEiE_OndAD8r3IWPK2Lii7Ig9a5a0Qv66H-xdIUFPvzspEo8hEZm08adAWGaNS2nqrnXHODhM0TjiiA0M849BW86OfRvH5AhM-OMg:1xEULa:ZkEt_XJMz5NWDNw4FIyN2VaarxBAIQANDlPgiJq1umA",
+    "expire_date": "2026-10-21T16:18:26.424Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "x6fgox286a0afp11jahpxkff6j4r5cf9",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSHyBpfu-w1kGAapGkhKuzL-uzbpQrf3nHNfLMK21rgNWuKc2YVpyU6_YwJ8UNtJvkO7dY69rcuc-K7wgw4-9UzP6-H-HVQY9VuTRktFBSVdSkL5QNKhN0KjJHkGyN6UrH12ZME6LF7oopQjQzIgBWTvDxGbOIM:1x9Ojp:XOtPYpDtluKf90BpxIYnMiuS-EeZESprlRVzqmE-7K4",
+    "expire_date": "2026-10-07T15:18:25.844Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xo283a1vies0a3vb0u958xk1eavj386p",
+  "fields": {
+    "session_data": "e30:1wcj2c:ZnYgGOrER7QxcOAAL3WG4w9IuKHKLg2yfl6Gg9Lh-0Y",
+    "expire_date": "2026-07-09T12:18:46.457Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xq81di4g36oqk076pys9xy5uul0f120d",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlnrz8o2JT1nsHb9wQHkSHFSIe4OkVJA-2bmvUSkbW1xG2WJUxZnocTpd2NKj9J3kO_Ub7NMc1-XieWuyIMOeZ1zeV4O9--g0Wjf2kHw2UBg5SEYdGiVNyrpUCpa8Jg1egJgh8TGmOoqa82qgq0MCFm8P6BsNqI:1x6sO6:dDHAgcdD2VGl3O12-PimfWviSLJ1KOhd5mqB0r_9jPA",
+    "expire_date": "2026-09-30T16:21:34.254Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yq8ky7e6vtuudgsmq3z0sxoqutp7jq8b",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyEUllI8eu83kF1YpGpoUtqT8d9tkx70NMm8N_MWAbe1hK3xEqYkrkKDuPyWhPHJ9SDpgfU-yzjXdZlIHoo8aZPjnPh1O92_g4Kt7GvwHUSXoyXFXbLQayR0qnc6WzUwgM-RDRhrsrd7qsQ6k88GI4GGQXy-_YU31w:1x1BjV:Xh1HmKXg2Up5WszcEedzmdOow6esvcB-A36b53V1rWQ",
+    "expire_date": "2026-09-14T23:48:09.220Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yw32d48woz6g09q3qi9rd1a0fxobrxv8",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABgQGX7nsGMgNUqoYmpV0Z765NutDtf-_9l4i0rTVuvSxxyuIilDj9bkzpUdoO8p3abZZpbusysdwVedAuhzmX5_Vw_w4q9fqttUMGk41nzAG8A486MVAIZ0s-B2UNgcIxWXDekGONIyqtEiAbZYN4fwC2-jaC:1wzjhb:IKqbh68MvevTB4jNTAJDFRTLxedq0LaQMB7Up1CSx5U",
+    "expire_date": "2026-09-10T23:40:11.574Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zb599ut3pa0sdtg7sktcrn2y71fg21m0",
+  "fields": {
+    "session_data": ".eJxVjMsKwjAQAP9lzxI2jyVJj979hpDNw1QlhaY9if8uhR70OjPMG0Lctxb2UdYwZ5hAwuWXcUzP0g-RH7HfF5GWvq0ziyMRpx3ituTyup7t36DF0WACi95ljZ6lQ6_JkpFOy6R8qWTQUVbkIiJbiqy1rrayUiwrmspImOHzBaBsNqI:1x6V8k:xVaDdvlwIfH6FAyMB05VI3iDwJSZq0BJTTAwwLoi2Xs",
+    "expire_date": "2026-09-29T15:32:10.484Z"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 2,
+  "fields": {
+    "nombre": "Mullet",
+    "descripcion": "Corto por los lados, largo por detras. Estilo retro moderno con mucha personalidad.",
+    "precio": 18000,
+    "duracion": 40,
+    "imagen": "https://i.imgur.com/k1iWPM0.jpg"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 3,
+  "fields": {
+    "nombre": "Corte Clasico",
+    "descripcion": "Tu le explicas al barbero lo que quieres. Corte personalizado a tu medida.",
+    "precio": 18000,
+    "duracion": 45,
+    "imagen": "https://i.imgur.com/XlGkJ10.jpg"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 4,
+  "fields": {
+    "nombre": "Buzz Cut",
+    "descripcion": "Muy corto y parejo en toda la cabeza. Fresco, limpio y de bajo mantenimiento.",
+    "precio": 18000,
+    "duracion": 30,
+    "imagen": "https://i.imgur.com/ZSb52bD.jpg"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 5,
+  "fields": {
+    "nombre": "Corte Texturizado",
+    "descripcion": "Con capas y movimiento natural. Ideal para cabello rizado o con volumen.",
+    "precio": 18000,
+    "duracion": 45,
+    "imagen": "https://i.imgur.com/OKGKQfq.jpg"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 6,
+  "fields": {
+    "nombre": "Taper Fade",
+    "descripcion": "Degradado limpio desde la sien hasta la nuca. El corte más pedido del momento.",
+    "precio": 18000,
+    "duracion": 40,
+    "imagen": "https://i.imgur.com/aplGgFF.jpg"
+  }
+},
+{
+  "model": "citas.servicio",
+  "pk": 9,
+  "fields": {
+    "nombre": "Adicionales",
+    "descripcion": "Cejas-\r\nDiseño\r\n-Barba",
+    "precio": 5000,
+    "duracion": 5,
+    "imagen": "https://i.imgur.com/Ls8ndQr.png"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 36,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-04",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 37,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-05",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 38,
+  "fields": {
+    "cliente": 21,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-05",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 39,
+  "fields": {
+    "cliente": 25,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-05",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 40,
+  "fields": {
+    "cliente": 25,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-05",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 41,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-27",
+    "hora": "09:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 42,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-06",
+    "hora": "08:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 43,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-05",
+    "hora": "08:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 44,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-11",
+    "hora": "08:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 45,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-11",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 46,
+  "fields": {
+    "cliente": 23,
+    "servicio": 5,
+    "barbero": null,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-11",
+    "hora": "01:15 PM",
+    "duracion_total": 40,
+    "recordatorio_enviado": true,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 47,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 48,
+  "fields": {
+    "cliente": 25,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Arreglo de barba, Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 49,
+  "fields": {
+    "cliente": 25,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "01:15 PM",
+    "duracion_total": 35,
+    "recordatorio_enviado": true,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Pendiente"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 50,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 51,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 52,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 53,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "08:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 54,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "09:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 55,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-12",
+    "hora": "09:00 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": true,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 57,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-08-21",
+    "hora": "11:15 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": true,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 60,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-01",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 61,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-02",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 62,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-03",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 63,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-04",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 64,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-05",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 65,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-06",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 66,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-07",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 67,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-08",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 68,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-09",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 69,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-10",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 70,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-11",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 71,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-12",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 72,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-13",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 73,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-14",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 74,
+  "fields": {
+    "cliente": 24,
+    "servicio": 2,
+    "barbero": null,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2020-01-15",
+    "hora": "08:00 AM",
+    "duracion_total": 30,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 75,
+  "fields": {
+    "cliente": 21,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "09:45 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 76,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": 9,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-17",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 77,
+  "fields": {
+    "cliente": 21,
+    "servicio": 5,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 78,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "09:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 79,
+  "fields": {
+    "cliente": 22,
+    "servicio": 6,
+    "barbero": 9,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "11:45 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 80,
+  "fields": {
+    "cliente": 21,
+    "servicio": 3,
+    "barbero": 9,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 81,
+  "fields": {
+    "cliente": 21,
+    "servicio": 6,
+    "barbero": 9,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 82,
+  "fields": {
+    "cliente": 21,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 83,
+  "fields": {
+    "cliente": 21,
+    "servicio": 5,
+    "barbero": 9,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-16",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 84,
+  "fields": {
+    "cliente": 21,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-17",
+    "hora": "10:30 AM",
+    "duracion_total": 35,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 85,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-19",
+    "hora": "09:20 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 86,
+  "fields": {
+    "cliente": 21,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-18",
+    "hora": "09:20 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 87,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-18",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 88,
+  "fields": {
+    "cliente": 23,
+    "servicio": 6,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "09:30 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 89,
+  "fields": {
+    "cliente": 23,
+    "servicio": 3,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba, Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-22",
+    "hora": "11:40 AM",
+    "duracion_total": 55,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 90,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Arreglo de barba, Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-18",
+    "hora": "10:45 AM",
+    "duracion_total": 55,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 91,
+  "fields": {
+    "cliente": 23,
+    "servicio": 4,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba",
+    "productos": "Ninguno",
+    "fecha": "2026-09-19",
+    "hora": "08:00 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 92,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba, Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-19",
+    "hora": "08:00 AM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {
+      "observaciones": [
+        "Cabello corto con estilo rapado en los laterales y ligeramente más largo en la parte superior.",
+        "Línea del cabello frontal visible y definida.",
+        "Textura de cabello liso y corto.",
+        "Rostro con estructura angulosa y mandíbula marcada."
+      ],
+      "recomendaciones": [
+        {
+          "nombre": "Buzz Cut",
+          "motivo": "Mantiene la practicidad del estilo actual y complementa la estructura angulosa del rostro.",
+          "mantenimiento": "Bajo",
+          "pedido_barbero": "Un corte rapado uniforme en toda la cabeza, número 2 en los lados y 3 arriba."
+        },
+        {
+          "nombre": "Crop Texturizado",
+          "motivo": "Aporta un toque moderno aprovechando la longitud superior para dar algo de textura frontal.",
+          "mantenimiento": "Medio",
+          "pedido_barbero": "Degradado bajo en los laterales, manteniendo textura y un poco de longitud en la parte superior para peinar hacia adelante."
+        },
+        {
+          "nombre": "Fade Clásico",
+          "motivo": "Define los contornos laterales manteniendo la parte superior limpia y de fácil manejo.",
+          "mantenimiento": "Medio",
+          "pedido_barbero": "Un desvanecido lateral limpio desde la piel, dejando la parte superior corta y ordenada."
+        }
+      ],
+      "aviso": "Estas son recomendaciones orientativas y el resultado final debe ser validado por tu barbero."
+    },
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 93,
+  "fields": {
+    "cliente": 21,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba, Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-19",
+    "hora": "08:50 AM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {
+      "observaciones": [
+        "Cabello muy corto con textura densa y apariencia uniforme.",
+        "Línea del cabello frontal bien definida y recta.",
+        "Estilo actual rapado al ras con bajo volumen visible."
+      ],
+      "recomendaciones": [
+        {
+          "nombre": "Buzz Cut con desvanecido",
+          "motivo": "Mantiene la longitud corta actual añadiendo un detalle moderno en los laterales con degradado.",
+          "mantenimiento": "Bajo",
+          "pedido_barbero": "Un buzz cut uniforme arriba con un desvanecimiento medio en los costados y la nuca."
+        },
+        {
+          "nombre": "Cesar corto",
+          "motivo": "Permite conservar los laterales cortos mientras se deja ligeramente más longitud y definición en la línea frontal.",
+          "mantenimiento": "Medio",
+          "pedido_barbero": "Corte estilo Cesar corto con textura arriba y una línea frontal recta bien marcada."
+        },
+        {
+          "nombre": "Rapado completo al cero",
+          "motivo": "Una opción clásica y limpia que aprovecha la forma natural de la cabeza y la estructura visible.",
+          "mantenimiento": "Bajo",
+          "pedido_barbero": "Rapado total al cero en toda la cabeza sin transiciones."
+        }
+      ],
+      "aviso": "Estas son recomendaciones orientativas y el barbero debe validar el resultado final."
+    },
+    "estado": "Confirmada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 94,
+  "fields": {
+    "cliente": 22,
+    "servicio": 4,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "02:00 PM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 95,
+  "fields": {
+    "cliente": 23,
+    "servicio": 4,
+    "barbero": 12,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "12:10 PM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 96,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "10:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 97,
+  "fields": {
+    "cliente": 23,
+    "servicio": 4,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-24",
+    "hora": "10:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 98,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-25",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 99,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-26",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 100,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-28",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 101,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-29",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 102,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-30",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 103,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-01",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 104,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-02",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 105,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "10:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 106,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-24",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 107,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-25",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 108,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-26",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 109,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-28",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 110,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-29",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 111,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-30",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 112,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-01",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 113,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-02",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 114,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-07",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 115,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-09-24",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 118,
+  "fields": {
+    "cliente": 23,
+    "servicio": 4,
+    "barbero": 12,
+    "adicionales": "Arreglo de barba, Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-25",
+    "hora": "01:00 PM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 119,
+  "fields": {
+    "cliente": 22,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Cejas, Diseño y líneas",
+    "productos": "Ninguno",
+    "fecha": "2026-09-23",
+    "hora": "11:20 AM",
+    "duracion_total": 50,
+    "recordatorio_enviado": false,
+    "historial_archivado": false,
+    "analisis_ia": {},
+    "estado": "Pendiente"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 120,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Cejas",
+    "productos": "Ninguno",
+    "fecha": "2026-10-07",
+    "hora": "08:45 AM",
+    "duracion_total": 45,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 121,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 12,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-07",
+    "hora": "08:00 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Finalizada"
+  }
+},
+{
+  "model": "citas.cita",
+  "pk": 122,
+  "fields": {
+    "cliente": 23,
+    "servicio": 2,
+    "barbero": 9,
+    "adicionales": "Ninguno",
+    "productos": "Ninguno",
+    "fecha": "2026-10-07",
+    "hora": "08:40 AM",
+    "duracion_total": 40,
+    "recordatorio_enviado": false,
+    "historial_archivado": true,
+    "analisis_ia": {},
+    "estado": "Cancelada"
+  }
+},
+{
+  "model": "barberos.barbero",
+  "pk": 9,
+  "fields": {
+    "nombre": "Jeison Cruz",
+    "cedula": "8965342",
+    "especialidad": "General",
+    "telefono": "98752176",
+    "email": "jeison@gmail.com",
+    "fecha_registro": "2026-08-05T12:07:40.536Z",
+    "activo": true,
+    "jornada_inicio": "08:00:00",
+    "jornada_fin": "18:00:00",
+    "duracion_cita": 30,
+    "dias_laborales": "LUN,MAR,MIE,JUE,VIE,SAB",
+    "dia_descanso": "DOM",
+    "tiempo_entre_citas": 15,
+    "imagen_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPYtMev0mwPWV5P8RZLWaCH0phOAurFw4TGAtP8sa7TDkK3y1iP1S4NuU&s=10",
+    "calificacion": "5.0",
+    "numero_resenas": 0,
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": ""
+  }
+},
+{
+  "model": "barberos.barbero",
+  "pk": 12,
+  "fields": {
+    "nombre": "Felipe Casas",
+    "cedula": "45238976",
+    "especialidad": "General",
+    "telefono": "08725148",
+    "email": "felipe@gmail.com",
+    "fecha_registro": "2026-09-16T14:32:35.414Z",
+    "activo": true,
+    "jornada_inicio": "08:00:00",
+    "jornada_fin": "18:00:00",
+    "duracion_cita": 30,
+    "dias_laborales": "LUN,MAR,MIE,JUE,VIE,SAB",
+    "dia_descanso": "DOM",
+    "tiempo_entre_citas": 15,
+    "imagen_url": "",
+    "calificacion": "5.0",
+    "numero_resenas": 0,
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": ""
+  }
+},
+{
+  "model": "barberos.barbero",
+  "pk": 16,
+  "fields": {
+    "nombre": "Juan Carlos",
+    "cedula": "56874320",
+    "especialidad": "General",
+    "telefono": "",
+    "email": "juan@gmail.com",
+    "fecha_registro": "2026-09-23T00:33:41.927Z",
+    "activo": true,
+    "jornada_inicio": "08:00:00",
+    "jornada_fin": "18:00:00",
+    "duracion_cita": 30,
+    "dias_laborales": "LUN,MAR,MIE,JUE,VIE,SAB",
+    "dia_descanso": "DOM",
+    "tiempo_entre_citas": 15,
+    "imagen_url": "",
+    "calificacion": "5.0",
+    "numero_resenas": 0,
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": ""
+  }
+},
+{
+  "model": "barberos.barbero",
+  "pk": 17,
+  "fields": {
+    "nombre": "felipe casas",
+    "cedula": "5654324564",
+    "especialidad": "General",
+    "telefono": "3432343234",
+    "email": "felipecasas69@gmail.com",
+    "fecha_registro": "2026-09-23T15:10:47.578Z",
+    "activo": true,
+    "jornada_inicio": "08:00:00",
+    "jornada_fin": "18:00:00",
+    "duracion_cita": 30,
+    "dias_laborales": "LUN,MAR,MIE,JUE,VIE,SAB",
+    "dia_descanso": "DOM",
+    "tiempo_entre_citas": 15,
+    "imagen_url": "",
+    "calificacion": "5.0",
+    "numero_resenas": 0,
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": ""
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "nicool"
+    ],
+    "nombre": "nicool",
+    "cedula": "",
+    "telefono": "",
+    "email": "nicool@gmail.com",
+    "fecha_registro": "2026-07-02T11:58:14.773Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 21,
+  "fields": {
+    "user": [
+      "yampol@gmail.com"
+    ],
+    "nombre": "Yampol Bonilla",
+    "cedula": "10123456789",
+    "telefono": "3016052994",
+    "email": "yampol@gmail.com",
+    "fecha_registro": "2026-07-31T06:51:22.405Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 22,
+  "fields": {
+    "user": [
+      "camilo@gmail.com"
+    ],
+    "nombre": "camilo ladino",
+    "cedula": "121448515",
+    "telefono": "3215448455",
+    "email": "camilo@gmail.com",
+    "fecha_registro": "2026-07-31T08:35:22.879Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 23,
+  "fields": {
+    "user": [
+      "samuel@gmail.com"
+    ],
+    "nombre": "samuel tellez",
+    "cedula": "1016717153",
+    "telefono": "3219215407",
+    "email": "samuel@gmail.com",
+    "fecha_registro": "2026-08-03T03:00:57.296Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 24,
+  "fields": {
+    "user": [
+      "alex@gmail.com"
+    ],
+    "nombre": "Alex Rodriguez",
+    "cedula": "5623478",
+    "telefono": "1234567890",
+    "email": "alex@gmail.com",
+    "fecha_registro": "2026-08-04T23:48:19.815Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 25,
+  "fields": {
+    "user": [
+      "felipe@gmail.com"
+    ],
+    "nombre": "Felipe Casas",
+    "cedula": "45238976",
+    "telefono": "08725148",
+    "email": "felipe@gmail.com",
+    "fecha_registro": "2026-08-04T23:50:59.704Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 26,
+  "fields": {
+    "user": [
+      "jeison@gmail.com"
+    ],
+    "nombre": "Jeison Cruz",
+    "cedula": "8965342",
+    "telefono": "98752176",
+    "email": "jeison@gmail.com",
+    "fecha_registro": "2026-08-05T11:59:57.188Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "clientes.cliente",
+  "pk": 32,
+  "fields": {
+    "user": [
+      "juan@gmail.com"
+    ],
+    "nombre": "Juan Carlos",
+    "cedula": "56874320",
+    "telefono": "",
+    "email": "juan@gmail.com",
+    "fecha_registro": "2026-09-16T14:50:43.248Z",
+    "activo": true,
+    "correo_confirmado": true,
+    "cortes_completados": 0,
+    "cortes_para_recompensa": 0,
+    "recompensas_disponibles": 0
+  }
+},
+{
+  "model": "administracion.sitio",
+  "pk": 1,
+  "fields": {
+    "nombre_marca": "BarberSpringfield",
+    "eslogan": "✂️ CORTES CON PERSONALIDAD",
+    "hero_titulo": "Estilo & Elegancia",
+    "hero_descripcion": "Vive la experiencia de una barbería tradicional con técnicas modernas. Atención personalizada, ambiente único y los mejores acabados.",
+    "hero_imagen_1_url": "https://i.pinimg.com/1200x/91/d6/03/91d6037c183ccc9644cdd59a70857524.jpg",
+    "hero_imagen_1_archivo": "home/b1.jpeg",
+    "hero_imagen_1_fuente": "archivo",
+    "hero_imagen_2_url": "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1200&auto=format&fit=crop",
+    "hero_imagen_2_archivo": "home/b2.jpeg",
+    "hero_imagen_2_fuente": "archivo",
+    "hero_imagen_3_url": "https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1200&auto=format&fit=crop",
+    "hero_imagen_3_archivo": "",
+    "hero_imagen_3_fuente": "url",
+    "servicios_titulo": "Servicios Populares",
+    "servicios_subtitulo": "Cada corte, cada arreglo, hecho con precisión y dedicación",
+    "barberos_titulo": "Nuestros Barberos",
+    "barberos_subtitulo": "Profesionales apasionados por su arte",
+    "nosotros_titulo": "Más que una barbería, un legado",
+    "nosotros_parrafo_1": "Desde 2012, BarberSpringfield es el punto de encuentro para los hombres que valoran la estética, la tradición y la buena conversación.",
+    "nosotros_parrafo_2": "Con un ambiente que fusiona lo vintage con lo moderno, cada visita es una experiencia sensorial.",
+    "nosotros_punto_1": "Profesionales certificados",
+    "nosotros_punto_2": "Productos premium importados",
+    "nosotros_punto_3": "Higiene y esterilización garantizada",
+    "nosotros_imagen_url": "https://www.beautymarket.es/imagen/min35798.jpg",
+    "nosotros_imagen_archivo": "home/b2_ezDQgc7.jpeg",
+    "nosotros_imagen_fuente": "archivo",
+    "testimonios_titulo": "Lo que dicen nuestros clientes",
+    "testimonios_subtitulo": "Más de 500 reseñas nos respaldan",
+    "testimonio_1": "Excelente servicio, el barbero entendió exactamente lo que quería.",
+    "testimonio_1_autor": "Javier M.",
+    "testimonio_2": "Llevo años buscando un lugar así. El corte Fade perfecto. 100% recomendado.",
+    "testimonio_2_autor": "Andrés L.",
+    "testimonio_3": "La mejor barbería de la zona. Precios justos y te dan una cerveza mientras esperas.",
+    "testimonio_3_autor": "Camila R.",
+    "cta_titulo": "¿Listo para un cambio de look?",
+    "cta_descripcion": "Reserva tu cita ahora y obtén un 15% de descuento en tu primer corte.",
+    "cta_boton": "Reservar mi espacio",
+    "footer_descripcion": "Cortes modernos, atención personalizada y calidad garantizada.",
+    "horario": "Lun - Vie: 9:00 AM - 8:00 PM\r\nSábados: 10:00 AM - 6:00 PM\r\nDomingos: Cerrado",
+    "direccion": "Calle 36B Sur # 5-50",
+    "telefono": "+57 301 234 5678",
+    "email": "barberspringfield@gmail.com",
+    "mapa_embed_url": "https://www.google.com/maps?q=4.5621815%2C-74.1041294&output=embed",
+    "fachada_imagen_url": "",
+    "fachada_imagen_archivo": "home/fachada_barberia.jpeg",
+    "fachada_imagen_fuente": "archivo",
+    "noticias_titulo": "Noticias",
+    "noticias_descripcion": "Promociones y tips de cuidado masculino.",
+    "copyright_texto": "© 2025 BarberSpringfield | Estilo & Elegancia - Todos los derechos reservados",
+    "actualizado": "2026-09-23T03:24:42.234Z"
+  }
+},
+{
+  "model": "inventario.producto",
+  "pk": 1,
+  "fields": {
+    "nombre": "Cera Cabello",
+    "descripcion": "ejemplo",
+    "stock_actual": 4,
+    "stock_minimo": 5,
+    "precio_unitario": "2500.00",
+    "fecha_creacion": "2026-06-25T12:34:48.902Z",
+    "activo": true
+  }
+},
+{
+  "model": "inventario.producto",
+  "pk": 2,
+  "fields": {
+    "nombre": "Pomada para el Cabello",
+    "descripcion": "s un producto de estilizado diseñado para moldear el cabello y mantener el peinado firme durante todo el día sin dejar el pelo rígido o acartonado. Su fórmula a base de agua es ideal porque proporciona un acabado limpio, permite",
+    "stock_actual": 10,
+    "stock_minimo": 5,
+    "precio_unitario": "30000.00",
+    "fecha_creacion": "2026-06-25T12:59:28.008Z",
+    "activo": true
+  }
+},
+{
+  "model": "inventario.producto",
+  "pk": 3,
+  "fields": {
+    "nombre": "peine",
+    "descripcion": "peine",
+    "stock_actual": 15,
+    "stock_minimo": 5,
+    "precio_unitario": "1000.00",
+    "fecha_creacion": "2026-06-25T14:47:12.193Z",
+    "activo": true
+  }
+},
+{
+  "model": "inventario.producto",
+  "pk": 5,
+  "fields": {
+    "nombre": "Tijeras",
+    "descripcion": "Cortan",
+    "stock_actual": 5,
+    "stock_minimo": 5,
+    "precio_unitario": "5000.00",
+    "fecha_creacion": "2026-09-16T15:18:54.347Z",
+    "activo": true
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 1,
+  "fields": {
+    "producto": 2,
+    "tipo": "ENTRADA",
+    "cantidad": 20,
+    "stock_anterior": 40,
+    "stock_nuevo": 60,
+    "proveedor": "no c",
+    "fecha": "2026-06-25T08:00:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": "entrada"
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 2,
+  "fields": {
+    "producto": 1,
+    "tipo": "ENTRADA",
+    "cantidad": 12,
+    "stock_anterior": 14,
+    "stock_nuevo": 26,
+    "proveedor": "codensa",
+    "fecha": "2026-06-25T09:42:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 3,
+  "fields": {
+    "producto": 3,
+    "tipo": "ENTRADA",
+    "cantidad": 10,
+    "stock_anterior": 10,
+    "stock_nuevo": 20,
+    "proveedor": "hjf",
+    "fecha": "2026-06-26T11:48:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": "dsasaa"
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 4,
+  "fields": {
+    "producto": 3,
+    "tipo": "SALIDA",
+    "cantidad": 5,
+    "stock_anterior": 5,
+    "stock_nuevo": 0,
+    "proveedor": "fghjk",
+    "fecha": "2026-06-27T09:50:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": "gfg"
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 5,
+  "fields": {
+    "producto": 3,
+    "tipo": "ENTRADA",
+    "cantidad": 10,
+    "stock_anterior": 15,
+    "stock_nuevo": 25,
+    "proveedor": "j",
+    "fecha": "2026-06-25T09:50:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": "j"
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 6,
+  "fields": {
+    "producto": 1,
+    "tipo": "ENTRADA",
+    "cantidad": 20,
+    "stock_anterior": 34,
+    "stock_nuevo": 54,
+    "proveedor": "gjhjk",
+    "fecha": "2026-07-02T06:10:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 7,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 20,
+    "stock_anterior": 34,
+    "stock_nuevo": 14,
+    "proveedor": "dddd",
+    "fecha": "2026-07-14T07:02:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 8,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 10,
+    "stock_anterior": 14,
+    "stock_nuevo": 4,
+    "proveedor": ".....",
+    "fecha": "2026-07-31T08:06:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 9,
+  "fields": {
+    "producto": 1,
+    "tipo": "ENTRADA",
+    "cantidad": 2,
+    "stock_anterior": 4,
+    "stock_nuevo": 6,
+    "proveedor": null,
+    "fecha": "2026-07-31T08:07:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 11,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 5,
+    "stock_anterior": 7,
+    "stock_nuevo": 2,
+    "proveedor": "...",
+    "fecha": "2026-07-31T09:46:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 12,
+  "fields": {
+    "producto": 2,
+    "tipo": "ENTRADA",
+    "cantidad": 28,
+    "stock_anterior": 10,
+    "stock_nuevo": 38,
+    "proveedor": "..",
+    "fecha": "2026-08-04T19:53:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 13,
+  "fields": {
+    "producto": 1,
+    "tipo": "ENTRADA",
+    "cantidad": 12,
+    "stock_anterior": 2,
+    "stock_nuevo": 14,
+    "proveedor": "gthrt",
+    "fecha": "2026-09-16T15:16:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 14,
+  "fields": {
+    "producto": 1,
+    "tipo": "ENTRADA",
+    "cantidad": 6,
+    "stock_anterior": 14,
+    "stock_nuevo": 20,
+    "proveedor": "tyj",
+    "fecha": "2026-10-07T13:14:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 15,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 10,
+    "stock_anterior": 20,
+    "stock_nuevo": 10,
+    "proveedor": null,
+    "fecha": "2026-10-07T13:15:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 16,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 2,
+    "stock_anterior": 10,
+    "stock_nuevo": 8,
+    "proveedor": null,
+    "fecha": "2026-10-07T14:20:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "inventario.movimientoinventario",
+  "pk": 17,
+  "fields": {
+    "producto": 1,
+    "tipo": "SALIDA",
+    "cantidad": 4,
+    "stock_anterior": 8,
+    "stock_nuevo": 4,
+    "proveedor": null,
+    "fecha": "2026-10-07T14:26:00Z",
+    "usuario": [
+      "nicool"
+    ],
+    "nota": ""
+  }
+},
+{
+  "model": "googlecalendar.citaeventogoogle",
+  "pk": 10,
+  "fields": {
+    "cita": 119,
+    "usuario": [
+      "nicool"
+    ],
+    "calendar_id": "primary",
+    "event_id": "mre89juig7tosv1qipdo3co37s",
+    "creado": "2026-09-23T15:56:03.849Z"
+  }
+},
+{
+  "model": "googlecalendar.citaeventogoogle",
+  "pk": 11,
+  "fields": {
+    "cita": 119,
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "calendar_id": "primary",
+    "event_id": "kenvc8ul8norpjc67glb6l61fg",
+    "creado": "2026-09-23T15:56:05.536Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 1,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 14/09/2026 a las 11:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-08-30T18:14:27.640Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 2,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 14/09/2026 a las 11:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-08-30T18:14:27.643Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 3,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 01/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 60,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.049Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 4,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 01/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 60,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.051Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 5,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 02/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 61,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.055Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 6,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 02/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 61,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.056Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 7,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 03/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 62,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.060Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 8,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 03/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 62,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.061Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 9,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 04/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 63,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.066Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 10,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 04/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 63,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.067Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 11,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 05/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 64,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.071Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 12,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 05/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 64,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.072Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 13,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 06/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 65,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.077Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 14,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 06/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 65,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.078Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 15,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 66,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.082Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 16,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 07/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 66,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.083Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 17,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 08/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 67,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.087Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 18,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 08/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 67,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.088Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 19,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 09/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 68,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.092Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 20,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 09/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 68,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.094Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 21,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 10/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 69,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.098Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 22,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 10/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 69,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.099Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 23,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 11/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 70,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.105Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 24,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 11/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 70,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.106Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 25,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 12/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 71,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.110Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 26,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 12/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 71,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.111Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 27,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 13/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 72,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.116Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 28,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 13/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 72,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.117Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 29,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 14/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 73,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.121Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 30,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 14/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 73,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.122Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 31,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 15/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 74,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.127Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 32,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 15/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 74,
+    "leida": true,
+    "creada": "2026-09-01T11:30:20.128Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 33,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 01/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.071Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 34,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 01/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.072Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 35,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 02/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.076Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 36,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 02/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.077Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 37,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 03/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.081Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 38,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 03/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.082Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 39,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 04/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.086Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 40,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 04/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.087Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 41,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 05/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.091Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 42,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 05/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.092Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 43,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 06/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.096Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 44,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 06/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.097Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 45,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.100Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 46,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 07/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.101Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 47,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 08/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.105Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 48,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 08/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.106Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 49,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 09/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.110Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 50,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 09/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.111Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 51,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 10/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.115Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 52,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 10/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.116Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 53,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 11/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.121Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 54,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 11/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.123Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 55,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 12/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.127Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 56,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 12/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.128Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 57,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 13/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.131Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 58,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 13/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.132Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 59,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 14/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.136Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 60,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 14/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.137Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 61,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 15/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.141Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 62,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 15/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:36.142Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 63,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 01/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.391Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 64,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 01/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.392Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 65,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 02/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.396Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 66,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 02/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.397Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 67,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 03/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.401Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 68,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 03/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.402Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 69,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 04/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.406Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 70,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 04/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.407Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 71,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 05/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.411Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 72,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 05/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.412Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 73,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 06/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.416Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 74,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 06/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.417Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 75,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.421Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 76,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 07/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.422Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 77,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 08/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.426Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 78,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 08/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.427Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 79,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 09/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.431Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 80,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 09/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.432Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 81,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 10/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.436Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 82,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 10/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.437Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 83,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 11/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.443Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 84,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 11/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.444Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 85,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 12/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.448Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 86,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 12/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.449Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 87,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 13/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.453Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 88,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 13/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.454Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 89,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 14/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.458Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 90,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 14/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.458Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 91,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Tu cita del 15/01/2020 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.462Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 92,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 15/01/2020 a las 08:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": null,
+    "leida": true,
+    "creada": "2026-09-01T11:30:47.464Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 94,
+  "fields": {
+    "usuario": [
+      "alex@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 21/08/2026 a las 11:15 AM (Taper Fade). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 57,
+    "leida": false,
+    "creada": "2026-09-15T11:59:38.560Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 95,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 09:45 AM (Mullet) fue cancelada.",
+    "cita": 75,
+    "leida": true,
+    "creada": "2026-09-16T14:54:23.419Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 96,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 16/09/2026 a las 09:45 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 75,
+    "leida": true,
+    "creada": "2026-09-16T14:54:23.421Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 97,
+  "fields": {
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 09:00 AM (Mullet) fue cancelada.",
+    "cita": 78,
+    "leida": true,
+    "creada": "2026-09-16T14:55:45.509Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 98,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 16/09/2026 a las 09:00 AM (Mullet). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 78,
+    "leida": true,
+    "creada": "2026-09-16T14:55:45.510Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 99,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 08:00 AM (Corte Texturizado) fue cancelada.",
+    "cita": 77,
+    "leida": true,
+    "creada": "2026-09-16T14:57:17.808Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 100,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Se liberó un turno: 16/09/2026 a las 08:00 AM (Corte Texturizado). Ya puedes ofrecerlo a otro cliente.",
+    "cita": 77,
+    "leida": true,
+    "creada": "2026-09-16T14:57:17.809Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 101,
+  "fields": {
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 11:45 AM (Taper Fade) fue cancelada.",
+    "cita": 79,
+    "leida": true,
+    "creada": "2026-09-16T14:59:10.569Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 103,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 08:00 AM (Corte Clasico) fue cancelada.",
+    "cita": 80,
+    "leida": true,
+    "creada": "2026-09-16T15:51:16.123Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 105,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 08:00 AM (Taper Fade) fue cancelada.",
+    "cita": 81,
+    "leida": true,
+    "creada": "2026-09-16T15:51:40.775Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 107,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 08:00 AM (Mullet) fue cancelada.",
+    "cita": 82,
+    "leida": true,
+    "creada": "2026-09-16T15:52:02.223Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 109,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 16/09/2026 a las 08:00 AM (Corte Texturizado) fue cancelada.",
+    "cita": 83,
+    "leida": true,
+    "creada": "2026-09-16T15:53:03.401Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 111,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 17/09/2026 a las 10:30 AM fue cancelada. El turno del 17/09/2026 a las 10:30 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 84,
+    "leida": true,
+    "creada": "2026-09-18T11:27:08.054Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 112,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con Yampol Bonilla fue cancelada. Este turno quedó libre: 17/09/2026 a las 10:30 AM (Mullet).",
+    "cita": 84,
+    "leida": true,
+    "creada": "2026-09-18T11:27:08.221Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 115,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 17/09/2026 a las 08:00 AM (Taper Fade).",
+    "cita": 76,
+    "leida": true,
+    "creada": "2026-09-18T11:27:28.504Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 118,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 19/09/2026 a las 09:20 AM (Mullet).",
+    "cita": 85,
+    "leida": true,
+    "creada": "2026-09-18T11:30:47.809Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 121,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 18/09/2026 a las 08:00 AM (Mullet).",
+    "cita": 87,
+    "leida": true,
+    "creada": "2026-09-18T11:31:57.055Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 123,
+  "fields": {
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "mensaje": "Tu cita del 18/09/2026 a las 10:45 AM fue cancelada. El turno del 18/09/2026 a las 10:45 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 90,
+    "leida": true,
+    "creada": "2026-09-18T21:33:39.598Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 124,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con camilo ladino fue cancelada. Este turno quedó libre: 18/09/2026 a las 10:45 AM (Mullet).",
+    "cita": 90,
+    "leida": true,
+    "creada": "2026-09-18T21:33:39.603Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 126,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 19/09/2026 a las 08:00 AM fue cancelada. El turno del 19/09/2026 a las 08:00 AM con Felipe Casas (Buzz Cut) quedó disponible nuevamente.",
+    "cita": 91,
+    "leida": true,
+    "creada": "2026-09-19T03:17:08.461Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 127,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 19/09/2026 a las 08:00 AM (Buzz Cut).",
+    "cita": 91,
+    "leida": true,
+    "creada": "2026-09-19T03:17:08.462Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 129,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 22/09/2026 a las 11:40 AM fue cancelada. El turno del 22/09/2026 a las 11:40 AM con Felipe Casas (Corte Clasico) quedó disponible nuevamente.",
+    "cita": 89,
+    "leida": true,
+    "creada": "2026-09-19T03:17:10.155Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 130,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 22/09/2026 a las 11:40 AM (Corte Clasico).",
+    "cita": 89,
+    "leida": true,
+    "creada": "2026-09-19T03:17:10.156Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 132,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 23/09/2026 a las 09:30 AM fue cancelada. El turno del 23/09/2026 a las 09:30 AM con Felipe Casas (Taper Fade) quedó disponible nuevamente.",
+    "cita": 88,
+    "leida": true,
+    "creada": "2026-09-19T03:17:11.551Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 133,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 23/09/2026 a las 09:30 AM (Taper Fade).",
+    "cita": 88,
+    "leida": true,
+    "creada": "2026-09-19T03:17:11.552Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 135,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 19/09/2026 a las 08:00 AM. Servicio: Mullet. El cliente realizó un análisis con AutoAI. Puedes consultar el análisis en la cita.",
+    "cita": 92,
+    "leida": true,
+    "creada": "2026-09-19T03:18:04.804Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 136,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: Yampol Bonilla el 19/09/2026 a las 08:50 AM. Servicio: Mullet. El cliente realizó un análisis con AutoAI. Puedes consultar el análisis en la cita.",
+    "cita": 93,
+    "leida": true,
+    "creada": "2026-09-19T04:31:23.561Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 137,
+  "fields": {
+    "usuario": [
+      "yampol@gmail.com"
+    ],
+    "mensaje": "Tu cita del 18/09/2026 a las 09:20 AM fue cancelada. El turno del 18/09/2026 a las 09:20 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 86,
+    "leida": true,
+    "creada": "2026-09-23T03:28:29.065Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 138,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con Yampol Bonilla fue cancelada. Este turno quedó libre: 18/09/2026 a las 09:20 AM (Mullet).",
+    "cita": 86,
+    "leida": false,
+    "creada": "2026-09-23T03:28:29.068Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 140,
+  "fields": {
+    "usuario": [
+      "felipead"
+    ],
+    "mensaje": "El turno del 18/09/2026 a las 09:20 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 86,
+    "leida": false,
+    "creada": "2026-09-23T03:28:29.070Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 141,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 23/09/2026 a las 02:00 PM. Servicio: Buzz Cut.",
+    "cita": 94,
+    "leida": true,
+    "creada": "2026-09-23T14:27:14.300Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 142,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 23/09/2026 a las 12:10 PM. Servicio: Buzz Cut.",
+    "cita": 95,
+    "leida": true,
+    "creada": "2026-09-23T14:34:53.192Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 143,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 23/09/2026 a las 10:00 AM. Servicio: Mullet.",
+    "cita": 96,
+    "leida": true,
+    "creada": "2026-09-23T14:36:06.874Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 144,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 24/09/2026 a las 10:00 AM. Servicio: Buzz Cut.",
+    "cita": 97,
+    "leida": true,
+    "creada": "2026-09-23T14:36:17.320Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 145,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 25/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 98,
+    "leida": true,
+    "creada": "2026-09-23T14:36:28.108Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 146,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 26/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 99,
+    "leida": true,
+    "creada": "2026-09-23T14:36:34.562Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 147,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 28/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 100,
+    "leida": true,
+    "creada": "2026-09-23T14:36:40.314Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 148,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 29/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 101,
+    "leida": true,
+    "creada": "2026-09-23T14:36:45.795Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 149,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 30/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 102,
+    "leida": true,
+    "creada": "2026-09-23T14:36:52.819Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 150,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 01/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 103,
+    "leida": true,
+    "creada": "2026-09-23T14:37:04.213Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 151,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 02/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 104,
+    "leida": true,
+    "creada": "2026-09-23T14:37:11.283Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 152,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "🎉 ¡Felicitaciones! Completaste 10 cortes. Tu próximo corte será gratis.",
+    "cita": 104,
+    "leida": true,
+    "creada": "2026-09-23T14:38:02.241Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 153,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 23/09/2026 a las 10:00 AM. Servicio: Mullet.",
+    "cita": 105,
+    "leida": true,
+    "creada": "2026-09-23T14:38:41.425Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 154,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 24/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 106,
+    "leida": true,
+    "creada": "2026-09-23T14:38:47.932Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 155,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 25/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 107,
+    "leida": true,
+    "creada": "2026-09-23T14:38:54.630Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 156,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 26/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 108,
+    "leida": true,
+    "creada": "2026-09-23T14:39:10.521Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 157,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 28/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 109,
+    "leida": true,
+    "creada": "2026-09-23T14:39:23.187Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 158,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 29/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 110,
+    "leida": true,
+    "creada": "2026-09-23T14:39:31.553Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 159,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 30/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 111,
+    "leida": true,
+    "creada": "2026-09-23T14:39:37.662Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 160,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 01/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 112,
+    "leida": true,
+    "creada": "2026-09-23T14:39:52.785Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 161,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 02/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 113,
+    "leida": true,
+    "creada": "2026-09-23T14:40:01.067Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 162,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 07/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 114,
+    "leida": true,
+    "creada": "2026-09-23T14:40:20.076Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 163,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 24/09/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 115,
+    "leida": true,
+    "creada": "2026-09-23T15:06:19.242Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 164,
+  "fields": {
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "mensaje": "🎉 ¡Felicitaciones! Completaste 10 cortes. Tu próximo corte será gratis.",
+    "cita": 115,
+    "leida": true,
+    "creada": "2026-09-23T15:14:49.847Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 165,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: ashley velandia el 23/09/2026 a las 10:40 AM. Servicio: Mullet.",
+    "cita": null,
+    "leida": false,
+    "creada": "2026-09-23T15:18:43.500Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 166,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: ashley velandia el 24/09/2026 a las 08:45 AM. Servicio: Mullet.",
+    "cita": null,
+    "leida": false,
+    "creada": "2026-09-23T15:19:07.962Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 167,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 25/09/2026 a las 01:00 PM. Servicio: Buzz Cut.",
+    "cita": 118,
+    "leida": true,
+    "creada": "2026-09-23T15:55:39.298Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 168,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: camilo ladino el 23/09/2026 a las 11:20 AM. Servicio: Mullet.",
+    "cita": 119,
+    "leida": true,
+    "creada": "2026-09-23T15:56:05.540Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 169,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 25/09/2026 a las 01:00 PM fue cancelada. El turno del 25/09/2026 a las 01:00 PM con Felipe Casas (Buzz Cut) quedó disponible nuevamente.",
+    "cita": 118,
+    "leida": true,
+    "creada": "2026-10-07T12:32:29.739Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 170,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 25/09/2026 a las 01:00 PM (Buzz Cut).",
+    "cita": 118,
+    "leida": false,
+    "creada": "2026-10-07T12:32:29.740Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 172,
+  "fields": {
+    "usuario": [
+      "felipead"
+    ],
+    "mensaje": "El turno del 25/09/2026 a las 01:00 PM con Felipe Casas (Buzz Cut) quedó disponible nuevamente.",
+    "cita": 118,
+    "leida": false,
+    "creada": "2026-10-07T12:32:29.741Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 173,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 07/10/2026 a las 08:45 AM. Servicio: Mullet.",
+    "cita": 120,
+    "leida": false,
+    "creada": "2026-10-07T12:38:30.076Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 174,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/10/2026 a las 08:45 AM fue cancelada. El turno del 07/10/2026 a las 08:45 AM con Felipe Casas (Mullet) quedó disponible nuevamente.",
+    "cita": 120,
+    "leida": true,
+    "creada": "2026-10-07T12:47:28.151Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 175,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 07/10/2026 a las 08:45 AM (Mullet).",
+    "cita": 120,
+    "leida": false,
+    "creada": "2026-10-07T12:47:28.158Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 177,
+  "fields": {
+    "usuario": [
+      "felipead"
+    ],
+    "mensaje": "El turno del 07/10/2026 a las 08:45 AM con Felipe Casas (Mullet) quedó disponible nuevamente.",
+    "cita": 120,
+    "leida": false,
+    "creada": "2026-10-07T12:47:28.171Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 178,
+  "fields": {
+    "usuario": [
+      "camilo@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/10/2026 a las 08:00 AM fue cancelada. El turno del 07/10/2026 a las 08:00 AM con Felipe Casas (Mullet) quedó disponible nuevamente.",
+    "cita": 114,
+    "leida": false,
+    "creada": "2026-10-07T12:48:04.804Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 179,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "Tu cita con camilo ladino fue cancelada. Este turno quedó libre: 07/10/2026 a las 08:00 AM (Mullet).",
+    "cita": 114,
+    "leida": false,
+    "creada": "2026-10-07T12:48:04.812Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 181,
+  "fields": {
+    "usuario": [
+      "felipead"
+    ],
+    "mensaje": "El turno del 07/10/2026 a las 08:00 AM con Felipe Casas (Mullet) quedó disponible nuevamente.",
+    "cita": 114,
+    "leida": false,
+    "creada": "2026-10-07T12:48:04.823Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 182,
+  "fields": {
+    "usuario": [
+      "felipe@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 07/10/2026 a las 08:00 AM. Servicio: Mullet.",
+    "cita": 121,
+    "leida": false,
+    "creada": "2026-10-07T12:50:02.360Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 183,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "🆕 Nueva cita: samuel tellez el 07/10/2026 a las 08:40 AM. Servicio: Mullet.",
+    "cita": 122,
+    "leida": false,
+    "creada": "2026-10-07T13:24:01.525Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 184,
+  "fields": {
+    "usuario": [
+      "samuel@gmail.com"
+    ],
+    "mensaje": "Tu cita del 07/10/2026 a las 08:40 AM fue cancelada. El turno del 07/10/2026 a las 08:40 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 122,
+    "leida": false,
+    "creada": "2026-10-07T16:01:14.818Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 185,
+  "fields": {
+    "usuario": [
+      "jeison@gmail.com"
+    ],
+    "mensaje": "Tu cita con samuel tellez fue cancelada. Este turno quedó libre: 07/10/2026 a las 08:40 AM (Mullet).",
+    "cita": 122,
+    "leida": false,
+    "creada": "2026-10-07T16:01:14.826Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 186,
+  "fields": {
+    "usuario": [
+      "nicool"
+    ],
+    "mensaje": "El turno del 07/10/2026 a las 08:40 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 122,
+    "leida": false,
+    "creada": "2026-10-07T16:01:14.832Z"
+  }
+},
+{
+  "model": "notificaciones.notificacion",
+  "pk": 187,
+  "fields": {
+    "usuario": [
+      "felipead"
+    ],
+    "mensaje": "El turno del 07/10/2026 a las 08:40 AM con Jeison Cruz (Mullet) quedó disponible nuevamente.",
+    "cita": 122,
+    "leida": false,
+    "creada": "2026-10-07T16:01:14.837Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-06-25T13:20:52.312Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "1",
+    "object_repr": "Taper Fade",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-06-25T13:21:44.962Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "2",
+    "object_repr": "Mullet",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-06-25T13:22:53.194Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "3",
+    "object_repr": "Corte Clasico",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-06-25T13:24:03.300Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "4",
+    "object_repr": "Buzz Cut",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-06-25T13:24:50.659Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "5",
+    "object_repr": "Corte Texturizado",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-09-16T14:52:30.116Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "barberos",
+      "barbero"
+    ],
+    "object_id": "13",
+    "object_repr": "Juan Carlos",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-09-16T15:13:53.989Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "barberos",
+      "barbero"
+    ],
+    "object_id": "13",
+    "object_repr": "Juan Carlos",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-09-22T14:43:12.398Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "32",
+    "object_repr": "nicoole@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-09-22T14:43:12.398Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "34",
+    "object_repr": "nicoolperdomo752@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-09-22T14:43:12.398Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "33",
+    "object_repr": "tellezsamuel2102@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-09-22T14:44:07.756Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "36",
+    "object_repr": "tellezsamuel2102@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-09-22T22:41:27.705Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "5",
+    "object_repr": "Corte Texturizado",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-09-22T22:41:29.439Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "5",
+    "object_repr": "Corte Texturizado",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-09-22T22:41:43.837Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "9",
+    "object_repr": "Adicionales",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-09-22T22:41:45.563Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "9",
+    "object_repr": "Adicionales",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-09-22T22:41:55.954Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "4",
+    "object_repr": "Buzz Cut",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2026-09-22T22:41:57.155Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "4",
+    "object_repr": "Buzz Cut",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2026-09-22T22:42:09.536Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "3",
+    "object_repr": "Corte Clasico",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2026-09-22T22:42:11.695Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "3",
+    "object_repr": "Corte Clasico",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2026-09-22T22:42:34.488Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "2",
+    "object_repr": "Mullet",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2026-09-22T22:42:35.602Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "2",
+    "object_repr": "Mullet",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2026-09-22T22:42:52.775Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "6",
+    "object_repr": "Taper Fade",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Imagen\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2026-09-22T22:42:54.082Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "6",
+    "object_repr": "Taper Fade",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2026-09-22T22:42:58.124Z",
+    "user": [
+      "felipead"
+    ],
+    "content_type": [
+      "citas",
+      "servicio"
+    ],
+    "object_id": "5",
+    "object_repr": "Corte Texturizado",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2026-09-23T15:28:32.521Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "41",
+    "object_repr": "felipecasas69@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2026-09-23T15:28:32.521Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "40",
+    "object_repr": "ladinodilan57@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2026-09-23T15:28:32.521Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "37",
+    "object_repr": "nicoolperdomo300@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2026-09-23T15:28:32.521Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "42",
+    "object_repr": "nicoolperdomo752@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2026-09-23T15:28:32.521Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "38",
+    "object_repr": "tellezsamuel2102@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2026-09-23T15:28:36.222Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "41",
+    "object_repr": "felipecasas69@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2026-09-23T15:28:36.222Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "40",
+    "object_repr": "ladinodilan57@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2026-09-23T15:28:36.222Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "37",
+    "object_repr": "nicoolperdomo300@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2026-09-23T15:28:36.222Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "42",
+    "object_repr": "nicoolperdomo752@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2026-09-23T15:28:36.223Z",
+    "user": [
+      "nicool"
+    ],
+    "content_type": [
+      "auth",
+      "user"
+    ],
+    "object_id": "38",
+    "object_repr": "tellezsamuel2102@gmail.com",
+    "action_flag": 3,
+    "change_message": ""
+  }
+}
+]
