@@ -778,8 +778,8 @@ html[data-theme="light"] .autoai-modal .alert * {
 
         <!-- TABLA DE CITAS -->
         <div class="card-custom">
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-list-ul"></i> Citas Registradas</span>
+            <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span><i class="bi bi-list-ul"></i> Citas Agendadas</span>
                 <span class="badge bg-warning text-dark">
                     {{ proximas_citas|length }} citas
                 </span>
@@ -1141,16 +1141,63 @@ html[data-theme="light"] .autoai-modal .alert * {
                 {% endfor %}
             </div>
 
+        </div> <!-- /.card-custom: fin de citas agendadas -->
 
+        <!-- HISTORIAL DE CITAS: sección independiente -->
+        <div class="card-custom mt-4">
+    <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span><i class="bi bi-clock-history"></i> Historial de citas</span>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge-pendiente">{{ historial_citas|length }} registros</span>
+            <button type="button"
+                    class="btn btn-danger btn-sm text-white"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalVaciarHistorialBarbero">
+                <i class="bi bi-trash3 text-white"></i> Vaciar historial
+            </button>
+        </div>
+    </div>
 
-            <!-- PAGINACIÓN -->
-            <div class="card-body">
+    <div class="p-3">
+        {% for cita in historial_citas %}
+            <div class="cita-card mb-3">
+                <div class="cita-icono">
+                    {% if cita.estado == 'Finalizada' %}
+                        <i class="bi bi-check-circle"></i>
+                    {% else %}
+                        <i class="bi bi-x-circle"></i>
+                    {% endif %}
+                </div>
 
-                {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
+                <div class="cita-info">
+                    <span class="cita-titulo">{{ cita.cliente.nombre }}</span>
+                    <span class="cita-meta">
+                        <span><i class="bi bi-scissors"></i> {{ cita.servicio.nombre }}</span>
+                        <span><i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }}</span>
+                        <span><i class="bi bi-alarm"></i> {{ cita.hora }}</span>
+                    </span>
+                </div>
 
+                <div>
+                    {% if cita.estado == 'Finalizada' %}
+                        <span class="badge bg-success">Finalizada</span>
+                    {% else %}
+                        <span class="badge bg-danger">Cancelada</span>
+                    {% endif %}
+                </div>
             </div>
+        {% empty %}
+            <div class="text-center text-light-brown py-4">
+                <i class="bi bi-clock-history fs-1 d-block mb-3"></i>
+                <h5>No tienes citas en tu historial</h5>
+                <p class="mb-0">Las citas finalizadas o canceladas aparecerán aquí.</p>
+            </div>
+        {% endfor %}
 
-        </div> <!-- /.card-custom -->
+        {% include "_paginacion.html" with page_obj=historial_citas parametro="pagina_historial" %}
+    </div>
+</div>
+        <!-- FIN DEL HISTORIAL -->
 
     </div> <!-- cierre contenedor de la sección -->
 

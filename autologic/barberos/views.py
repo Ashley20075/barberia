@@ -48,16 +48,45 @@ def panel_barbero(request):
             f"⚠️ Hoy es día de descanso o no laboral para {barbero.nombre}."
         )
 
-    proximas_citas = Cita.objects.filter(
-        barbero=barbero,
-        estado__in=[
-            "Pendiente",
-            "Confirmada"
-        ]
-    ).order_by(
-        "fecha",
-        "hora"
-    )
+    # Filtros enviados desde el formulario.
+    filtro_estado = request.GET.get('estado', '').strip()
+    filtro_fecha_inicio = request.GET.get('fecha_inicio', '').strip()
+    filtro_fecha_fin = request.GET.get('fecha_fin', '').strip()
+
+    # Base de citas activas y de historial del barbero.
+    citas_base = Cita.objects.filter(barbero=barbero)
+
+    # Aplicar filtros sobre el conjunto de citas.
+    if filtro_estado:
+        citas_base = citas_base.filter(estado=filtro_estado)
+
+    if filtro_fecha_inicio:
+        try:
+            fecha_inicio = datetime.strptime(
+                filtro_fecha_inicio, '%Y-%m-%d'
+            ).date()
+            citas_base = citas_base.filter(fecha__gte=fecha_inicio)
+        except ValueError:
+            filtro_fecha_inicio = ''
+
+    if filtro_fecha_fin:
+        try:
+            fecha_fin = datetime.strptime(
+                filtro_fecha_fin, '%Y-%m-%d'
+            ).date()
+            citas_base = citas_base.filter(fecha__lte=fecha_fin)
+        except ValueError:
+            filtro_fecha_fin = ''
+
+    # Mostrar las citas filtradas, sin mezclar el historial archivado.
+    proximas_citas = citas_base.filter(
+        estado__in=['Pendiente', 'Confirmada']
+    ).order_by('fecha', 'hora')
+
+    historial_citas = citas_base.filter(
+        estado__in=['Finalizada', 'Cancelada'],
+        historial_archivado=False
+    ).order_by('-fecha', '-hora')
 
     historial_citas = Cita.objects.filter(
         barbero=barbero,
@@ -96,6 +125,10 @@ def panel_barbero(request):
         "citas_confirmadas": citas_confirmadas,
         "citas_canceladas": citas_canceladas,
         "citas_finalizadas": citas_finalizadas,
+
+        "filtro_estado": filtro_estado,
+        "filtro_fecha_inicio": filtro_fecha_inicio,
+        "filtro_fecha_fin": filtro_fecha_fin,
 
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
         "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
@@ -250,106 +283,184 @@ def editar_perfil_barbero(request):
     )
 
     if request.method == 'POST':
-
         nombre = request.POST.get('nombre', '').strip()
         apellido = request.POST.get('apellido', '').strip()
         cedula = request.POST.get('cedula', '').strip()
         telefono = request.POST.get('telefono', '').strip()
-        email = request.POST.get('email', '').strip()
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+        dia_descanso = request.POST.get('dia_descanso', '').strip()
 
-        if email != request.user.email and User.objects.filter(email=email).exists():
-            messages.error(request, '❌ Este correo ya está registrado.')
+        nombre_completo = f'{nombre} {apellido}'.strip()
+
+        # Validar los campos obligatorios.
+        if not all([nombre, apellido, cedula, telefono, email]):
+            messages.error(
+                request,
+                'Completa todos los campos obligatorios.'
+            )
             return redirect('barberos:editar_perfil_barbero')
 
+        # Validar el correo en otras cuentas de usuario.
+        if User.objects.filter(email__iexact=email).exclude(
+            pk=request.user.pk
+        ).exists():
+            messages.error(
+                request,
+                'Ese correo ya pertenece a otra cuenta.'
+            )
+            return redirect('barberos:editar_perfil_barbero')
+
+        # Validar el correo en otros perfiles de barbero.
+        if Barbero.objects.filter(email__iexact=email).exclude(
+            pk=barbero.pk
+        ).exists():
+            messages.error(
+                request,
+                'Ese correo ya está asignado a otro barbero.'
+            )
+            return redirect('barberos:editar_perfil_barbero')
+
+        # Validar la cédula en otros perfiles.
+        if Barbero.objects.filter(cedula=cedula).exclude(
+            pk=barbero.pk
+        ).exists():
+            messages.error(
+                request,
+                'Esa cédula ya está registrada para otro barbero.'
+            )
+            return redirect('barberos:editar_perfil_barbero')
+
+        # Validar el día de descanso.
+        dias_validos = dict(Barbero.DIAS_SEMANA)
+        if dia_descanso not in dias_validos:
+            messages.error(
+                request,
+                'Selecciona un día de descanso válido.'
+            )
+            return redirect('barberos:editar_perfil_barbero')
+
+        # La contraseña es opcional.
+        if password or confirm_password:
+            if not password or not confirm_password:
+                messages.error(
+                    request,
+                    'Completa los dos campos de contraseña.'
+                )
+                return redirect('barberos:editar_perfil_barbero')
+
+            if password != confirm_password:
+                messages.error(
+                    request,
+                    'Las contraseñas no coinciden.'
+                )
+                return redirect('barberos:editar_perfil_barbero')
+
+            if len(password) < 6:
+                messages.error(
+                    request,
+                    'La contraseña debe tener al menos 6 caracteres.'
+                )
+                return redirect('barberos:editar_perfil_barbero')
+
         try:
-
             with transaction.atomic():
-
-                user = request.user
+                user = User.objects.select_for_update().get(
+                    pk=request.user.pk
+                )
 
                 user.first_name = nombre
                 user.last_name = apellido
-                user.username = email
                 user.email = email
 
+                # No modificar el nombre de usuario si el proyecto
+                # permite iniciar sesión con un username diferente.
+                # Si tu proyecto usa el correo como username, sincronizarlo.
+                if user.username == request.user.email:
+                    user.username = email
+
                 if password:
-
-                    if password != confirm_password:
-                        messages.error(request, '❌ Las contraseñas no coinciden.')
-                        return redirect('barberos:editar_perfil_barbero')
-
-                    if len(password) < 6:
-                        messages.error(request, '❌ La contraseña debe tener al menos 6 caracteres.')
-                        return redirect('barberos:editar_perfil_barbero')
-
                     user.set_password(password)
-                    update_session_auth_hash(request, user)
 
                 user.save()
 
-                # Actualizar datos del barbero
-                barbero.nombre = f"{nombre} {apellido}".strip()
+                barbero.nombre = nombre_completo
                 barbero.cedula = cedula
                 barbero.telefono = telefono
                 barbero.email = email
+                barbero.dia_descanso = dia_descanso
                 barbero.save()
 
-                # Si existe cliente asociado también lo actualiza
-                Cliente.objects.filter(user=request.user).update(
-                    nombre=f"{nombre} {apellido}".strip(),
-                    cedula=cedula,
+                # Actualizar el perfil de cliente asociado, si existe.
+                Cliente.objects.filter(user=user).update(
+                    nombre=nombre_completo,
                     telefono=telefono,
                     email=email
                 )
+                # No asignar la cédula al cliente si pertenece a otro
+                # registro; se evita sobrescribir datos ajenos.
+                Cliente.objects.filter(
+                    user=user
+                ).exclude(
+                    cedula=cedula
+                ).update(cedula=cedula)
 
-            messages.success(request, "✅ Perfil actualizado correctamente.")
-            return redirect("barberos:panel_barbero")
+            if password:
+                update_session_auth_hash(request, user)
 
+            messages.success(
+                request,
+                'Perfil actualizado correctamente.'
+            )
+            return redirect('barberos:editar_perfil_barbero')
         except IntegrityError:
             messages.error(
                 request,
-                "❌ Ese correo o esa cédula ya están en uso por otra cuenta."
+                'No se pudo guardar: el correo o la cédula '
+                'pueden estar registrados en otra cuenta.'
             )
-            return redirect("barberos:editar_perfil_barbero")
-
-        except Exception:
-            messages.error(request, "❌ No se pudo actualizar el perfil. Intentá de nuevo.")
-            return redirect("barberos:editar_perfil_barbero")
-
-    nombre = barbero.nombre.split()
-
+            return redirect('barberos:editar_perfil_barbero')
+    nombre_partes = barbero.nombre.split()
     return render(
         request,
-        "editar_perfil_barbero.html",
+        'editar_perfil_barbero.html',
         {
-            "barbero": barbero,
-            "nombre": nombre[0] if len(nombre) > 0 else "",
-            "apellido": " ".join(nombre[1:]) if len(nombre) > 1 else "",
+            'barbero': barbero,
+            'nombre': nombre_partes[0] if nombre_partes else '',
+            'apellido': ' '.join(nombre_partes[1:]),
+            'dias_semana': Barbero.DIAS_SEMANA,
+            'notificaciones_no_leidas': (
+                request.user.notificaciones.filter(leida=False).count()
+            ),
         }
     )
 @login_required(login_url='login')
 def vaciar_historial_barbero(request):
+    if request.method != 'POST':
+        return redirect('barberos:panel_barbero')
 
-    if request.method == "POST":
+    barbero = get_object_or_404(
+        Barbero,
+        email=request.user.email,
+        activo=True
+    )
 
-        barbero = get_object_or_404(
-            Barbero,
-            email=request.user.email,
-            activo=True
-        )
+    cantidad = Cita.objects.filter(
+        barbero=barbero,
+        estado__in=['Finalizada', 'Cancelada'],
+        historial_archivado=False
+    ).update(historial_archivado=True)
 
-        Cita.objects.filter(
-            barbero=barbero,
-            estado__in=["Finalizada", "Cancelada"]
-        ).update(
-            historial_archivado=True
-        )
-
+    if cantidad:
         messages.success(
             request,
-            "✅ Tu historial de citas ha sido vaciado correctamente."
+            f'Se archivaron {cantidad} citas de tu historial.'
+        )
+    else:
+        messages.info(
+            request,
+            'No tienes citas finalizadas o canceladas pendientes por archivar.'
         )
 
-    return redirect("barberos:panel_barbero")
+    return redirect('barberos:panel_barbero')

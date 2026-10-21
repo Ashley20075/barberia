@@ -146,34 +146,57 @@
                         {% endif %}
 
                         <form method="POST">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">Nombre *</label>
-                                    <input type="text" name="nombre" class="form-control bg-dark-input"
-                                        value="{{ barbero.nombre.split.0 }}" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">Apellido *</label>
-                                    <input type="text" name="apellido" class="form-control bg-dark-input"
-                                        value="{{ barbero.nombre.split.1 }}" required>
-                                </div>
+                        {% csrf_token %}
+                        
+                        <!-- Campo oculto necesario para enviar el email del barbero -->
+                        <input type="hidden" name="email" value="{{ barbero.email }}">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Nombre *</label>
+                                <input type="text" name="nombre" class="form-control bg-dark-input"
+                                    value="{{ nombre }}" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label-custom">Cédula *</label>
-                                <input type="text" name="cedula" class="form-control bg-dark-input"
-                                    value="{{ barbero.cedula }}" required>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Apellido *</label>
+                                <input type="text" name="apellido" class="form-control bg-dark-input"
+                                    value="{{ apellido }}" required>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-custom">Cédula *</label>
+                            <input type="text" name="cedula" class="form-control bg-dark-input"
+                                value="{{ barbero.cedula }}" required>
+                        </div>
                             <div class="mb-3">
                                 <label class="form-label-custom">Teléfono *</label>
                                 <input type="text" name="telefono" class="form-control bg-dark-input"
                                     value="{{ barbero.telefono }}" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label-custom">Email *</label>
-                                <input type="email" name="email" class="form-control bg-dark-input"
-                                    value="{{ barbero.email }}" required>
-                            </div>
+                            <label class="form-label-custom">Correo Electrónico *</label>
+                            <input type="email" name="email" class="form-control bg-dark-input"
+                                value="{{ barbero.email }}" required>
+                        </div>
+                            <div class="mb-3">
+    <label class="form-label-custom">
+        <i class="bi bi-calendar-week"></i>
+        Día de descanso del barbero (Gestionado por el Administrador)
+    </label>
+
+    <!-- Input de solo lectura para mostrar el nombre del día sin desplegable ni flechita -->
+    <input type="text" 
+           class="form-control bg-dark-input" 
+           value="{% for codigo, dia in dias_semana %}{% if barbero.dia_descanso == codigo %}{{ dia }}{% endif %}{% endfor %}" 
+           readonly>
+
+    <!-- Campo oculto indispensable para que el valor actual viaje al backend al guardar -->
+    <input type="hidden" name="dia_descanso" value="{{ barbero.dia_descanso }}">
+
+    <small class="text-light-brown">
+        Este día es asignado y modificado exclusivamente por el administrador.
+    </small>
+</div>
                             <hr style="border-color: #3F2E22;">
                             <h6 class="text-yellow"><i class="bi bi-lock"></i> Cambiar Contraseña (opcional)</h6>
                             <div class="row">
@@ -205,6 +228,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Seleccionar las alertas de mensajes
+            const alerts = document.querySelectorAll('.alert');
+            
+            alerts.forEach(function (alert) {
+                // Configurar el temporizador a 4000 ms (4 segundos)
+                setTimeout(function () {
+                    // Usar la API de Bootstrap para cerrar la alerta con animación suave
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    if (bsAlert) {
+                        bsAlert.close();
+                    }
+                }, 4000);
+            });
+        });
+    </script>
 </body>
 
 </html>
