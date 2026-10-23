@@ -26,6 +26,12 @@
             min-height: 150px;
         }
 
+        /* Foto de perfil del cliente en "Citas Agendadas" / historial,
+           reemplazando el ícono genérico cuando el cliente tiene foto. */
+        .cita-icono-foto {
+            object-fit: cover;
+        }
+
 
 
         /* white-space: nowrap: sin esto, en columnas angostas (celular)
@@ -788,7 +794,11 @@ html[data-theme="light"] .autoai-modal .alert * {
             <div class="p-3">
                 {% for cita in proximas_citas %}
                 <div class="cita-card {% if cita.estado == 'Confirmada' %}cita-card--confirmada{% endif %}">
-                    <div class="cita-icono"><i class="bi bi-person"></i></div>
+                    {% if cita.cliente.foto_perfil %}
+                        <img src="{{ cita.cliente.foto_perfil.url }}" alt="{{ cita.cliente.nombre }}" class="cita-icono cita-icono-foto">
+                    {% else %}
+                        <div class="cita-icono"><i class="bi bi-person"></i></div>
+                    {% endif %}
                     <div class="cita-info">
                         <span class="cita-titulo">{{ cita.cliente.nombre }}</span>
                         <span class="cita-meta">
