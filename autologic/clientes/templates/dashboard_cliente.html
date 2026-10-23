@@ -31,8 +31,7 @@
         .fidelidad-premio h4 { font-size: 1.1rem; }
 
         /* Insignias tipo "rosquilla" (guiño a Springfield), una por corte.
-           Grid a 10 columnas para que ocupe todo el ancho de la caja,
-           en vez de quedar amontonadas a la izquierda. */
+           Grid a 10 columnas para que ocupe todo el ancho de la caja. */
         .fidelidad-insignias {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
@@ -210,6 +209,8 @@
         </div>
 
         <!-- Google Calendar del cliente -->
+        <div class="row justify-content-center">
+        <div class="col-md-9">
         <div class="aviso-google-calendar d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div>
                 <i class="bi bi-calendar3"></i>
@@ -232,24 +233,26 @@
                 </a>
             {% endif %}
         </div>
+        </div>
+        </div>
 
         <!-- Tarjetas de estadísticas -->
-        <div class="row g-4 mb-5">
-            <div class="col-6 col-md-4">
+        <div class="row g-4 mb-5 justify-content-center">
+            <div class="col-6 col-md-3">
                 <div class="stat-card citas text-center">
                     <div class="icon-wrapper"><i class="bi bi-scissors"></i></div>
                     <h3 class="mt-2">{{ proximos|length }}</h3>
                     <p class="mb-0">Citas activas</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4">
+            <div class="col-6 col-md-3">
                 <div class="stat-card servicios text-center">
                     <div class="icon-wrapper"><i class="bi bi-archive"></i></div>
                     <h3 class="mt-2">{{ historial|length }}</h3>
                     <p class="mb-0">Historial</p>
                 </div>
             </div>
-            <div class="col-6 col-md-4">
+            <div class="col-6 col-md-3">
                 <div class="stat-card barberos text-center">
                     <div class="icon-wrapper"><i class="bi bi-calendar-check"></i></div>
                     <h3 class="mt-2">{{ proximos|length }}</h3>
@@ -418,6 +421,12 @@
                 </div>
             </form>
         </div>
+
+        <!-- Mismo ancho que la fila de tarjetas de arriba (col-md-3 x 3 = 9/12),
+             para que "Mis cortes" y "Próximas citas/Historial" no se estiren a
+             todo el ancho de la página y quede espacio vacío a los lados. -->
+        <div class="row justify-content-center">
+        <div class="col-md-9">
 
         <!-- Programa de fidelidad: cada 10 cortes finalizados, el siguiente es gratis -->
         <div class="row g-4 mb-5">
@@ -591,6 +600,9 @@
 </div>
 
         </div><!-- /.row #turnos -->
+
+        </div>
+        </div>
 
 
 <!-- ===================================================== -->
