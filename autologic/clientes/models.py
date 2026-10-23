@@ -14,6 +14,10 @@ class Cliente(models.Model):
     cedula = models.CharField(max_length=20, unique=True, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, default='')
+    foto_perfil = models.ImageField(
+        upload_to='clientes/perfil/', blank=True, null=True,
+        help_text='Foto de perfil que el cliente sube desde "Editar Perfil".'
+    )
     fecha_registro = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     # Las cuentas creadas desde la web o por el administrador nacen con

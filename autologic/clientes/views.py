@@ -122,6 +122,8 @@ def editar_perfil(request):
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+        foto_perfil = request.FILES.get('foto_perfil')
+        quitar_foto = request.POST.get('quitar_foto') == '1'
 
         if email != request.user.email and User.objects.filter(email=email).exists():
             messages.error(request, '❌ Este correo electrónico ya está registrado.')
@@ -157,6 +159,13 @@ def editar_perfil(request):
                 cliente.cedula = cedula
                 cliente.telefono = telefono
                 cliente.email = email
+
+                if quitar_foto and cliente.foto_perfil:
+                    cliente.foto_perfil.delete(save=False)
+                    cliente.foto_perfil = None
+                elif foto_perfil:
+                    cliente.foto_perfil = foto_perfil
+
                 cliente.save()
 
                 # Actualizar también los datos si el usuario es un barbero registrado
@@ -777,4 +786,4 @@ def horarios_disponibles(request):
         # ocupado cuando una cita dura más de 40 minutos por adicionales.
         inicio += dt.timedelta(minutes=duracion)
 
-    return JsonResponse(resultados, safe=False)
+    return JsonResponse(resultados, safe=False) 

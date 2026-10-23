@@ -189,9 +189,14 @@
         <!-- Perfil del cliente -->
         <div class="row align-items-center mb-5">
             <div class="col-md-2 text-center text-md-start">
-                <div class="avatar-circle">
-                    {{ nombre|slice:":2"|upper }}
-                </div>
+                {% if cliente.foto_perfil %}
+                    <img src="{{ cliente.foto_perfil.url }}" alt="{{ nombre }}"
+                        class="avatar-circle" style="object-fit: cover;">
+                {% else %}
+                    <div class="avatar-circle">
+                        {{ nombre|slice:":2"|upper }}
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-7 text-center text-md-start mt-3 mt-md-0">
                 <h1 class="display-6">¡Hola, {{ nombre }}! 👋</h1>
@@ -263,6 +268,8 @@
 
 
         <!-- Formulario nuevo turno -->
+        <div class="row justify-content-center">
+        <div class="col-md-9">
         <div id="formularioTurno" class="form-turno mb-5" style="display: none;">
             <h4 class="text-yellow mb-4"><i class="bi bi-calendar-plus"></i> Nueva cita</h4>
             <form method="POST" action="{% url 'agendar_cita' %}">
@@ -420,6 +427,8 @@
                     </div>
                 </div>
             </form>
+        </div>
+        </div>
         </div>
 
         <!-- Mismo ancho que la fila de tarjetas de arriba (col-md-3 x 3 = 9/12),

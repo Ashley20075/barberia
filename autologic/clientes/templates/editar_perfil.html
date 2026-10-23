@@ -9,7 +9,156 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
-    
+
+    <style>
+        /* ===== Foto de perfil en "Editar Perfil" ===== */
+        .foto-perfil-bloque {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #3F2E22;
+        }
+        .foto-perfil-preview-wrap {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            flex-shrink: 0;
+        }
+        .foto-perfil-preview {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: linear-gradient(135deg, var(--color-primario), var(--color-primario-claro));
+            border: 2px solid var(--color-primario);
+        }
+        .foto-perfil-preview-inicial {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            font-weight: bold;
+            color: #0B0A08;
+            background: linear-gradient(135deg, var(--color-primario), var(--color-primario-claro));
+            border: 2px solid var(--color-primario);
+        }
+        .foto-perfil-editar-btn {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--color-primario);
+            color: #0B0A08;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-fondo-card, #221910);
+            cursor: pointer;
+            font-size: .95rem;
+        }
+        .foto-perfil-editar-btn:hover { filter: brightness(1.08); }
+        .foto-perfil-info h6 { margin-bottom: .2rem; }
+        .foto-perfil-acciones { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-top: .6rem; }
+        .foto-perfil-acciones .btn-subir-foto {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-claro) 100%);
+            color: #0B0A08;
+            border: none;
+            border-radius: 50px;
+            padding: 7px 16px;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 3px 12px rgba(var(--color-primario-rgb, 244,197,66), .3);
+        }
+        .foto-perfil-acciones .btn-subir-foto:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(var(--color-primario-rgb, 244,197,66), .45);
+        }
+        .foto-perfil-acciones .btn-quitar-foto {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: transparent;
+            border: 1px solid rgba(227, 93, 106, .55);
+            color: #e35d6a;
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .foto-perfil-acciones .btn-quitar-foto:hover { background: rgba(227, 93, 106, .12); }
+        #inputFotoPerfil { display: none; }
+
+        /* ===== Fondo decorativo de la página "Editar Perfil" ===== */
+        .perfil-fondo {
+            min-height: calc(100vh - 80px);
+            padding-bottom: 3rem;
+            background:
+                radial-gradient(900px 420px at 15% -10%, rgba(244, 197, 66, 0.16), transparent 60%),
+                radial-gradient(700px 500px at 110% 20%, rgba(244, 197, 66, 0.10), transparent 65%),
+                linear-gradient(180deg, #0B0A08 0%, #1E1A15 45%, #0B0A08 100%);
+        }
+
+        /* Banner superior tipo "hero", detrás de la tarjeta del formulario */
+        .perfil-banner {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #15110c 0%, #2A1E14 100%);
+            border-bottom: 1px solid rgba(244, 197, 66, 0.25);
+            padding: 3rem 0 5.5rem;
+            text-align: center;
+        }
+        .perfil-banner i.bi-person-vcard {
+            font-size: 2.4rem;
+            color: var(--color-primario);
+            background: rgba(244, 197, 66, 0.12);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: .8rem;
+        }
+        .perfil-banner h2 { color: #FFD966; margin-bottom: .2rem; }
+        .perfil-banner p { color: #C9A87C; margin-bottom: 0; }
+        /* Tijera gigante de fondo, muy tenue, solo decorativa */
+        .perfil-banner::after {
+            content: "\f5c7";
+            font-family: "bootstrap-icons";
+            position: absolute;
+            right: -2rem;
+            top: -3rem;
+            font-size: 14rem;
+            color: rgba(244, 197, 66, 0.05);
+            transform: rotate(18deg);
+            pointer-events: none;
+        }
+
+        /* La tarjeta "flota" encima del banner */
+        .perfil-tarjeta-wrap { margin-top: -4rem; position: relative; z-index: 2; }
+        .perfil-tarjeta-wrap .card-custom {
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(244, 197, 66, 0.18);
+        }
+        .perfil-tarjeta-wrap .card-header-custom {
+            background: linear-gradient(135deg, rgba(244,197,66,.14), rgba(244,197,66,.03));
+        }
+    </style>
 </head>
 
 <body class="tema-cliente">
@@ -132,14 +281,22 @@
 
 
 
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card-custom">
-                    <div class="card-header-custom">
-                        <i class="bi bi-pencil"></i> Editar Perfil
-                    </div>
-                    <div class="card-body p-4">
+    <div class="perfil-fondo">
+
+        <div class="perfil-banner">
+            <i class="bi bi-person-vcard"></i>
+            <h2>Editar Perfil</h2>
+            <p>Actualizá tus datos y tu foto de perfil.</p>
+        </div>
+
+        <div class="container perfil-tarjeta-wrap">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <i class="bi bi-pencil"></i> Editar Perfil
+                        </div>
+                        <div class="card-body p-4">
 
                         {% if messages %}
                         {% for message in messages %}
@@ -150,8 +307,45 @@
                         {% endfor %}
                         {% endif %}
 
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
+
+                            <!-- ===== Foto de perfil ===== -->
+                            <div class="foto-perfil-bloque">
+                                <div class="foto-perfil-preview-wrap">
+                                    {% if cliente.foto_perfil %}
+                                        <img src="{{ cliente.foto_perfil.url }}" alt="Tu foto de perfil"
+                                            class="foto-perfil-preview" id="fotoPerfilPreview">
+                                    {% else %}
+                                        <div class="foto-perfil-preview-inicial" id="fotoPerfilInicial">
+                                            {{ cliente.nombre|slice:":2"|upper }}
+                                        </div>
+                                        <img src="" alt="" class="foto-perfil-preview d-none" id="fotoPerfilPreview">
+                                    {% endif %}
+                                    <label for="inputFotoPerfil" class="foto-perfil-editar-btn" title="Cambiar foto">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </label>
+                                    <input type="file" name="foto_perfil" id="inputFotoPerfil" accept="image/*">
+                                </div>
+                                <div class="foto-perfil-info">
+                                    <h6 class="text-yellow mb-0">
+                                        {% if cliente.foto_perfil %}Tu foto de perfil{% else %}Agregar mi foto de perfil{% endif %}
+                                    </h6>
+                                    <p class="text-light-brown small mb-0">JPG o PNG, el cambio se guarda al presionar "Guardar Cambios".</p>
+                                    <div class="foto-perfil-acciones">
+                                        <label for="inputFotoPerfil" class="btn-subir-foto">
+                                            <i class="bi bi-cloud-arrow-up-fill"></i> {% if cliente.foto_perfil %}Cambiar foto{% else %}Subir foto de perfil{% endif %}
+                                        </label>
+                                        {% if cliente.foto_perfil %}
+                                        <button type="submit" name="quitar_foto" value="1" class="btn-quitar-foto">
+                                            <i class="bi bi-trash3"></i> Quitar foto
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-light-brown small mb-0 mt-1" id="fotoPerfilNombreArchivo"></p>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label-custom">Nombre *</label>
@@ -210,10 +404,38 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
+    <script>
+        // Vista previa inmediata de la foto de perfil al elegir un archivo,
+        // antes de guardar el formulario.
+        const inputFoto = document.getElementById('inputFotoPerfil');
+        const previewImg = document.getElementById('fotoPerfilPreview');
+        const previewInicial = document.getElementById('fotoPerfilInicial');
+        const nombreArchivo = document.getElementById('fotoPerfilNombreArchivo');
+
+        if (inputFoto) {
+            inputFoto.addEventListener('change', function () {
+                const archivo = this.files && this.files[0];
+                if (!archivo) return;
+
+                if (nombreArchivo) {
+                    nombreArchivo.textContent = '📎 ' + archivo.name + ' — se guarda al presionar "Guardar Cambios".';
+                }
+
+                const lector = new FileReader();
+                lector.onload = function (evento) {
+                    previewImg.src = evento.target.result;
+                    previewImg.classList.remove('d-none');
+                    if (previewInicial) previewInicial.classList.add('d-none');
+                };
+                lector.readAsDataURL(archivo);
+            });
+        }
+    </script>
 </body>
 
 </html>
