@@ -29,8 +29,9 @@ def panel_barbero(request):
 
     try:
         barbero = Barbero.objects.get(
-            email=request.user.email,
-            activo=True
+            email__iexact=request.user.email,
+            activo=True,
+            es_barbero=True
         )
 
     except Barbero.DoesNotExist:
@@ -40,13 +41,17 @@ def panel_barbero(request):
         )
         return redirect("inicio")
 
-    hoy = timezone.now().date()
+    hoy = timezone.localdate()
 
-    if not barbero.es_dia_laboral(hoy) or barbero.es_dia_descanso(hoy):
-        messages.warning(
-            request,
-            f"⚠️ Hoy es día de descanso o no laboral para {barbero.nombre}."
-        )
+    es_dia_descanso_hoy = barbero.es_dia_descanso(hoy)
+    es_dia_no_laboral_hoy = not barbero.es_dia_laboral(hoy)
+    mensaje_jornada_hoy = (
+        f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). "
+        "No tienes que atender citas hoy."
+        if es_dia_descanso_hoy else
+        "Hoy no tienes jornada laboral programada. Disfruta tu día."
+        if es_dia_no_laboral_hoy else ""
+    )
 
     # Filtros enviados desde el formulario.
     filtro_estado = request.GET.get('estado', '').strip()
@@ -116,6 +121,10 @@ def panel_barbero(request):
 
     context = {
         "barbero": barbero,
+        "hoy": hoy,
+        "es_dia_descanso_hoy": es_dia_descanso_hoy,
+        "es_dia_no_laboral_hoy": es_dia_no_laboral_hoy,
+        "mensaje_jornada_hoy": mensaje_jornada_hoy,
 
         "proximas_citas": proximas_citas,
         "historial_citas": paginar(historial_citas, request, parametro="pagina_historial"),
@@ -145,7 +154,7 @@ def confirmar_cita(request, id):
     cita = get_object_or_404(Cita, id=id)
     
     try:
-        barbero = Barbero.objects.get(email=request.user.email, activo=True)
+        barbero = Barbero.objects.get(email=request.user.email, activo=True, es_barbero=True)
         if cita.barbero != barbero:
             messages.error(request, '❌ No tienes permiso para confirmar esta cita.')
             return redirect('barberos:panel_barbero')
@@ -153,6 +162,10 @@ def confirmar_cita(request, id):
         messages.error(request, '❌ No tienes un perfil de barbero asignado.')
         return redirect('barberos:panel_barbero')
     
+    if not barbero.es_dia_laboral(timezone.localdate()):
+        messages.warning(request, f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). Tu panel está bloqueado durante el descanso. No puedes realizar acciones hoy.")
+        return redirect('barberos:panel_barbero')
+
     if cita.estado == "Pendiente":
         # ===== VALIDACIÓN: Verificar que el barbero trabaja en esa fecha =====
         if not barbero.es_dia_laboral(cita.fecha):
@@ -174,12 +187,16 @@ def cancelar_cita(request, id):
     cita = get_object_or_404(Cita, id=id)
     
     try:
-        barbero = Barbero.objects.get(email=request.user.email, activo=True)
+        barbero = Barbero.objects.get(email=request.user.email, activo=True, es_barbero=True)
         if cita.barbero != barbero:
             messages.error(request, '❌ No tienes permiso para cancelar esta cita.')
             return redirect('barberos:panel_barbero')
     except Barbero.DoesNotExist:
         messages.error(request, '❌ No tienes un perfil de barbero asignado.')
+        return redirect('barberos:panel_barbero')
+
+    if not barbero.es_dia_laboral(timezone.localdate()):
+        messages.warning(request, f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). Tu panel está bloqueado durante el descanso. No puedes realizar acciones hoy.")
         return redirect('barberos:panel_barbero')
 
     if cita.estado != "Cancelada":
@@ -211,8 +228,9 @@ def finalizar_cita(request, id):
 
     try:
         barbero = Barbero.objects.get(
-            email=request.user.email,
-            activo=True
+            email__iexact=request.user.email,
+            activo=True,
+            es_barbero=True
         )
 
         if cita.barbero != barbero:
@@ -227,6 +245,10 @@ def finalizar_cita(request, id):
             request,
             '❌ No tienes un perfil de barbero asignado.'
         )
+        return redirect('barberos:panel_barbero')
+
+    if not barbero.es_dia_laboral(timezone.localdate()):
+        messages.warning(request, f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). Tu panel está bloqueado durante el descanso. No puedes realizar acciones hoy.")
         return redirect('barberos:panel_barbero')
 
     if cita.estado == "Confirmada":
@@ -267,7 +289,7 @@ def finalizar_cita(request, id):
 
 @login_required
 def lista_barberos(request):
-    barberos = Barbero.objects.filter(activo=True)
+    barberos = Barbero.objects.filter(activo=True, es_barbero=True)
     return render(request, 'barberos/lista.html', {'barberos': barberos})
 
 @login_required
@@ -279,8 +301,17 @@ def detalle_barbero(request, id):
 def editar_perfil_barbero(request):
     barbero = get_object_or_404(
         Barbero,
-        email=request.user.email
+        email__iexact=request.user.email,
+        activo=True,
+        es_barbero=True
     )
+
+    if not barbero.es_dia_laboral(timezone.localdate()):
+        messages.warning(
+            request,
+            f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). Tu panel está bloqueado y no puedes realizar acciones hoy."
+        )
+        return redirect('barberos:panel_barbero')
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
@@ -442,9 +473,13 @@ def vaciar_historial_barbero(request):
 
     barbero = get_object_or_404(
         Barbero,
-        email=request.user.email,
-        activo=True
+        email__iexact=request.user.email,
+        activo=True,
+        es_barbero=True
     )
+    if not barbero.es_dia_laboral(timezone.localdate()):
+        messages.warning(request, f"Hoy es tu día de descanso ({barbero.get_dia_descanso_display()}). Tu panel está bloqueado durante el descanso. No puedes realizar acciones hoy.")
+        return redirect('barberos:panel_barbero')
 
     cantidad = Cita.objects.filter(
         barbero=barbero,

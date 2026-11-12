@@ -230,6 +230,7 @@
     </div>
 
     <!-- ========== MODAL ELIMINAR CUENTA ========== -->
+    {% if not es_barbero %}
     <div class="modal fade" id="modalEliminarCuenta" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-danger">
@@ -277,6 +278,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
 
 
@@ -393,10 +395,12 @@
                                     <i class="bi bi-check-circle"></i> Guardar Cambios
                                 </button>
 
+                                {% if not es_barbero %}
                                 <a href="#" class="btn-delete-account" data-bs-toggle="modal"
                                     data-bs-target="#modalEliminarCuenta">
                                     <i class="bi bi-trash"></i> Eliminar Cuenta
                                 </a>
+                                {% endif %}
 
                             </div>
                         </form>

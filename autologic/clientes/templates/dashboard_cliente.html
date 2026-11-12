@@ -344,7 +344,7 @@
                         <div class="nc-opcion">
                             <input class="nc-input" type="radio" name="barbero"
                                 value="{{ barbero.id }}" id="barbero{{ barbero.id }}"
-                                data-dias-laborales="{{ barbero.dias_laborales }}" {% if forloop.first %}checked{% endif %}>
+                                data-dias-laborales="{{ barbero.get_dias_laborales_list|join:',' }}" data-dia-descanso="{{ barbero.dia_descanso }}" data-barbero-nombre="{{ barbero.nombre|escapejs }}" {% if forloop.first %}checked{% endif %}>
                             <label class="nc-card nc-card-barbero" for="barbero{{ barbero.id }}">
                                 {% if barbero.imagen_url %}
                                 <span class="nc-icono nc-icono-foto"><img src="{{ barbero.imagen_url }}" alt="" loading="lazy" referrerpolicy="no-referrer"></span>
@@ -817,7 +817,14 @@ function renderCalendario() {
         if (noLaboral || pasada) {
             boton.disabled = true;
             boton.classList.add("no-disponible");
-            boton.title = pasada ? "Fecha anterior" : "Día no laboral";
+            const opcionBarbero = barberoInput.options[0];
+            const nombreBarbero = opcionBarbero?.dataset.barberoNombre || "Este barbero";
+            const diaDescanso = opcionBarbero?.dataset.diaDescanso || "";
+            boton.title = pasada
+                ? "Fecha anterior"
+                : (diasSemana[fecha.getDay()] === diaDescanso
+                    ? `${nombreBarbero} descansa este día`
+                    : `${nombreBarbero} no trabaja este día`);
         } else {
             boton.addEventListener("click", () => seleccionarFecha(iso));
         }

@@ -24,7 +24,8 @@ import logging
 
 from django.conf import settings
 from django.core import signing
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 # Sal propia para que este token no sirva para nada más.
@@ -68,15 +69,14 @@ def enviar_correo_confirmacion(request, user):
 
     asunto = 'Confirma tu correo - Barber Springfield'
 
+    nombre = user.first_name or user.username
+    contexto = {'nombre': nombre, 'enlace': enlace, 'validez_horas': 24}
     cuerpo = (
-        f'Hola {user.first_name or user.username}:\n\n'
-        f'Para terminar de crear tu cuenta en Barber Springfield, abre '
-        f'este enlace:\n\n'
+        f'Hola {nombre}:\n\n'
+        'Para terminar de crear tu cuenta en Barber Springfield, abre este enlace:\n\n'
         f'{enlace}\n\n'
-        f'El enlace caduca en 24 horas. Si no fuiste tú quien se '
-        f'registró, simplemente ignora este mensaje.\n'
+        'El enlace caduca en 24 horas. Si no solicitaste esta cuenta, ignora este mensaje.\n'
     )
-
     # Si Django está usando el backend de consola, el mensaje NO se envía
     # a internet: solamente aparece en la terminal. Para esta funcionalidad
     # eso debe considerarse un fallo de configuración, no un envío exitoso.
@@ -91,13 +91,15 @@ def enviar_correo_confirmacion(request, user):
         return False
 
     try:
-        enviados = send_mail(
+        html = render_to_string('clientes/emails/confirmacion_correo.html', contexto)
+        mensaje = EmailMultiAlternatives(
             asunto,
             cuerpo,
             getattr(settings, 'DEFAULT_FROM_EMAIL', None),
             [user.email],
-            fail_silently=False,
         )
+        mensaje.attach_alternative(html, 'text/html')
+        enviados = mensaje.send(fail_silently=False)
         return enviados > 0
     except Exception as exc:
         # Guardamos el error real en el log para poder diagnosticar SMTP,

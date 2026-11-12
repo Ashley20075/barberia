@@ -166,7 +166,7 @@
                     <label class="form-label-custom mb-2">💈 3. Barbero</label>
                     <select class="form-select bg-dark-input mb-4" name="barbero" id="barbero">
                         {% for barbero in barberos %}
-                        <option value="{{ barbero.id }}" data-dias-laborales="{{ barbero.dias_laborales }}">
+                        <option value="{{ barbero.id }}" data-dias-laborales="{{ barbero.get_dias_laborales_list|join:',' }}">
                             {{ barbero.nombre }} - {{ barbero.especialidad }}
                         </option>
                         {% endfor %}

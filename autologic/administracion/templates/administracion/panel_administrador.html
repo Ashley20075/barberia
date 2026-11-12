@@ -10,6 +10,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
+
+/* Modal de edición de barbero: desplazamiento real en todos los dispositivos. */
+#modalEditarBarbero { overflow-y: auto !important; }
+#modalEditarBarbero .modal-dialog {
+    width: min(920px, calc(100% - 1.25rem)); max-width: 920px;
+    height: calc(100% - 1.5rem); max-height: calc(100dvh - 1.5rem);
+    margin: .75rem auto; display: flex; align-items: stretch;
+}
+#modalEditarBarbero .modal-content {
+    width: 100%; max-height: calc(100dvh - 1.5rem); min-height: 0;
+    display: flex; flex-direction: column; overflow: hidden;
+}
+#modalEditarBarbero form { min-height: 0; display: flex; flex: 1 1 auto; flex-direction: column; }
+#modalEditarBarbero .modal-body {
+    min-height: 0; flex: 1 1 auto; overflow-y: auto !important;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 1.25rem;
+}
+#modalEditarBarbero .modal-header, #modalEditarBarbero .modal-footer { flex: 0 0 auto; }
+#modalEditarBarbero .horario-descanso-editor { margin-top: 1rem; }
+@media (max-width: 575.98px) {
+    #modalEditarBarbero .modal-dialog { width: calc(100% - .5rem); height: calc(100% - .5rem); max-height: calc(100dvh - .5rem); margin: .25rem auto; }
+    #modalEditarBarbero .modal-content { max-height: calc(100dvh - .5rem); border-radius: 14px; }
+    #modalEditarBarbero .modal-body { padding: .9rem; }
+    #modalEditarBarbero .modal-footer { gap: .5rem; flex-wrap: wrap; }
+    #modalEditarBarbero .modal-footer > * { flex: 1 1 auto !important; }
+}
+
         .nav-btn.active { background-color: var(--color-primario); border-color: var(--color-primario); color: #0B0A08 !important; box-shadow: 0 0 20px rgba(var(--color-primario-rgb), 0.3); }
         .action-bar-sticky { position: sticky; top: 76px; z-index: 1040; background: var(--color-fondo); padding: 18px 0; border-bottom: 3px solid var(--color-primario); margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .btn-group-modern { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
@@ -36,6 +63,26 @@
         @media (max-width: 768px) { .navbar-brand-custom { font-size: 1.3rem; } .nav-btn, .btn-logout-custom { font-size: 0.8rem; padding: 0.3rem 0.8rem; } .btn-modern, .btn-modern-inventario { font-size: 13px; padding: 11px 18px; min-width: 140px; } }
         @media (max-width: 576px) { .btn-group-modern { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .btn-modern, .btn-modern-inventario { font-size: 12px; padding: 9px 8px; min-width: unset; width: 100%; box-shadow: none; } }
         .modal-body-scroll {max-height: 70vh;overflow-y: auto; padding-right: 10px;}
+        /* Desplazamiento usable en modales largos en tablet y celular. */
+        .modal { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .modal-dialog-scrollable { height: calc(100% - 1.5rem); max-height: calc(100dvh - 1.5rem); }
+        .modal-dialog-scrollable .modal-content { max-height: calc(100dvh - 1.5rem); min-height: 0; }
+        .modal-dialog-scrollable .modal-body { min-height: 0; overflow-y: auto !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+        @media (max-width: 991.98px) {
+            .modal-dialog { margin: .5rem auto; max-width: calc(100% - 1rem); }
+            .modal-dialog-scrollable { height: calc(100% - 1rem); max-height: calc(100dvh - 1rem); }
+            .modal-dialog-scrollable .modal-content { max-height: calc(100dvh - 1rem); }
+            #modalEditarBarbero .modal-dialog { height: calc(100% - 1rem); max-height: calc(100dvh - 1rem); margin: .5rem auto; }
+            #modalEditarBarbero .modal-content { max-height: calc(100dvh - 1rem); }
+        }
+        @media (max-width: 575.98px) {
+            .modal-dialog { width: calc(100% - .5rem); max-width: calc(100% - .5rem); margin: .25rem auto; }
+            .modal-dialog-scrollable { height: calc(100% - .5rem); max-height: calc(100dvh - .5rem); }
+            .modal-dialog-scrollable .modal-content { max-height: calc(100dvh - .5rem); border-radius: 14px; }
+            .modal-dialog-scrollable .modal-footer { flex-wrap: wrap; gap: .5rem; }
+            .modal-dialog-scrollable .modal-footer > * { flex: 1 1 auto; }
+        }
+
         .modal-body-scroll::-webkit-scrollbar {width: 8px;}
         .modal-body-scroll::-webkit-scrollbar-track {background: var(--color-fondo-secundario); border-radius: 10px;}
         .modal-body-scroll::-webkit-scrollbar-thumb {background: var(--color-primario); border-radius: 10px;}
@@ -214,7 +261,6 @@ body.light-mode #modalEditarInicio .form-select {
                         {% endif %}
                     </a>
 
-
                     <a href="{% url 'administracion:panel_admin' %}" class="nav-btn active">
                         <i class="bi bi-speedometer2"></i> Panel Admin
                     </a>
@@ -227,13 +273,11 @@ body.light-mode #modalEditarInicio .form-select {
                         <i class="bi bi-cash-coin"></i> Cierre de Caja
                     </a>
 
-
                     <button class="btn-logout-custom"
                             data-bs-toggle="modal"
                             data-bs-target="#modalCerrarSesion">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
-
 
                     <button type="button"
                             id="themeToggle"
@@ -249,7 +293,7 @@ body.light-mode #modalEditarInicio .form-select {
     </nav>
 
     <!-- MODAL CERRAR SESIÓN -->
-    <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
+    <div class="modal fade modal-cierre-sesion" id="modalCerrarSesion" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
@@ -403,7 +447,7 @@ body.light-mode #modalEditarInicio .form-select {
                                 <td>
                                     {% if u.is_superuser %}
                                     <span class="badge badge-role-admin">Admin</span>
-                                    {% elif u.groups.exists %}
+                                    {% elif u.email|lower in barbero_emails %}
                                     <span class="badge badge-role-barbero">Barbero</span>
                                     {% else %}
                                     <span class="badge badge-role-cliente">Cliente</span>
@@ -419,20 +463,21 @@ body.light-mode #modalEditarInicio .form-select {
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if u.groups.all %}
-                                    <a href="{% url 'administracion:quitar_barbero' u.id %}" class="btn btn-sm btn-secondary" data-confirmar="¿Quitar rol de barbero?"
-                                               data-confirmar-titulo="Quitar rol"
-                                               data-confirmar-boton="Sí, quitar"
-                                               data-confirmar-peligro>
-                                        <i class="bi bi-person-dash"></i> Quitar barbero
-                                    </a>
+                                    {# Primer botón: alterna según el rol real del usuario. #}
+                                    {% if u.email|lower in barbero_emails %}
+                                    <form method="post" action="{% url 'administracion:quitar_barbero' u.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-secondary" data-confirmar="¿Quitar el rol de barbero a {{ u.username }}? Se conservarán su cuenta y todas sus citas." data-confirmar-titulo="Quitar barbero" data-confirmar-boton="Sí, quitar barbero" data-confirmar-peligro>
+                                            <i class="bi bi-person-dash"></i> Quitar barbero
+                                        </button>
+                                    </form>
                                     {% else %}
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
                                         <i class="bi bi-person-badge"></i> Hacer barbero
                                     </button>
 
                                     <div class="modal fade" id="modalAsignarBarbero{{ u.id }}" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog">
+                                        <div class="modal-dialog modal-dialog-scrollable">
                                             <div class="modal-content modal-content-custom">
                                                 <form method="post" action="{% url 'administracion:asignar_barbero' u.id %}">
                                                     {% csrf_token %}
@@ -441,9 +486,7 @@ body.light-mode #modalEditarInicio .form-select {
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p class="text-light-brown small">
-                                                            Si esta cuenta se registró con Google, todavía no tiene cédula guardada: complétala aquí para poder convertirla en barbero.
-                                                        </p>
+                                                        <p class="text-light-brown small">Completa los datos necesarios para asignar el rol de barbero.</p>
                                                         <div class="mb-3">
                                                             <label class="form-label text-yellow">Cédula *</label>
                                                             <input type="text" name="cedula" class="form-control bg-dark-input" value="{{ u.cliente.cedula|default:'' }}" required>
@@ -459,20 +502,17 @@ body.light-mode #modalEditarInicio .form-select {
                                                     </div>
                                                     <div class="modal-footer modal-footer-custom">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn-modern">
-                                                            <i class="bi bi-person-badge"></i> Confirmar
-                                                        </button>
+                                                        <button type="submit" class="btn-modern"><i class="bi bi-person-badge"></i> Confirmar</button>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                     {% endif %}
+
+                                    {# Segundo botón: activar/desactivar, siempre visible. #}
                                     {% if u.is_active %}
-                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" data-confirmar="¿Deseas desactivar este usuario?"
-                                               data-confirmar-titulo="Desactivar usuario"
-                                               data-confirmar-boton="Sí, desactivar"
-                                               data-confirmar-peligro>
+                                    <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" data-confirmar="¿Deseas desactivar este usuario? Se conservarán sus datos y citas." data-confirmar-titulo="Desactivar usuario" data-confirmar-boton="Sí, desactivar" data-confirmar-peligro>
                                         <i class="bi bi-person-x"></i> Desactivar
                                     </a>
                                     {% elif u.cliente and not u.cliente.correo_confirmado %}
@@ -480,9 +520,7 @@ body.light-mode #modalEditarInicio .form-select {
                                         <i class="bi bi-envelope-exclamation"></i> Esperando confirmación del correo
                                     </span>
                                     {% else %}
-                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" data-confirmar="¿Deseas activar este usuario?"
-                                               data-confirmar-titulo="Activar usuario"
-                                               data-confirmar-boton="Sí, activar">
+                                    <a href="{% url 'administracion:activar_usuario' u.id %}" class="btn btn-sm btn-success mt-1" data-confirmar="¿Deseas activar este usuario?" data-confirmar-titulo="Activar usuario" data-confirmar-boton="Sí, activar">
                                         <i class="bi bi-person-check"></i> Activar
                                     </a>
                                     {% endif %}
@@ -587,7 +625,6 @@ body.light-mode #modalEditarInicio .form-select {
 
     </div>
 
-
     <!-- LISTA -->
     <div class="card-body p-0">
 
@@ -627,7 +664,6 @@ body.light-mode #modalEditarInicio .form-select {
 
     </div>
 
-
     <!-- PAGINACIÓN -->
     <div class="card-body">
 
@@ -636,7 +672,6 @@ body.light-mode #modalEditarInicio .form-select {
     </div>
 
 </div>
-
 
 <!-- ===================================================== -->
 <!-- MODAL VACIAR HISTORIAL ADMINISTRADOR -->
@@ -652,7 +687,6 @@ body.light-mode #modalEditarInicio .form-select {
 
         <div class="modal-content modal-content-custom">
 
-
             <!-- ENCABEZADO -->
             <div class="modal-header modal-header-custom">
 
@@ -664,7 +698,6 @@ body.light-mode #modalEditarInicio .form-select {
 
                 </h5>
 
-
                 <button
                     type="button"
                     class="btn-close btn-close-white"
@@ -674,17 +707,14 @@ body.light-mode #modalEditarInicio .form-select {
 
             </div>
 
-
             <!-- CUERPO -->
             <div class="modal-body text-center py-4">
 
                 <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-inline-block"></i>
 
-
                 <h5>
                     ¿Vaciar el historial?
                 </h5>
-
 
                 <p class="text-light-brown mb-0">
 
@@ -695,10 +725,8 @@ body.light-mode #modalEditarInicio .form-select {
 
             </div>
 
-
             <!-- BOTONES -->
             <div class="modal-footer modal-footer-custom">
-
 
                 <!-- CANCELAR -->
                 <button
@@ -710,7 +738,6 @@ body.light-mode #modalEditarInicio .form-select {
 
                 </button>
 
-
                 <!-- CONFIRMAR -->
                 <form
                     method="POST"
@@ -718,7 +745,6 @@ body.light-mode #modalEditarInicio .form-select {
                     class="d-inline">
 
                     {% csrf_token %}
-
 
                     <button
                         type="submit"
@@ -765,6 +791,7 @@ body.light-mode #modalEditarInicio .form-select {
                             <span><i class="bi bi-envelope"></i> {{ b.email }}</span>
                             <span><i class="bi bi-clock"></i> {{ b.jornada_inicio|time:"H:i" }} - {{ b.jornada_fin|time:"H:i" }}</span>
                             <span><i class="bi bi-calendar-x"></i> Descansa: {{ b.get_dia_descanso_display }}</span>
+                            {% if b.activo %}<span class="badge bg-success">Activo</span>{% else %}<span class="badge bg-secondary">Desactivado · conserva sus citas</span>{% endif %}
                         </span>
                     </div>
                     <div class="cita-acciones">
@@ -781,21 +808,22 @@ body.light-mode #modalEditarInicio .form-select {
                                     data-especialidad="{{ b.especialidad }}"
                                     data-telefono="{{ b.telefono }}"
                                     data-email="{{ b.email }}"
+                                    data-activo="{{ b.activo|yesno:'true,false' }}"
                                     data-imagen_url="{{ b.imagen_url }}"
                                     data-jornada_inicio="{{ b.jornada_inicio|time:'H:i' }}"
                                     data-jornada_fin="{{ b.jornada_fin|time:'H:i' }}"
                                     data-duracion_cita="{{ b.duracion_cita }}"
-                                    data-dias_laborales="{{ b.dias_laborales }}"
+                                    data-dias_laborales="{{ b.get_dias_laborales_list|join:',' }}"
                                     data-dia_descanso="{{ b.dia_descanso }}"
                                     data-tiempo_entre_citas="{{ b.tiempo_entre_citas }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <a href="{% url 'administracion:eliminar_barbero' b.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar este barbero?"
-                                       data-confirmar-titulo="Eliminar barbero"
-                                       data-confirmar-boton="Sí, eliminar"
-                                       data-confirmar-peligro>
-                                <i class="bi bi-trash"></i>
-                            </a>
+                            <form method="post" action="{% url 'administracion:eliminar_barbero' b.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar la cuenta de {{ b.nombre }}? Se bloqueará su acceso y se retirará su perfil operativo, pero se conservarán sus citas e historial." data-confirmar-titulo="Eliminar cuenta" data-confirmar-boton="Sí, eliminar cuenta" data-confirmar-peligro>
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -807,7 +835,6 @@ body.light-mode #modalEditarInicio .form-select {
                 {% endfor %}
             </div>
         </div>
-
 
         <!-- TABLA DE SERVICIOS -->
         <div class="card-custom mb-4">
@@ -1431,8 +1458,8 @@ body.light-mode #modalEditarInicio .form-select {
     </div>
 
     <!-- MODAL AGREGAR USUARIO -->
-    <div class="modal fade" id="modalAgregarUsuario" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="modalAgregarUsuario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow"><i class="bi bi-person-plus"></i> Nuevo Usuario</h5>
@@ -1474,7 +1501,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-plus-circle"></i> Crear Usuario
                         </button>
                     </div>
@@ -1542,7 +1569,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1552,8 +1579,8 @@ body.light-mode #modalEditarInicio .form-select {
     </div>
 
     <!-- MODAL EDITAR BARBERO -->
-    <div class="modal fade" id="modalEditarBarbero" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade" id="modalEditarBarbero" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title text-yellow"><i class="bi bi-pencil"></i> Editar Barbero</h5>
@@ -1648,37 +1675,21 @@ body.light-mode #modalEditarInicio .form-select {
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Días Laborales</label>
-                                <select name="dias_laborales" id="editBarberoDiasLaborales" class="form-select bg-dark-input" multiple size="4">
-                                    <option value="LUN">Lunes</option>
-                                    <option value="MAR">Martes</option>
-                                    <option value="MIE">Miércoles</option>
-                                    <option value="JUE">Jueves</option>
-                                    <option value="VIE">Viernes</option>
-                                    <option value="SAB">Sábado</option>
-                                    <option value="DOM">Domingo</option>
-                                </select>
-                                <small class="text-light-brown">Selecciona los días que trabaja (Ctrl+Click para múltiple)</small>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label-custom">Día de Descanso</label>
-                                <select name="dia_descanso" id="editBarberoDiaDescanso" class="form-select bg-dark-input">
-                                    <option value="LUN">Lunes</option>
-                                    <option value="MAR">Martes</option>
-                                    <option value="MIE">Miércoles</option>
-                                    <option value="JUE">Jueves</option>
-                                    <option value="VIE">Viernes</option>
-                                    <option value="SAB">Sábado</option>
-                                    <option value="DOM">Domingo</option>
-                                </select>
-                            </div>
+                        <div class="section-editor horario-descanso-editor">
+                            <h6><i class="bi bi-calendar2-week"></i> Día de descanso semanal</h6>
+                            <label class="form-label-custom" for="editBarberoDiaDescanso">Selecciona el único día libre del barbero</label>
+                            <select name="dia_descanso" id="editBarberoDiaDescanso" class="form-select bg-dark-input">
+                                <option value="LUN">Lunes</option><option value="MAR">Martes</option>
+                                <option value="MIE">Miércoles</option><option value="JUE">Jueves</option>
+                                <option value="VIE">Viernes</option><option value="SAB">Sábado</option>
+                                <option value="DOM">Domingo</option>
+                            </select>
+                            <small class="text-light-brown d-block mt-2">El barbero trabajará los otros seis días. Al cambiar este día, la disponibilidad de citas se actualiza automáticamente.</small>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1715,7 +1726,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1756,7 +1767,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
                     </div>
@@ -1797,7 +1808,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
+                        <button type="submit" class="btn-modern" >
                             <i class="bi bi-plus-circle"></i> Agregar Servicio
                         </button>
                     </div>
@@ -1819,7 +1830,6 @@ const editCitaHora = document.getElementById('editCitaHora');
 const editCitaBarbero = document.getElementById('editCitaBarbero');
 const editCitaEstado = document.getElementById('editCitaEstado');
 const formEditarCita = document.getElementById('formEditarCita');
-
 
 async function cargarHorariosEdicion(horaActual = '') {
 
@@ -1902,7 +1912,6 @@ async function cargarHorariosEdicion(horaActual = '') {
     }
 }
 
-
 function convertirHora12a24(hora) {
 
     const partes = hora.trim().split(' ');
@@ -1929,7 +1938,6 @@ function convertirHora12a24(hora) {
     return `${String(horas).padStart(2, '0')}:${minutos}`;
 }
 
-
 modalEditarCita.addEventListener('show.bs.modal', function(e) {
 
     const btn = e.relatedTarget;
@@ -1955,13 +1963,11 @@ modalEditarCita.addEventListener('show.bs.modal', function(e) {
     );
 });
 
-
 editCitaBarbero.addEventListener('change', function() {
 
     cargarHorariosEdicion();
 
 });
-
 
 editCitaFecha.addEventListener('change', function() {
 
@@ -1969,19 +1975,16 @@ editCitaFecha.addEventListener('change', function() {
 
 });
 
-
 editCitaServicio.addEventListener('change', function() {
 
     cargarHorariosEdicion();
 
 });
 
-        // MODAL EDITAR BARBERO
+        // MODAL EDITAR BARBERO: el único día de descanso determina los otros seis días laborales.
         document.getElementById('modalEditarBarbero').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
-            // El modal tambien puede abrirse por JS (al restaurar un
-            // formulario tras un error). En ese caso no hay boton de
-            // origen y no se debe sobrescribir lo que el usuario escribio.
+            // Si se abre desde código, conserva los datos del formulario.
             if (!btn) { return; }
 
             document.getElementById('editBarberoNombre').value = btn.dataset.nombre || '';
@@ -2003,21 +2006,13 @@ editCitaServicio.addEventListener('change', function() {
             document.getElementById('editBarberoTiempoEntreCitas').value = btn.dataset.tiempo_entre_citas || 15;
             document.getElementById('editBarberoDiaDescanso').value = btn.dataset.dia_descanso || 'DOM';
 
-            const diasLaborales = (btn.dataset.dias_laborales || 'LUN,MAR,MIE,JUE,VIE,SAB').split(',');
-            const selectDias = document.getElementById('editBarberoDiasLaborales');
-            for (let option of selectDias.options) {
-                option.selected = diasLaborales.includes(option.value);
-            }
-
             document.getElementById('formEditarBarbero').action = `/editar-barbero/${btn.dataset.id}/`;
         });
 
         // MODAL EDITAR PRODUCTO
         document.getElementById('modalEditarProducto').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
-            // El modal tambien puede abrirse por JS (al restaurar un
-            // formulario tras un error). En ese caso no hay boton de
-            // origen y no se debe sobrescribir lo que el usuario escribio.
+            // Si se abre desde código, conserva los datos del formulario.
             if (!btn) { return; }
             document.getElementById('editProductoNombre').value = btn.dataset.nombre || '';
             document.getElementById('editProductoPrecio').value = btn.dataset.precio || 0;
@@ -2028,9 +2023,7 @@ editCitaServicio.addEventListener('change', function() {
         // MODAL EDITAR SERVICIO
         document.getElementById('modalEditarServicio').addEventListener('show.bs.modal', function(e) {
             const btn = e.relatedTarget;
-            // El modal tambien puede abrirse por JS (al restaurar un
-            // formulario tras un error). En ese caso no hay boton de
-            // origen y no se debe sobrescribir lo que el usuario escribio.
+            // Si se abre desde código, conserva los datos del formulario.
             if (!btn) { return; }
             document.getElementById('editServicioNombre').value = btn.dataset.nombre || '';
             document.getElementById('editServicioDescripcion').value = btn.dataset.descripcion || '';
@@ -2138,7 +2131,6 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizar();
     }
 
-
     configurarSelectorImagen(
         'hero_imagen_1_fuente',
         'contenedorHeroImagen1Url',
@@ -2146,7 +2138,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'hero_imagen_1_url',
         'hero_imagen_1_archivo'
     );
-
 
     configurarSelectorImagen(
         'hero_imagen_2_fuente',
@@ -2156,7 +2147,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'hero_imagen_2_archivo'
     );
 
-
     configurarSelectorImagen(
         'hero_imagen_3_fuente',
         'contenedorHeroImagen3Url',
@@ -2165,7 +2155,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'hero_imagen_3_archivo'
     );
 
-
     configurarSelectorImagen(
         'nosotros_imagen_fuente',
         'contenedorNosotrosImagenUrl',
@@ -2173,7 +2162,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'nosotros_imagen_url',
         'nosotros_imagen_archivo'
     );
-
 
     configurarSelectorImagen(
         'fachada_imagen_fuente',

@@ -18,6 +18,8 @@ class Barbero(models.Model):
     email = models.EmailField()
     fecha_registro = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
+    # False retira el rol sin borrar el perfil ni romper el historial de citas.
+    es_barbero = models.BooleanField(default=True)
     
     # ===== NUEVOS CAMPOS DE HORARIO =====
     jornada_inicio = models.TimeField(default='08:00')
@@ -39,19 +41,24 @@ class Barbero(models.Model):
         return self.nombre
     
     def get_dias_laborales_list(self):
-        return self.dias_laborales.split(',') if self.dias_laborales else []
-    
+        """Devuelve los seis días laborables derivados del único día libre.
+
+        `dias_laborales` se conserva por compatibilidad con datos y vistas
+        antiguas, pero ya no decide el horario: el día de descanso es la
+        única fuente de verdad.
+        """
+        codigos = [codigo for codigo, _ in self.DIAS_SEMANA]
+        descanso = (self.dia_descanso or 'DOM').strip().upper()
+        if descanso not in codigos:
+            descanso = 'DOM'
+        return [codigo for codigo in codigos if codigo != descanso]
+
     def es_dia_laboral(self, fecha):
-        from datetime import datetime
         dias = {0: 'LUN', 1: 'MAR', 2: 'MIE', 3: 'JUE', 4: 'VIE', 5: 'SAB', 6: 'DOM'}
-        dia_semana = dias[fecha.weekday()]
-        return dia_semana in self.get_dias_laborales_list()
-    
+        return dias[fecha.weekday()] in self.get_dias_laborales_list()
+
     def es_dia_descanso(self, fecha):
-        from datetime import datetime
-        dias = {0: 'LUN', 1: 'MAR', 2: 'MIE', 3: 'JUE', 4: 'VIE', 5: 'SAB', 6: 'DOM'}
-        dia_semana = dias[fecha.weekday()]
-        return dia_semana == self.dia_descanso
+        return not self.es_dia_laboral(fecha)
     
     def horarios_disponibles(self, fecha, duracion=35):
         import datetime

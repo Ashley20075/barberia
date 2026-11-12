@@ -32,8 +32,6 @@
             object-fit: cover;
         }
 
-
-
         /* white-space: nowrap: sin esto, en columnas angostas (celular)
            el icono y el texto se partían en dos líneas dentro de la
            misma pastilla, dejando el badge deforme y cortado. */
@@ -394,7 +392,6 @@ html[data-theme="light"] .autoai-modal .modal-footer {
     border-top: 1px solid #E3D5BE !important;
 }
 
-
 /* ============================================================
    CLIENTE / SERVICIO
    ============================================================ */
@@ -412,7 +409,6 @@ html[data-theme="light"] .autoai-modal strong {
     color: #2B241E !important;
 }
 
-
 /* ============================================================
    CAJAS DE INFORMACIÓN
    ============================================================ */
@@ -422,7 +418,6 @@ html[data-theme="light"] .autoai-modal .autoai-info-item {
     color: #2B241E !important;
     border: 1px solid #E6DAC6 !important;
 }
-
 
 /* ============================================================
    OBSERVACIONES
@@ -446,7 +441,6 @@ html[data-theme="light"] .autoai-modal .autoai-observacion {
     box-shadow: none !important;
 }
 
-
 /* ============================================================
    SECCIONES
    ============================================================ */
@@ -459,7 +453,6 @@ html[data-theme="light"] .autoai-modal .autoai-section {
 
     border: 1px solid #E6DAC6 !important;
 }
-
 
 /* ============================================================
    RECOMENDACIONES
@@ -481,7 +474,6 @@ html[data-theme="light"] .autoai-modal .autoai-recomendacion {
     box-shadow: none !important;
 }
 
-
 /* ============================================================
    DETALLES INTERNOS DE LAS RECOMENDACIONES
    ============================================================ */
@@ -498,7 +490,6 @@ html[data-theme="light"] .autoai-modal .autoai-detail {
 html[data-theme="light"] .autoai-modal .autoai-detail-text {
     color: #40382F !important;
 }
-
 
 /* ============================================================
    PEDIDO / TEXTO DE RECOMENDACIÓN
@@ -517,7 +508,6 @@ html[data-theme="light"] .autoai-modal .autoai-pedido-text {
     color: #40382F !important;
 }
 
-
 /* ============================================================
    TÍTULOS DE RECOMENDACIONES
    ============================================================ */
@@ -527,7 +517,6 @@ html[data-theme="light"] .autoai-modal .autoai-detail-title,
 html[data-theme="light"] .autoai-modal .autoai-pedido-title {
     color: #8A6500 !important;
 }
-
 
 /* ============================================================
    COMENTARIOS DEL CLIENTE
@@ -554,7 +543,6 @@ html[data-theme="light"] .autoai-modal .autoai-client-comment-response p {
     color: #40382F !important;
 }
 
-
 /* ============================================================
    BOTÓN CERRAR
    ============================================================ */
@@ -575,7 +563,6 @@ html[data-theme="light"] .autoai-modal .autoai-btn-cerrar:hover {
     color: #2B241E !important;
 }
 
-
 /* ============================================================
    BOTÓN X DEL ENCABEZADO
    ============================================================ */
@@ -584,7 +571,6 @@ html[data-theme="light"] .autoai-modal .btn-close {
     opacity: .7 !important;
     filter: none !important;
 }
-
 
 /* ============================================================
    ALERTAS INTERNAS
@@ -602,7 +588,103 @@ html[data-theme="light"] .autoai-modal .alert {
 html[data-theme="light"] .autoai-modal .alert * {
     color: #40382F !important;
 }
-    </style>
+
+        /* Acabado plateado exclusivo del análisis AutoAI */
+        .autoai-modal {
+            background: #17191d !important;
+            color: #eef0f3 !important;
+            border: 1px solid rgba(192, 200, 210, .42) !important;
+        }
+        .autoai-modal .modal-header {
+            background: linear-gradient(135deg, #252a31, #343b45) !important;
+            border-bottom: 1px solid rgba(192, 200, 210, .30) !important;
+        }
+        .autoai-modal .modal-footer {
+            background: #252a31 !important;
+            border-top: 1px solid rgba(192, 200, 210, .30) !important;
+        }
+        .autoai-modal .modal-body { background: #17191d !important; color: #eef0f3 !important; }
+        .autoai-modal .modal-title,
+        .autoai-modal h6, .autoai-modal h5, .autoai-modal strong,
+        .autoai-modal .autoai-label, .autoai-modal .autoai-section-title,
+        .autoai-modal .autoai-recomendacion-title,
+        .autoai-modal .autoai-detail-title, .autoai-modal .autoai-pedido-title {
+            color: #d9dee5 !important;
+        }
+        .autoai-modal .autoai-info-item,
+        .autoai-modal .autoai-section,
+        .autoai-modal .autoai-recomendacion,
+        .autoai-modal .autoai-detail,
+        .autoai-modal .autoai-pedido,
+        .autoai-modal .autoai-client-comment {
+            background: #242930 !important;
+            border-color: rgba(192, 200, 210, .25) !important;
+        }
+        .autoai-modal .autoai-btn-cerrar,
+        .autoai-modal .btn-close { filter: none; }
+        .autoai-modal .autoai-btn-cerrar {
+            background: linear-gradient(135deg, #d8dde4, #aeb7c2) !important;
+            color: #17191d !important;
+            border: 1px solid #e5e9ee !important;
+        }
+        html[data-theme="light"] .autoai-modal {
+            background: #fff !important; color: #252a31 !important;
+            border-color: #c5ccd5 !important;
+        }
+        html[data-theme="light"] .autoai-modal .modal-header,
+        html[data-theme="light"] .autoai-modal .modal-footer {
+            background: #e9edf2 !important; border-color: #c5ccd5 !important;
+        }
+        html[data-theme="light"] .autoai-modal .modal-body { background: #fff !important; color: #252a31 !important; }
+        html[data-theme="light"] .autoai-modal .modal-title,
+        html[data-theme="light"] .autoai-modal h6, html[data-theme="light"] .autoai-modal h5,
+        html[data-theme="light"] .autoai-modal strong,
+        html[data-theme="light"] .autoai-modal .autoai-label,
+        html[data-theme="light"] .autoai-modal .autoai-section-title,
+        html[data-theme="light"] .autoai-modal .autoai-recomendacion-title,
+        html[data-theme="light"] .autoai-modal .autoai-detail-title,
+        html[data-theme="light"] .autoai-modal .autoai-pedido-title { color: #46505d !important; }
+        html[data-theme="light"] .autoai-modal .autoai-info-item,
+        html[data-theme="light"] .autoai-modal .autoai-section,
+        html[data-theme="light"] .autoai-modal .autoai-recomendacion,
+        html[data-theme="light"] .autoai-modal .autoai-detail,
+        html[data-theme="light"] .autoai-modal .autoai-pedido,
+        html[data-theme="light"] .autoai-modal .autoai-client-comment {
+            background: #f3f5f7 !important; border-color: #d5dbe2 !important;
+        }
+        .jornada-aviso {
+            display:flex; align-items:flex-start; gap:1rem; padding:1.1rem 1.25rem;
+            margin:0 0 1.5rem; border:1px solid #aeb7c2; border-radius:16px;
+            background:linear-gradient(135deg, rgba(192,200,210,.17), rgba(120,130,145,.08));
+            color:var(--color-texto, #f3f4f6);
+        }
+        .jornada-aviso-icono { font-size:1.8rem; color:#c5ccd5; line-height:1; }
+        .jornada-aviso p { margin:.25rem 0; }
+        .jornada-aviso small { color:var(--color-texto-secundario, #aeb7c2); }
+        .jornada-descanso { border-color:#aeb7c2; }
+        .jornada-no-laboral { border-color:#8793a2; }
+        @media (max-width: 767.98px) {
+            .navbar-custom .container > .d-flex { align-items:flex-start !important; }
+            .navbar-custom .d-flex.align-items-center.gap-2 { width:100%; justify-content:flex-start; }
+            .nav-btn, .btn-logout-custom { font-size:.82rem; padding:.55rem .75rem; }
+            .container.py-4 { padding-left: .85rem !important; padding-right: .85rem !important; }
+            .autoai-info-grid { grid-template-columns:1fr !important; }
+            .autoai-modal .modal-dialog { margin:.5rem; }
+            .autoai-modal .modal-body { padding:1rem !important; max-height:70vh; overflow-y:auto; }
+            .jornada-aviso { padding:1rem; }
+            .table-responsive { font-size:.85rem; }
+        }
+        @media (max-width: 575.98px) {
+            .stat-card { min-height:118px !important; }
+            .stat-card h2 { font-size:1.5rem; }
+            .modal-dialog { margin:.5rem; }
+            .modal-content { border-radius:14px; }
+            .modal-footer { flex-wrap:wrap; }
+            .modal-footer > * { flex:1 1 auto; }
+            .cita-acciones { width:100%; }
+            .cita-acciones > * { justify-content:flex-start !important; }
+        }
+\n    </style>
 </head>
 <body class="tema-barbero">
 
@@ -614,6 +696,7 @@ html[data-theme="light"] .autoai-modal .alert * {
     <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
 </div>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
+                    {% if not es_dia_descanso_hoy %}
                     <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
                         <i class="bi bi-bell"></i>
                         {% if notificaciones_no_leidas %}
@@ -635,6 +718,7 @@ html[data-theme="light"] .autoai-modal .alert * {
     aria-label="Cambiar tema">
     <i class="bi bi-moon-fill"></i>
 </button>
+                    {% endif %}
                     <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
@@ -678,6 +762,21 @@ html[data-theme="light"] .autoai-modal .alert * {
             </div>
         </div>
 
+        {% if mensaje_jornada_hoy %}
+        <section class="jornada-aviso {% if es_dia_descanso_hoy %}jornada-descanso{% else %}jornada-no-laboral{% endif %}"
+                 role="status" aria-live="polite">
+            <span class="jornada-aviso-icono" aria-hidden="true">
+                <i class="bi {% if es_dia_descanso_hoy %}bi-cup-hot-fill{% else %}bi-calendar-minus{% endif %}"></i>
+            </span>
+            <div>
+                <strong>{% if es_dia_descanso_hoy %}¡Hoy es tu día libre!{% else %}Hoy no tienes jornada asignada{% endif %}</strong>
+                <p>{{ mensaje_jornada_hoy }}</p>
+                <small>Por ser tu día de descanso, todas las funciones del panel están bloqueadas. No puedes consultar ni gestionar citas ni modificar tu perfil hoy. Tus citas permanecen guardadas.</small>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if not es_dia_descanso_hoy %}
         <!-- CONEXIÓN CON GOOGLE CALENDAR -->
         <div class="aviso-google-calendar d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
@@ -808,6 +907,8 @@ html[data-theme="light"] .autoai-modal .alert * {
                         </span>
                         {% if cita.adicionales and cita.adicionales != 'Ninguno' %}
                         <span class="cita-extra"><i class="bi bi-plus-circle"></i> {{ cita.adicionales }}</span>
+                        {% elif es_dia_no_laboral_hoy and cita.estado in "Pendiente,Confirmada" %}
+                            <span class="badge bg-secondary">Acciones bloqueadas por descanso</span>
                         {% endif %}
                     </div>
                     <div class="cita-acciones">
@@ -826,20 +927,22 @@ html[data-theme="light"] .autoai-modal .alert * {
                                 <i class="bi bi-stars"></i> AutoAI
                             </button>
                             {% endif %}
-                            {% if cita.estado == "Pendiente" %}
+                            {% if not es_dia_no_laboral_hoy and cita.estado == "Pendiente" %}
                             <a href="{% url 'barberos:confirmar_cita' cita.id %}" class="btn btn-success btn-sm" data-confirmar="¿Confirmar esta cita?" data-confirmar-titulo="Confirmar cita" data-confirmar-boton="Sí, confirmar">
                                 <i class="bi bi-check-circle"></i> Confirmar
                             </a>
                             <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
-                            {% elif cita.estado == "Confirmada" %}
+                            {% elif not es_dia_no_laboral_hoy and cita.estado == "Confirmada" %}
                             <a href="{% url 'barberos:finalizar_cita' cita.id %}" class="btn btn-info btn-sm" data-confirmar="¿Finalizar esta cita?" data-confirmar-titulo="Finalizar cita" data-confirmar-boton="Sí, finalizar">
                                 <i class="bi bi-flag-fill"></i> Finalizar
                             </a>
                             <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
+                            {% elif es_dia_no_laboral_hoy and cita.estado == "Pendiente" or es_dia_no_laboral_hoy and cita.estado == "Confirmada" %}
+                            <span class="badge bg-secondary">Acciones bloqueadas por descanso</span>
                             {% endif %}
                         </div>
                     </div>
@@ -872,7 +975,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                 </button>
             </div>
 
-
             <!-- CONTENIDO -->
             <div class="modal-body">
 
@@ -888,7 +990,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                     </p>
                 </div>
 
-
                 <!-- SERVICIO -->
                 <div class="mb-4">
                     <h6>
@@ -900,7 +1001,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                         {{ cita.servicio.nombre }}
                     </p>
                 </div>
-
 
                 <!-- OBSERVACIONES -->
                 {% if cita.analisis_ia.observaciones %}
@@ -928,7 +1028,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                 {% endif %}
 
-
                 <!-- RECOMENDACIONES -->
                 {% if cita.analisis_ia.recomendaciones %}
 
@@ -938,7 +1037,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                         <i class="bi bi-stars"></i>
                         Recomendaciones de corte
                     </h6>
-
 
                     {% for recomendacion in cita.analisis_ia.recomendaciones %}
 
@@ -951,7 +1049,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                                 <i class="bi bi-scissors"></i>
                                 {{ recomendacion.nombre }}
                             </h5>
-
 
                             <!-- MOTIVO -->
                             {% if recomendacion.motivo %}
@@ -971,7 +1068,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                             {% endif %}
 
-
                             <!-- MANTENIMIENTO -->
                             {% if recomendacion.mantenimiento %}
 
@@ -989,7 +1085,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                             </div>
 
                             {% endif %}
-
 
                             <!-- CÓMO PEDÍRSELO AL BARBERO -->
                             {% if recomendacion.pedido_barbero %}
@@ -1019,7 +1114,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                 {% endif %}
 
-
                 <!-- MANTENIMIENTO GENERAL -->
                 {% if cita.analisis_ia.mantenimiento %}
 
@@ -1040,7 +1134,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                 {% endif %}
 
-
                 <!-- CÓMO PEDIRLO -->
                 {% if cita.analisis_ia.como_pedirlo %}
 
@@ -1060,7 +1153,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                 </div>
 
                 {% endif %}
-
 
                 <!-- COMENTARIOS DEL CLIENTE A AUTOAI -->
                 {% if cita.analisis_ia.comentarios_cliente %}
@@ -1106,7 +1198,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
 {% endif %}
 
-
                 <!-- DISCLAIMER -->
                 {% if cita.analisis_ia.disclaimer %}
 
@@ -1122,7 +1213,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                 {% endif %}
 
             </div>
-
 
             <!-- PIE -->
             <div class="modal-footer">
@@ -1211,10 +1301,10 @@ html[data-theme="light"] .autoai-modal .alert * {
 
     </div> <!-- cierre contenedor de la sección -->
 
-    </div> <!-- /.container py-4: faltaba este cierre; el modal terminaba
-                anidado dentro del contenedor en vez de ser independiente,
-                lo que rompía el ancho responsive de la página -->
+        {% endif %} {# En descanso solo se muestra el aviso; el resto del panel queda oculto. #}
+    </div> <!-- /.container py-4 -->
 
+    {% if not es_dia_descanso_hoy %}
     <!-- El modal va fuera del contenedor -->
     <div
         class="modal fade"
@@ -1244,7 +1334,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                 </div>
 
-
                 <div class="modal-body text-center py-4">
 
                     <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3 d-inline-block"></i>
@@ -1260,7 +1349,6 @@ html[data-theme="light"] .autoai-modal .alert * {
 
                 </div>
 
-
                 <div class="modal-footer modal-footer-custom">
 
                     <button
@@ -1271,7 +1359,6 @@ html[data-theme="light"] .autoai-modal .alert * {
                         Cancelar
 
                     </button>
-
 
                     <form
                         method="POST"
@@ -1298,7 +1385,7 @@ html[data-theme="light"] .autoai-modal .alert * {
         </div>
 
     </div>
-
+    {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

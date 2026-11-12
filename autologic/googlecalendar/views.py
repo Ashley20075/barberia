@@ -128,7 +128,7 @@ def _guardar_cuenta_google(usuario, credenciales, email_google):
 def _redirigir_segun_rol(usuario):
     if usuario.is_superuser:
         return redirect("administracion:panel_admin")
-    if Barbero.objects.filter(email=usuario.email, activo=True).exists():
+    if Barbero.objects.filter(email=usuario.email, activo=True, es_barbero=True).exists():
         return redirect("barberos:panel_barbero")
     return redirect("panel_cliente")
 

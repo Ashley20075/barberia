@@ -5,7 +5,6 @@ from django.contrib.auth.models import User, Group
 from citas.models import Cita, Servicio
 from clientes.models import Cliente
 from clientes.verificacion import enviar_correo_confirmacion
-from clientes.views import CorreoNoEntregado
 from barberos.models import Barbero
 from inventario.models import Producto
 from inventario.utils import registrar_movimiento
@@ -74,8 +73,12 @@ def panel_admin(request):
     usuarios = User.objects.all()
     clientes = Cliente.objects.all()
     grupo_barberos, _ = Group.objects.get_or_create(name='Barberos')
-    cantidad_barberos = User.objects.filter(groups=grupo_barberos).count()
-    barberos = Barbero.objects.all()
+    # La tabla administrativa conserva perfiles activos e inactivos para poder
+    # editar/reactivar sin perder el historial ni las citas asignadas.
+    barberos = Barbero.objects.filter(es_barbero=True).order_by('nombre')
+    # La fuente real del rol es el perfil Barbero, no cualquier grupo Django.
+    barbero_emails = {email.lower() for email in Barbero.objects.filter(es_barbero=True).exclude(email='').values_list('email', flat=True)}
+    cantidad_barberos = barberos.count()
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
     
@@ -111,6 +114,7 @@ def panel_admin(request):
         'productos': productos,
         'sitio': Sitio.obtener(),
         'cantidad_barberos': cantidad_barberos,
+        'barbero_emails': barbero_emails,
         "total_citas": total_citas,
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
         "notificaciones_no_leidas": Notificacion.objects.filter(usuario=request.user, leida=False).count(),
@@ -432,82 +436,98 @@ def asignar_barbero(request, id):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
+    if request.method != 'POST':
+        return redirect('administracion:panel_admin')
 
     user = get_object_or_404(User, id=id)
     cliente = Cliente.objects.filter(user=user).first()
-
-    if Barbero.objects.filter(email=user.email).exists():
-        messages.warning(request, f'⚠️ El usuario "{user.username}" ya es barbero.')
-        return redirect('administracion:panel_admin')
-
-    # Las cuentas creadas con "Continuar con Google" no traen cédula
-    # (Google no la conoce), así que el modal "Hacer barbero" del panel
-    # deja completarla aquí en vez de bloquear la acción.
     cedula = (request.POST.get('cedula') or (cliente.cedula if cliente else '') or '').strip()
     telefono = (request.POST.get('telefono') or (cliente.telefono if cliente else '') or '').strip()
-    especialidad = (request.POST.get('especialidad') or 'General').strip()
+    especialidad = (request.POST.get('especialidad') or 'General').strip() or 'General'
 
+    if not user.email:
+        messages.error(request, 'No se puede asignar el rol de barbero porque la cuenta no tiene correo electrónico.')
+        return redirect('administracion:panel_admin')
     if not cedula:
-        messages.error(
-            request,
-            f'❌ Para hacer barbero a "{user.username}" primero debes ingresar su cédula '
-            'en el formulario de "Hacer barbero".'
-        )
+        messages.error(request, 'Ingresa la cédula para convertir esta cuenta en barbero.')
         return redirect('administracion:panel_admin')
 
-    if Barbero.objects.filter(cedula=cedula).exists():
-        messages.warning(request, '⚠️ Ya existe un barbero registrado con esa cédula.')
-        return redirect('administracion:panel_admin')
+    try:
+        with transaction.atomic():
+            barbero = Barbero.objects.filter(email__iexact=user.email).first()
+            if Barbero.objects.filter(cedula=cedula).exclude(pk=barbero.pk if barbero else None).exists():
+                messages.error(request, 'Esa cédula ya está registrada en otro barbero.')
+                return redirect('administracion:panel_admin')
+            if Cliente.objects.filter(cedula=cedula).exclude(user=user).exists():
+                messages.error(request, 'Esa cédula ya está asociada a otro cliente.')
+                return redirect('administracion:panel_admin')
 
-    # Solo tocamos el grupo/rol una vez que TODAS las validaciones pasaron,
-    # para no dejar al usuario marcado como "Barbero" sin un registro
-    # de Barbero real detrás (eso pasaba antes: el grupo se asignaba
-    # primero y las validaciones podían fallar después).
-    grupo, _ = Group.objects.get_or_create(name='Barberos')
-    user.groups.add(grupo)
+            nombre = ((cliente.nombre.strip() if cliente else '') or user.get_full_name().strip() or user.username)
+            if barbero:
+                # Si ya existía un perfil inactivo, se reactiva y sincroniza; no se duplica.
+                barbero.nombre = nombre
+                barbero.cedula = cedula
+                barbero.telefono = telefono or barbero.telefono
+                barbero.especialidad = especialidad
+                barbero.activo = True
+                barbero.es_barbero = True
+                barbero.save()
+            else:
+                Barbero.objects.create(
+                    nombre=nombre, cedula=cedula, telefono=telefono,
+                    email=user.email, especialidad=especialidad, activo=True,
+                    jornada_inicio='08:00', jornada_fin='18:00', duracion_cita=30,
+                    dias_laborales='LUN,MAR,MIE,JUE,VIE,SAB', dia_descanso='DOM',
+                    tiempo_entre_citas=15,
+                )
 
-    # Aprovechamos para completar los datos del cliente si le faltaban
-    if cliente:
-        cambios = False
-        if not cliente.cedula:
-            cliente.cedula = cedula
-            cambios = True
-        if telefono and not cliente.telefono:
-            cliente.telefono = telefono
-            cambios = True
-        if cambios:
-            cliente.save()
-
-    Barbero.objects.create(
-        nombre=cliente.nombre if cliente else (user.get_full_name() or user.username),
-        cedula=cedula,
-        telefono=telefono,
-        email=user.email,
-        especialidad=especialidad,
-        activo=True,
-        jornada_inicio='08:00',
-        jornada_fin='18:00',
-        duracion_cita=30,
-        dias_laborales='LUN,MAR,MIE,JUE,VIE,SAB',
-        dia_descanso='DOM',
-        tiempo_entre_citas=15
-    )
-
-    messages.success(request, f'✅ Usuario "{user.username}" ahora es barbero.')
+            grupo, _ = Group.objects.get_or_create(name='Barberos')
+            user.groups.add(grupo)
+            if cliente:
+                cambios = False
+                if cliente.cedula != cedula:
+                    cliente.cedula = cedula
+                    cambios = True
+                if telefono and cliente.telefono != telefono:
+                    cliente.telefono = telefono
+                    cambios = True
+                if cambios:
+                    cliente.save()
+        messages.success(request, f'¡Listo! {user.username} aparece en la tabla de barberos y puede ingresar como barbero.')
+    except IntegrityError:
+        messages.error(request, 'No se pudo asignar el rol: la cédula ya está registrada en otro perfil.')
+    except Exception as exc:
+        messages.error(request, f'No se pudo convertir la cuenta en barbero: {exc}')
     return redirect('administracion:panel_admin')
 
 @login_required
 def quitar_barbero(request, id):
+    """Quita el rol de barbero al usuario sin borrar la cuenta ni las citas."""
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
-    
-    user = get_object_or_404(User, id=id)
-    grupo = Group.objects.get(name='Barberos')
-    user.groups.remove(grupo)
-    Barbero.objects.filter(email=user.email).delete()
-    
-    messages.success(request, f'✅ Usuario "{user.username}" ya no es barbero.')
+    if request.method != 'POST':
+        return redirect('administracion:panel_admin')
+
+    usuario = get_object_or_404(User, id=id)
+    perfil = Barbero.objects.filter(email__iexact=usuario.email, es_barbero=True).first()
+    if perfil is None:
+        messages.error(request, 'Este usuario no tiene actualmente el rol de barbero.')
+        return redirect('administracion:panel_admin')
+
+    with transaction.atomic():
+        perfil.es_barbero = False
+        perfil.activo = False
+        perfil.save(update_fields=['es_barbero', 'activo'])
+        grupo = Group.objects.filter(name='Barberos').first()
+        if grupo:
+            usuario.groups.remove(grupo)
+
+    # La cuenta sigue activa y puede continuar usando el sistema como cliente.
+    messages.success(
+        request,
+        f'El rol de barbero de "{perfil.nombre}" fue retirado. Su cuenta y sus citas anteriores se conservaron.'
+    )
     return redirect('administracion:panel_admin')
 
 @login_required
@@ -518,8 +538,10 @@ def desactivar_usuario(request, id):
     
     usuario = get_object_or_404(User, id=id)
     usuario.is_active = False
-    usuario.save()
-    messages.success(request, f'✅ El usuario "{usuario.username}" fue desactivado.')
+    usuario.save(update_fields=['is_active'])
+    # Ocultarlo de la tabla operativa de barberos sin borrar sus datos ni citas.
+    Barbero.objects.filter(email__iexact=usuario.email).update(activo=False)
+    messages.success(request, f'✅ El usuario "{usuario.username}" fue desactivado. Su perfil permanece en la tabla administrativa como inactivo y sus citas se conservan.')
     return redirect('administracion:panel_admin')
 
 @login_required
@@ -534,7 +556,8 @@ def activar_usuario(request, id):
     # NO puede activarse manualmente. Debe abrir primero el enlace enviado
     # al correo; ese enlace es el que confirma que la dirección existe.
     cliente = Cliente.objects.filter(user=usuario).first()
-    if cliente is not None and not cliente.correo_confirmado:
+    perfil_barbero = Barbero.objects.filter(email__iexact=usuario.email, es_barbero=True).first()
+    if cliente is not None and not cliente.correo_confirmado and perfil_barbero is None:
         messages.error(
             request,
             f'⚠️ El usuario "{usuario.username}" todavía no ha confirmado su correo. '
@@ -544,6 +567,8 @@ def activar_usuario(request, id):
 
     usuario.is_active = True
     usuario.save(update_fields=['is_active'])
+    # Al reactivar la cuenta, recuperar también su perfil de barbero si existe.
+    Barbero.objects.filter(email__iexact=usuario.email, es_barbero=True).update(activo=True)
     messages.success(request, f'✅ El usuario "{usuario.username}" fue activado.')
     return redirect('administracion:panel_admin')
 
@@ -552,81 +577,91 @@ def crear_usuario(request):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
-    
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
-        cedula = request.POST.get('cedula')
-        telefono = request.POST.get('telefono')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        
-        if password != confirm_password:
-            messages.error(request, '❌ Las contraseñas no coinciden')
-            return redirect('administracion:panel_admin')
-        
-        if User.objects.filter(email=email).exists():
-            messages.error(request, '❌ Este correo ya está registrado')
-            return redirect('administracion:panel_admin')
-        
-        if Cliente.objects.filter(cedula=cedula).exists():
-            messages.error(request, '❌ La cédula ya está registrada')
-            return redirect('administracion:panel_admin')
 
-        try:
-            with transaction.atomic():
-                # Igual que en el autorregistro: la cuenta nace
-                # desactivada y solo se activa cuando la persona abre
-                # el enlace que le llega por correo. Antes, un usuario
-                # creado desde acá quedaba activo de una y nunca
-                # confirmaba que ese correo existiera de verdad.
-                user = User.objects.create_user(
-                    username=email,
-                    email=email,
-                    password=password,
-                    first_name=nombre,
-                    last_name=apellido,
-                    is_active=False,
-                )
-                Cliente.objects.create(
-                    user=user,
-                    nombre=f"{nombre} {apellido}",
-                    cedula=cedula,
-                    telefono=telefono,
-                    email=email,
-                    correo_confirmado=False,
-                )
-
-                enviado = enviar_correo_confirmacion(request, user)
-
-                if not enviado:
-                    raise CorreoNoEntregado(email)
-
-            messages.success(
-                request,
-                '✅ Usuario "%s %s" creado. Le enviamos un correo a %s para '
-                'que confirme la cuenta antes de poder iniciar sesión.'
-                % (nombre, apellido, email)
-            )
-
-        except CorreoNoEntregado:
-            messages.error(
-                request,
-                '❌ No pudimos enviar el correo de confirmación a "%s". '
-                'Revisa la configuración SMTP y vuelve a intentarlo.' % email
-            )
-
-        except IntegrityError:
-            messages.error(
-                request,
-                '❌ Ya existe una cuenta con ese correo o esa cédula.'
-            )
-
-        except Exception:
-            messages.error(request, '❌ No se pudo crear el usuario. Intentá de nuevo.')
-
+    if request.method != 'POST':
         return redirect('administracion:panel_admin')
+
+    nombre = request.POST.get('nombre', '').strip()
+    apellido = request.POST.get('apellido', '').strip()
+    cedula = request.POST.get('cedula', '').strip()
+    telefono = request.POST.get('telefono', '').strip()
+    email = request.POST.get('email', '').strip().lower()
+    password = request.POST.get('password', '')
+    confirm_password = request.POST.get('confirm_password', '')
+
+    if not all([nombre, apellido, cedula, telefono, email, password]):
+        messages.error(request, 'Completa todos los campos obligatorios.')
+        return redirect('administracion:panel_admin')
+    if password != confirm_password:
+        messages.error(request, '❌ Las contraseñas no coinciden.')
+        return redirect('administracion:panel_admin')
+    usuario_existente = User.objects.filter(email__iexact=email).first()
+    if usuario_existente is None:
+        usuario_existente = User.objects.filter(username__iexact=email).first()
+    if usuario_existente is not None:
+        cliente_existente = Cliente.objects.filter(user=usuario_existente).first()
+        if cliente_existente is not None and not cliente_existente.correo_confirmado and not usuario_existente.is_active:
+            enviado = enviar_correo_confirmacion(request, usuario_existente)
+            if enviado:
+                messages.success(
+                    request,
+                    f'La cuenta de {usuario_existente.get_full_name() or usuario_existente.username} ya estaba creada. '
+                    f'Reenviamos el enlace de confirmación a {usuario_existente.email}.'
+                )
+            else:
+                messages.success(request, 'La cuenta ya estaba creada y continúa pendiente de confirmación.')
+                messages.warning(request, 'No pudimos reenviar el correo. Revisa la conexión SMTP e inténtalo de nuevo.')
+        else:
+            messages.error(request, '❌ Este correo ya está asociado a una cuenta activa.')
+        return redirect('administracion:panel_admin')
+    if Cliente.objects.filter(cedula=cedula).exists():
+        messages.error(request, '❌ La cédula ya está registrada.')
+        return redirect('administracion:panel_admin')
+
+    try:
+        with transaction.atomic():
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=nombre,
+                last_name=apellido,
+                is_active=False,
+            )
+            Cliente.objects.create(
+                user=user,
+                nombre=f'{nombre} {apellido}',
+                cedula=cedula,
+                telefono=telefono,
+                email=email,
+                correo_confirmado=False,
+            )
+    except IntegrityError:
+        messages.error(request, '❌ Ya existe una cuenta con ese correo o esa cédula.')
+        return redirect('administracion:panel_admin')
+    except Exception:
+        messages.error(request, '❌ No se pudo crear el usuario. Inténtalo de nuevo.')
+        return redirect('administracion:panel_admin')
+
+    # La cuenta ya quedó creada y guardada. El correo se envía después,
+    # sin revertir la cuenta si Gmail tiene una caída o rechaza el envío.
+    enviado = enviar_correo_confirmacion(request, user)
+    if enviado:
+        messages.success(
+            request,
+            f'✅ ¡Cuenta creada con éxito! {nombre} {apellido} ya está registrado. '
+            f'Enviamos el enlace de confirmación a {email}.'
+        )
+    else:
+        messages.success(
+            request,
+            f'✅ ¡Cuenta creada con éxito! {nombre} {apellido} ya está registrado. '
+            'La cuenta quedó pendiente de confirmar el correo.'
+        )
+        messages.warning(
+            request,
+            f'No pudimos enviar el correo a {email}. Revisa el SMTP y vuelve a enviar la confirmación.'
+        )
     return redirect('administracion:panel_admin')
 
 @login_required
@@ -738,7 +773,7 @@ def horarios_disponibles_editar(request):
         })
 
     try:
-        barbero = Barbero.objects.get(id=barbero_id)
+        barbero = Barbero.objects.get(id=barbero_id, activo=True, es_barbero=True)
         servicio = Servicio.objects.get(id=servicio_id)
         fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
     except (Barbero.DoesNotExist, Servicio.DoesNotExist, ValueError):
@@ -844,6 +879,15 @@ def agregar_barbero(request):
                 messages.error(request, f'❌ El email "{email}" ya está registrado.')
                 return redirect('administracion:panel_admin')
             
+            dias_validos = {codigo for codigo, _ in Barbero.DIAS_SEMANA}
+            dia_descanso = request.POST.get('dia_descanso', 'DOM').strip().upper()
+            if dia_descanso not in dias_validos:
+                raise ValueError('Selecciona un día de descanso válido.')
+            dias_seleccionados = [
+                codigo for codigo, _ in Barbero.DIAS_SEMANA
+                if codigo != dia_descanso
+            ]
+
             barbero = Barbero.objects.create(
                 nombre=request.POST.get('nombre'),
                 cedula=cedula,
@@ -854,8 +898,8 @@ def agregar_barbero(request):
                 jornada_inicio=request.POST.get('jornada_inicio', '08:00'),
                 jornada_fin=request.POST.get('jornada_fin', '18:00'),
                 duracion_cita=int(request.POST.get('duracion_cita', 30)),
-                dias_laborales=request.POST.get('dias_laborales', 'LUN,MAR,MIE,JUE,VIE,SAB'),
-                dia_descanso=request.POST.get('dia_descanso', 'DOM'),
+                dias_laborales=','.join(dias_seleccionados),
+                dia_descanso=dia_descanso,
                 tiempo_entre_citas=int(request.POST.get('tiempo_entre_citas', 15)),
                 imagen_url=request.POST.get('imagen_url', '').strip(),
                 calificacion=request.POST.get('calificacion', '5.0') or '5.0',
@@ -864,7 +908,16 @@ def agregar_barbero(request):
                 facebook=request.POST.get('facebook', '').strip(),
                 whatsapp=request.POST.get('whatsapp', '').strip()
             )
-            messages.success(request, f'✅ Barbero "{barbero.nombre}" agregado correctamente.')
+            # Si el correo ya pertenece a una cuenta, vincular automáticamente
+            # esa cuenta con el rol de barbero para que pueda iniciar sesión.
+            usuario = User.objects.filter(email__iexact=barbero.email).first()
+            if usuario:
+                grupo, _ = Group.objects.get_or_create(name='Barberos')
+                usuario.groups.add(grupo)
+            messages.success(request, f'✅ Barbero "{barbero.nombre}" agregado correctamente.' + (
+                ' Su cuenta de usuario quedó vinculada.' if usuario else
+                ' Para iniciar sesión necesitará una cuenta de usuario con ese correo.'
+            ))
         except Exception as e:
             messages.error(request, f'❌ Error: {e}')
         return redirect('administracion:panel_admin')
@@ -911,16 +964,15 @@ def editar_barbero(request, id):
             except ValueError:
                 barbero.tiempo_entre_citas = 15
             
-            barbero.dia_descanso = request.POST.get('dia_descanso', 'DOM')
-            
-            # Días laborales
-            dias_laborales = request.POST.getlist('dias_laborales')
-            
-            if dias_laborales:
-                dias_limpios = [d.strip() for d in dias_laborales if d.strip()]
-                barbero.dias_laborales = ','.join(dias_limpios)
-            else:
-                barbero.dias_laborales = 'LUN,MAR,MIE,JUE,VIE,SAB'
+            dias_validos = {codigo for codigo, _ in Barbero.DIAS_SEMANA}
+            dia_descanso = request.POST.get('dia_descanso', 'DOM').strip().upper()
+            if dia_descanso not in dias_validos:
+                raise ValueError('Selecciona un día de descanso válido.')
+            barbero.dia_descanso = dia_descanso
+            barbero.dias_laborales = ','.join(
+                codigo for codigo, _ in Barbero.DIAS_SEMANA
+                if codigo != dia_descanso
+            )
             
             barbero.save()
             messages.success(request, f'✅ Barbero "{barbero.nombre}" actualizado correctamente.')
@@ -931,6 +983,9 @@ def editar_barbero(request, id):
                 '❌ Ese correo o esa cédula ya están en uso por otro barbero.'
             )
 
+        except ValueError as error:
+            messages.error(request, f'❌ {error}')
+
         except Exception:
             messages.error(request, '❌ No se pudo actualizar el barbero. Intentá de nuevo.')
         
@@ -939,16 +994,58 @@ def editar_barbero(request, id):
     return redirect('administracion:panel_admin')
 
 @login_required
-def eliminar_barbero(request, id):
+def cambiar_estado_barbero(request, id):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
         return redirect('administracion:panel_admin')
-    
-    barbero = get_object_or_404(Barbero, id=id)
-    nombre = barbero.nombre
-    barbero.delete()
-    messages.success(request, f'✅ Barbero "{nombre}" eliminado correctamente.')
+    if request.method != 'POST':
+        return redirect('administracion:panel_admin')
+    barbero = get_object_or_404(Barbero, id=id, es_barbero=True)
+    usuario = User.objects.filter(email__iexact=barbero.email).first()
+    activar = not barbero.activo
+    barbero.activo = activar
+    barbero.save(update_fields=['activo'])
+    if usuario:
+        usuario.is_active = activar
+        usuario.save(update_fields=['is_active'])
+        grupo, _ = Group.objects.get_or_create(name='Barberos')
+        usuario.groups.add(grupo)
+    estado = 'reactivado' if activar else 'desactivado'
+    messages.success(request, f'El barbero {barbero.nombre} fue {estado}. Sus citas e historial permanecen guardados.')
     return redirect('administracion:panel_admin')
+
+
+@login_required
+def eliminar_barbero(request, id):
+    """Eliminación lógica de la cuenta del barbero: bloquea acceso y retira el rol,
+    pero conserva el usuario, el perfil histórico y todas las citas relacionadas.
+    No se usa User.delete() porque podría borrar en cascada el perfil de cliente y sus citas.
+    """
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('administracion:panel_admin')
+    if request.method != 'POST':
+        return redirect('administracion:panel_admin')
+
+    perfil = get_object_or_404(Barbero, id=id, es_barbero=True)
+    usuario = User.objects.filter(email__iexact=perfil.email).first()
+    with transaction.atomic():
+        perfil.es_barbero = False
+        perfil.activo = False
+        perfil.save(update_fields=['es_barbero', 'activo'])
+        if usuario:
+            usuario.is_active = False
+            usuario.save(update_fields=['is_active'])
+            grupo = Group.objects.filter(name='Barberos').first()
+            if grupo:
+                usuario.groups.remove(grupo)
+
+    messages.success(
+        request,
+        f'La cuenta de "{perfil.nombre}" fue retirada del sistema. Se bloqueó su acceso y se conservaron las citas y el historial.'
+    )
+    return redirect('administracion:panel_admin')
+
 
 @login_required
 def agregar_producto(request):
@@ -1449,7 +1546,7 @@ def agendar_cita_admin(request):
 
         # -------------------------------------------------- Resto de datos
         try:
-            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True)
+            barbero = Barbero.objects.get(id=request.POST.get("barbero"), activo=True, es_barbero=True)
             servicio = Servicio.objects.get(id=request.POST.get("servicio"))
             duracion_total = int(request.POST.get("duracion_total", 40))
             fecha = request.POST.get("fecha")
@@ -1508,12 +1605,12 @@ def agendar_cita_admin(request):
         # barbero o a un superusuario, para que el desplegable solo
         # muestre clientes de verdad.
         "clientes": Cliente.objects.exclude(
-            email__in=Barbero.objects.values_list("email", flat=True)
+            email__in=Barbero.objects.filter(es_barbero=True).values_list("email", flat=True)
         ).exclude(
             user__is_staff=True
         ).exclude(
             user__is_superuser=True
         ).order_by("nombre"),
-        "barberos": Barbero.objects.filter(activo=True).order_by("nombre"),
+        "barberos": Barbero.objects.filter(activo=True, es_barbero=True).order_by("nombre"),
         "servicios": Servicio.objects.all().order_by("id"),
     })

@@ -53,13 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 })();
 
-
 /* =====================================================
    FUNCIONES CUANDO CARGA LA PÁGINA
 ===================================================== */
 
 document.addEventListener('DOMContentLoaded', function () {
-
 
     /* =================================================
        MENSAJES AUTOMÁTICOS
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-
     /* =================================================
        BOTÓN DE TEMA
     ================================================= */
@@ -106,10 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-
     var icono =
         botonTema.querySelector('i');
-
 
     /* Actualizar icono */
     function actualizarIcono() {
@@ -155,9 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
     actualizarIcono();
-
 
     /* Cambiar tema */
     botonTema.addEventListener(
@@ -167,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var temaActual =
                 document.documentElement
                     .getAttribute('data-theme');
-
 
             if (temaActual === 'light') {
 
@@ -198,14 +190,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             }
 
-
             actualizarIcono();
 
         }
     );
 
 });
-
 
 /* =====================================================
    USABILIDAD: NO PERDER EL LUGAR NI LO ESCRITO
@@ -297,7 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
-
     /* =================================================
        1. GUARDAR SCROLL ANTES DE CAMBIAR DE PAGINA
        -------------------------------------------------
@@ -336,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Se expone para que el modal de confirmacion (mas abajo en este
        mismo archivo) pueda llamarlo justo antes de navegar. */
     window._guardarScrollBarberia = guardarScrollActual;
-
 
     /* =================================================
        2. GUARDAR LO ESCRITO AL ENVIAR UN FORMULARIO
@@ -406,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function () {
             datos: datos
         });
     }, true);
-
 
     /* =================================================
        3. AL CARGAR: RESTAURAR
@@ -521,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 })();
 
-
 /* =====================================================
    MODAL DE CONFIRMACION PROPIO
    -----------------------------------------------------
@@ -628,7 +614,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Se expone por si alguna pantalla necesita llamarlo a mano. */
     window.confirmarAccion = confirmar;
 
-
     /* Intercepta clics en cualquier elemento con data-confirmar. */
     document.addEventListener('click', function (evento) {
 
@@ -706,22 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 })();
 
-
-/* =====================================================
-   MENU HAMBURGUESA PARA LAS NAVBARS DE LOS PANELES
-   -----------------------------------------------------
-   .navbar-custom (barbero, cliente, admin, inventario,
-   cierre de caja, agendar cita...) nunca tuvo colapso
-   para pantallas chicas: todos los botones (campana,
-   usuario, enlaces, tema, cerrar sesion) iban en una
-   sola fila que en el celular se amontonaba, se cortaba
-   o directamente tapaba otros botones al cargar.
-
-   Esto NO toca el HTML de cada plantilla: busca el
-   patron que ya usan todas (marca + fila de botones) y
-   le inyecta un boton de hamburguesa por JS, asi la
-   correccion aplica en todos los paneles a la vez.
-===================================================== */
+/* Menú compacto para las barras de navegación. */
 (function () {
 
     function armarNavbar(nav) {
@@ -757,3 +727,29 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 })();
+
+/* Ajustes para los modales en móvil. */
+document.addEventListener('DOMContentLoaded', function () {
+    if (!window.bootstrap || !window.bootstrap.Modal) return;
+
+    document.querySelectorAll('.modal').forEach(function (modal) {
+        modal.addEventListener('shown.bs.modal', function () {
+            var primerControl = modal.querySelector(
+                'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+            );
+            if (primerControl && window.matchMedia('(max-width: 767.98px)').matches) {
+                modal.setAttribute('data-modal-mobile-ready', 'true');
+            }
+        });
+        modal.addEventListener('hidden.bs.modal', function () {
+            if (!document.querySelector('.modal.show')) {
+                document.body.classList.remove('modal-open');
+                document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+                    backdrop.remove();
+                });
+                document.body.style.removeProperty('padding-right');
+                document.body.style.removeProperty('overflow');
+            }
+        });
+    });
+});

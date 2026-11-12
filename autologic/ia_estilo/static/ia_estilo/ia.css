@@ -86,7 +86,6 @@ body {
     align-items: center;
 }
 
-
 /* =====================================================
    AUTOLOGIC AI - MODO CLARO
 ===================================================== */
@@ -184,7 +183,6 @@ html[data-theme="light"] .ia-card .btn-outline-light:hover {
     color: #212529;
 }
 
-
 /* =====================================================
    AUTOLOGIC AI - MODO OSCURO
 ===================================================== */
@@ -210,7 +208,6 @@ html:not([data-theme="light"]) .ia-disclaimer {
     color: #fff;
 }
 
-
 /* =====================================================
    CORRECCIÓN DE TEXTO EN MODO CLARO
 ===================================================== */
@@ -228,4 +225,38 @@ html[data-theme="light"] .ia-card .text-muted {
 
 html[data-theme="light"] .ia-card .text-white {
     color: #212529 !important;
+}
+
+/* Colores plateados de AutoAI. */
+.ia-badge { border-color: rgba(192, 200, 210, .55); color: #d5dbe3; }
+.upload-zone:hover { border-color: #c5ccd5; background: rgba(192, 200, 210, .08); }
+.recommendation-card { border-left-color: #b8c1cc; }
+.recommendation-card h5 { color: #d5dbe3; }
+html[data-theme="light"] .upload-zone:hover { background: #f1f3f5; border-color: #9ca7b4; }
+html[data-theme="light"] .recommendation-card { border-left-color: #9ca7b4; }
+html[data-theme="light"] .recommendation-card h5 { color: #46505d; }
+.ia-card, .recommendation-card, .upload-zone { transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease; }
+.ia-card :focus-visible, .upload-zone:focus-visible, .ia-card button:focus-visible {
+    outline: 3px solid #b8c1cc; outline-offset: 3px;
+}
+@media (max-width: 767.98px) {
+    .ia-card { padding: 1rem !important; border-radius: 14px; }
+    .upload-zone { padding: 1.6rem 1rem; }
+    .preview-image { max-height: 240px; }
+    .empty-result { min-height: 220px; }
+    .ia-subtitle { max-width: 100%; }
+}
+
+/* Mantener los modales de esta pantalla en tonos plateados. */
+.tema-cliente .text-yellow,
+.tema-cliente .modal-content-custom .modal-title,
+.tema-cliente .modal-content-custom .bi-check-circle-fill {
+    color: #c5ccd5 !important;
+}
+.tema-cliente .modal-content-custom {
+    border: 1px solid rgba(192, 200, 210, .38);
+}
+.tema-cliente .modal-header-custom,
+.tema-cliente .modal-footer-custom {
+    border-color: rgba(192, 200, 210, .3) !important;
 }

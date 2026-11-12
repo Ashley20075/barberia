@@ -72,10 +72,16 @@ def login_view(request):
                 )
             return render(request, 'login.html', datos)
 
-        # Una cuenta de cliente solo puede iniciar sesión si ya confirmó
-        # el correo. Esto mantiene la regla incluso si alguien cambia
-        # is_active manualmente desde otro lugar.
-        if cliente is not None and not cliente.correo_confirmado:
+        # Resolver primero el perfil de barbero. Al convertir una cuenta de
+        # cliente en barbero puede quedar un Cliente asociado sin verificar;
+        # ese estado no debe hacer que el barbero sea tratado como cliente.
+        perfil_barbero = Barbero.objects.filter(email__iexact=usuario.email, es_barbero=True).first()
+        if perfil_barbero is not None and not perfil_barbero.activo:
+            messages.error(request, 'Tu perfil de barbero está desactivado. Comunícate con la administración.')
+            return render(request, 'login.html', datos)
+
+        # La verificación de correo aplica a cuentas que siguen siendo clientes.
+        if perfil_barbero is None and cliente is not None and not cliente.correo_confirmado:
             messages.error(
                 request,
                 '❌ Todavía no has confirmado tu correo. Revisa tu bandeja y abre '
@@ -117,7 +123,7 @@ def login_view(request):
             return redirect('administracion:panel_admin')
 
         # BARBERO (por email en modelo Barbero)
-        if Barbero.objects.filter(email__iexact=user.email, activo=True).exists():
+        if perfil_barbero is not None and perfil_barbero.activo:
             return redirect('barberos:panel_barbero')
 
         # CLIENTE (por defecto)
@@ -164,7 +170,8 @@ def recuperar_contrasena(request):
         barbero = Barbero.objects.filter(
             email__iexact=email,
             cedula=cedula,
-            activo=True
+            activo=True,
+            es_barbero=True
         ).first()
 
         if not cliente and not barbero:

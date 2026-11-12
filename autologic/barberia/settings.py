@@ -33,18 +33,16 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 # el bundle CA que acabamos de fijar para Python 3.14.
 os.environ.pop("SSL_CERT_DIR", None)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#219o@++kpz9i+o+sdaeunt0te@v95h3&i9&dkz+(adsl_l9nu'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-dev-only-change-this-key-before-deploying')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').strip().lower() in ('1', 'true', 'yes', 'on')
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
 
 # Application definition
 
@@ -105,7 +103,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'barberia.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -134,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -145,7 +141,6 @@ TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -193,7 +188,6 @@ GOOGLE_OAUTH_SCOPES = [
 if DEBUG:
     os.environ.setdefault('OAUTHLIB_INSECURE_TRANSPORT', '1')
 
-
 # ===== Mensajes =====
 # Django etiqueta los errores como "error", pero Bootstrap usa "danger".
 # Sin esta traducción, las plantillas que hacen alert-{{ message.tags }}
@@ -208,7 +202,6 @@ MESSAGE_TAGS = {
     messages_constants.WARNING: 'warning',
     messages_constants.ERROR: 'danger',
 }
-
 
 # ===== Correo =====
 # Se usa para el enlace de confirmacion que valida que la direccion de

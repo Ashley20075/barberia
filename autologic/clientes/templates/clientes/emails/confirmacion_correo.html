@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:32px 12px;background:#eef1f4;font-family:Arial,Helvetica,sans-serif;color:#202833;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #d9dee5;border-radius:18px;overflow:hidden;box-shadow:0 12px 35px rgba(25,35,48,.10);">
+    <div style="padding:30px 28px;text-align:center;background:linear-gradient(135deg,#171c24,#343d49);">
+      <div style="display:inline-block;padding:9px 14px;border:1px solid #9da8b5;border-radius:999px;color:#e8edf3;font-size:11px;letter-spacing:3px;text-transform:uppercase;">Barber Springfield</div>
+      <h1 style="margin:18px 0 0;color:#ffffff;font-size:25px;line-height:1.25;font-weight:700;">Tu estilo comienza aquí</h1>
+    </div>
+    <div style="padding:34px 32px 30px;">
+      <p style="margin:0 0 14px;font-size:17px;color:#202833;">Hola <strong>{{ nombre|escape }}</strong>,</p>
+      <p style="margin:0 0 24px;color:#586474;font-size:15px;line-height:1.7;">¡Gracias por registrarte! Solo falta confirmar tu correo para activar tu cuenta y comenzar a disfrutar de Barber Springfield.</p>
+      <div style="padding:22px 18px;text-align:center;background:#f4f6f8;border:1px solid #e0e5eb;border-radius:14px;">
+        <p style="margin:0 0 18px;color:#485464;font-size:14px;line-height:1.6;">Confirma tu dirección de correo haciendo clic en el siguiente botón:</p>
+        <a href="{{ enlace }}" style="display:inline-block;padding:14px 27px;border-radius:999px;background:#303a47;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.3px;">CONFIRMAR MI CUENTA</a>
+      </div>
+      <p style="margin:24px 0 8px;color:#667180;font-size:13px;line-height:1.7;">Este enlace es válido durante <strong>{{ validez_horas }} horas</strong>.</p>
+      <p style="margin:0;color:#8993a0;font-size:12px;line-height:1.7;">Si el botón no funciona, copia y pega este enlace en tu navegador:<br><a href="{{ enlace }}" style="color:#46576b;word-break:break-all;">{{ enlace }}</a></p>
+    </div>
+    <div style="padding:18px 24px;text-align:center;background:#f7f8fa;border-top:1px solid #e5e9ee;">
+      <p style="margin:0;color:#8993a0;font-size:11px;line-height:1.6;">Si no solicitaste esta cuenta, puedes ignorar este mensaje.<br>© Barber Springfield</p>
+    </div>
+  </div>
+</body>
+</html>

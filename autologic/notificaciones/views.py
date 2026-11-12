@@ -14,7 +14,7 @@ from .models import Notificacion, SuscripcionTurno
 def listar_notificaciones(request):
     notificaciones = request.user.notificaciones.all()[:50]
     request.user.notificaciones.filter(leida=False).update(leida=True)
-    es_barbero = Barbero.objects.filter(email=request.user.email, activo=True).exists()
+    es_barbero = Barbero.objects.filter(email=request.user.email, activo=True, es_barbero=True).exists()
     return render(
         request,
         "notificaciones/listar.html",
@@ -68,7 +68,7 @@ def suscribirse_turno(request):
         return JsonResponse({"ok": False, "error": "Fecha inválida."}, status=400)
 
     try:
-        barbero = Barbero.objects.get(id=barbero_id, activo=True)
+        barbero = Barbero.objects.get(id=barbero_id, activo=True, es_barbero=True)
     except Barbero.DoesNotExist:
         return JsonResponse({"ok": False, "error": "Barbero inválido."}, status=404)
 

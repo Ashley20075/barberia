@@ -52,7 +52,7 @@ def panel_cliente(request):
         historial_archivado=False
     ).order_by("-fecha", "-hora")
 
-    barberos = Barbero.objects.filter(activo=True)
+    barberos = Barbero.objects.filter(activo=True, es_barbero=True)
     servicios = Servicio.objects.all()
     productos = Producto.objects.all()
 
@@ -190,7 +190,7 @@ def editar_perfil(request):
             messages.error(request, '❌ No se pudo actualizar el perfil. Intentá de nuevo.')
             return redirect('editar_perfil')
 
-    return render(request, 'editar_perfil.html', {'cliente': cliente})
+    return render(request, 'editar_perfil.html', {'cliente': cliente, 'es_barbero': Barbero.objects.filter(email__iexact=request.user.email, es_barbero=True).exists()})
 
 
 @login_required(login_url='login')
@@ -222,7 +222,8 @@ def agendar_cita(request):
 
             barbero = Barbero.objects.get(
                 id=request.POST.get("barbero"),
-                activo=True
+                activo=True,
+                es_barbero=True
             )
 
             servicio = Servicio.objects.get(
@@ -697,6 +698,11 @@ def logout_view(request):
 def eliminar_cuenta(request):
     if request.method == "POST":
         usuario = request.user
+        # Una cuenta con perfil de barbero no puede autoeliminarse desde
+        # la pantalla compartida de perfil de cliente.
+        if Barbero.objects.filter(email__iexact=usuario.email, es_barbero=True).exists():
+            messages.error(request, 'Los barberos no pueden eliminar su cuenta desde el perfil. Solicita el cambio a administración.')
+            return redirect('barberos:editar_perfil_barbero')
         usuario.delete()
         return redirect("cuenta_eliminada")
 
@@ -722,7 +728,7 @@ def horarios_disponibles(request):
     except ValueError:
         return JsonResponse([], safe=False)
 
-    barbero = get_object_or_404(Barbero, id=barbero_id, activo=True)
+    barbero = get_object_or_404(Barbero, id=barbero_id, activo=True, es_barbero=True)
 
     try:
         duracion = int(request.GET.get("duracion_total"))

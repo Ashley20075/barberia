@@ -28,7 +28,7 @@ def inicio(request):
 
     servicios = Servicio.objects.all().order_by("id")
     sitio = Sitio.obtener()
-    barberos = Barbero.objects.filter(activo=True).order_by("nombre")
+    barberos = Barbero.objects.filter(activo=True, es_barbero=True).order_by("nombre")
 
     return render(request, "index.html", {
         "servicios": servicios,

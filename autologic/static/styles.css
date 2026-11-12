@@ -19,7 +19,6 @@
     --color-navbar: #0B0A08;
 }
 
-
 /* =====================================================
    TEMA CLARO
 ===================================================== */
@@ -625,7 +624,6 @@ h2 {
   margin-top: 1rem;
 }
 
-
 /* ========== TESTIMONIOS ========== */
 .testimonios {
   background-color: #1E1A15;
@@ -1089,8 +1087,6 @@ h2 {
   color: #F5EFE6;
 }
 
-
-
 /* ========== DASHBOARD ADMIN ========== */
 .stat-card {
     background-color: var(--color-fondo-secundario);
@@ -1251,7 +1247,6 @@ h2 {
 .text-light-brown {
     color: var(--color-texto-secundario) !important;
 }
-
 
 /* ========== DASHBOARD CLIENTE ========== */
 
@@ -2090,7 +2085,6 @@ body {
     color: #FFFFFF !important;
 }
 
-
 .table-custom {
     background-color: transparent !important;
     margin-bottom: 0;
@@ -2175,7 +2169,6 @@ body {
     color-scheme: light;
 }
 
-
 /* =========================================================
    BODY Y TEXTOS GENERALES
 ========================================================= */
@@ -2198,7 +2191,6 @@ body {
 [data-theme="light"] li {
     color: var(--color-texto);
 }
-
 
 /* =========================================================
    NAVBAR
@@ -2238,7 +2230,6 @@ body {
     background-color: var(--color-fondo-hover);
     border-color: var(--color-primario);
 }
-
 
 /* =========================================================
    HERO
@@ -2282,7 +2273,6 @@ body {
     border-color: var(--color-primario);
 }
 
-
 /* =========================================================
    SERVICIOS
 ========================================================= */
@@ -2312,7 +2302,6 @@ body {
 [data-theme="light"] .precio {
     color: var(--color-primario-claro);
 }
-
 
 /* =========================================================
    BARBEROS
@@ -2353,7 +2342,6 @@ body {
     color: var(--color-texto-secundario);
 }
 
-
 /* =========================================================
    NOSOTROS
 ========================================================= */
@@ -2385,7 +2373,6 @@ body {
     color: #756454;
 }
 
-
 /* =========================================================
    OPINIONES / TESTIMONIOS
 ========================================================= */
@@ -2406,7 +2393,6 @@ body {
 [data-theme="light"] .card-testimonio h4 {
     color: #8E6912;
 }
-
 
 /* =========================================================
    CTA
@@ -2431,7 +2417,6 @@ body {
     color: #62574D !important;
 }
 
-
 /* =========================================================
    FOOTER
 ========================================================= */
@@ -2453,7 +2438,6 @@ body {
 [data-theme="light"] .copyright {
     border-top-color: var(--color-borde);
 }
-
 
 /* =========================================================
    FORMULARIOS
@@ -2483,7 +2467,6 @@ body {
     border-color: var(--color-primario) !important;
 }
 
-
 /* =========================================================
    MODALES
 ========================================================= */
@@ -2508,7 +2491,6 @@ body {
 [data-theme="light"] .btn-close-white {
     filter: none;
 }
-
 
 /* =========================================================
    DASHBOARDS
@@ -2558,7 +2540,6 @@ body {
     color: #2B241E !important;
 }
 
-
 /* =========================================================
    TABLAS
 ========================================================= */
@@ -2594,7 +2575,6 @@ body {
     --bs-table-color: #2B241E;
 }
 
-
 /* =========================================================
    PAGINACIÓN
 ========================================================= */
@@ -2617,7 +2597,6 @@ body {
     color: #FFFFFF;
 }
 
-
 /* =========================================================
    NOTIFICACIONES
 ========================================================= */
@@ -2633,7 +2612,6 @@ body {
     color: var(--color-primario) !important;
 }
 
-
 /* =========================================================
    BARRA DE ACCIONES
 ========================================================= */
@@ -2647,7 +2625,6 @@ body {
 
     border-bottom-color: var(--color-primario);
 }
-
 
 /* =========================================================
    LOGIN / REGISTRO
@@ -2675,7 +2652,6 @@ body {
     color: var(--color-primario);
 }
 
-
 [data-theme="light"] .btn-secondary {
     background-color: #E5D8C8;
     color: #FFFFFF !important;
@@ -2685,7 +2661,6 @@ body {
     background-color: #D2BFA8;
     color: #FFFFFF !important;
 }
-
 
 /* =========================================================
    TEXTOS SECUNDARIOS
@@ -2728,7 +2703,6 @@ body {
     --bs-table-color: #2B241E;
 }
 
-
 /* Encabezado */
 [data-theme="light"] .table-custom thead th {
     background-color: #F1E8DA !important;
@@ -2736,7 +2710,6 @@ body {
 
     border-bottom: 2px solid #C89418 !important;
 }
-
 
 /* Celdas */
 [data-theme="light"] .table-custom tbody td,
@@ -2748,24 +2721,20 @@ body {
     border-bottom: 1px solid #E0D4C4 !important;
 }
 
-
 /* Filas */
 [data-theme="light"] .table-custom tbody tr {
     background-color: #FFFFFF !important;
 }
-
 
 /* Hover */
 [data-theme="light"] .table-custom tbody tr:hover td {
     background-color: #F5EFE6 !important;
 }
 
-
 /* Texto secundario dentro de las tablas */
 [data-theme="light"] .table-custom .text-light-brown {
     color: #756454 !important;
 }
-
 
 /* Strong */
 [data-theme="light"] .table-custom strong {
@@ -2825,7 +2794,6 @@ body {
     transform: translateY(-1px);
 }
 
-
 /* GOOGLE EN TEMA CLARO */
 
 [data-theme="light"] .btn-google {
@@ -2880,7 +2848,6 @@ body {
     box-shadow: 0 8px 25px rgba(80, 60, 40, 0.10) !important;
 }
 
-
 /* Icono */
 [data-theme="light"] .stat-card .icon-wrapper {
     background: rgba(200, 148, 24, 0.10) !important;
@@ -2890,25 +2857,21 @@ body {
     color: #C89418 !important;
 }
 
-
 /* Título */
 [data-theme="light"] .stat-card h5 {
     color: #756454 !important;
 }
-
 
 /* Número */
 [data-theme="light"] .stat-card h2 {
     color: #8E6912 !important;
 }
 
-
 /* Hover */
 [data-theme="light"] .stat-card:hover {
     background: #FFFFFF !important;
     box-shadow: 0 15px 35px rgba(80, 60, 40, 0.15) !important;
 }
-
 
 /* Animación del icono */
 [data-theme="light"] .stat-card:hover .icon-wrapper {
@@ -2985,7 +2948,6 @@ body {
     box-shadow: 0 6px 20px rgba(80, 60, 40, 0.08) !important;
 }
 
-
 [data-theme="light"] .card-header-custom {
     background-color: #F7F3EC !important;
     color: #6E551D !important;
@@ -3008,12 +2970,10 @@ body {
     font-weight: 600;
 }
 
-
 /* Icono */
 [data-theme="light"] .btn-logout-custom i {
     color: #8A7460 !important;
 }
-
 
 /* Hover */
 [data-theme="light"] .btn-logout-custom:hover {
@@ -3079,7 +3039,6 @@ body {
     border: 1px solid #E0D4C4 !important;
 }
 
-
 /* Encabezado de Inventario - Productos */
 [data-theme="light"] .card-header-custom {
     background-color: #F7F3EC !important;
@@ -3095,20 +3054,17 @@ body {
     color: #C89418 !important;
 }
 
-
 /* Zona interna de la tarjeta */
 [data-theme="light"] .card-custom .card-body,
 [data-theme="light"] .card-custom .table-responsive {
     background-color: #FFFFFF !important;
 }
 
-
 /* Tabla de inventario */
 [data-theme="light"] .card-custom .table-custom {
     background-color: #FFFFFF !important;
     color: #2B241E !important;
 }
-
 
 /* Encabezados de la tabla */
 [data-theme="light"] .card-custom .table-custom thead,
@@ -3118,7 +3074,6 @@ body {
     color: #6E551D !important;
 }
 
-
 /* Filas y celdas */
 [data-theme="light"] .card-custom .table-custom tbody,
 [data-theme="light"] .card-custom .table-custom tbody tr,
@@ -3127,20 +3082,17 @@ body {
     color: #2B241E !important;
 }
 
-
 /* Hover de las filas */
 [data-theme="light"] .card-custom .table-custom tbody tr:hover,
 [data-theme="light"] .card-custom .table-custom tbody tr:hover td {
     background-color: #F5EFE6 !important;
 }
 
-
 /* Bordes */
 [data-theme="light"] .card-custom .table-custom td,
 [data-theme="light"] .card-custom .table-custom th {
     border-color: #E0D4C4 !important;
 }
-
 
 /* Texto cuando no hay registros */
 [data-theme="light"] .card-custom .text-light-brown {
@@ -3158,24 +3110,20 @@ body {
     border-color: #E0D4C4 !important;
 }
 
-
 /* Títulos de los reportes */
 [data-theme="light"] #reportes .text-yellow {
     color: #8E6912 !important;
 }
-
 
 /* Texto secundario */
 [data-theme="light"] #reportes .text-light-brown {
     color: #6B5D50 !important;
 }
 
-
 /* Números importantes */
 [data-theme="light"] #reportes .text-white {
     color: #2B241E !important;
 }
-
 
 /* Bordes */
 [data-theme="light"] #reportes .border-secondary {
@@ -3309,7 +3257,6 @@ body {
     color: #000000 !important;
 }
 
-
 /* =========================================================
    CORRECCIONES DE COHERENCIA VISUAL
    ---------------------------------------------------------
@@ -3383,7 +3330,6 @@ body {
     color: #1A1410 !important;
 }
 
-
 /* =========================================================
    MODAL DE CONFIRMACION COMPARTIDO
    ---------------------------------------------------------
@@ -3434,7 +3380,6 @@ body {
 [data-theme="light"] #modalConfirmar .modal-content {
     background-color: var(--color-fondo-card);
 }
-
 
 /* =========================================================
    CALENDARIO Y HORARIOS PERSONALIZADOS - RESERVAS CLIENTE
@@ -4294,7 +4239,6 @@ body {
    Diseño integrado con el dashboard
    ========================================================= */
 
-
 /* ---------------------------------------------------------
    MODAL PRINCIPAL
    --------------------------------------------------------- */
@@ -4306,7 +4250,6 @@ body {
     border-radius: 10px !important;
     overflow: hidden !important;
 }
-
 
 /* ---------------------------------------------------------
    HEADER
@@ -4337,7 +4280,6 @@ body {
     opacity: 1;
 }
 
-
 /* ---------------------------------------------------------
    BODY
    --------------------------------------------------------- */
@@ -4347,7 +4289,6 @@ body {
     color: #F5EFE6 !important;
     padding: 24px !important;
 }
-
 
 /* ---------------------------------------------------------
    INFORMACIÓN DEL CLIENTE
@@ -4385,7 +4326,6 @@ body {
     color: #F4C542;
 }
 
-
 /* ---------------------------------------------------------
    SECCIONES
    --------------------------------------------------------- */
@@ -4403,7 +4343,6 @@ body {
 .autoai-section-title i {
     margin-right: 6px;
 }
-
 
 /* ---------------------------------------------------------
    OBSERVACIONES
@@ -4423,7 +4362,6 @@ body {
     padding: 3px 0;
 }
 
-
 /* ---------------------------------------------------------
    RECOMENDACIONES
    --------------------------------------------------------- */
@@ -4441,7 +4379,6 @@ body {
     padding: 18px;
 }
 
-
 /* Título de cada corte */
 
 .autoai-recomendacion-title {
@@ -4455,7 +4392,6 @@ body {
     color: #F4C542;
     margin-right: 6px;
 }
-
 
 /* ---------------------------------------------------------
    DETALLES
@@ -4480,7 +4416,6 @@ body {
     color: #C9A87C !important;
     line-height: 1.5;
 }
-
 
 /* ---------------------------------------------------------
    PEDIDO AL BARBERO
@@ -4510,7 +4445,6 @@ body {
     font-style: italic;
 }
 
-
 /* ---------------------------------------------------------
    FOOTER
    --------------------------------------------------------- */
@@ -4520,7 +4454,6 @@ body {
     border-top: 1px solid #3F2E22 !important;
     padding: 14px 22px !important;
 }
-
 
 /* ---------------------------------------------------------
    BOTÓN CERRAR
@@ -4539,7 +4472,6 @@ body {
     border-color: #F4C542 !important;
     color: #F4C542 !important;
 }
-
 
 /* ---------------------------------------------------------
    RESPONSIVE
@@ -4587,7 +4519,6 @@ body {
     color: #F5EFE6 !important;
 }
 
-
 /* =========================================================
    ICONOS Y TEXTO QUE NO RESALTABAN
    ---------------------------------------------------------
@@ -4605,7 +4536,6 @@ body {
 .form-label-custom i {
     font-size: 1.05em;
 }
-
 
 /* =========================================================
    BOTONES "CANCELAR" DE LOS MODALES, SIEMPRE EN ROJO
@@ -4635,7 +4565,6 @@ body {
     background: #dc3545 !important;
     color: #fff !important;
 }
-
 
 /* =========================================================
    MENU HAMBURGUESA DE LAS NAVBARS DE LOS PANELES
@@ -4701,7 +4630,6 @@ body {
     }
 }
 
-
 /* =========================================================
    AVISO DE GOOGLE CALENDAR (conectar/desconectar)
    ---------------------------------------------------------
@@ -4750,7 +4678,6 @@ body {
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
 }
 
-
 /* =====================================================
    CABECERA
 ===================================================== */
@@ -4794,7 +4721,6 @@ body {
     font-size: 0.9rem;
 }
 
-
 /* =====================================================
    CUERPO
 ===================================================== */
@@ -4802,7 +4728,6 @@ body {
 .estilos-modal-body {
     padding: 0;
 }
-
 
 /* =====================================================
    CARRUSEL
@@ -4831,7 +4756,6 @@ body {
     height: 100%;
 }
 
-
 /* =====================================================
    SLIDE
 ===================================================== */
@@ -4845,7 +4769,6 @@ body {
     height: 520px;
     min-height: 520px;
 }
-
 
 /* =====================================================
    IMAGEN
@@ -4882,7 +4805,6 @@ body {
     z-index: 2;
 }
 
-
 /*
    TODAS las imágenes tendrán exactamente
    el mismo espacio disponible.
@@ -4900,13 +4822,11 @@ body {
     transition: transform 0.8s ease;
 }
 
-
 /* Pequeño efecto al mostrar el slide */
 
 .carousel-item.active .estilo-imagen {
     transform: scale(1.02);
 }
-
 
 /* =====================================================
    PLACEHOLDER
@@ -4945,7 +4865,6 @@ body {
 .estilo-imagen-placeholder span {
     font-size: 0.9rem;
 }
-
 
 /* =====================================================
    INFORMACIÓN
@@ -5025,7 +4944,6 @@ body {
     max-width: 420px;
 }
 
-
 /* =====================================================
    DATOS
 ===================================================== */
@@ -5090,7 +5008,6 @@ body {
     margin-top: 2px;
 }
 
-
 /* =====================================================
    BOTÓN
 ===================================================== */
@@ -5112,7 +5029,6 @@ body {
 .estilo-reservar:hover i {
     transform: translateX(4px);
 }
-
 
 /* =====================================================
    CONTROLES
@@ -5172,7 +5088,6 @@ body {
     transform: scale(1.08);
 }
 
-
 /* =====================================================
    INDICADORES
 ===================================================== */
@@ -5219,7 +5134,6 @@ body {
     background-color: #F4C542;
 }
 
-
 /* =====================================================
    FOOTER
 ===================================================== */
@@ -5248,7 +5162,6 @@ body {
 
     margin-right: 0.35rem;
 }
-
 
 /* =====================================================
    SIN ESTILOS
@@ -5283,7 +5196,6 @@ body {
     color: #9F8D78;
 }
 
-
 /* =====================================================
    RESPONSIVE - TABLET
 ===================================================== */
@@ -5304,7 +5216,6 @@ body {
         height: auto;
     }
 
-
     .estilo-slide {
         display: grid;
 
@@ -5314,17 +5225,14 @@ body {
         min-height: 0;
     }
 
-
     .estilo-imagen-container {
         height: 350px;
         min-height: 350px;
     }
 
-
     .estilo-imagen-placeholder {
         min-height: 350px;
     }
-
 
     .estilo-informacion {
         height: auto;
@@ -5333,23 +5241,19 @@ body {
         padding: 2.5rem 2rem 4rem;
     }
 
-
     .estilo-informacion h2 {
         font-size: 2rem;
     }
-
 
     .estilos-indicators {
         right: 2rem;
         bottom: 1.5rem;
     }
 
-
     .estilo-control {
         bottom: 1rem;
     }
 }
-
 
 /* =====================================================
    RESPONSIVE - CELULAR
@@ -5361,32 +5265,26 @@ body {
         margin: 0.5rem;
     }
 
-
     .estilos-modal-content {
         border-radius: 20px;
     }
-
 
     .estilos-modal-header {
         padding: 1.2rem;
     }
 
-
     .estilos-modal-header h3 {
         font-size: 1.5rem;
     }
-
 
     .estilo-imagen-container {
         height: 280px;
         min-height: 280px;
     }
 
-
     .estilo-imagen-placeholder {
         min-height: 280px;
     }
-
 
     .estilo-informacion {
         min-height: 330px;
@@ -5394,16 +5292,13 @@ body {
         padding: 2rem 1.4rem 4.5rem;
     }
 
-
     .estilo-informacion h2 {
         font-size: 1.8rem;
     }
 
-
     .estilo-descripcion {
         font-size: 0.9rem;
     }
-
 
     .estilo-datos {
         gap: 1rem;
@@ -5411,11 +5306,9 @@ body {
         flex-wrap: wrap;
     }
 
-
     .estilos-modal-footer span {
         display: none;
     }
-
 
     .estilos-modal-footer {
         justify-content: flex-end;
@@ -5492,7 +5385,6 @@ body {
     box-shadow: 0 0 0 .2rem rgba(255, 193, 7, .12);
 }
 
-
 @media (max-width: 576px) {
 
     .ia-chat-form {
@@ -5504,7 +5396,6 @@ body {
     }
 
 }
-
 
 /* MODO CLARO */
 
@@ -5665,7 +5556,6 @@ html[data-theme="light"] .ia-chat-form .form-control {
     .stat-card i { font-size: 1.7rem; }
     .stat-card .icon-wrapper { width: 48px; height: 48px; }
 }
-
 
 /* =========================================================================
    TARJETA DE CITA — mismo lenguaje visual que las tarjetas de "Agendar
@@ -6088,7 +5978,6 @@ html[data-theme="light"] .ia-chat-form .form-control {
 .hz-barbero-nombre-overlay h3 { font-size: 1.25rem; margin: 0; color: #fff; }
 .hz-barbero-nombre-overlay p { margin: .1rem 0 0; font-size: .85rem; color: rgba(255,255,255,.75); }
 .hz-barbero-pie { padding: .85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; font-size: .85rem; }
-
 
 /* ===================== NOSOTROS ===================== */
 .hz-checklist { display: flex; flex-direction: column; gap: .6rem; margin: 1.4rem 0; }
@@ -6515,3 +6404,108 @@ html[data-theme="light"] .ia-chat-form .form-control {
     height: auto !important;
     min-height: 0 !important;
 }
+
+/* Ajustes responsive para modales y formularios. */
+.modal { --bs-modal-margin: .75rem; }
+.modal-dialog { max-width: min(92vw, 900px); }
+.modal-content { max-height: calc(100dvh - 1.5rem); display: flex; flex-direction: column; }
+.modal-body { overflow-y: auto; overscroll-behavior: contain; }
+.modal-header, .modal-footer { flex-shrink: 0; }
+.modal [data-bs-dismiss="modal"], .modal .btn-close { cursor: pointer; }
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid #b8c1cc;
+    outline-offset: 2px;
+}
+.dias-laborales-grid {
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.55rem;
+}
+.dia-laboral-opcion { position:relative; cursor:pointer; }
+.dia-laboral-opcion input {
+    position:absolute; opacity:0; width:1px; height:1px;
+}
+.dia-laboral-opcion span {
+    display:flex; align-items:center; justify-content:center; min-height:42px;
+    padding:.55rem .65rem; border:1px solid var(--color-borde, #68717d);
+    border-radius:10px; color:var(--color-texto, #eee); background:var(--color-fondo-card, #20242a);
+    transition:background .15s ease,border-color .15s ease, color .15s ease;
+}
+.dia-laboral-opcion input:checked + span {
+    background:#c5ccd5; border-color:#e0e5eb; color:#17191d; font-weight:700;
+}
+.dia-laboral-opcion input:focus-visible + span { outline:3px solid #b8c1cc; outline-offset:3px; }
+.dia-laboral-opcion input:disabled + span { opacity:.45; cursor:not-allowed; text-decoration:line-through; }
+@media (max-width: 991.98px) {
+    .modal-dialog { max-width: calc(100% - 1rem); }
+    .table-responsive { -webkit-overflow-scrolling:touch; }
+    .navbar-custom .container { flex-wrap:wrap; }
+}
+@media (max-width: 767.98px) {
+    .modal-dialog { margin:.5rem auto; }
+    .modal-content { max-height: calc(100dvh - 1rem); }
+    .modal-body { padding:1rem !important; }
+    .modal-header, .modal-footer { padding:.85rem 1rem !important; }
+    .dias-laborales-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .navbar-custom .d-flex.align-items-center.gap-2 { flex-wrap:wrap; }
+    .card-custom, .card-header-custom { min-width:0; }
+    .cita-card { flex-wrap:wrap; gap:.75rem; }
+    .cita-info { min-width:0; flex:1 1 65%; }
+    .cita-meta { flex-wrap:wrap; }
+    img, video, canvas { max-width:100%; }
+}
+@media (max-width: 575.98px) {
+    .modal-dialog { width:calc(100% - 1rem); }
+    .modal-footer { gap:.5rem; }
+    .modal-footer .btn, .modal-footer button, .modal-footer a { flex:1 1 auto; }
+    .table-responsive table { min-width:620px; }
+    .btn, .nav-btn { white-space:normal; }
+}
+
+/* Modales con formularios largos: el encabezado y los botones quedan fijos. */
+.modal .modal-dialog { width: auto; }
+.modal .modal-content { min-height: 0; overflow: hidden; }
+.modal .modal-content > form { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; overflow: hidden; }
+.modal .modal-content > form > .modal-body,
+.modal .modal-content > .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.modal .modal-content > form > .modal-footer { flex: 0 0 auto; }
+.modal .modal-footer .btn-modern { min-width: 0; padding: .7rem 1.25rem; }
+.modal-cierre-sesion .modal-dialog { width: min(100% - 1rem, 480px); }
+.modal-cierre-sesion .modal-footer { display: flex; flex-wrap: wrap; gap: .65rem; }
+.modal-cierre-sesion .modal-footer > * { flex: 0 1 auto; }
+@media (max-width: 767.98px) {
+    .modal .modal-dialog { margin: .5rem auto; max-width: calc(100% - 1rem); }
+    .modal .modal-content { max-height: calc(100dvh - 1rem); }
+    .modal .modal-content > form > .modal-body { padding: 1rem !important; }
+    .modal .modal-content > form > .modal-footer { padding: .8rem 1rem !important; }
+    .modal .modal-footer .btn-modern { flex: 1 1 130px; }
+    .modal-cierre-sesion .modal-footer > * { flex: 1 1 130px !important; }
+}
+@media (max-width: 420px) {
+    .modal-cierre-sesion .modal-footer { flex-direction: column-reverse; }
+    .modal-cierre-sesion .modal-footer > * { width: 100%; flex: 1 1 auto !important; }
+}
+
+/* Acciones del administrador usan el mismo acabado plateado del panel. */
+.tema-admin .btn-warning,
+.tema-admin .btn-info,
+.tema-admin .btn-outline-warning {
+    color: #20252b !important;
+    background: linear-gradient(135deg, #dce1e7, #aeb8c4) !important;
+    border: 1px solid #aeb8c4 !important;
+    box-shadow: 0 2px 8px rgba(160, 171, 185, .2);
+}
+.tema-admin .btn-warning:hover,
+.tema-admin .btn-info:hover,
+.tema-admin .btn-outline-warning:hover {
+    color: #15191e !important;
+    background: linear-gradient(135deg, #edf0f4, #c2cad4) !important;
+    border-color: #e0e5eb !important;
+}
+.tema-admin .btn-secondary,
+.tema-admin .btn-secondary-custom {
+    color: var(--color-texto, #f3f4f6);
+    background: var(--color-fondo-secundario, #343a40);
+    border: 1px solid var(--color-borde, #68717d);
+}
+.tema-admin .btn-secondary:hover,
+.tema-admin .btn-secondary-custom:hover { filter: brightness(1.12); }
+
