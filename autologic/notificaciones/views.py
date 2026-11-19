@@ -18,7 +18,11 @@ def listar_notificaciones(request):
     return render(
         request,
         "notificaciones/listar.html",
-        {"notificaciones": notificaciones, "es_barbero": es_barbero},
+        {
+            "notificaciones": notificaciones,
+            "es_barbero": es_barbero,
+            "rol": "admin" if request.user.is_superuser else ("barbero" if es_barbero else "cliente"),
+        },
     )
 
 

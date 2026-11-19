@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Sum
 from django.utils import timezone
 from .models import Producto, MovimientoInventario
@@ -47,9 +47,22 @@ def agregar_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
-            producto = form.save()
+            with transaction.atomic():
+                inicial = form.cleaned_data.get('stock_actual') or 0
+                producto = form.save(commit=False)
+                producto.stock_actual = 0
+                producto.save()
+                if inicial > 0:
+                    # El stock inicial también queda en el historial.
+                    registrar_movimiento(
+                        producto, 'ENTRADA', inicial, usuario=request.user,
+                        nota='Stock inicial al crear el producto',
+                    )
             messages.success(request, f'✅ Producto "{producto.nombre}" agregado exitosamente.')
             return redirect('inventario:dashboard')
+        for campo, errores in form.errors.items():
+            for error in errores:
+                messages.error(request, f'❌ {error}')
     else:
         form = ProductoForm()
     return render(request, 'inventario/producto_form.html', {'form': form, 'titulo': 'Agregar Producto'})
@@ -76,26 +89,13 @@ def movimiento_inventario(request, producto_id):
         if form.is_valid():
             datos = form.cleaned_data
 
-            # Límites de stock (máx. 20 / mín. 5 en ajustes)
-            if datos['tipo'] == 'ENTRADA' and producto.stock_actual + datos['cantidad'] > 20:
-                messages.error(request, "❌ No se puede superar el stock máximo de 20 unidades.")
-                return redirect('inventario:dashboard')
-
-            if datos['tipo'] == 'AJUSTE' and datos['cantidad'] > 20:
-                messages.error(request, "❌ El stock máximo permitido es de 20 unidades.")
-                return redirect('inventario:dashboard')
-
-            if datos['tipo'] == 'AJUSTE' and datos['cantidad'] < 5:
-                messages.error(request, "❌ El stock mínimo permitido es de 5 unidades.")
-                return redirect('inventario:dashboard')
-
             try:
                 movimiento = registrar_movimiento(
                     producto=producto,
                     tipo=datos['tipo'],
                     cantidad=datos['cantidad'],
                     usuario=request.user,
-                    proveedor=datos.get('proveedor'),
+                    proveedor=datos.get('proveedor') if datos['tipo'] == 'ENTRADA' else None,
                     nota=datos.get('nota'),
                 )
             except ValueError as e:
@@ -169,149 +169,116 @@ def historial_movimientos(request):
 
 @login_required
 def reporte_inventario_pdf(request):
+    """PDF de inventario con la identidad visual del sitio (dorado/negro/crema)."""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.lib.enums import TA_CENTER
+
+    ORO = colors.HexColor('#d4a017')
+    NEGRO = colors.HexColor('#1a1410')
+    CREMA = colors.HexColor('#faf5ea')
+    BORDE = colors.HexColor('#e3d7bd')
+    ROJO = colors.HexColor('#c0392b')
+    AMBAR = colors.HexColor('#b9770e')
+    VERDE = colors.HexColor('#1e8449')
+
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="reporte_inventario.pdf"'
 
-    doc = SimpleDocTemplate(response)
+    ahora = datetime.now()
 
+    def decorar(canvas, doc):
+        canvas.saveState()
+        ancho, alto = A4
+        canvas.setFillColor(NEGRO)
+        canvas.rect(0, alto - 2.6 * cm, ancho, 2.6 * cm, stroke=0, fill=1)
+        canvas.setFillColor(ORO)
+        canvas.rect(0, alto - 2.75 * cm, ancho, 0.15 * cm, stroke=0, fill=1)
+        ruta_logo = os.path.join(settings.BASE_DIR, "inventario", "static", "img", "logo.jpeg")
+        x_texto = 1.5 * cm
+        if os.path.exists(ruta_logo):
+            try:
+                canvas.drawImage(ruta_logo, 1.2 * cm, alto - 2.3 * cm, 1.8 * cm, 1.8 * cm,
+                                 preserveAspectRatio=True, mask='auto')
+                x_texto = 3.4 * cm
+            except Exception:
+                pass
+        canvas.setFillColor(ORO)
+        canvas.setFont('Helvetica-Bold', 17)
+        canvas.drawString(x_texto, alto - 1.35 * cm, 'REPORTE DE INVENTARIO')
+        canvas.setFillColor(colors.white)
+        canvas.setFont('Helvetica', 9)
+        canvas.drawString(x_texto, alto - 1.95 * cm, 'Sistema de Gestión para Barbería')
+        canvas.drawRightString(ancho - 1.5 * cm, alto - 1.35 * cm, ahora.strftime('%d/%m/%Y'))
+        canvas.drawRightString(ancho - 1.5 * cm, alto - 1.95 * cm, ahora.strftime('%H:%M'))
+        canvas.setStrokeColor(BORDE)
+        canvas.line(1.5 * cm, 1.4 * cm, ancho - 1.5 * cm, 1.4 * cm)
+        canvas.setFillColor(colors.HexColor('#6b5d45'))
+        canvas.setFont('Helvetica', 8)
+        canvas.drawString(1.5 * cm, 0.9 * cm, 'Generado automáticamente por el sistema')
+        canvas.drawRightString(ancho - 1.5 * cm, 0.9 * cm, f'Página {doc.page}')
+        canvas.restoreState()
+
+    doc = SimpleDocTemplate(response, pagesize=A4, leftMargin=1.5 * cm, rightMargin=1.5 * cm,
+                            topMargin=3.4 * cm, bottomMargin=2 * cm,
+                            title='Reporte de inventario')
     estilos = getSampleStyleSheet()
+    celda = ParagraphStyle('celda', parent=estilos['Normal'], fontSize=9, leading=11)
+    titulo = ParagraphStyle('t', parent=estilos['Heading2'], textColor=NEGRO, fontSize=13, spaceAfter=6)
+    kpi_txt = ParagraphStyle('k', parent=estilos['Normal'], alignment=TA_CENTER, fontSize=9,
+                             textColor=colors.HexColor('#6b5d45'))
     elementos = []
 
-    # ================= LOGO =================
+    productos = list(Producto.objects.filter(activo=True).order_by('nombre'))
+    total_productos = len(productos)
+    stock_total = sum(p.stock_actual for p in productos)
+    bajo_stock = sum(1 for p in productos if p.stock_actual <= p.stock_minimo)
+    valor_total = sum(p.stock_actual * p.precio_unitario for p in productos)
 
-    ruta_logo = os.path.join(
-    settings.BASE_DIR,
-    "inventario",
-    "static",
-    "img",
-    "logo.jpeg"
-)
-
-    if os.path.exists(ruta_logo):
-        logo = Image(ruta_logo)
-        logo.drawWidth = 80
-        logo.drawHeight = 80
-        elementos.append(logo)
-
-    # ================= TITULO =================
-
-    elementos.append(
-        Paragraph(
-            "<b>REPORTE DE INVENTARIO</b>",
-            estilos['Title']
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "Sistema de Gestión para Barbería",
-            estilos['Normal']
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M')}",
-            estilos['Normal']
-        )
-    )
-
-    elementos.append(Paragraph(" ", estilos['Normal']))
-
-    # ================= TABLA =================
-
-    datos = [[
-        "Producto",
-        "Stock",
-        "Stock mínimo",
-        "Precio",
-        "Estado"
-    ]]
-
-    productos = Producto.objects.filter(
-        activo=True
-    ).order_by("nombre")
-
-    for producto in productos:
-
-        if producto.stock_actual == 0:
-            estado = "Agotado"
-
-        elif producto.stock_actual <= producto.stock_minimo:
-            estado = "Bajo"
-
-        else:
-            estado = "Disponible"
-
-        datos.append([
-            producto.nombre,
-            str(producto.stock_actual),
-            str(producto.stock_minimo),
-            f"$ {producto.precio_unitario}",
-            estado
-        ])
-
-    tabla = Table(datos)
-
-    tabla.setStyle(TableStyle([
-
-        ('BACKGROUND', (0,0), (-1,0), colors.black),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-
-        ('GRID', (0,0), (-1,-1), 1, colors.black),
-
-        ('BACKGROUND', (0,1), (-1,-1), colors.beige),
-
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-
-        ('BOTTOMPADDING', (0,0), (-1,0), 10),
-
+    kpis = Table([[
+        Paragraph(f'<font size=16 color="#1a1410"><b>{total_productos}</b></font><br/>Productos', kpi_txt),
+        Paragraph(f'<font size=16 color="#1a1410"><b>{stock_total}</b></font><br/>Unidades en stock', kpi_txt),
+        Paragraph(f'<font size=16 color="#c0392b"><b>{bajo_stock}</b></font><br/>Stock bajo / agotado', kpi_txt),
+        Paragraph(f'<font size=16 color="#1a1410"><b>$ {valor_total:,.0f}</b></font><br/>Valor del inventario', kpi_txt),
+    ]], colWidths=[4.5 * cm] * 4)
+    kpis.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), CREMA),
+        ('BOX', (0, 0), (-1, -1), 0.8, BORDE),
+        ('INNERGRID', (0, 0), (-1, -1), 0.5, BORDE),
+        ('TOPPADDING', (0, 0), (-1, -1), 8), ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
     ]))
+    elementos += [kpis, Paragraph(' ', estilos['Normal']), Paragraph('Detalle de productos', titulo)]
 
+    datos = [['Producto', 'Stock', 'Mín.', 'Máx.', 'Precio', 'Estado']]
+    colores_estado = []
+    for i, p in enumerate(productos, start=1):
+        if p.stock_actual == 0:
+            estado, col = 'Agotado', ROJO
+        elif p.stock_actual <= p.stock_minimo:
+            estado, col = 'Bajo', AMBAR
+        else:
+            estado, col = 'Disponible', VERDE
+        colores_estado.append(('TEXTCOLOR', (5, i), (5, i), col))
+        datos.append([Paragraph(p.nombre, celda), str(p.stock_actual), str(p.stock_minimo),
+                      str(p.stock_maximo), f'$ {p.precio_unitario:,.0f}', estado])
+
+    tabla = Table(datos, colWidths=[6.2 * cm, 2 * cm, 1.8 * cm, 1.8 * cm, 3 * cm, 3.2 * cm], repeatRows=1)
+    tabla.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), NEGRO),
+        ('TEXTCOLOR', (0, 0), (-1, 0), ORO),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, CREMA]),
+        ('LINEBELOW', (0, 0), (-1, -1), 0.4, BORDE),
+        ('BOX', (0, 0), (-1, -1), 0.8, BORDE),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('FONTNAME', (5, 1), (5, -1), 'Helvetica-Bold'),
+        ('TOPPADDING', (0, 0), (-1, -1), 6), ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ] + colores_estado))
     elementos.append(tabla)
 
-    elementos.append(Paragraph(" ", estilos['Normal']))
-
-    # ================= RESUMEN =================
-
-    total_productos = Producto.objects.filter(
-        activo=True
-    ).count()
-
-    stock_total = Producto.objects.filter(
-        activo=True
-    ).aggregate(
-        total=Sum('stock_actual')
-    )['total'] or 0
-
-    bajo_stock = Producto.objects.filter(
-        activo=True,
-        stock_actual__lte=models.F('stock_minimo')
-    ).count()
-
-    elementos.append(
-        Paragraph(
-            f"<b>Total de productos:</b> {total_productos}",
-            estilos['Normal']
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<b>Stock total:</b> {stock_total}",
-            estilos['Normal']
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<b>Productos con bajo stock:</b> {bajo_stock}",
-            estilos['Normal']
-        )
-    )
-
-    doc.build(elementos)
-
+    doc.build(elementos, onFirstPage=decorar, onLaterPages=decorar)
     return response

@@ -419,57 +419,7 @@
 <body class="tema-admin">
 
      <!-- ========== NAVBAR ========== -->
-    <nav class="navbar-custom">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
-
-                <div class="navbar-brand-custom">
-                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
-                    Barber <span>Springfield</span>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-
-                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
-                        <i class="bi bi-bell"></i>
-                        {% if notificaciones_no_leidas %}
-                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
-                        {% endif %}
-                    </a>
-
-
-                    <a href="{% url 'administracion:panel_admin' %}" class="nav-btn">
-                        <i class="bi bi-speedometer2"></i> Panel Admin
-                    </a>
-
-                    <a href="{% url 'inventario:dashboard' %}" class="nav-btn active">
-                        <i class="bi bi-boxes"></i> Inventario
-                    </a>
-
-                    <a href="{% url 'administracion:cierre_caja' %}" class="nav-btn">
-                        <i class="bi bi-cash-coin"></i> Cierre de Caja
-                    </a>
-
-
-                    <button class="btn-logout-custom"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalCerrarSesion">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
-
-
-                    <button type="button"
-                            id="themeToggle"
-                            class="theme-toggle"
-                            title="Cambiar tema"
-                            aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% include "partials/navbar_admin.html" with activo="inventario" %}
 
     <!-- ========== MODAL CERRAR SESIÓN ========== -->
     <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
@@ -490,7 +440,7 @@
                 </div>
 
                 <div class="modal-footer modal-footer-custom">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                     <button class="btn-modern"
                             style="min-width:auto; padding:10px 30px; flex:0 1 auto;"
                             onclick="window.location.href='{% url 'logout' %}'">
@@ -513,7 +463,7 @@
                 </h1>
             </div>
             <div>
-                <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary">
+                <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary btn-volver">
                     <i class="bi bi-arrow-left"></i> Volver al Panel
                 </a>
             </div>
@@ -595,7 +545,7 @@
 
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-list-ul"></i> Productos Registrados</span>
-                <span class="badge bg-warning text-dark">{{ productos|length }} productos</span>
+                <span class="contador-seccion">{{ productos|length }} productos</span>
             </div>
 
             <div class="card-body p-0">
@@ -606,7 +556,8 @@
                                 <th style="width: 5%;">#</th>
                                 <th style="width: 20%;">Producto</th>
                                 <th style="width: 12%;">Stock</th>
-                                <th style="width: 12%;">Mínimo</th>
+                                <th style="width: 8%;">Mínimo</th>
+                                <th style="width: 8%;">Máximo</th>
                                 <th style="width: 15%;">Precio</th>
                                 <th style="width: 15%;">Estado</th>
                                 <th style="width: 21%;" class="text-center">Acciones</th>
@@ -628,13 +579,14 @@
                                         </span>
                                     </td>
                                     <td>{{ producto.stock_minimo }}</td>
+                                    <td>{{ producto.stock_maximo }}</td>
                                     <td>${{ producto.precio_unitario|floatformat:2 }}</td>
                                     <td>
                                         {% if producto.stock_actual <= 0 %}
                                             <span class="badge-stock-bajo"><i class="bi bi-x-circle"></i> Agotado</span>
                                         {% elif producto.stock_actual <= producto.stock_minimo %}
                                             <span class="badge-stock-bajo"><i class="bi bi-exclamation-circle"></i> Bajo stock</span>
-                                        {% elif producto.stock_actual <= producto.stock_minimo|add:"5" %}
+                                        {% elif producto.stock_actual <= producto.stock_minimo|add:"5" and producto.stock_actual < producto.stock_maximo %}
                                             <span class="badge-stock-medio"><i class="bi bi-dash-circle"></i> Medio</span>
                                         {% else %}
                                             <span class="badge-stock-bueno"><i class="bi bi-check-circle"></i> Suficiente</span>
@@ -644,18 +596,20 @@
                                         <div class="btn-group btn-group-sm" role="group">
 
                                             <button type="button"
-                                                    class="btn btn-warning"
-                                                    title="Registrar movimiento"
+                                                    class="btn btn-accion btn-accion-movimiento"
+                                                    title="Registrar movimiento (entrada, salida o ajuste)"
+                                                    data-minimo="{{ producto.stock_minimo }}"
+                                                    data-maximo="{{ producto.stock_maximo }}"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalMovimiento"
                                                     data-id="{{ producto.id }}"
                                                     data-nombre="{{ producto.nombre }}"
                                                     data-stock="{{ producto.stock_actual }}">
-                                                <i class="bi bi-arrow-left-right"></i>
+                                                <i class="bi bi-arrow-left-right"></i> <span class="d-none d-xl-inline">Movimiento</span>
                                             </button>
 
-                                            <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-info" title="Editar">
-                                                <i class="bi bi-pencil"></i>
+                                            <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-accion btn-accion-editar" title="Editar datos del producto (nombre, precio, mínimo y máximo)">
+                                                <i class="bi bi-pencil-square"></i> <span class="d-none d-xl-inline">Editar</span>
                                             </a>
 
                                             <button type="button"
@@ -693,7 +647,7 @@
 
                 <div class="card-header-custom d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-clock-history"></i> Últimos Movimientos</span>
-                    <span class="badge bg-info text-dark">{{ ultimos_movimientos|length }} registros</span>
+                    <span class="contador-seccion">{{ ultimos_movimientos|length }} registros</span>
                 </div>
 
                 <div class="card-body p-0">
@@ -738,16 +692,16 @@
 
             <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <span><i class="bi bi-file-earmark-bar-graph"></i> Reportes de Inventario</span>
-                <a href="{% url 'inventario:reporte_pdf' %}" class="btn btn-danger btn-sm">
+                <a href="{% url 'inventario:reporte_pdf' %}" class="btn btn-pdf btn-sm ms-auto">
                     <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
                 </a>
             </div>
 
-            <div class="card-body">
+            <div class="card-body p-3 p-md-4">
                 <div class="row g-3">
 
                     <div class="col-md-6">
-                        <div class="p-3 bg-dark rounded border border-secondary">
+                        <div class="reporte-caja">
                             <h6 class="text-yellow"><i class="bi bi-exclamation-triangle"></i> Productos con bajo stock</h6>
                             <ul class="list-unstyled mb-0">
                                 {% for p in productos %}
@@ -764,11 +718,11 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div class="p-3 bg-dark rounded border border-secondary">
+                        <div class="reporte-caja">
                             <h6 class="text-yellow"><i class="bi bi-check-circle"></i> Resumen de stock</h6>
                             <ul class="list-unstyled mb-0">
                                 <li class="text-light-brown py-1">
-                                    <span class="text-success">●</span> Stock total: <strong class="text-white">{{ stock_total }}</strong>
+                                    <span class="text-success">●</span> Stock total: <strong class="reporte-valor">{{ stock_total }}</strong>
                                 </li>
                                 <li class="text-light-brown py-1">
                                     <span class="text-warning">●</span> Productos activos: <strong class="text-white">{{ total_productos }}</strong>
@@ -820,10 +774,15 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock inicial *</label>
                                 <input type="number" name="stock_actual" class="form-control bg-dark-input" required min="0" value="0">
+                                <small class="text-light-brown">Quedará en el historial como entrada inicial.</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock mínimo *</label>
                                 <input type="number" name="stock_minimo" class="form-control bg-dark-input" required min="0" value="5">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Stock máximo *</label>
+                                <input type="number" name="stock_maximo" class="form-control bg-dark-input" required min="1" value="20">
                             </div>
                         </div>
 
@@ -834,7 +793,7 @@
                     </div>
 
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-plus-circle"></i> Agregar Producto
                         </button>
@@ -872,11 +831,16 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock actual *</label>
-                                <input type="number" name="stock_actual" id="editProductoStock" class="form-control bg-dark-input" required min="0">
+                                <input type="number" id="editProductoStock" class="form-control bg-dark-input" readonly>
+                                <small class="text-light-brown">Para cambiar el stock usa «Movimiento → Ajuste».</small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">Stock mínimo *</label>
                                 <input type="number" name="stock_minimo" id="editProductoMinimo" class="form-control bg-dark-input" required min="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label-custom">Stock máximo *</label>
+                                <input type="number" name="stock_maximo" id="editProductoMaximo" class="form-control bg-dark-input" required min="1">
                             </div>
                         </div>
 
@@ -887,7 +851,7 @@
                     </div>
 
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
@@ -918,6 +882,7 @@
                             Producto: <strong class="text-yellow" id="movimientoProductoNombre"></strong>
                             <br>
                             Stock actual: <strong class="text-white" id="movimientoStockActual"></strong>
+                            &nbsp;·&nbsp; Mín: <strong id="movimientoMin"></strong> · Máx: <strong id="movimientoMax"></strong>
                         </div>
 
                         <div class="mb-3">
@@ -930,12 +895,18 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label-custom">Cantidad *</label>
+                            <label class="form-label-custom" id="movimientoLabelCantidad">Cantidad *</label>
                             <input type="number" name="cantidad" id="movimientoCantidad" class="form-control bg-dark-input" required min="1">
                             <small class="text-light-brown" id="movimientoAyudaCantidad">Ingresa la cantidad para entrada/salida o el nuevo stock para ajuste</small>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="alert alert-warning py-2 small d-none" id="movimientoAyudaAjuste">
+                            <strong>¿Qué es un ajuste?</strong> Corrige el stock al número <u>real contado</u>
+                            (conteo físico, producto dañado o perdido). No es una compra ni una venta.
+                        </div>
+                        <div class="small fw-bold mb-3 d-none" id="movimientoPreview"></div>
+
+                        <div class="mb-3" id="movimientoBloqueProveedor">
                             <label class="form-label-custom">Proveedor</label>
                             <input type="text" name="proveedor" id="movimientoProveedor" class="form-control bg-dark-input" placeholder="Nombre del proveedor (opcional)">
                         </div>
@@ -946,14 +917,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label-custom">Nota (opcional)</label>
+                            <label class="form-label-custom" id="movimientoLabelNota">Nota (opcional)</label>
                             <textarea name="nota" id="movimientoNota" class="form-control bg-dark-input" rows="2" placeholder="Observaciones del movimiento"></textarea>
                         </div>
 
                     </div>
 
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;">
                             <i class="bi bi-check-circle"></i> Registrar Movimiento
                         </button>
@@ -985,7 +956,7 @@
                     </div>
 
                     <div class="modal-footer modal-footer-danger">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-danger-modern">Eliminar Producto</button>
                     </div>
                 </form>
@@ -1011,6 +982,7 @@
             document.getElementById('editProductoDescripcion').value = btn.dataset.descripcion || '';
             document.getElementById('editProductoStock').value = btn.dataset.stock || 0;
             document.getElementById('editProductoMinimo').value = btn.dataset.minimo || 0;
+            document.getElementById('editProductoMaximo').value = btn.dataset.maximo || 20;
             document.getElementById('editProductoPrecio').value = btn.dataset.precio || 0;
             document.getElementById('formEditarProducto').action = `/inventario/editar/${btn.dataset.id}/`;
         });
@@ -1026,6 +998,9 @@
 
             document.getElementById('movimientoProductoNombre').textContent = btn.dataset.nombre || 'Producto';
             document.getElementById('movimientoStockActual').textContent = btn.dataset.stock || 0;
+            document.getElementById('movimientoMin').textContent = btn.dataset.minimo || 0;
+            document.getElementById('movimientoMax').textContent = btn.dataset.maximo || 0;
+            movState = { stock: parseInt(btn.dataset.stock || 0, 10), max: parseInt(btn.dataset.maximo || 0, 10) };
             document.getElementById('formMovimiento').action = `/inventario/movimiento/${btn.dataset.id}/`;
             document.getElementById('movimientoTipo').value = 'ENTRADA';
             document.getElementById('movimientoCantidad').value = '';
@@ -1040,17 +1015,36 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('movimientoFecha').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            actualizarMovimiento();
         });
 
-        // Cambiar texto de ayuda según tipo de movimiento
-        document.getElementById('movimientoTipo').addEventListener('change', function () {
+        // ===== Lógica del modal de movimiento (tipo, proveedor, vista previa) =====
+        let movState = { stock: 0, max: 0 };
+        function actualizarMovimiento() {
+            const tipo = document.getElementById('movimientoTipo').value;
+            const cant = document.getElementById('movimientoCantidad');
+            const nota = document.getElementById('movimientoNota');
+            const prev = document.getElementById('movimientoPreview');
             const ayuda = document.getElementById('movimientoAyudaCantidad');
-            if (this.value === 'AJUSTE') {
-                ayuda.textContent = 'Ingresa el NUEVO stock que deseas establecer';
-            } else {
-                ayuda.textContent = 'Ingresa la cantidad para entrada/salida';
-            }
-        });
+            document.getElementById('movimientoBloqueProveedor').classList.toggle('d-none', tipo !== 'ENTRADA');
+            document.getElementById('movimientoAyudaAjuste').classList.toggle('d-none', tipo !== 'AJUSTE');
+            document.getElementById('movimientoLabelNota').textContent = tipo === 'AJUSTE' ? 'Motivo del ajuste *' : 'Nota (opcional)';
+            nota.required = tipo === 'AJUSTE';
+            cant.min = tipo === 'AJUSTE' ? 0 : 1;
+            cant.max = tipo === 'SALIDA' ? movState.stock : movState.max;
+            ayuda.textContent = tipo === 'AJUSTE' ? 'Escribe el NUEVO stock real (conteo físico).'
+                : tipo === 'ENTRADA' ? 'Unidades que ingresan (compra/reposición). No puede superar el máximo.'
+                : 'Unidades vendidas o retiradas. No puede superar el stock.';
+            const v = parseInt(cant.value, 10);
+            if (isNaN(v)) { prev.classList.add('d-none'); return; }
+            const nuevo = tipo === 'AJUSTE' ? v : tipo === 'ENTRADA' ? movState.stock + v : movState.stock - v;
+            const invalido = nuevo < 0 || nuevo > movState.max;
+            prev.classList.remove('d-none');
+            prev.textContent = 'Resultado: stock ' + movState.stock + ' → ' + nuevo + (invalido ? '  (fuera de los límites 0–' + movState.max + ')' : '');
+            prev.style.color = invalido ? '#e74c3c' : '';
+        }
+        document.getElementById('movimientoTipo').addEventListener('change', actualizarMovimiento);
+        document.getElementById('movimientoCantidad').addEventListener('input', actualizarMovimiento);
 
         // ===== MODAL ELIMINAR PRODUCTO =====
         document.getElementById('modalEliminarProducto').addEventListener('show.bs.modal', function (e) {

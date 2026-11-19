@@ -753,3 +753,265 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+/* ===== Toasts: convierte los banners de messages de Django en toasts flotantes ===== */
+(function () {
+    function crearStack() {
+        let s = document.getElementById('toastStack');
+        if (!s) {
+            s = document.createElement('div');
+            s.id = 'toastStack'; s.className = 'toast-stack';
+            s.setAttribute('aria-live', 'polite'); s.setAttribute('aria-atomic', 'false');
+            document.body.appendChild(s);
+        }
+        return s;
+    }
+    function mostrarToast(texto, tipo) {
+        const stack = crearStack();
+        const t = document.createElement('div');
+        t.className = 'app-toast ' + (tipo || 'info');
+        t.setAttribute('role', (tipo === 'danger' || tipo === 'error') ? 'alert' : 'status');
+        const body = document.createElement('div'); body.className = 'app-toast-body'; body.textContent = texto;
+        const x = document.createElement('button'); x.type = 'button'; x.className = 'app-toast-close';
+        x.setAttribute('aria-label', 'Cerrar'); x.innerHTML = '&times;';
+        t.appendChild(body); t.appendChild(x); stack.appendChild(t);
+        requestAnimationFrame(function () { t.classList.add('show'); });
+        const dur = (tipo === 'danger' || tipo === 'error') ? 7000 : 4500;
+        let resto = dur, inicio = Date.now(), timer;
+        function cerrar() { clearTimeout(timer); t.classList.remove('show'); setTimeout(function () { t.remove(); }, 400); }
+        function arrancar() { inicio = Date.now(); timer = setTimeout(cerrar, resto); }
+        t.addEventListener('mouseenter', function () { clearTimeout(timer); resto -= Date.now() - inicio; });
+        t.addEventListener('mouseleave', arrancar);
+        x.addEventListener('click', cerrar);
+        arrancar();
+    }
+    window.mostrarToast = mostrarToast;
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.alert.alert-dismissible').forEach(function (a) {
+            if (a.closest('.modal')) { return; }
+            const m = a.className.match(/alert-(success|danger|warning|info|error)/);
+            const copia = a.cloneNode(true);
+            copia.querySelectorAll('.btn-close').forEach(function (b) { b.remove(); });
+            const texto = copia.textContent.replace(/\s+/g, ' ').trim();
+            if (texto) { mostrarToast(texto, m ? m[1] : 'info'); }
+            a.remove();
+        });
+    });
+})();
+
+/* ===== Panel admin: secciones desplegables + menú de anclas fijo ===== */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!document.body.classList.contains('tema-admin')) { return; }
+        var CLAVE = 'admin_secciones_v1';
+        var estado = {};
+        try { estado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { estado = {}; }
+        function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {} }
+
+        var tarjetas = Array.prototype.slice.call(document.querySelectorAll('.card-custom'))
+            .filter(function (c) { return c.querySelector('.card-header-custom') && !c.closest('.modal'); });
+        if (tarjetas.length < 2) { return; }
+
+        var barra = document.createElement('nav');
+        barra.className = 'admin-anclas'; barra.setAttribute('aria-label', 'Secciones del panel');
+        var contenedor = document.querySelector('.container') || document.body;
+        var primera = tarjetas[0];
+        primera.parentNode.insertBefore(barra, primera);
+
+        tarjetas.forEach(function (card, i) {
+            var header = card.querySelector('.card-header-custom');
+            var titulo = (header.querySelector('span') || header).textContent.replace(/\s+/g, ' ').trim().replace(/\d+$/, '').trim() || ('Sección ' + (i + 1));
+            var clave = titulo;
+            var id = card.id || ('seccion-' + (i + 1));
+            card.id = id; card.style.scrollMarginTop = '130px';
+
+            var envoltorio = header;
+            while (envoltorio.parentElement && envoltorio.parentElement !== card) { envoltorio = envoltorio.parentElement; }
+            var cuerpo = [];
+            for (var n = envoltorio.nextElementSibling; n; n = n.nextElementSibling) { cuerpo.push(n); }
+
+            var pill = document.createElement('span');
+            pill.className = 'seccion-toggle';
+            pill.innerHTML = '<span class="seccion-toggle-txt"></span><i class="bi bi-chevron-down"></i>';
+            header.appendChild(pill);
+            var pillTxt = pill.querySelector('.seccion-toggle-txt');
+            header.style.cursor = 'pointer';
+            header.setAttribute('role', 'button'); header.setAttribute('tabindex', '0');
+
+            function aplicar(abierta) {
+                cuerpo.forEach(function (el) { el.style.display = abierta ? '' : 'none'; });
+                card.classList.toggle('seccion-cerrada', !abierta);
+                header.setAttribute('aria-expanded', abierta ? 'true' : 'false');
+                pillTxt.textContent = abierta ? 'Ocultar' : 'Mostrar';
+                estado[clave] = abierta; guardar();
+            }
+            var abierta = (clave in estado) ? estado[clave] : (i === 0);
+            aplicar(abierta);
+            function alternar(ev) {
+                if (ev.target.closest('a, button, input, select, form, .btn')) { return; }
+                aplicar(card.classList.contains('seccion-cerrada'));
+            }
+            header.addEventListener('click', alternar);
+            header.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); alternar(ev); } });
+
+            var a = document.createElement('a');
+            a.href = '#' + id; a.textContent = titulo;
+            a.addEventListener('click', function () { aplicar(true); });
+            barra.appendChild(a);
+        });
+    });
+})();
+
+/* ===== Asistente de citas por pasos (cliente) ===== */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var cont = document.getElementById('formularioTurno');
+        if (!cont) { return; }
+        var form = cont.querySelector('form');
+        if (!form) { return; }
+        var bloques = Array.prototype.slice.call(form.querySelectorAll(':scope > .nc-bloque'));
+        var resumen = form.querySelector(':scope > .nc-resumen');
+        if (bloques.length < 4 || !resumen) { return; }
+
+        // Orden pedido: servicio -> barbero -> fecha y hora -> adicionales -> confirmar
+        var pasos = [bloques[0], bloques[2], bloques[3], bloques[1], resumen];
+        var nombres = ['Servicio', 'Barbero', 'Fecha y hora', 'Adicionales', 'Confirmar'];
+        pasos.slice(0, 4).forEach(function (p) { form.insertBefore(p, resumen); });
+
+        var progreso = document.createElement('div');
+        progreso.className = 'wiz-progreso';
+        progreso.innerHTML = '<div class="wiz-barra"><div class="wiz-barra-llena"></div></div><ol class="wiz-pasos"></ol>';
+        var lista = progreso.querySelector('.wiz-pasos');
+        nombres.forEach(function (n, i) {
+            var li = document.createElement('li'); li.textContent = (i + 1) + '. ' + n; lista.appendChild(li);
+        });
+        form.insertBefore(progreso, form.firstChild);
+
+        var nav = document.createElement('div');
+        nav.className = 'wiz-nav';
+        nav.innerHTML = '<button type="button" class="btn btn-cancelar btn-secondary wiz-cancelar">Cancelar</button>' +
+            '<span class="wiz-total" aria-live="polite"></span>' +
+            '<button type="button" class="btn btn-volver btn-secondary wiz-atras"><i class="bi bi-arrow-left"></i> Atrás</button>' +
+            '<button type="button" class="btn btn-primary-custom wiz-siguiente">Siguiente <i class="bi bi-arrow-right"></i></button>';
+        form.appendChild(nav);
+        var bAtras = nav.querySelector('.wiz-atras'), bSig = nav.querySelector('.wiz-siguiente');
+        var totalEl = nav.querySelector('.wiz-total');
+        var actual = 0;
+
+        function mostrar(i) {
+            actual = Math.max(0, Math.min(pasos.length - 1, i));
+            pasos.forEach(function (p, k) { p.style.display = (k === actual) ? '' : 'none'; });
+            progreso.querySelector('.wiz-barra-llena').style.width = ((actual + 1) / pasos.length * 100) + '%';
+            Array.prototype.forEach.call(lista.children, function (li, k) {
+                li.classList.toggle('activo', k === actual); li.classList.toggle('hecho', k < actual);
+            });
+            bAtras.style.display = actual === 0 ? 'none' : '';
+            bSig.style.display = actual === pasos.length - 1 ? 'none' : '';
+            actualizarTotal();
+            irAlFormulario();
+        }
+        function irAlFormulario() {
+            var y = cont.getBoundingClientRect().top + window.pageYOffset - 84;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+        }
+        function modoAgendando(on) {
+            var fid = document.getElementById('fidelidad');
+            var fila = fid && fid.closest('.row');
+            if (fila) { fila.style.display = on ? 'none' : ''; }
+            cont.style.minHeight = on ? '75vh' : '';
+        }
+        var inputCupon = document.getElementById('usarCupon');
+        var avisoCupon = document.createElement('div');
+        avisoCupon.className = 'wiz-cupon';
+        avisoCupon.innerHTML = '<i class="bi bi-ticket-perforated-fill"></i> <span>Cupón de corte gratis aplicado: el servicio se cobra $0.</span> ' +
+            '<button type="button" class="wiz-cupon-quitar">Quitar</button>';
+        form.insertBefore(avisoCupon, progreso.nextSibling);
+        function cuponActivo() { return inputCupon && inputCupon.value === '1'; }
+        function actualizarTotal() {
+            var t = document.getElementById('totalPagar');
+            avisoCupon.style.display = cuponActivo() ? '' : 'none';
+            if (!t) { totalEl.textContent = ''; return; }
+            var texto = t.textContent;
+            if (cuponActivo()) {
+                var radio = form.querySelector('.servicio-radio:checked');
+                var total = parseInt((t.textContent || '').replace(/[^0-9]/g, ''), 10) || 0;
+                var precio = radio ? parseInt(radio.dataset.precio, 10) || 0 : 0;
+                texto = '$' + Math.max(0, total - precio).toLocaleString('es-CO') + ' (cupón aplicado)';
+            }
+            totalEl.textContent = 'Total: ' + texto;
+        }
+        avisoCupon.querySelector('.wiz-cupon-quitar').addEventListener('click', function () {
+            if (inputCupon) { inputCupon.value = '0'; }
+            actualizarTotal();
+        });
+        function avisar(msg) { if (window.mostrarToast) { window.mostrarToast(msg, 'warning'); } else { alert(msg); } }
+
+        function validar() {
+            var paso = pasos[actual];
+            var campos = paso.querySelectorAll('input:required, select:required, textarea:required');
+            for (var i = 0; i < campos.length; i++) {
+                var c = campos[i];
+                if (c.type === 'hidden') {
+                    if (!c.value) { avisar('Elige una hora disponible para continuar.'); return false; }
+                } else if (!c.checkValidity()) { c.reportValidity(); return false; }
+            }
+            return true;
+        }
+        // Paso de adicionales: botón "Ninguno" para continuar sin extras
+        var pasoExtras = pasos[3];
+        var ninguno = document.createElement('button');
+        ninguno.type = 'button';
+        ninguno.className = 'btn btn-volver wiz-ninguno';
+        ninguno.innerHTML = '<i class="bi bi-slash-circle"></i> Ninguno, continuar sin extras';
+        ninguno.addEventListener('click', function () {
+            pasoExtras.querySelectorAll('input[type="checkbox"]').forEach(function (c) {
+                if (c.checked) { c.checked = false; c.dispatchEvent(new Event('change', { bubbles: true })); }
+            });
+            mostrar(4);
+        });
+        pasoExtras.appendChild(ninguno);
+
+        bSig.addEventListener('click', function () { if (validar()) { mostrar(actual + 1); } });
+        bAtras.addEventListener('click', function () { mostrar(actual - 1); });
+        nav.querySelector('.wiz-cancelar').addEventListener('click', function () {
+            if (inputCupon) { inputCupon.value = '0'; }
+            modoAgendando(false);
+            var b = document.getElementById('btnCancelarForm'); if (b) { b.click(); }
+        });
+        var bCupon = document.getElementById('btnUsarCupon');
+        if (bCupon) {
+            bCupon.addEventListener('click', function () {
+                if (inputCupon) { inputCupon.value = '1'; }
+                var ag = document.getElementById('btnAgendar'); if (ag) { ag.click(); }
+            });
+        }
+        form.addEventListener('change', actualizarTotal);
+        var obs = document.getElementById('totalPagar');
+        if (obs) { new MutationObserver(actualizarTotal).observe(obs, { childList: true, characterData: true, subtree: true }); }
+        document.getElementById('btnAgendar') && document.getElementById('btnAgendar').addEventListener('click', function () {
+            // Si no viene del botón del cupón, la cita es normal
+            if (inputCupon && !window.__cuponPendiente) { /* se mantiene el valor puesto por btnUsarCupon */ }
+            modoAgendando(true);
+            mostrar(0);
+        });
+        var bCancelOrig = document.getElementById('btnCancelarForm');
+        if (bCancelOrig) { bCancelOrig.addEventListener('click', function () { if (inputCupon) { inputCupon.value = '0'; } modoAgendando(false); }); }
+        // Enter no debe enviar el formulario antes del último paso
+        form.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && actual < pasos.length - 1 && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault(); bSig.click();
+            }
+        });
+        mostrar(0);
+    });
+})();
+
+/* Si la página no trae el modal de cerrar sesión, el botón cierra sesión directamente */
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('modalCerrarSesion')) { return; }
+    document.querySelectorAll('.btn-logout-custom[data-bs-target="#modalCerrarSesion"]').forEach(function (b) {
+        b.removeAttribute('data-bs-toggle');
+        b.addEventListener('click', function () { window.location.href = '/logout/'; });
+    });
+});
+

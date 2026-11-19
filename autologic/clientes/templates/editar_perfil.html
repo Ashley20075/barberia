@@ -103,109 +103,13 @@
         .foto-perfil-acciones .btn-quitar-foto:hover { background: rgba(227, 93, 106, .12); }
         #inputFotoPerfil { display: none; }
 
-        /* ===== Fondo decorativo de la página "Editar Perfil" ===== */
-        .perfil-fondo {
-            min-height: calc(100vh - 80px);
-            padding-bottom: 3rem;
-            background:
-                radial-gradient(900px 420px at 15% -10%, rgba(244, 197, 66, 0.16), transparent 60%),
-                radial-gradient(700px 500px at 110% 20%, rgba(244, 197, 66, 0.10), transparent 65%),
-                linear-gradient(180deg, #0B0A08 0%, #1E1A15 45%, #0B0A08 100%);
-        }
-
-        /* Banner superior tipo "hero", detrás de la tarjeta del formulario */
-        .perfil-banner {
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #15110c 0%, #2A1E14 100%);
-            border-bottom: 1px solid rgba(244, 197, 66, 0.25);
-            padding: 3rem 0 5.5rem;
-            text-align: center;
-        }
-        .perfil-banner i.bi-person-vcard {
-            font-size: 2.4rem;
-            color: var(--color-primario);
-            background: rgba(244, 197, 66, 0.12);
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: .8rem;
-        }
-        .perfil-banner h2 { color: #FFD966; margin-bottom: .2rem; }
-        .perfil-banner p { color: #C9A87C; margin-bottom: 0; }
-        /* Tijera gigante de fondo, muy tenue, solo decorativa */
-        .perfil-banner::after {
-            content: "\f5c7";
-            font-family: "bootstrap-icons";
-            position: absolute;
-            right: -2rem;
-            top: -3rem;
-            font-size: 14rem;
-            color: rgba(244, 197, 66, 0.05);
-            transform: rotate(18deg);
-            pointer-events: none;
-        }
-
-        /* La tarjeta "flota" encima del banner */
-        .perfil-tarjeta-wrap { margin-top: -4rem; position: relative; z-index: 2; }
-        .perfil-tarjeta-wrap .card-custom {
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(244, 197, 66, 0.18);
-        }
-        .perfil-tarjeta-wrap .card-header-custom {
-            background: linear-gradient(135deg, rgba(244,197,66,.14), rgba(244,197,66,.03));
-        }
+        
     </style>
 </head>
 
 <body class="tema-cliente">
 <!-- ========== NAVBAR UNIFICADA ========== -->
-    <nav class="navbar-custom">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
-
-                <div class="navbar-brand-custom">
-                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
-                    Barber <span>Springfield</span>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-
-                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
-                        <i class="bi bi-bell"></i>
-                        {% if notificaciones_no_leidas %}
-                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
-                        {% endif %}
-                    </a>
-
-                    <a href="{% url 'panel_cliente' %}" class="nav-btn">
-                        <i class="bi bi-person"></i> Mi Perfil
-                    </a>
-
-                    <a href="{% url 'editar_perfil' %}" class="nav-btn active">
-                        <i class="bi bi-gear"></i> Editar Perfil
-                    </a>
-
-                    <a href="{% url 'ia_estilo:recomendador' %}" class="nav-btn">
-                        <i class="bi bi-stars"></i> AutoAI
-                    </a>
-
-                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
-
-                    <button type="button" id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-
-
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% include "partials/navbar_cliente.html" with activo="perfil" %}
 
     <div class="modal fade" id="modalCerrarSesion" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -220,7 +124,7 @@
                     <p class="text-light-brown">Serás redirigido al inicio.</p>
                 </div>
                 <div class="modal-footer modal-footer-custom">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                     <button class="btn-modern" onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
@@ -262,7 +166,7 @@
 
                 <div class="modal-footer modal-footer-danger">
 
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">
                         Cancelar
                     </button>
 
@@ -283,15 +187,9 @@
 
 
 
-    <div class="perfil-fondo">
+    <div>
 
-        <div class="perfil-banner">
-            <i class="bi bi-person-vcard"></i>
-            <h2>Editar Perfil</h2>
-            <p>Actualizá tus datos y tu foto de perfil.</p>
-        </div>
-
-        <div class="container perfil-tarjeta-wrap">
+        <div class="container py-4">
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card-custom">

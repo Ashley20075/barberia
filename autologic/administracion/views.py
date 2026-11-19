@@ -1055,24 +1055,35 @@ def agregar_producto(request):
     
     if request.method == 'POST':
         try:
+            inicial = int(request.POST.get("stock") or 0)
             producto = Producto(
                 nombre=request.POST.get("nombre"),
                 precio_unitario=request.POST.get("precio"),
-                stock_actual=request.POST.get("stock")
+                stock_actual=inicial,
             )
+            if request.POST.get("stock_minimo"):
+                producto.stock_minimo = int(request.POST.get("stock_minimo"))
+            if request.POST.get("stock_maximo"):
+                producto.stock_maximo = int(request.POST.get("stock_maximo"))
 
             producto.full_clean()
+            producto.stock_actual = 0
             producto.save()
+            if inicial > 0:
+                registrar_movimiento(
+                    producto=producto, tipo='ENTRADA', cantidad=inicial,
+                    usuario=request.user, nota='Stock inicial al crear el producto',
+                )
 
             messages.success(
                 request,
                 f'✅ Producto "{producto.nombre}" agregado correctamente.'
             )
 
-        except ValidationError as e:
+        except (ValidationError, ValueError) as e:
             messages.error(
                 request,
-                e.messages[0]
+                e.messages[0] if hasattr(e, 'messages') else str(e)
             )
 
     return redirect('administracion:panel_admin')
@@ -1093,12 +1104,20 @@ def editar_producto(request, id):
 
         stock_cambio = nuevo_stock != producto.stock_actual
 
-        if stock_cambio and not (5 <= nuevo_stock <= 20):
-            messages.error(request, '❌ El stock debe estar entre 5 y 20 unidades.')
+        if stock_cambio and not (0 <= nuevo_stock <= producto.stock_maximo):
+            messages.error(request, f'❌ El stock debe estar entre 0 y {producto.stock_maximo} unidades.')
             return redirect('administracion:panel_admin')
 
         producto.nombre = request.POST.get('nombre')
         producto.precio_unitario = request.POST.get('precio')
+        try:
+            if request.POST.get('stock_minimo'):
+                producto.stock_minimo = int(request.POST.get('stock_minimo'))
+            if request.POST.get('stock_maximo'):
+                producto.stock_maximo = int(request.POST.get('stock_maximo'))
+        except ValueError:
+            messages.error(request, '❌ Mínimo y máximo deben ser números enteros.')
+            return redirect('administracion:panel_admin')
         if not stock_cambio:
             producto.stock_actual = nuevo_stock
 
@@ -1203,114 +1222,57 @@ def certificado_barbero_admin(request, id):
         f'attachment; filename="certificado_{barbero.nombre}.pdf"'
     )
 
-    doc = SimpleDocTemplate(response)
+    from pdf_estilo import ORO, NEGRO, CREMA, BORDE, TEXTO_SUAVE, ruta_logo
+    from reportlab.lib.pagesizes import A4 as _A4
+    from reportlab.lib.styles import ParagraphStyle as _PS
+    from reportlab.lib.enums import TA_CENTER as _C, TA_JUSTIFY as _J
+    from reportlab.lib.units import cm as _cm
 
-    estilos = getSampleStyleSheet()
+    def marco(canvas, doc_):
+        canvas.saveState()
+        w, h = _A4
+        canvas.setFillColor(CREMA)
+        canvas.rect(0, 0, w, h, stroke=0, fill=1)
+        canvas.setStrokeColor(ORO); canvas.setLineWidth(3)
+        canvas.rect(1.0 * _cm, 1.0 * _cm, w - 2.0 * _cm, h - 2.0 * _cm, stroke=1, fill=0)
+        canvas.setStrokeColor(NEGRO); canvas.setLineWidth(0.8)
+        canvas.rect(1.3 * _cm, 1.3 * _cm, w - 2.6 * _cm, h - 2.6 * _cm, stroke=1, fill=0)
+        canvas.setFillColor(NEGRO)
+        canvas.rect(1.3 * _cm, h - 4.6 * _cm, w - 2.6 * _cm, 3.3 * _cm, stroke=0, fill=1)
+        logo = ruta_logo()
+        if logo:
+            try:
+                canvas.drawImage(logo, w / 2 - 1.2 * _cm, h - 4.3 * _cm, 2.4 * _cm, 2.4 * _cm,
+                                 preserveAspectRatio=True, mask='auto')
+            except Exception:
+                pass
+        canvas.setFillColor(ORO); canvas.setFont('Helvetica-Bold', 11)
+        canvas.drawCentredString(w / 2, h - 4.0 * _cm + 0.1 * _cm - 0.9 * _cm, "BARBER SPRINGFIELD")
+        canvas.restoreState()
 
-    elementos = []
+    doc = SimpleDocTemplate(response, pagesize=_A4, leftMargin=3 * _cm, rightMargin=3 * _cm,
+                            topMargin=6 * _cm, bottomMargin=3 * _cm, title="Certificado laboral")
+    base = getSampleStyleSheet()["Normal"]
+    titulo = _PS("t", parent=base, fontName="Helvetica-Bold", fontSize=24, alignment=_C, textColor=NEGRO, spaceAfter=6)
+    sub = _PS("s", parent=base, fontSize=11, alignment=_C, textColor=TEXTO_SUAVE, spaceAfter=22)
+    nombre = _PS("n", parent=base, fontName="Helvetica-Bold", fontSize=22, alignment=_C, textColor=ORO, spaceBefore=6, spaceAfter=14)
+    cuerpo = _PS("c", parent=base, fontSize=12, leading=19, alignment=_J, textColor=NEGRO)
+    centro = _PS("ce", parent=base, fontSize=11, alignment=_C, textColor=TEXTO_SUAVE, leading=16)
 
-    ruta_logo = os.path.join(
-        settings.BASE_DIR,
-        "inventario",
-        "static",
-        "img",
-        "logo.jpeg"
-    )
-
-    if os.path.exists(ruta_logo):
-
-        logo = Image(ruta_logo)
-
-        logo.drawWidth = 80
-        logo.drawHeight = 80
-
-        elementos.append(logo)
-
-    elementos.append(
-        Paragraph(
-            "<b>CERTIFICADO LABORAL</b>",
-            estilos["Title"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "BarberSpringfield",
-            estilos["Heading2"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/><br/>Se certifica que:",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<b>{barbero.nombre}</b>",
-            estilos["Heading1"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Cédula: {barbero.cedula}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Especialidad: {barbero.especialidad}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Correo: {barbero.email}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/>Actualmente se encuentra vinculado laboralmente como BARBERO en nuestra empresa, desempeñando sus funciones con responsabilidad y profesionalismo.",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"<br/>Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/><br/><br/>_________________________",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "Administrador",
-            estilos["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "BarberSpringfield",
-            estilos["Normal"]
-        )
-    )
-
-    doc.build(elementos)
+    elementos = [
+        Paragraph("CERTIFICADO LABORAL", titulo),
+        Paragraph("Barber Springfield certifica que", sub),
+        Paragraph(barbero.nombre, nombre),
+        Paragraph(f"Cédula: <b>{barbero.cedula}</b> &nbsp;·&nbsp; Especialidad: <b>{barbero.especialidad}</b><br/>Correo: {barbero.email}", centro),
+        Spacer(1, 18),
+        Paragraph("Actualmente se encuentra vinculado laboralmente como <b>BARBERO</b> en nuestra empresa, "
+                  "desempeñando sus funciones con responsabilidad y profesionalismo.", cuerpo),
+        Spacer(1, 14),
+        Paragraph(f"Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}", centro),
+        Spacer(1, 56),
+        Paragraph("_______________________________<br/><b>Administrador</b><br/>Barber Springfield", centro),
+    ]
+    doc.build(elementos, onFirstPage=marco, onLaterPages=marco)
 
     return response
 
@@ -1389,81 +1351,56 @@ def cierre_caja_pdf(request):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="cierre_caja_{nombre_archivo}.pdf"'
 
-    doc = SimpleDocTemplate(response)
-    estilos = getSampleStyleSheet()
-    elementos = []
+    from pdf_estilo import (
+        crear_documento, tarjetas_resumen, titulo_seccion, tabla, ESTILOS, ROJO, VERDE, ORO, NEGRO,
+    )
+    from reportlab.platypus import Spacer as _Sp, Paragraph as _P
 
-    elementos.append(Paragraph(f"Cierre de caja — {titulo_periodo}", estilos["Title"]))
-    elementos.append(Spacer(1, 10))
-    elementos.append(Paragraph(f"Servicios finalizados: {resumen['total_finalizadas']}", estilos["Normal"]))
-    elementos.append(Paragraph(f"Citas canceladas: {resumen['total_canceladas']}", estilos["Normal"]))
-    elementos.append(Paragraph(f"Citas sin resolver: {resumen['total_pendientes']}", estilos["Normal"]))
-    elementos.append(Paragraph(f"Total de ingresos: ${resumen['total_ingresos']:,}", estilos["Normal"]))
-    elementos.append(Spacer(1, 16))
+    doc, decorar = crear_documento(response, "Cierre de caja", titulo_periodo)
+    gratis = sum(1 for c in resumen["finalizadas"] if c.corte_gratis)
+    elementos = [
+        tarjetas_resumen([
+            (resumen["total_finalizadas"], "Servicios realizados"),
+            (f"$ {resumen['total_ingresos']:,}", "Total de ingresos", "#1e8449"),
+            (resumen["total_canceladas"], "Citas canceladas", "#c0392b"),
+            (resumen["total_pendientes"], "Sin resolver", "#b9770e"),
+        ]),
+        _Sp(1, 4),
+    ]
+    if gratis:
+        elementos.append(_P(f"Incluye <b>{gratis}</b> corte(s) gratis del programa de fidelidad (precio $0).", ESTILOS["normal"]))
 
-    elementos.append(Paragraph("Servicios realizados", estilos["Heading2"]))
-    if resumen["es_rango"]:
-        encabezado_finalizadas = ["Fecha", "Hora", "Cliente", "Servicio", "Barbero", "Precio"]
-    else:
-        encabezado_finalizadas = ["Hora", "Cliente", "Servicio", "Barbero", "Precio"]
-    data_finalizadas = [encabezado_finalizadas]
+    elementos.append(titulo_seccion("Servicios realizados"))
+    rango = resumen["es_rango"]
+    enc = (["Fecha"] if rango else []) + ["Hora", "Cliente", "Servicio", "Barbero", "Precio"]
+    datos = [enc]
     for cita in resumen["finalizadas"]:
-        fila = []
-        if resumen["es_rango"]:
-            fila.append(cita.fecha.strftime("%d/%m/%Y"))
-        fila += [
-            cita.hora,
-            cita.cliente.nombre,
-            cita.servicio.nombre,
-            cita.barbero.nombre if cita.barbero else "-",
-            f"${cita.servicio.precio:,}",
-        ]
-        data_finalizadas.append(fila)
-    if len(data_finalizadas) == 1:
-        fila_vacia = ["Sin servicios finalizados en este período"] + ["-"] * (len(encabezado_finalizadas) - 1)
-        data_finalizadas.append(fila_vacia)
+        precio = f"${cita.precio_cobrado:,}" + (" · Gratis" if cita.corte_gratis else "")
+        datos.append(
+            ([cita.fecha.strftime("%d/%m/%Y")] if rango else []) +
+            [cita.hora, cita.cliente.nombre, cita.servicio.nombre,
+             cita.barbero.nombre if cita.barbero else "-", precio]
+        )
+    if len(datos) == 1:
+        datos.append(["Sin servicios finalizados en este período"] + [""] * (len(enc) - 1))
+    anchos = [2.2, 1.6, 4.4, 3.8, 3.2, 2.8] if rango else [2.0, 5.2, 4.4, 3.6, 2.8]
+    elementos.append(tabla(datos, anchos, centradas=(1, len(enc) - 1) if rango else (0, len(enc) - 1)))
 
-    tabla_finalizadas = Table(data_finalizadas, hAlign="LEFT")
-    tabla_finalizadas.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F4C542")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
-        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("FONTSIZE", (0, 0), (-1, -1), 9),
-    ]))
-    elementos.append(tabla_finalizadas)
-    elementos.append(Spacer(1, 20))
-
-    elementos.append(Paragraph("Citas canceladas", estilos["Heading2"]))
-    if resumen["es_rango"]:
-        encabezado_canceladas = ["Fecha", "Hora", "Cliente", "Servicio", "Barbero"]
-    else:
-        encabezado_canceladas = ["Hora", "Cliente", "Servicio", "Barbero"]
-    data_canceladas = [encabezado_canceladas]
+    elementos.append(titulo_seccion("Citas canceladas"))
+    enc2 = (["Fecha"] if rango else []) + ["Hora", "Cliente", "Servicio", "Barbero"]
+    datos2 = [enc2]
     for cita in resumen["canceladas"]:
-        fila = []
-        if resumen["es_rango"]:
-            fila.append(cita.fecha.strftime("%d/%m/%Y"))
-        fila += [
-            cita.hora,
-            cita.cliente.nombre,
-            cita.servicio.nombre,
-            cita.barbero.nombre if cita.barbero else "-",
-        ]
-        data_canceladas.append(fila)
-    if len(data_canceladas) == 1:
-        fila_vacia = ["Sin cancelaciones en este período"] + ["-"] * (len(encabezado_canceladas) - 1)
-        data_canceladas.append(fila_vacia)
+        datos2.append(
+            ([cita.fecha.strftime("%d/%m/%Y")] if rango else []) +
+            [cita.hora, cita.cliente.nombre, cita.servicio.nombre,
+             cita.barbero.nombre if cita.barbero else "-"]
+        )
+    if len(datos2) == 1:
+        datos2.append(["Sin cancelaciones en este período"] + [""] * (len(enc2) - 1))
+    anchos2 = [2.4, 1.8, 5.2, 4.8, 3.8] if rango else [2.0, 6.0, 5.4, 4.6]
+    elementos.append(tabla(datos2, anchos2, centradas=(1,) if rango else (0,), cabecera=ROJO, texto_cabecera=__import__("reportlab.lib.colors", fromlist=["white"]).white))
 
-    tabla_canceladas = Table(data_canceladas, hAlign="LEFT")
-    tabla_canceladas.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#3F2E22")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-        ("FONTSIZE", (0, 0), (-1, -1), 9),
-    ]))
-    elementos.append(tabla_canceladas)
-
-    doc.build(elementos)
+    doc.build(elementos, onFirstPage=decorar, onLaterPages=decorar)
 
     return response
 

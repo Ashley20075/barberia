@@ -53,13 +53,7 @@
 
 <body>
 
-    <nav class="navbar-custom">
-        <div class="container">
-            <div class="navbar-brand-custom">
-    <img src="{% static 'logo.jpeg' %}" alt="Logo"> Barber <span>Springfield</span>
-</div>
-        </div>
-    </nav>
+    {% include "partials/navbar_admin.html" with activo="inventario" %}
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -78,7 +72,7 @@
                     </div>
                     <div class="card-footer bg-dark border-0 p-3">
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'inventario:dashboard' %}" class="btn btn-secondary">
+                            <a href="{% url 'inventario:dashboard' %}" class="btn btn-secondary btn-cancelar">
                                 <i class="bi bi-arrow-left"></i> Cancelar
                             </a>
                             <form method="POST">

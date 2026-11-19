@@ -26,7 +26,7 @@
                     <p class="text-light-brown">Serás redirigido al inicio.</p>
                 </div>
                 <div class="modal-footer modal-footer-custom">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                     <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;" onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
@@ -41,7 +41,7 @@
             <h1 class="text-yellow" style="font-family:'Playfair Display',serif;">
                 <i class="bi bi-calendar-plus"></i> Agendar Cita
             </h1>
-            <a href="{% url 'administracion:panel_admin' %}" class="btn-secondary-custom">
+            <a href="{% url 'administracion:panel_admin' %}" class="btn-secondary-custom btn-volver">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
         </div>
@@ -214,7 +214,7 @@
                     <input type="hidden" name="duracion_total" id="duracion_total" value="40">
 
                     <div class="d-flex gap-2 justify-content-end">
-                        <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary">Cancelar</a>
+                        <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary btn-cancelar">Cancelar</a>
                         <button type="submit" class="btn-modern">
                             <i class="bi bi-check-circle"></i> Agendar Cita
                         </button>

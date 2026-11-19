@@ -3,7 +3,7 @@
     <ul class="pagination pagination-custom justify-content-center flex-wrap mt-3 mb-0">
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{{ parametro }}={{ page_obj.previous_page_number }}">
+                <a class="page-link" href="?{{ parametro }}={{ page_obj.previous_page_number }}{{ filtros_qs }}">
                     <i class="bi bi-chevron-left"></i>
                 </a>
             </li>
@@ -15,13 +15,13 @@
             {% if num == page_obj.number %}
                 <li class="page-item active"><span class="page-link">{{ num }}</span></li>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <li class="page-item"><a class="page-link" href="?{{ parametro }}={{ num }}">{{ num }}</a></li>
+                <li class="page-item"><a class="page-link" href="?{{ parametro }}={{ num }}{{ filtros_qs }}">{{ num }}</a></li>
             {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{{ parametro }}={{ page_obj.next_page_number }}">
+                <a class="page-link" href="?{{ parametro }}={{ page_obj.next_page_number }}{{ filtros_qs }}">
                     <i class="bi bi-chevron-right"></i>
                 </a>
             </li>

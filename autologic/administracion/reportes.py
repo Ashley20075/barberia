@@ -67,7 +67,7 @@ def calcular_cierre_caja(fecha_inicio, fecha_fin, hora_inicio=None, hora_fin=Non
     canceladas = [c for c in citas_del_rango if c.estado == "Cancelada"]
     pendientes = [c for c in citas_del_rango if c.estado in ("Pendiente", "Confirmada")]
 
-    total_ingresos = sum(cita.servicio.precio for cita in finalizadas)
+    total_ingresos = sum(cita.precio_cobrado for cita in finalizadas)
 
     por_barbero = {}
     for cita in finalizadas:

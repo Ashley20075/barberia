@@ -107,14 +107,14 @@ def _guardar_cuenta_google(usuario, credenciales, email_google):
     """
     cuenta_existente = CuentaGoogle.objects.filter(usuario=usuario).first()
     refresh_token = credenciales.refresh_token or (
-        cuenta_existente.token_refresco if cuenta_existente else None
+        cuenta_existente.token_refresco if cuenta_existente else ""
     )
 
     CuentaGoogle.objects.update_or_create(
         usuario=usuario,
         defaults={
             "token_acceso": credenciales.token,
-            "token_refresco": refresh_token,
+            "token_refresco": refresh_token or "",
             "token_uri": credenciales.token_uri,
             "client_id": credenciales.client_id,
             "client_secret": credenciales.client_secret,

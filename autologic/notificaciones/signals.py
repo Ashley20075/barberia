@@ -45,6 +45,11 @@ def _notificar_turno_liberado(
     if instance.estado != "Cancelada" or estado_anterior == "Cancelada":
         return
 
+    # Si la cita tenía cupón de corte gratis, el cupón vuelve al cliente.
+    if instance.corte_gratis:
+        from clientes.fidelidad import devolver_cupon
+        devolver_cupon(instance)
+
     anterior = getattr(instance, "_datos_anteriores_notif", None)
 
     cliente = anterior.cliente if anterior else instance.cliente

@@ -1,7 +1,11 @@
-from django.test import SimpleTestCase
+from django.contrib.auth.models import User
+from django.test import TestCase
 
 
-class IaEstiloSmokeTest(SimpleTestCase):
+class IaEstiloSmokeTest(TestCase):
     def test_url_exists(self):
-        response = self.client.get('/ia-estilo/')
-        self.assertEqual(response.status_code, 200)
+        # La vista exige sesion: sin login redirige (302) al login.
+        self.assertEqual(self.client.get('/ia-estilo/').status_code, 302)
+        User.objects.create_user('u', password='x')
+        self.client.login(username='u', password='x')
+        self.assertEqual(self.client.get('/ia-estilo/').status_code, 200)

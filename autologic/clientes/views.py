@@ -373,6 +373,17 @@ def agendar_cita(request):
                 )
 
                 # ====================================================
+                # CUPÓN DE CORTE GRATIS (cobro $0)
+                # ====================================================
+                if request.POST.get("usar_cupon") == "1":
+                    from .fidelidad import aplicar_cupon
+                    if not aplicar_cupon(nueva_cita):
+                        messages.warning(
+                            request,
+                            "No tienes cupones disponibles; la cita se cobrará normal."
+                        )
+
+                # ====================================================
                 # DESCONTAR STOCK DE PRODUCTOS
                 # ====================================================
 
@@ -427,6 +438,11 @@ def agendar_cita(request):
                         f"a las {hora}. "
                         f"Servicio: {servicio.nombre}."
                     )
+
+                    if nueva_cita.corte_gratis:
+                        mensaje_barbero += (
+                            " 🎟️ CUPÓN DE CORTE GRATIS: cobrar $0."
+                        )
 
                     # Si existe análisis de AutoAI,
                     # se informa al barbero.

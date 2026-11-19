@@ -243,54 +243,7 @@ body.light-mode #modalEditarInicio .form-select {
 <body class="tema-admin">
 
  <!-- ========== NAVBAR ========== -->
-    <nav class="navbar-custom">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
-
-                <div class="navbar-brand-custom">
-                    <img src="{% static 'logo.jpeg' %}" alt="Logo">
-                    Barber <span>Springfield</span>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-
-                    <a href="{% url 'notificaciones:listar' %}" class="nav-bell" title="Notificaciones">
-                        <i class="bi bi-bell"></i>
-                        {% if notificaciones_no_leidas %}
-                            <span class="nav-bell-badge">{{ notificaciones_no_leidas }}</span>
-                        {% endif %}
-                    </a>
-
-                    <a href="{% url 'administracion:panel_admin' %}" class="nav-btn active">
-                        <i class="bi bi-speedometer2"></i> Panel Admin
-                    </a>
-
-                    <a href="{% url 'inventario:dashboard' %}" class="nav-btn">
-                        <i class="bi bi-boxes"></i> Inventario
-                    </a>
-
-                    <a href="{% url 'administracion:cierre_caja' %}" class="nav-btn">
-                        <i class="bi bi-cash-coin"></i> Cierre de Caja
-                    </a>
-
-                    <button class="btn-logout-custom"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalCerrarSesion">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
-
-                    <button type="button"
-                            id="themeToggle"
-                            class="theme-toggle"
-                            title="Cambiar tema"
-                            aria-label="Cambiar tema">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% include "partials/navbar_admin.html" with activo="panel" %}
 
     <!-- MODAL CERRAR SESIÓN -->
     <div class="modal fade modal-cierre-sesion" id="modalCerrarSesion" tabindex="-1" aria-hidden="true">
@@ -306,7 +259,7 @@ body.light-mode #modalEditarInicio .form-select {
                     <p class="text-light-brown">Serás redirigido al inicio.</p>
                 </div>
                 <div class="modal-footer modal-footer-custom">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                     <button class="btn-modern" style="min-width:auto; padding:10px 30px; flex:0 1 auto;" onclick="window.location.href='{% url 'logout' %}'">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                     </button>
@@ -411,7 +364,7 @@ body.light-mode #modalEditarInicio .form-select {
         <div class="card-custom mb-4">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-people"></i> Usuarios Registrados</span>
-                <span class="badge bg-warning text-dark">{{ usuarios|length }}</span>
+                <span class="contador-seccion" title="Total">{{ usuarios|length }}</span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -472,7 +425,7 @@ body.light-mode #modalEditarInicio .form-select {
                                         </button>
                                     </form>
                                     {% else %}
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
+                                    <button type="button" class="btn btn-sm btn-act-asignar" data-bs-toggle="modal" data-bs-target="#modalAsignarBarbero{{ u.id }}">
                                         <i class="bi bi-person-badge"></i> Hacer barbero
                                     </button>
 
@@ -501,7 +454,7 @@ body.light-mode #modalEditarInicio .form-select {
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer modal-footer-custom">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                                                         <button type="submit" class="btn-modern"><i class="bi bi-person-badge"></i> Confirmar</button>
                                                     </div>
                                                 </form>
@@ -544,14 +497,14 @@ body.light-mode #modalEditarInicio .form-select {
         <div class="card-custom mb-4">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-calendar-check"></i> Citas</span>
-                <span class="badge bg-warning text-dark">{{ citas|length }}</span>
+                <span class="contador-seccion" title="Total">{{ citas|length }}</span>
             </div>
             <div class="p-3">
                 {% for cita in citas %}
                 <div class="cita-card {% if cita.estado == 'Confirmada' %}cita-card--confirmada{% endif %}">
                     <div class="cita-icono"><i class="bi bi-person"></i></div>
                     <div class="cita-info">
-                        <span class="cita-titulo">{{ cita.cliente.nombre }}</span>
+                        <span class="cita-titulo">{{ cita.cliente.nombre }}</span> {% if cita.corte_gratis %}<span class="badge-cupon" title="Esta cita usa un cupón: cobrar $0"><i class="bi bi-ticket-perforated-fill"></i> Cupón · Corte gratis · $0</span>{% endif %}
                         <span class="cita-meta">
                             <span><i class="bi bi-scissors"></i> {{ cita.servicio.nombre }}</span>
                             <span><i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }}</span>
@@ -570,7 +523,7 @@ body.light-mode #modalEditarInicio .form-select {
                         <span class="badge bg-danger">Cancelada</span>
                         {% endif %}
                         <div class="d-flex gap-1 flex-wrap justify-content-end">
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
+                            <button class="btn btn-sm btn-act-editar" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar esta cita?"
@@ -605,7 +558,7 @@ body.light-mode #modalEditarInicio .form-select {
         <div class="d-flex align-items-center gap-2">
 
             <!-- CANTIDAD -->
-            <span class="badge bg-secondary">
+            <span class="contador-seccion" title="Total">
                 {{ historial_citas.paginator.count }}
             </span>
 
@@ -635,7 +588,7 @@ body.light-mode #modalEditarInicio .form-select {
             <div class="cita-card cita-card--historial">
                 <div class="cita-icono"><i class="bi bi-clock-history"></i></div>
                 <div class="cita-info">
-                    <span class="cita-titulo">{{ cita.cliente.nombre }}</span>
+                    <span class="cita-titulo">{{ cita.cliente.nombre }}</span> {% if cita.corte_gratis %}<span class="badge-cupon" title="Esta cita usa un cupón: cobrar $0"><i class="bi bi-ticket-perforated-fill"></i> Cupón · Corte gratis · $0</span>{% endif %}
                     <span class="cita-meta">
                         <span><i class="bi bi-scissors"></i> {{ cita.servicio.nombre }}</span>
                         <span><i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}</span>
@@ -731,7 +684,7 @@ body.light-mode #modalEditarInicio .form-select {
                 <!-- CANCELAR -->
                 <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary btn-cancelar"
                     data-bs-dismiss="modal">
 
                     Cancelar
@@ -770,7 +723,7 @@ body.light-mode #modalEditarInicio .form-select {
         <div class="card-custom mb-4">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-person-badge"></i> Barberos</span>
-                <span class="badge bg-warning text-dark">{{ barberos|length }}</span>
+                <span class="contador-seccion" title="Total">{{ barberos|length }}</span>
             </div>
             <div class="p-3">
                 {% for b in barberos %}
@@ -796,10 +749,10 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="cita-acciones">
                         <div class="d-flex gap-1 flex-wrap justify-content-end">
-                            <a href="{% url 'administracion:certificado_barbero_admin' b.id %}" class="btn btn-sm btn-info" target="_blank">
+                            <a href="{% url 'administracion:certificado_barbero_admin' b.id %}" class="btn btn-sm btn-act-cert" target="_blank">
                                 <i class="bi bi-file-earmark-text"></i>
                             </a>
-                            <button class="btn btn-sm btn-warning"
+                            <button class="btn btn-sm btn-act-editar"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEditarBarbero"
                                     data-id="{{ b.id }}"
@@ -840,7 +793,7 @@ body.light-mode #modalEditarInicio .form-select {
         <div class="card-custom mb-4">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-scissors"></i> Servicios</span>
-                <span class="badge bg-warning text-dark">{{ servicios|length }}</span>
+                <span class="contador-seccion" title="Total">{{ servicios|length }}</span>
             </div>
             <div class="p-3">
                 {% for servicio in servicios %}
@@ -858,7 +811,7 @@ body.light-mode #modalEditarInicio .form-select {
                     </div>
                     <div class="cita-acciones">
                         <div class="d-flex gap-1 flex-wrap justify-content-end">
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}" data-duracion="{{ servicio.duracion }}">
+                            <button class="btn btn-sm btn-act-editar" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}" data-duracion="{{ servicio.duracion }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar este servicio?"
@@ -1449,7 +1402,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary-custom btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern"><i class="bi bi-check-circle"></i> Guardar cambios</button>
                     </div>
                 </form>
@@ -1500,7 +1453,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-plus-circle"></i> Crear Usuario
                         </button>
@@ -1568,7 +1521,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
@@ -1688,7 +1641,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
@@ -1725,7 +1678,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
@@ -1766,7 +1719,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-check-circle"></i> Guardar Cambios
                         </button>
@@ -1807,7 +1760,7 @@ body.light-mode #modalEditarInicio .form-select {
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-secondary btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn-modern" >
                             <i class="bi bi-plus-circle"></i> Agregar Servicio
                         </button>

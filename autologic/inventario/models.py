@@ -1,31 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone 
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
-    stock_actual = models.PositiveIntegerField(
-    default=5,
-    validators=[
-        MinValueValidator(
-            5,
-            message="El stock mínimo permitido es de 5 unidades."
-        ),
-        MaxValueValidator(
-            20,
-            message="No se puede registrar más de 20 unidades de este producto."
-        ),
-    ]
-)
+    stock_actual = models.PositiveIntegerField(default=0)
     stock_minimo = models.PositiveIntegerField(default=5)
+    stock_maximo = models.PositiveIntegerField(default=20)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     
     def __str__(self):
         return self.nombre
+
+    def clean(self):
+        super().clean()
+        if self.stock_minimo is not None and self.stock_maximo is not None:
+            if self.stock_minimo > self.stock_maximo:
+                raise ValidationError({'stock_minimo': 'El mínimo no puede ser mayor que el máximo.'})
+            if self.stock_actual is not None and self.stock_actual > self.stock_maximo:
+                raise ValidationError({'stock_actual': 'El stock no puede superar el máximo.'})
     
     def necesita_reposicion(self):
         return self.stock_actual <= self.stock_minimo
@@ -35,7 +32,7 @@ class Producto(models.Model):
             return 'agotado'
         elif self.stock_actual <= self.stock_minimo:
             return 'bajo'
-        elif self.stock_actual <= self.stock_minimo * 2:
+        elif self.stock_actual <= self.stock_minimo + max(1, (self.stock_maximo - self.stock_minimo) // 4):
             return 'medio'
         else:
             return 'suficiente'

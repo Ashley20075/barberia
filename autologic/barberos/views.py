@@ -57,11 +57,18 @@ def panel_barbero(request):
     filtro_estado = request.GET.get('estado', '').strip()
     filtro_fecha_inicio = request.GET.get('fecha_inicio', '').strip()
     filtro_fecha_fin = request.GET.get('fecha_fin', '').strip()
+    filtro_q = request.GET.get('q', '').strip()
 
     # Base de citas activas y de historial del barbero.
     citas_base = Cita.objects.filter(barbero=barbero)
 
     # Aplicar filtros sobre el conjunto de citas.
+    if filtro_q:
+        citas_base = citas_base.filter(
+            Q(cliente__nombre__icontains=filtro_q) |
+            Q(servicio__nombre__icontains=filtro_q)
+        )
+
     if filtro_estado:
         citas_base = citas_base.filter(estado=filtro_estado)
 
@@ -93,15 +100,18 @@ def panel_barbero(request):
         historial_archivado=False
     ).order_by('-fecha', '-hora')
 
-    historial_citas = Cita.objects.filter(
-        barbero=barbero,
-        estado__in=["Finalizada", "Cancelada"],
-        historial_archivado=False
-).order_by("-fecha", "-hora")
-
     total_citas = Cita.objects.filter(
         barbero=barbero
     ).count()
+
+    # Conserva los filtros al cambiar de página en la paginación.
+    from urllib.parse import urlencode
+    filtros_qs = urlencode({
+        k: val for k, val in (
+            ('estado', filtro_estado), ('q', filtro_q),
+            ('fecha_inicio', filtro_fecha_inicio), ('fecha_fin', filtro_fecha_fin),
+        ) if val
+    })
 
     citas_pendientes = proximas_citas.filter(
         estado="Pendiente"
@@ -138,6 +148,8 @@ def panel_barbero(request):
         "filtro_estado": filtro_estado,
         "filtro_fecha_inicio": filtro_fecha_inicio,
         "filtro_fecha_fin": filtro_fecha_fin,
+        "filtro_q": filtro_q,
+        "filtros_qs": ("&" + filtros_qs) if filtros_qs else "",
 
         "cuenta_google": CuentaGoogle.objects.filter(usuario=request.user).first(),
         "notificaciones_no_leidas": request.user.notificaciones.filter(leida=False).count(),
@@ -212,6 +224,7 @@ def cancelar_cita(request, id):
                         cantidad=1,
                         usuario=request.user,
                         nota=f'Devolución por cancelación de cita de {cita.cliente.nombre}',
+                        validar_maximo=False,
                     )
                 except Producto.DoesNotExist:
                     pass
@@ -255,30 +268,8 @@ def finalizar_cita(request, id):
         cita.estado = "Finalizada"
         cita.save()
 
-        # ============================================================
-        # PROGRAMA DE FIDELIDAD: cada 10 cortes finalizados, el
-        # siguiente corte queda gratis para el cliente.
-        # ============================================================
-        cliente = cita.cliente
-        cliente.cortes_completados += 1
-        cliente.cortes_para_recompensa += 1
-
-        gano_recompensa = False
-        if cliente.cortes_para_recompensa >= 10:
-            cliente.cortes_para_recompensa = 0
-            cliente.recompensas_disponibles += 1
-            gano_recompensa = True
-
-        cliente.save()
-
-        if gano_recompensa:
-            usuario_cliente = usuario_de_cliente(cliente)
-            notificar(
-                usuario_cliente,
-                '🎉 ¡Felicitaciones! Completaste 10 cortes. '
-                'Tu próximo corte será gratis.',
-                cita=cita,
-            )
+        from clientes.fidelidad import procesar_finalizacion
+        procesar_finalizacion(cita)
 
         messages.success(
             request,

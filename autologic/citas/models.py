@@ -109,6 +109,13 @@ class Cita(models.Model):
         default="Pendiente"
     )
 
+    # Corte gratis canjeado (programa de fidelidad: cada 10 cortes, el siguiente es gratis)
+    corte_gratis = models.BooleanField(default=False)
+
+    @property
+    def precio_cobrado(self):
+        return 0 if self.corte_gratis else self.servicio.precio
+
     class Meta:
         ordering = ["fecha", "hora"]
 

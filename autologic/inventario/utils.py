@@ -16,7 +16,7 @@ from django.db import transaction
 
 
 def registrar_movimiento(producto, tipo, cantidad, usuario=None,
-                         proveedor=None, nota=None):
+                         proveedor=None, nota=None, validar_maximo=True):
     """
     Aplica un movimiento de stock sobre `producto` y deja constancia de él
     en `MovimientoInventario`.
@@ -33,12 +33,19 @@ def registrar_movimiento(producto, tipo, cantidad, usuario=None,
     from .models import MovimientoInventario  # import local para evitar ciclos
 
     cantidad = int(cantidad)
+    if tipo != 'ENTRADA':
+        proveedor = None  # solo las entradas (compras) llevan proveedor
     stock_anterior = producto.stock_actual
 
     if tipo == 'ENTRADA':
         if cantidad <= 0:
             raise ValueError('La cantidad de entrada debe ser mayor a 0.')
         stock_nuevo = stock_anterior + cantidad
+        if validar_maximo and stock_nuevo > producto.stock_maximo:
+            raise ValueError(
+                f'No se puede superar el stock máximo de {producto.stock_maximo} '
+                f'unidades para "{producto.nombre}" (stock actual: {stock_anterior}).'
+            )
 
     elif tipo == 'SALIDA':
         if cantidad <= 0:
@@ -51,7 +58,16 @@ def registrar_movimiento(producto, tipo, cantidad, usuario=None,
         stock_nuevo = stock_anterior - cantidad
 
     elif tipo == 'AJUSTE':
+        if cantidad < 0:
+            raise ValueError('El stock ajustado no puede ser negativo.')
+        if cantidad > producto.stock_maximo:
+            raise ValueError(
+                f'El stock ajustado no puede superar el máximo ({producto.stock_maximo}).'
+            )
+        if not (nota or '').strip():
+            raise ValueError('El ajuste requiere un motivo.')
         stock_nuevo = cantidad
+        proveedor = None
 
     else:
         raise ValueError(f'Tipo de movimiento inválido: {tipo}')
