@@ -6872,7 +6872,386 @@ section[id], footer[id] { scroll-margin-top: 80px; }
 .notif-vacio { text-align: center; padding: 3rem 1rem; opacity: .75; }
 .notif-vacio i { font-size: 2.4rem; }
 .notif-cupon { --nc: #d4a017; } .notif-espera { --nc: #3b82f6; } .notif-liberado { --nc: #22a06b; }
+.notif-falta { --nc: #f97316; } .notif-resena { --nc: #eab308; }
 .notif-rechazo { --nc: #e5484d; } .notif-nueva { --nc: #8b5cf6; } .notif-confirmada { --nc: #14b8a6; }
 [data-theme="light"] .notif-item { background: color-mix(in srgb, var(--nc) 8%, #ffffff); color: #2b2218; }
 [data-theme="light"] .notif-chip, [data-theme="light"] .notif-etiqueta { color: color-mix(in srgb, var(--nc) 65%, #000); }
 
+
+
+/* ==========================================================================
+   MEJORAS v4: cabecera del cliente, asistente de citas, calificación,
+   penalizaciones, botones de eliminar, filtro del barbero, cupón y anclas
+   ========================================================================== */
+
+/* ---- Cabecera del cliente: "Agendar cita" y "Mis turnos" alineados ---- */
+.perfil-acciones { display: flex; flex-direction: column; gap: 10px; align-items: stretch; max-width: 240px; margin-left: auto; }
+.perfil-acciones .btn { width: 100%; min-height: 46px; white-space: nowrap; margin: 0 !important; }
+@media (max-width: 767.98px) { .perfil-acciones { max-width: none; margin: 0; } }
+
+/* ---- Asistente de citas: barra de navegación siempre en el mismo lugar ---- */
+#formularioTurno form { display: flex; flex-direction: column; min-height: min(78vh, 760px); }
+.wiz-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.wiz-cab .wiz-paso-txt { font-weight: 700; font-size: .9rem; opacity: .85; }
+.wiz-cab .wiz-cancelar { min-height: 34px; font-size: .85rem; padding: 4px 14px; }
+.wiz-nav {
+    margin-top: auto; position: sticky; bottom: 10px; z-index: 20;
+    display: grid; grid-template-columns: 130px 1fr 150px; align-items: center; gap: 10px;
+    padding: 10px 12px; box-shadow: 0 -8px 20px rgba(0, 0, 0, .22);
+}
+.wiz-nav .wiz-atras { grid-column: 1; width: 100%; }
+.wiz-nav .wiz-total { grid-column: 2; margin: 0; text-align: center; font-size: .95rem; }
+.wiz-nav .wiz-siguiente { grid-column: 3; width: 100%; min-height: 46px; font-size: 1rem; }
+.wiz-nav .wiz-atras.wiz-oculto { visibility: hidden; }
+.nc-resumen .nc-acciones { display: none !important; }
+@media (max-width: 575.98px) {
+    .wiz-nav { grid-template-columns: 1fr 1fr; bottom: 6px; }
+    .wiz-nav .wiz-total { grid-column: 1 / -1; grid-row: 1; }
+    .wiz-nav .wiz-atras { grid-column: 1; grid-row: 2; }
+    .wiz-nav .wiz-siguiente { grid-column: 2; grid-row: 2; }
+}
+/* "Ninguno" con el mismo aspecto que los demás adicionales */
+.nc-opciones-extras { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.nc-extra .nc-precio-extra.nc-sin-costo { opacity: .75; }
+.wiz-ninguno { display: none !important; }
+
+/* ---- Penalizaciones ---- */
+.aviso-penalizacion {
+    display: flex; gap: 12px; align-items: flex-start; margin: 0 auto 1.4rem; max-width: 75%;
+    padding: 12px 16px; border-radius: 12px; font-size: .92rem;
+    background: rgba(229, 72, 77, .14); border: 1.5px solid #e5484d; color: var(--color-texto, #f5ede0);
+}
+.aviso-penalizacion > i { font-size: 1.4rem; color: #e5484d; flex-shrink: 0; }
+.aviso-penalizacion--suave { background: rgba(249, 115, 22, .12); border-color: #f97316; }
+.aviso-penalizacion--suave > i { color: #f97316; }
+[data-theme="light"] .aviso-penalizacion { color: #3d1210; background: #fdecea; }
+[data-theme="light"] .aviso-penalizacion--suave { color: #4a2306; background: #fff1e5; }
+@media (max-width: 767.98px) { .aviso-penalizacion { max-width: 100%; } }
+.cancelar-bloqueado { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; opacity: .75; }
+#btnAgendar:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ---- Calificación del servicio ---- */
+.aviso-calificar {
+    padding: 1rem 1.2rem; border-radius: 14px; max-width: 100%;
+    background: linear-gradient(120deg, rgba(244, 197, 66, .16), rgba(244, 197, 66, .04));
+    border: 1px solid rgba(244, 197, 66, .45);
+}
+.aviso-calificar-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: .8rem; }
+.aviso-calificar-cab h5 { color: var(--color-primario, #d4a017); font-weight: 800; }
+.calificar-form + .calificar-form { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--color-borde, #5a4a38); }
+.calificar-detalle { font-size: .92rem; }
+.calificar-acciones { display: flex; justify-content: flex-end; margin-top: .6rem; }
+.estrellas { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.estrellas input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.estrellas label { cursor: pointer; font-size: 1.9rem; line-height: 1; color: #6b5d4c; transition: transform .12s ease, color .12s ease; }
+.estrellas label:hover, .estrellas label:hover ~ label, .estrellas input:checked ~ label { color: #f4c542; }
+.estrellas label:hover { transform: scale(1.12); }
+.estrellas input:focus-visible + label { outline: 3px solid rgba(212, 160, 23, .6); outline-offset: 2px; border-radius: 6px; }
+[data-theme="light"] .estrellas label { color: #cdbf9f; }
+[data-theme="light"] .estrellas label:hover, [data-theme="light"] .estrellas label:hover ~ label,
+[data-theme="light"] .estrellas input:checked ~ label { color: #d99a00; }
+.resena-mia { display: block; font-size: .8rem; margin-top: 2px; }
+.resena-mia .bi-star-fill { color: #f4c542; margin-right: 1px; }
+.resena-mia .bi-star-fill.apagada { color: #6b5d4c; opacity: .55; }
+[data-theme="light"] .resena-mia .bi-star-fill { color: #d99a00; }
+[data-theme="light"] .resena-mia .bi-star-fill.apagada { color: #cdbf9f; }
+.resena-texto { margin-left: 6px; opacity: .85; font-style: italic; }
+
+/* ---- Botones de eliminar: compactos y con la figura bien contrastada ---- */
+.btn-icono {
+    width: 34px; height: 34px; min-height: 34px; padding: 0 !important; border-radius: 9px;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    background: #b3261e !important; border: 1.5px solid #ffffff55 !important; color: #ffffff !important;
+}
+.btn-icono i {
+    font-size: 1rem; line-height: 1; color: #ffffff !important; margin: 0 !important;
+}
+.btn-icono:hover {
+    background: #8f1c15 !important; box-shadow: 0 0 0 3px rgba(179, 38, 30, .35);
+}
+[data-theme="light"] .btn-icono { border-color: #7a1812 !important; }
+
+/* ---- Filtro de citas del barbero ---- */
+.filtros-citas { padding: 0; overflow: hidden; }
+.filtros-citas-cab {
+    display: flex; align-items: center; gap: 8px; padding: 12px 18px; font-weight: 800;
+    color: var(--color-primario, #d4a017); border-bottom: 1px solid var(--color-borde, #5a4a38);
+    background: rgba(212, 160, 23, .07);
+}
+.filtros-activos {
+    margin-left: auto; font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 999px; background: var(--color-primario, #d4a017); color: #1a1410;
+}
+.filtros-citas-form {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 14px; align-items: end; padding: 16px 18px;
+}
+.filtro-campo label {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: .74rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--color-primario, #d4a017);
+}
+.filtro-campo .form-control, .filtro-campo .form-select { height: 44px; border-radius: 10px; }
+.filtro-botones { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.filtro-botones .btn { min-width: 140px; min-height: 44px; }
+[data-theme="light"] .filtros-citas-cab { color: #7a5604; background: #faf1da; border-color: #e3d7bd; }
+[data-theme="light"] .filtro-campo label { color: #7a5604; }
+@media (max-width: 991.98px) { .filtros-citas-form { grid-template-columns: 1fr 1fr; } .filtro-buscar { grid-column: 1 / -1; } }
+@media (max-width: 575.98px) {
+    .filtros-citas-form { grid-template-columns: 1fr; }
+    .filtro-botones .btn { flex: 1 1 100%; }
+}
+
+/* ---- Cupón de corte gratis: letra siempre legible ---- */
+.cupon-corte .cupon-centro h4, .cupon-corte .cupon-centro p, .cupon-corte .cupon-centro { color: #1a1410 !important; }
+.cupon-corte .cupon-centro p { font-weight: 600; opacity: .9; }
+.cupon-corte .cupon-izq, .cupon-corte .cupon-izq span, .cupon-corte .cupon-izq i { color: #f4c542 !important; }
+.cupon-corte .cupon-der .btn-primary-custom { background: #1a1410 !important; color: #f4c542 !important; border: none !important; }
+.cupon-corte .cupon-der .btn-primary-custom i { color: #f4c542 !important; }
+
+/* ---- Panel admin: barra "Ir a" en pantallas pequeñas ---- */
+.admin-anclas::before {
+    position: sticky; left: 0; z-index: 2; flex: 0 0 auto; align-self: center;
+    padding: 4px 10px 4px 0; background: var(--color-fondo-secundario, #231b14);
+}
+[data-theme="light"] .admin-anclas::before { background: #ffffff; }
+.admin-anclas { scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+.admin-anclas::-webkit-scrollbar { display: none; }
+.admin-anclas a { flex: 0 0 auto; scroll-snap-align: start; }
+@media (max-width: 767.98px) {
+    .admin-anclas { top: 58px !important; padding: 6px 10px; gap: 6px; border-radius: 10px; margin-left: -4px; margin-right: -4px; }
+    .admin-anclas::before { font-size: .72rem; padding-right: 8px; }
+    .admin-anclas a { padding: 5px 12px; font-size: .8rem; }
+}
+
+
+/* ==========================================================================
+   MEJORAS v5
+   ========================================================================== */
+
+/* Botones con texto nunca se recortan */
+.btn { white-space: nowrap; }
+td .btn, .cita-acciones .btn { flex-shrink: 0; }
+
+/* ---- Vaciar historial: mismo estilo en cliente, barbero, admin y notificaciones ---- */
+.btn-vaciar {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 14px;
+    border-radius: 10px; font-weight: 700; font-size: .85rem; line-height: 1;
+    background: transparent !important; color: #e5484d !important; border: 1.5px solid #e5484d !important;
+}
+.btn-vaciar i { color: inherit !important; font-size: 1rem; margin: 0 !important; }
+.btn-vaciar:hover { background: #e5484d !important; color: #fff !important; }
+[data-theme="light"] .btn-vaciar { color: #b3261e !important; border-color: #b3261e !important; }
+[data-theme="light"] .btn-vaciar:hover { background: #b3261e !important; color: #fff !important; }
+
+/* ---- Paginación: todos los botones del mismo tamaño ---- */
+.pagination-custom { gap: 6px; align-items: center; }
+.pagination-custom .page-item { margin: 0 !important; display: flex; }
+.pagination-custom .page-link {
+    display: inline-flex !important; align-items: center; justify-content: center;
+    width: 40px; height: 40px; min-height: 40px; padding: 0 !important; margin: 0 !important;
+    border-radius: 10px !important; font-weight: 700; line-height: 1;
+}
+.pagination-custom .page-link i { font-size: 1rem; line-height: 1; }
+.pagination-custom .page-item.active .page-link { box-shadow: 0 0 0 3px rgba(212, 160, 23, .25); }
+
+/* ---- Contador de secciones del admin: bien visible en claro y oscuro ---- */
+html body span.contador-seccion {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px;
+    padding: 0 9px; border-radius: 999px; font-weight: 800; font-size: .85rem;
+    background: #d4a017 !important; color: #1a1410 !important; -webkit-text-fill-color: #1a1410 !important;
+    border: 1.5px solid rgba(26, 20, 16, .35);
+}
+
+/* ---- Selector URL / Dispositivo ---- */
+.selector-fuente-imagen .btn, .selector-fuente-imagen .btn-outline-warning {
+    background: transparent !important; background-image: none !important; box-shadow: none !important;
+    color: #d4a017 !important; border: 1.5px solid #d4a017 !important; min-height: 40px; padding: 6px 18px;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.selector-fuente-imagen .btn i { color: inherit !important; }
+.selector-fuente-imagen .btn-check:checked + .btn, .selector-fuente-imagen .btn:hover {
+    background: #d4a017 !important; color: #1a1410 !important; border-color: #d4a017 !important;
+}
+[data-theme="light"] .selector-fuente-imagen .btn { color: #7a5604 !important; border-color: #b8860b !important; background: #fff !important; }
+[data-theme="light"] .selector-fuente-imagen .btn-check:checked + .btn, [data-theme="light"] .selector-fuente-imagen .btn:hover {
+    background: #d4a017 !important; color: #1a1410 !important;
+}
+
+/* ---- Fotos de barberos dentro de su círculo ---- */
+.cita-icono { overflow: hidden; flex-shrink: 0; }
+.cita-icono img { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 50%; display: block; }
+
+/* ---- Barra de secciones del admin: sin "Ir a" ---- */
+.admin-anclas::before { content: none !important; display: none !important; }
+.admin-anclas {
+    display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; padding: 8px 12px; border-radius: 14px;
+    background: var(--color-fondo-card, #231b14); border: 1px solid var(--color-borde, #5a4a38);
+}
+.admin-anclas a {
+    flex: 0 0 auto; padding: 7px 16px; border-radius: 999px; font-weight: 700; font-size: .85rem;
+    color: var(--color-primario, #d4a017); border: 1.5px solid var(--color-borde, #5a4a38); background: transparent;
+}
+[data-theme="light"] .admin-anclas a { color: #7a5604; border-color: #e3d7bd; }
+@media (max-width: 767.98px) { .admin-anclas { top: 58px !important; margin: 0 -2px 12px; } }
+
+/* ---- Botón "Volver" idéntico en todo el panel admin / inventario ---- */
+.btn-volver-panel {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 150px; height: 44px;
+    padding: 0 20px; border-radius: 999px; font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap;
+    background: transparent; color: var(--color-primario, #d4a017); border: 1.5px solid var(--color-primario, #d4a017);
+    transition: all .2s ease;
+}
+.btn-volver-panel i { color: inherit; }
+.btn-volver-panel:hover { background: var(--color-primario, #d4a017); color: #1a1410; }
+[data-theme="light"] .btn-volver-panel { color: #7a5604; border-color: #b8860b; background: #fff; }
+[data-theme="light"] .btn-volver-panel:hover { background: #d4a017; color: #1a1410; }
+
+/* ---- Agendar cita del admin: mismo estilo que el cliente ---- */
+.admin-agenda .nc-opciones { display: grid; gap: 10px; }
+.admin-agenda .nc-opciones-cortes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.admin-agenda .paso-titulo { font-weight: 800; margin: 18px 0 10px; color: var(--color-primario, #d4a017); }
+.admin-agenda .nc-resumen { position: sticky; bottom: 10px; z-index: 15; margin-top: 18px; }
+.admin-agenda .nc-resumen .nc-acciones { display: flex !important; }
+
+/* ---- Carrusel de estilos en móvil: se desliza con el dedo, sin flechas ---- */
+.estilos-carousel { touch-action: pan-y; }
+@media (max-width: 767.98px) {
+    .estilos-carousel .estilo-control, .estilos-carousel .carousel-control-prev, .estilos-carousel .carousel-control-next { display: none !important; }
+}
+
+/* ---- Calificación: botón para omitir ---- */
+.calificar-cerrar {
+    background: transparent; border: 1.5px solid var(--color-borde, #5a4a38); color: inherit; width: 32px; height: 32px;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; line-height: 1; cursor: pointer;
+}
+.calificar-cerrar:hover { background: #e5484d; border-color: #e5484d; color: #fff; }
+.aviso-calificar-cab .acciones-cab { display: flex; align-items: center; gap: 8px; }
+
+/* Cabecera del cliente: botones en fila, mismo tamaño, centrados */
+.perfil-acciones--fila { flex-direction: row !important; max-width: none !important; margin: 0 !important; gap: 12px; justify-content: flex-end; }
+.perfil-acciones--fila .btn { flex: 1 1 0; width: auto !important; min-width: 140px; max-width: 210px; height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+#btnAgendar { background: linear-gradient(135deg, #f4c542, #d4a017) !important; color: #1a1410 !important; border: none !important; }
+#btnAgendar i { color: #1a1410 !important; }
+@media (max-width: 767.98px) { .perfil-acciones--fila { justify-content: stretch; } .perfil-acciones--fila .btn { max-width: none; } }
+
+
+/* ==========================================================================
+   MEJORAS v6: paleta por panel (admin dorado · barbero bronce · cliente plateado)
+   ========================================================================== */
+:root { --acento-texto: #1a1410; }
+[data-theme="light"] .tema-barbero, [data-theme="light"] .tema-cliente { --acento-texto: #ffffff; }
+
+/* ---- Cabecera del cliente: botones plateados ---- */
+.tema-cliente #btnAgendar {
+    background: linear-gradient(135deg, #EAEEF1, #A9B1BA) !important; color: #1a1410 !important; border: none !important;
+}
+.tema-cliente #btnAgendar i { color: #1a1410 !important; }
+.tema-cliente #btnAgendar:hover { filter: brightness(1.08); }
+[data-theme="light"] .tema-cliente #btnAgendar { background: linear-gradient(135deg, #7d8893, #5B6670) !important; color: #fff !important; }
+[data-theme="light"] .tema-cliente #btnAgendar i { color: #fff !important; }
+.perfil-acciones--fila .btn-volver {
+    background: transparent !important; color: var(--color-primario) !important;
+    border: 1.5px solid var(--color-primario) !important;
+}
+.perfil-acciones--fila .btn-volver:hover { background: var(--color-primario) !important; color: var(--acento-texto) !important; }
+
+/* ---- Paginación: oscura, con el acento de cada panel ---- */
+.pagination-custom .page-link {
+    background: #2a211b !important; color: #e8dfd0 !important; border: 1.5px solid #4a3d33 !important;
+}
+.pagination-custom .page-link i { color: inherit !important; }
+.pagination-custom .page-item.disabled .page-link { opacity: .4; background: #211a15 !important; }
+.pagination-custom .page-item:not(.disabled):not(.active) .page-link:hover {
+    border-color: var(--color-primario) !important; color: var(--color-primario) !important;
+}
+.pagination-custom .page-item.active .page-link {
+    background: var(--color-primario) !important; color: var(--acento-texto) !important;
+    border-color: var(--color-primario) !important; box-shadow: 0 0 0 3px rgba(var(--color-primario-rgb), .28);
+}
+[data-theme="light"] .pagination-custom .page-link { background: #ffffff !important; color: #3d3224 !important; border-color: #d9cdb4 !important; }
+[data-theme="light"] .pagination-custom .page-item.disabled .page-link { background: #f3ede0 !important; }
+[data-theme="light"] .pagination-custom .page-item.active .page-link { color: var(--acento-texto) !important; }
+
+/* ---- Vaciar historial: solo la caneca, con contraste en cada modo ---- */
+.btn-vaciar-icono {
+    width: 40px; height: 40px; min-height: 40px; padding: 0 !important; border-radius: 10px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(229, 72, 77, .14) !important; border: 1.5px solid #ff6b6b !important; color: #ff6b6b !important;
+}
+.btn-vaciar-icono i { font-size: 1.15rem !important; line-height: 1; color: #ff6b6b !important; margin: 0 !important; }
+.btn-vaciar-icono:hover { background: #e5484d !important; border-color: #e5484d !important; }
+.btn-vaciar-icono:hover i { color: #fff !important; }
+[data-theme="light"] .btn-vaciar-icono { background: #fdecea !important; border-color: #b3261e !important; }
+[data-theme="light"] .btn-vaciar-icono i { color: #b3261e !important; }
+[data-theme="light"] .btn-vaciar-icono:hover { background: #b3261e !important; }
+[data-theme="light"] .btn-vaciar-icono:hover i { color: #fff !important; }
+
+/* ---- Botones de los avisos: "cancelar" neutro y la acción destacada ---- */
+.modal-content .btn-cancelar, .modal-footer .btn-secondary, .modal-footer-custom .btn-secondary {
+    background: transparent !important; color: #e8dfd0 !important; border: 1.5px solid rgba(190, 178, 160, .65) !important;
+}
+.modal-content .btn-cancelar:hover, .modal-footer .btn-secondary:hover, .modal-footer-custom .btn-secondary:hover {
+    background: rgba(190, 178, 160, .18) !important;
+}
+[data-theme="light"] .modal-content .btn-cancelar, [data-theme="light"] .modal-footer .btn-secondary,
+[data-theme="light"] .modal-footer-custom .btn-secondary { color: #3d3224 !important; border-color: #a89880 !important; }
+.modal-footer .btn, .modal-footer-custom .btn { min-width: 130px; min-height: 44px; font-weight: 700; }
+.modal-footer .btn-danger, .modal-footer-custom .btn-danger { background: #c0392b !important; border: 1.5px solid #c0392b !important; color: #fff !important; }
+
+/* ---- Aviso de cerrar sesión (igual en los 3 paneles, cambia el color de aceptar) ---- */
+body.tema-admin #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #F4C542, #C89418) !important; color: #1a1410 !important; border: none !important; }
+body.tema-barbero #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #E3A360, #CD7F32) !important; color: #1a1410 !important; border: none !important; }
+body.tema-cliente #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #EAEEF1, #A9B1BA) !important; color: #1a1410 !important; border: none !important; }
+[data-theme="light"] body.tema-admin #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #D9A928, #C89418) !important; }
+[data-theme="light"] body.tema-barbero #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #A8692F, #8B5A2B) !important; color: #fff !important; }
+[data-theme="light"] body.tema-cliente #modalConfirmarAceptar:not(.btn-danger) { background: linear-gradient(135deg, #7d8893, #5B6670) !important; color: #fff !important; }
+#modalConfirmarAceptar { min-width: 150px; }
+
+/* ---- Asistente de citas: cancelar como enlace discreto bajo la barra ---- */
+.wiz-nav { grid-template-columns: 130px 1fr 150px; grid-template-areas: "atras total sig" "cancel cancel cancel"; row-gap: 6px; }
+.wiz-nav .wiz-atras { grid-area: atras; } .wiz-nav .wiz-total { grid-area: total; } .wiz-nav .wiz-siguiente { grid-area: sig; }
+.wiz-cancelar-link {
+    grid-area: cancel; justify-self: center; background: none; border: none; padding: 4px 10px; font-size: .8rem;
+    font-weight: 600; opacity: .7; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.wiz-cancelar-link:hover { opacity: 1; color: #ff6b6b; }
+.wiz-cab { margin-bottom: 8px; }
+@media (max-width: 575.98px) {
+    .wiz-nav { grid-template-columns: 1fr 1fr; grid-template-areas: "total total" "atras sig" "cancel cancel"; }
+}
+.wiz-detalle { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.wiz-detalle li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-borde, #4a3d33); background: rgba(255,255,255,.03); font-size: .9rem; }
+.wiz-detalle li i { color: var(--color-primario); font-size: 1.15rem; }
+.wiz-detalle small { display: block; opacity: .7; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ---- Rosquillas ---- */
+.fidelidad-insignia-donut { max-width: 52px; }
+.fidelidad-insignia-ganada .fidelidad-insignia-donut { transform: rotate(-6deg); }
+.fidelidad-insignia:nth-child(even).fidelidad-insignia-ganada .fidelidad-insignia-donut { transform: rotate(8deg); }
+.rosquilla-bloqueada { opacity: .55; }
+
+/* ---- Agendar cita del admin: más ordenado ---- */
+.admin-agenda .nc-opciones-cortes { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.admin-agenda .nc-card { min-height: 84px; align-items: center; }
+.admin-agenda .nc-nombre { white-space: normal; }
+.admin-agenda .nc-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.admin-agenda .nc-opciones-extras { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 8px; }
+.admin-agenda .paso-titulo { margin: 26px 0 10px; display: flex; align-items: center; gap: 8px; }
+.admin-agenda .tipo-cliente { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.admin-agenda .tipo-cliente .form-check { margin: 0; padding: 10px 16px 10px 40px; border: 1.5px solid var(--color-borde, #4a3d33); border-radius: 12px; }
+.admin-agenda .tipo-cliente .form-check:has(input:checked) { border-color: var(--color-primario); background: rgba(var(--color-primario-rgb), .1); }
+.admin-agenda .tipo-cliente .form-check-input { margin-left: -26px; }
+.admin-agenda .form-select { min-height: 46px; border-radius: 10px; }
+
+/* ---- Inventario: acciones de la tabla, todas iguales y solo con icono ---- */
+.acciones-inv { display: inline-flex; gap: 8px; justify-content: center; }
+.btn-inv {
+    width: 38px; height: 38px; min-height: 38px; padding: 0 !important; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; line-height: 1;
+    background: transparent !important; border: 1.5px solid var(--color-primario) !important; color: var(--color-primario) !important;
+}
+.btn-inv i { color: inherit !important; margin: 0 !important; }
+.btn-inv:hover { background: var(--color-primario) !important; color: var(--acento-texto) !important; }
+.btn-inv-eliminar { border-color: #e5484d !important; color: #e5484d !important; }
+.btn-inv-eliminar:hover { background: #e5484d !important; color: #fff !important; }
+[data-theme="light"] .btn-inv-eliminar { border-color: #b3261e !important; color: #b3261e !important; }
+[data-theme="light"] .btn-inv-eliminar:hover { background: #b3261e !important; color: #fff !important; }

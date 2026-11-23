@@ -464,6 +464,11 @@ body.light-mode #modalEditarInicio .form-select {
                                     {% endif %}
 
                                     {# Segundo botón: activar/desactivar, siempre visible. #}
+                                    {% if u.cliente and u.cliente.inasistencias %}
+                                    <a href="{% url 'administracion:perdonar_penalizacion' u.cliente.id %}" class="btn btn-sm btn-volver mt-1" title="Quitar faltas y penalización" data-confirmar="¿Quitar las {{ u.cliente.inasistencias }} falta(s) y la penalización de {{ u.username }}?" data-confirmar-titulo="Perdonar penalización" data-confirmar-boton="Sí, perdonar">
+                                        <i class="bi bi-heart-pulse"></i> Perdonar faltas ({{ u.cliente.inasistencias }})
+                                    </a>
+                                    {% endif %}
                                     {% if u.is_active %}
                                     <a href="{% url 'administracion:desactivar_usuario' u.id %}" class="btn btn-sm btn-danger mt-1" data-confirmar="¿Deseas desactivar este usuario? Se conservarán sus datos y citas." data-confirmar-titulo="Desactivar usuario" data-confirmar-boton="Sí, desactivar" data-confirmar-peligro>
                                         <i class="bi bi-person-x"></i> Desactivar
@@ -523,10 +528,18 @@ body.light-mode #modalEditarInicio .form-select {
                         <span class="badge bg-danger">Cancelada</span>
                         {% endif %}
                         <div class="d-flex gap-1 flex-wrap justify-content-end">
+                            {% if cita.puede_inasistencia %}
+                            <a href="{% url 'administracion:marcar_inasistencia' cita.id 'cliente' %}" class="btn btn-sm btn-warning" title="Registrar que el cliente no asistió" data-confirmar="¿El cliente no asistió? Se aplicará la penalización." data-confirmar-titulo="Cliente no asistió" data-confirmar-boton="Sí, no asistió" data-confirmar-peligro>
+                                <i class="bi bi-person-x"></i> Cliente faltó
+                            </a>
+                            <a href="{% url 'administracion:marcar_inasistencia' cita.id 'barbero' %}" class="btn btn-sm btn-volver" title="Registrar que el barbero no asistió" data-confirmar="¿El barbero no asistió? El cliente recibirá un cupón de corte gratis." data-confirmar-titulo="Barbero no asistió" data-confirmar-boton="Sí, no asistió" data-confirmar-peligro>
+                                <i class="bi bi-scissors"></i> Barbero faltó
+                            </a>
+                            {% endif %}
                             <button class="btn btn-sm btn-act-editar" data-bs-toggle="modal" data-bs-target="#modalEditarCita" data-id="{{ cita.id }}" data-cliente="{{ cita.cliente.id }}" data-servicio="{{ cita.servicio.id }}" data-fecha="{{ cita.fecha|date:'Y-m-d' }}" data-hora="{{ cita.hora }}" data-barbero="{{ cita.barbero.id }}" data-estado="{{ cita.estado }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar esta cita?"
+                            <a href="{% url 'administracion:eliminar_cita' cita.id %}" class="btn btn-sm btn-danger btn-icono" aria-label="Eliminar cita" data-confirmar="¿Eliminar esta cita?"
                                        data-confirmar-titulo="Eliminar cita"
                                        data-confirmar-boton="Sí, eliminar"
                                        data-confirmar-peligro>
@@ -565,10 +578,10 @@ body.light-mode #modalEditarInicio .form-select {
             <!-- BOTÓN VACIAR HISTORIAL -->
             <button
                 type="button"
-                class="btn btn-sm btn-outline-danger"
+                class="btn btn-vaciar-icono"
                 data-bs-toggle="modal"
                 data-bs-target="#modalVaciarHistorialAdmin"
-                title="Vaciar historial">
+                title="Vaciar historial" aria-label="Vaciar historial">
 
                 <i class="bi bi-trash3"></i>
 
@@ -598,6 +611,9 @@ body.light-mode #modalEditarInicio .form-select {
                 <div class="cita-acciones">
                     {% if cita.estado == "Finalizada" %}
                         <span class="badge bg-info text-dark">Finalizada</span>
+                        {% if cita.resena %}<span class="resena-mia ms-1" title="Calificación del cliente">{% for n in "12345" %}<i class="bi bi-star-fill{% if forloop.counter > cita.resena.puntuacion %} apagada{% endif %}"></i>{% endfor %}</span>{% endif %}
+                    {% elif cita.estado == "NoAsistio" %}
+                        <span class="badge bg-warning text-dark">{% if cita.falta_de == "barbero" %}Barbero no asistió{% else %}Cliente no asistió{% endif %}</span>
                     {% else %}
                         <span class="badge bg-danger">Cancelada</span>
                     {% endif %}
@@ -773,7 +789,7 @@ body.light-mode #modalEditarInicio .form-select {
                             </button>
                             <form method="post" action="{% url 'administracion:eliminar_barbero' b.id %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar la cuenta de {{ b.nombre }}? Se bloqueará su acceso y se retirará su perfil operativo, pero se conservarán sus citas e historial." data-confirmar-titulo="Eliminar cuenta" data-confirmar-boton="Sí, eliminar cuenta" data-confirmar-peligro>
+                                <button type="submit" class="btn btn-sm btn-danger btn-icono" aria-label="Eliminar cuenta" data-confirmar="¿Eliminar la cuenta de {{ b.nombre }}? Se bloqueará su acceso y se retirará su perfil operativo, pero se conservarán sus citas e historial." data-confirmar-titulo="Eliminar cuenta" data-confirmar-boton="Sí, eliminar cuenta" data-confirmar-peligro>
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
@@ -814,7 +830,7 @@ body.light-mode #modalEditarInicio .form-select {
                             <button class="btn btn-sm btn-act-editar" data-bs-toggle="modal" data-bs-target="#modalEditarServicio" data-url="{% url 'administracion:editar_servicio' servicio.id %}" data-nombre="{{ servicio.nombre }}" data-descripcion="{{ servicio.descripcion }}" data-precio="{{ servicio.precio }}" data-duracion="{{ servicio.duracion }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger" data-confirmar="¿Eliminar este servicio?"
+                            <a href="{% url 'administracion:eliminar_servicio' servicio.id %}" class="btn btn-sm btn-danger btn-icono" aria-label="Eliminar servicio" data-confirmar="¿Eliminar este servicio?"
                                        data-confirmar-titulo="Eliminar servicio"
                                        data-confirmar-boton="Sí, eliminar"
                                        data-confirmar-peligro>

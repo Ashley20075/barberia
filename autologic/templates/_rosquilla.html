@@ -1,17 +1,37 @@
 <svg class="rosquilla-svg{% if ganada %} rosquilla-ganada{% else %} rosquilla-bloqueada{% endif %}" viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true" focusable="false">
-    <!-- masa -->
-    <circle cx="32" cy="32" r="26" fill="{% if ganada %}#d9a066{% else %}var(--rq-bloq-masa, #8a8378){% endif %}"/>
-    <!-- glaseado con goteo -->
-    <path d="M32 9c12 0 21 8 22 19 1 5-3 8-6 6-2 5-6 5-8 1-2 4-6 5-8 1-2 4-6 5-8 1-3 3-8 1-8-4 1-14 7-24 14-24 9-24z"
-          fill="{% if ganada %}#ff7aa8{% else %}var(--rq-bloq-glaseado, #b3ada2){% endif %}"/>
-    <!-- hueco central -->
-    <circle cx="32" cy="32" r="8" fill="var(--rq-hueco, #1a1410)"/>
+    <defs>
+        <radialGradient id="rqMasa" cx="38%" cy="32%" r="75%">
+            <stop offset="0" stop-color="#f3c88a"/><stop offset=".55" stop-color="#d9a066"/><stop offset="1" stop-color="#a8642a"/>
+        </radialGradient>
+        <radialGradient id="rqGlas" cx="35%" cy="30%" r="80%">
+            <stop offset="0" stop-color="#ffb3cf"/><stop offset=".6" stop-color="#ff7aa8"/><stop offset="1" stop-color="#e0487f"/>
+        </radialGradient>
+        <radialGradient id="rqMasaB" cx="38%" cy="32%" r="75%">
+            <stop offset="0" stop-color="#a39c90"/><stop offset="1" stop-color="#6d675e"/>
+        </radialGradient>
+        <radialGradient id="rqGlasB" cx="35%" cy="30%" r="80%">
+            <stop offset="0" stop-color="#c9c3b8"/><stop offset="1" stop-color="#9a948a"/>
+        </radialGradient>
+    </defs>
+    <!-- sombra sobre la mesa -->
+    <ellipse cx="32" cy="58" rx="22" ry="3.2" fill="#000" opacity=".22"/>
+    <!-- masa: el aro dorado del bollo -->
+    <circle cx="32" cy="31" r="27" fill="{% if ganada %}url(#rqMasa){% else %}url(#rqMasaB){% endif %}"/>
+    <!-- glaseado ondulado -->
+    <path fill-rule="evenodd" fill="{% if ganada %}url(#rqGlas){% else %}url(#rqGlasB){% endif %}"
+          d="M55.9 32.0 L56.1 34.1 L55.4 36.1 L54.1 37.9 L52.8 39.6 L51.6 41.2 L50.6 42.7 L49.4 44.2 L47.8 45.3 L46.0 46.0 L44.2 46.6 L42.8 47.4 L41.7 48.8 L40.8 50.9 L39.7 53.3 L38.3 55.4 L36.3 56.5 L34.1 56.4 L32.0 55.3 L30.1 53.8 L28.4 52.3 L26.8 51.3 L25.2 50.8 L23.5 50.2 L21.9 49.5 L20.5 48.4 L19.2 47.3 L17.7 46.3 L15.9 45.5 L13.7 44.8 L11.4 43.9 L9.5 42.5 L8.7 40.5 L9.1 38.1 L10.3 35.8 L11.8 33.8 L12.9 32.0 L13.3 30.4 L13.0 28.7 L12.6 26.8 L12.4 24.9 L12.7 23.0 L13.3 21.2 L14.1 19.5 L14.9 17.6 L15.6 15.6 L16.6 13.6 L18.1 12.2 L20.2 11.5 L22.6 11.9 L25.0 12.9 L27.1 13.8 L28.9 14.2 L30.4 13.6 L32.0 12.3 L33.8 10.9 L35.9 10.0 L37.9 9.8 L39.9 10.4 L41.7 11.3 L43.4 12.3 L45.1 13.2 L46.8 14.4 L48.1 15.9 L48.8 17.9 L48.9 20.2 L48.6 22.4 L48.5 24.3 L49.1 25.8 L50.6 27.0 L52.7 28.4 L54.7 30.0 Z M32 21.5 a9.5 9.5 0 1 0 .01 0 Z"/>
+    <!-- brillo del glaseado -->
+    <path d="M17 24 Q21 14 32 12.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity="{% if ganada %}.55{% else %}.25{% endif %}"/>
+    <!-- hueco central con borde de masa -->
+    <circle cx="32" cy="31" r="9.2" fill="var(--rq-hueco, #1a1410)" stroke="{% if ganada %}#a8642a{% else %}#6d675e{% endif %}" stroke-width="1.4"/>
     {% if ganada %}
     <!-- chispitas -->
-    <rect x="16" y="22" width="6" height="2.4" rx="1.2" transform="rotate(-30 19 23)" fill="#fff"/>
-    <rect x="40" y="16" width="6" height="2.4" rx="1.2" transform="rotate(25 43 17)" fill="#ffe14d"/>
-    <rect x="44" y="34" width="6" height="2.4" rx="1.2" transform="rotate(-50 47 35)" fill="#6fe3ff"/>
-    <rect x="22" y="40" width="6" height="2.4" rx="1.2" transform="rotate(40 25 41)" fill="#8dff9c"/>
-    <rect x="30" y="17" width="6" height="2.4" rx="1.2" transform="rotate(80 33 18)" fill="#fff"/>
+    <rect x="18" y="22" width="6" height="2.4" rx="1.2" transform="rotate(-30 21 23.2)" fill="#fff6a8"/>
+    <rect x="40" y="15" width="6" height="2.4" rx="1.2" transform="rotate(25 43 16.2)" fill="#6fe3ff"/>
+    <rect x="47" y="30" width="6" height="2.4" rx="1.2" transform="rotate(-50 50 31.2)" fill="#ffffff"/>
+    <rect x="44" y="45" width="6" height="2.4" rx="1.2" transform="rotate(35 47 46.2)" fill="#8dff9c"/>
+    <rect x="26" y="47" width="6" height="2.4" rx="1.2" transform="rotate(-20 29 48.2)" fill="#ffe14d"/>
+    <rect x="15" y="35" width="6" height="2.4" rx="1.2" transform="rotate(60 18 36.2)" fill="#c9a7ff"/>
+    <rect x="32" y="12" width="6" height="2.4" rx="1.2" transform="rotate(80 35 13.2)" fill="#fff"/>
     {% endif %}
 </svg>

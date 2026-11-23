@@ -463,7 +463,7 @@
                 </h1>
             </div>
             <div>
-                <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary btn-volver">
+                <a href="{% url 'administracion:panel_admin' %}" class="btn-volver-panel">
                     <i class="bi bi-arrow-left"></i> Volver al Panel
                 </a>
             </div>
@@ -593,11 +593,9 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
-                                        <div class="btn-group btn-group-sm" role="group">
-
-                                            <button type="button"
-                                                    class="btn btn-accion btn-accion-movimiento"
-                                                    title="Registrar movimiento (entrada, salida o ajuste)"
+                                        <div class="acciones-inv" role="group">
+                                            <button type="button" class="btn btn-inv btn-accion-movimiento"
+                                                    title="Registrar movimiento (entrada, salida o ajuste)" aria-label="Movimiento"
                                                     data-minimo="{{ producto.stock_minimo }}"
                                                     data-maximo="{{ producto.stock_maximo }}"
                                                     data-bs-toggle="modal"
@@ -605,23 +603,18 @@
                                                     data-id="{{ producto.id }}"
                                                     data-nombre="{{ producto.nombre }}"
                                                     data-stock="{{ producto.stock_actual }}">
-                                                <i class="bi bi-arrow-left-right"></i> <span class="d-none d-xl-inline">Movimiento</span>
+                                                <i class="bi bi-arrow-left-right"></i>
                                             </button>
-
-                                            <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-accion btn-accion-editar" title="Editar datos del producto (nombre, precio, mínimo y máximo)">
-                                                <i class="bi bi-pencil-square"></i> <span class="d-none d-xl-inline">Editar</span>
+                                            <a href="{% url 'inventario:editar' producto.id %}" class="btn btn-inv"
+                                               title="Editar producto" aria-label="Editar">
+                                                <i class="bi bi-pencil-square"></i>
                                             </a>
-
-                                            <button type="button"
-                                                    class="btn btn-outline-danger"
-                                                    title="Eliminar"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEliminarProducto"
+                                            <button type="button" class="btn btn-inv btn-inv-eliminar" title="Eliminar" aria-label="Eliminar producto"
+                                                    data-bs-toggle="modal" data-bs-target="#modalEliminarProducto"
                                                     data-id="{{ producto.id }}"
                                                     data-nombre="{{ producto.nombre }}">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -1031,14 +1024,20 @@
             document.getElementById('movimientoLabelNota').textContent = tipo === 'AJUSTE' ? 'Motivo del ajuste *' : 'Nota (opcional)';
             nota.required = tipo === 'AJUSTE';
             cant.min = tipo === 'AJUSTE' ? 0 : 1;
-            cant.max = tipo === 'SALIDA' ? movState.stock : movState.max;
+            // Sin atributo max: el navegador lanzaba "El valor mínimo debe ser inferior al máximo".
+            // Los límites se validan abajo (mensaje) y en el servidor.
+            cant.removeAttribute('max');
             ayuda.textContent = tipo === 'AJUSTE' ? 'Escribe el NUEVO stock real (conteo físico).'
                 : tipo === 'ENTRADA' ? 'Unidades que ingresan (compra/reposición). No puede superar el máximo.'
                 : 'Unidades vendidas o retiradas. No puede superar el stock.';
             const v = parseInt(cant.value, 10);
-            if (isNaN(v)) { prev.classList.add('d-none'); return; }
+            if (isNaN(v)) { cant.setCustomValidity(''); prev.classList.add('d-none'); return; }
             const nuevo = tipo === 'AJUSTE' ? v : tipo === 'ENTRADA' ? movState.stock + v : movState.stock - v;
             const invalido = nuevo < 0 || nuevo > movState.max;
+            cant.setCustomValidity(invalido
+                ? (tipo === 'SALIDA' ? 'No puedes sacar más unidades de las que hay (' + movState.stock + ').'
+                    : 'El stock resultante debe estar entre 0 y ' + movState.max + '.')
+                : '');
             prev.classList.remove('d-none');
             prev.textContent = 'Resultado: stock ' + movState.stock + ' → ' + nuevo + (invalido ? '  (fuera de los límites 0–' + movState.max + ')' : '');
             prev.style.color = invalido ? '#e74c3c' : '';

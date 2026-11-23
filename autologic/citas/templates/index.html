@@ -758,6 +758,23 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/ui-mejoras.js' %}"></script>
 <script>
+// Carrusel de estilos: deslizar con el dedo en el móvil
+(function () {
+    var el = document.getElementById('carruselEstilos');
+    if (!el) { return; }
+    var x0 = null, y0 = null;
+    el.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    el.addEventListener('touchend', function (e) {
+        if (x0 === null) { return; }
+        var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+        x0 = null;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) { return; }
+        var car = window.bootstrap.Carousel.getOrCreateInstance(el, { interval: false, touch: false });
+        if (dx < 0) { car.next(); } else { car.prev(); }
+    }, { passive: true });
+})();
+</script>
+<script>
 document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll("section, footer");
     const navLinks = document.querySelectorAll(".nav-link");

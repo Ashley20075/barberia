@@ -163,15 +163,32 @@
                     <i class="bi bi-star-fill text-yellow"></i> {{ proximos|length }} citas próximas 
                 </p>
             </div>
-            <div class="col-md-3 text-center text-md-end mt-3 mt-md-0">
-                <button class="btn btn-primary-custom" id="btnAgendar">
-                    <i class="bi bi-calendar-plus"></i> Agendar cita
-                </button>
-                <a href="#turnos" class="btn btn-volver mt-2 ms-md-2"><i class="bi bi-calendar-check"></i> Mis turnos</a>
-       
-</div>
+            <div class="col-md-3 mt-3 mt-md-0">
+                <div class="perfil-acciones perfil-acciones--fila">
+                    <button class="btn btn-primary-custom" id="btnAgendar" {% if cliente.penalizado %}disabled title="Estás penalizado por inasistencias"{% endif %}>
+                        <i class="bi bi-calendar-plus"></i> Agendar cita
+                    </button>
+                    <a href="#turnos" class="btn btn-volver"><i class="bi bi-calendar-check"></i> Mis turnos</a>
+                </div>
             </div>
         </div>
+
+        {% if cliente.penalizado %}
+        <div class="aviso-penalizacion" role="alert">
+            <i class="bi bi-exclamation-octagon-fill"></i>
+            <div>
+                <strong>Tienes una penalización por inasistencias.</strong>
+                No podrás agendar citas hasta el {{ cliente.penalizado_hasta|date:"d/m/Y" }}.
+                Llevas {{ cliente.inasistencias }} falta{{ cliente.inasistencias|pluralize }}.
+                Recuerda cancelar con al menos {{ horas_cancelacion }} horas de antelación si no puedes asistir.
+            </div>
+        </div>
+        {% elif cliente.inasistencias %}
+        <div class="aviso-penalizacion aviso-penalizacion--suave" role="note">
+            <i class="bi bi-info-circle-fill"></i>
+            <div>Tienes {{ cliente.inasistencias }} inasistencia{{ cliente.inasistencias|pluralize }} registrada{{ cliente.inasistencias|pluralize }}. Una nueva falta puede bloquear tus reservas por varios días.</div>
+        </div>
+        {% endif %}
 
         <!-- Google Calendar del cliente -->
         <div class="row justify-content-center">
@@ -364,7 +381,7 @@
                             </div>
                         </div>
                         <div class="mt-2 small text-light-brown">
-                            <i class="bi bi-info-circle"></i> Los horarios tachados no se pueden reservar. Puedes activar el aviso para recibir una notificación cuando se liberen.
+                            <i class="bi bi-info-circle"></i> Los horarios tachados no se pueden reservar. Puedes unirte a la lista de espera: si el turno se cancela, la cita se agenda sola para ti (por orden de llegada).
                         </div>
                     </div>
                 </div>
@@ -454,6 +471,38 @@
             </div>
         </div>
 
+        {% if por_calificar %}
+        <div class="aviso-calificar mb-4" id="avisoCalificar">
+            <div class="aviso-calificar-cab">
+                <h5 class="mb-0"><i class="bi bi-star-fill"></i> ¿Cómo te fue en tu servicio?</h5>
+                <div class="acciones-cab">
+                    <span class="nc-opcional">Opcional</span>
+                    <button type="button" class="calificar-cerrar" id="cerrarCalificar" title="No quiero calificar" aria-label="No quiero calificar"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>
+            {% for cita in por_calificar %}
+            <form method="post" action="{% url 'calificar_cita' cita.id %}" class="calificar-form" data-cita="{{ cita.id }}">
+                {% csrf_token %}
+                <p class="calificar-detalle mb-2">
+                    <strong>{{ cita.servicio.nombre }}</strong>
+                    · {{ cita.fecha|date:"d/m/Y" }} · {{ cita.hora }}{% if cita.barbero %} · con {{ cita.barbero.nombre }}{% endif %}
+                </p>
+                <div class="estrellas" role="radiogroup" aria-label="Calificación de 1 a 5 estrellas">
+                    {% for n in "54321" %}
+                    <input type="radio" name="puntuacion" id="est{{ cita.id }}-{{ n }}" value="{{ n }}" required>
+                    <label for="est{{ cita.id }}-{{ n }}" title="{{ n }} estrella{{ n|pluralize }}"><i class="bi bi-star-fill"></i><span class="visually-hidden">{{ n }} estrellas</span></label>
+                    {% endfor %}
+                </div>
+                <textarea name="comentario" class="form-control bg-dark-input mt-2" rows="2" maxlength="500"
+                    placeholder="Cuéntanos tu experiencia (opcional)"></textarea>
+                <div class="calificar-acciones">
+                    <button type="submit" class="btn btn-primary-custom"><i class="bi bi-send"></i> Enviar calificación</button>
+                </div>
+            </form>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <!-- Lista de turnos -->
         <div class="row g-4" id="turnos">
             <div class="col-md-6">
@@ -482,12 +531,25 @@
                                 {% elif cita.estado == "Pendiente" %}
                                 <span class="badge bg-warning text-dark">Pendiente</span>
                                 {% endif %}
+                                {% if cita.se_puede_cancelar %}
                                 <a href="{% url 'cancelar_cita_cliente' cita.id %}"
                                     class="btn btn-sm btn-outline-danger"
-                                    data-confirmar="¿Cancelar este turno?"
+                                    data-confirmar="Se cancelará tu cita y el turno quedará libre para otras personas. Esta acción no se puede deshacer."
                                            data-confirmar-titulo="Cancelar turno"
-                                           data-confirmar-boton="Sí, cancelar"
+                                           data-confirmar-boton="Sí, cancelar mi cita"
                                            data-confirmar-peligro>Cancelar</a>
+                                {% elif cita.puede_reportar %}
+                                <form method="post" action="{% url 'reportar_barbero_ausente' cita.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-volver" title="Avisa al administrador que el barbero no se presentó">
+                                        <i class="bi bi-flag"></i> Barbero no llegó
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="cancelar-bloqueado" title="Solo se puede cancelar con {{ horas_cancelacion }} horas de antelación">
+                                    <i class="bi bi-lock-fill"></i> Sin cancelación (&lt; {{ horas_cancelacion }} h)
+                                </span>
+                                {% endif %}
                             </div>
                         </div>
                         {% empty %}
@@ -512,10 +574,10 @@
             <!-- BOTÓN VACIAR HISTORIAL -->
             <button
                 type="button"
-                class="btn btn-sm btn-outline-danger"
+                class="btn btn-vaciar-icono"
                 data-bs-toggle="modal"
                 data-bs-target="#modalVaciarHistorialCliente"
-                title="Vaciar historial">
+                title="Vaciar historial" aria-label="Vaciar historial">
 
                 <i class="bi bi-trash3"></i>
 
@@ -538,6 +600,12 @@
                         <span class="cita-meta">
                             <i class="bi bi-calendar3"></i> {{ cita.fecha|date:"d/m/Y" }} - {{ cita.hora }}
                         </span>
+                        {% if cita.resena %}
+                        <span class="resena-mia" title="Tu calificación">
+                            {% for n in "12345" %}<i class="bi bi-star-fill{% if forloop.counter > cita.resena.puntuacion %} apagada{% endif %}"></i>{% endfor %}
+                            {% if cita.resena.comentario %}<span class="resena-texto">«{{ cita.resena.comentario }}»</span>{% endif %}
+                        </span>
+                        {% endif %}
                     </div>
 
                     <div class="cita-acciones">
@@ -551,6 +619,12 @@
 
                             <span class="badge bg-danger">
                                 Cancelada
+                            </span>
+
+                        {% elif cita.estado == "NoAsistio" %}
+
+                            <span class="badge bg-warning text-dark">
+                                {% if cita.falta_de == "barbero" %}Barbero no asistió{% else %}No asististe{% endif %}
                             </span>
 
                         {% endif %}
@@ -875,7 +949,11 @@ function calcularTotal() {
         tiempo += 5;
     });
 
-    document.getElementById("totalPagar").textContent = "$" + total.toLocaleString("es-CO");
+    const cuponActivo = document.getElementById("usarCupon") && document.getElementById("usarCupon").value === "1";
+    if (cuponActivo && servicio) total = Math.max(0, total - Number(servicio.dataset.precio));
+    const totalEl = document.getElementById("totalPagar");
+    totalEl.textContent = "$" + total.toLocaleString("es-CO");
+    totalEl.classList.toggle("nc-total-gratis", cuponActivo);
     document.getElementById("tiempoEstimado").textContent = tiempo + " minutos";
     document.getElementById("duracion_total").value = tiempo;
 }
@@ -951,7 +1029,8 @@ function cargarHorarios() {
                                 <input class="form-check-input aviso-turno-checkbox" type="checkbox" id="${checkboxId}" ${suscrito ? "checked" : ""}
                                     data-barbero="${barbero}" data-fecha="${fecha}" data-hora="${hora}">
                                 <label class="form-check-label" for="${checkboxId}">
-                                    Notificarme si se libera este turno
+                                    Unirme a la lista de espera de este turno
+                                    <small class="d-block text-light-brown">Si se cancela, te agendamos automáticamente.</small>
                                 </label>
                             </div>
                         `}
@@ -986,8 +1065,10 @@ function conectarCheckboxesSuscripcion() {
                 fecha: checkbox.dataset.fecha,
                 hora: checkbox.dataset.hora,
                 duracion_total: calcularDuracionActual(),
+                servicio: (document.querySelector("input[name='servicio']:checked") || {}).value || "",
                 suscrito: estadoNuevo ? "true" : "false"
             });
+            document.querySelectorAll("input[name='adicionales']:checked").forEach(a => data.append("adicionales", a.value));
 
             checkbox.disabled = true;
             fetch("{% url 'notificaciones:suscribirse_turno' %}", {
@@ -1060,6 +1141,46 @@ barberoInput.addEventListener("change", function () {
 calcularTotal();
 
 </script>
+    <script>
+    // "X" de la calificación: la omite y no vuelve a molestar por esas citas.
+    (function () {
+        var aviso = document.getElementById("avisoCalificar");
+        if (!aviso) { return; }
+        var forms = aviso.querySelectorAll(".calificar-form");
+        function omitidas() { try { return JSON.parse(localStorage.getItem("citasSinCalificar") || "[]"); } catch (e) { return []; } }
+        var ocultas = omitidas();
+        var visibles = 0;
+        forms.forEach(function (f) {
+            if (ocultas.indexOf(f.dataset.cita) !== -1) { f.remove(); } else { visibles++; }
+        });
+        if (!visibles) { aviso.remove(); return; }
+        document.getElementById("cerrarCalificar").addEventListener("click", function () {
+            var lista = omitidas();
+            aviso.querySelectorAll(".calificar-form").forEach(function (f) { lista.push(f.dataset.cita); });
+            try { localStorage.setItem("citasSinCalificar", JSON.stringify(lista)); } catch (e) {}
+            aviso.remove();
+        });
+    })();
+    </script>
+    <style>
+    /* Panel del cliente más compacto */
+    .stat-card { padding: 1rem .8rem !important; }
+    .stat-card .icon-wrapper { width: 48px !important; height: 48px !important; font-size: 1.3rem !important; margin-bottom: .4rem !important; }
+    .stat-card h3, .stat-card .stat-numero { font-size: 1.6rem !important; margin-bottom: 0 !important; }
+    .stat-card p { font-size: .85rem !important; margin-bottom: 0 !important; }
+    .cupon-corte { min-height: 0 !important; margin-bottom: 1rem !important; }
+    .cupon-corte .cupon-izq { padding: 8px 14px !important; min-width: 70px !important; }
+    .cupon-corte .cupon-centro { padding: 8px 12px !important; }
+    .cupon-corte .cupon-centro h4 { font-size: 1.05rem !important; margin-bottom: 2px !important; }
+    .cupon-corte .cupon-centro p { font-size: .8rem !important; }
+    .cupon-corte .cupon-der { padding: 8px 12px !important; }
+    .cupon-corte .cupon-der .btn { padding: 8px 14px !important; font-size: .9rem !important; min-height: 38px !important; }
+    .nc-total-gratis { color: #2ecc71 !important; }
+    @media (max-width: 575.98px) {
+        .cupon-corte { flex-direction: column !important; }
+        .cupon-corte .cupon-izq { width: 100%; flex-direction: row !important; gap: 10px; }
+    }
+    </style>
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
 </body>
 

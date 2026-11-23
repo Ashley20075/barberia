@@ -13,7 +13,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from twilio.rest import Client
 
 from barberos.models import Barbero
-from citas.models import Cita, Servicio
+from citas.models import Cita, Resena, Servicio
+from citas.reglas import HORAS_MIN_CANCELACION, puede_cancelar_cliente, puede_marcar_inasistencia
+from citas.resenas import registrar_resena
 from citas.paginacion import paginar
 from clientes.models import Cliente
 from inventario.models import Producto
@@ -48,9 +50,23 @@ def panel_cliente(request):
 
     historial = Cita.objects.filter(
         cliente=cliente,
-        estado__in=["Finalizada", "Cancelada"],
+        estado__in=["Finalizada", "Cancelada", "NoAsistio"],
         historial_archivado=False
-    ).order_by("-fecha", "-hora")
+    ).select_related("resena", "servicio", "barbero").order_by("-fecha", "-hora")
+
+    # Citas finalizadas que el cliente aún no ha calificado (es opcional).
+    por_calificar = list(
+        Cita.objects.filter(
+            cliente=cliente, estado="Finalizada",
+            historial_archivado=False, resena__isnull=True,
+        ).select_related("servicio", "barbero").order_by("-fecha", "-hora")[:3]
+    )
+
+    # Cada cita próxima sabe si todavía se puede cancelar (≥ 24 h).
+    proximos = list(proximos)
+    for c in proximos:
+        c.se_puede_cancelar = puede_cancelar_cliente(c)
+        c.puede_reportar = puede_marcar_inasistencia(c)
 
     barberos = Barbero.objects.filter(activo=True, es_barbero=True)
     servicios = Servicio.objects.all()
@@ -68,6 +84,8 @@ def panel_cliente(request):
     return render(request, "dashboard_cliente.html", {
         "nombre": cliente.nombre,
         "proximos": proximos,
+        "por_calificar": por_calificar,
+        "horas_cancelacion": HORAS_MIN_CANCELACION,
         "historial": paginar(historial, request, parametro="pagina_historial"),
         "barberos": barberos,
         "servicios": servicios,
@@ -90,7 +108,7 @@ def vaciar_historial_cliente(request):
         
         citas_archivadas = Cita.objects.filter(
             cliente=cliente,
-            estado__in=["Finalizada", "Cancelada"],
+            estado__in=["Finalizada", "Cancelada", "NoAsistio"],
             historial_archivado=False
         ).update(historial_archivado=True)
         
@@ -219,6 +237,14 @@ def agendar_cita(request):
 
         try:
             cliente = Cliente.objects.get(user=request.user)
+
+            if cliente.penalizado:
+                messages.error(
+                    request,
+                    "❌ Estás penalizado por inasistencias: podrás agendar de nuevo a partir del "
+                    f"{(cliente.penalizado_hasta + timedelta(days=1)).strftime('%d/%m/%Y')}."
+                )
+                return redirect("panel_cliente")
 
             barbero = Barbero.objects.get(
                 id=request.POST.get("barbero"),
@@ -511,11 +537,80 @@ def cancelar_cita_cliente(request, id):
     # Asegura que el cliente solo pueda cancelar sus propias citas
     cita = get_object_or_404(Cita, id=id, cliente__user=request.user)
 
-    if cita.estado != "Cancelada":
-        cita.estado = "Cancelada"
-        cita.save()
-        messages.success(request, "✅ Cita cancelada exitosamente.")
+    if cita.estado not in ("Pendiente", "Confirmada"):
+        return redirect("panel_cliente")
 
+    if not puede_cancelar_cliente(cita):
+        messages.error(
+            request,
+            f"❌ Solo puedes cancelar tu cita con al menos {HORAS_MIN_CANCELACION} horas "
+            "(1 día) de antelación. Si no puedes asistir, ten en cuenta que no asistir "
+            "genera una penalización."
+        )
+        return redirect("panel_cliente")
+
+    cita.estado = "Cancelada"
+    cita.save()
+    messages.success(request, "✅ Cita cancelada exitosamente.")
+
+    return redirect("panel_cliente")
+
+
+@login_required(login_url='login')
+def calificar_cita(request, id):
+    """El cliente califica (1 a 5 + comentario opcional) una cita finalizada."""
+    cita = get_object_or_404(Cita, id=id, cliente__user=request.user)
+
+    if request.method != "POST":
+        return redirect("panel_cliente")
+
+    try:
+        puntuacion = int(request.POST.get("puntuacion", ""))
+    except ValueError:
+        puntuacion = 0
+
+    if not 1 <= puntuacion <= 5:
+        messages.error(request, "❌ Elige de 1 a 5 estrellas para calificar.")
+        return redirect("panel_cliente")
+
+    if cita.estado != "Finalizada":
+        messages.error(request, "❌ Solo puedes calificar citas finalizadas.")
+        return redirect("panel_cliente")
+
+    if registrar_resena(cita, puntuacion, request.POST.get("comentario", "")) is None:
+        messages.warning(request, "Esta cita ya fue calificada.")
+    else:
+        messages.success(request, "⭐ ¡Gracias por calificar tu servicio!")
+    return redirect("panel_cliente")
+
+
+@login_required(login_url='login')
+def reportar_barbero_ausente(request, id):
+    """
+    El cliente avisa que su barbero no se presentó. No cambia la cita por sí
+    solo (para evitar abusos): notifica al administrador, que la revisa y la
+    marca. Si se confirma, el cliente recibe un cupón de corte gratis.
+    """
+    from citas.reglas import puede_marcar_inasistencia
+    from notificaciones.utils import notificar_administradores
+
+    cita = get_object_or_404(Cita, id=id, cliente__user=request.user)
+
+    if request.method != "POST":
+        return redirect("panel_cliente")
+
+    if cita.estado not in ("Pendiente", "Confirmada") or not puede_marcar_inasistencia(cita):
+        messages.error(request, "❌ Solo puedes reportar una cita cuya hora ya pasó y sigue sin cerrarse.")
+        return redirect("panel_cliente")
+
+    nombre_b = cita.barbero.nombre if cita.barbero else "el barbero"
+    notificar_administradores(
+        f"⚠️ {cita.cliente.nombre} reporta que {nombre_b} no asistió a su cita del "
+        f"{cita.fecha.strftime('%d/%m/%Y')} a las {cita.hora}. Revisa la cita y, si es cierto, "
+        "márcala como «Barbero no asistió».",
+        cita=cita,
+    )
+    messages.success(request, "✅ Reporte enviado al administrador. Te avisaremos cuando lo revise.")
     return redirect("panel_cliente")
 
 

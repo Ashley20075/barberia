@@ -5,7 +5,6 @@ from django.dispatch import receiver
 
 from citas.models import Cita
 
-from .models import SuscripcionTurno
 from .utils import (
     notificar,
     notificar_administradores,
@@ -88,19 +87,12 @@ def _notificar_turno_liberado(
     # 3. Administradores.
     notificar_administradores(mensaje_disponible, cita=instance)
 
-    # 4. Clientes suscritos al turno liberado.
-    suscripciones = SuscripcionTurno.objects.filter(
-        barbero=barbero,
-        fecha=fecha,
-        hora=hora,
-    ).exclude(usuario_id=getattr(usuario_cliente, "id", None))
+    # 4. Lista de espera / avisos: el primero de la fila queda agendado
+    #    automáticamente; los avisos sin servicio solo se notifican.
+    from .espera import atender_lista_espera
 
-    for suscripcion in suscripciones.select_related("usuario"):
-        notificar(
-            suscripcion.usuario,
-            f"🔔 {mensaje_disponible} Lo estabas siguiendo para recibir un aviso.",
-            cita=instance,
-        )
-
-    # Las suscripciones se eliminan después de notificar.
-    suscripciones.delete()
+    atender_lista_espera(
+        barbero, fecha, hora,
+        getattr(usuario_cliente, "id", None),
+        mensaje_disponible, instance,
+    )

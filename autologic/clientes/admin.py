@@ -12,6 +12,8 @@ class ClienteAdmin(admin.ModelAdmin):
         "cortes_completados",
         "cortes_para_recompensa",
         "recompensas_disponibles",
+        "inasistencias",
+        "penalizado_hasta",
         "activo",
     )
     search_fields = ("nombre", "email", "cedula", "telefono")

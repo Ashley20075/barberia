@@ -4,6 +4,8 @@ register = template.Library()
 
 # (clave, etiqueta, icono, palabras clave) — el orden importa.
 CATEGORIAS = [
+    ('falta', 'Inasistencia', 'bi-person-x', ('no asist', 'falta n.')),
+    ('resena', 'Calificación', 'bi-star-fill', ('calificó', 'calificación')),
     ('cupon', 'Cupón', 'bi-ticket-perforated', ('corte gratis', 'cupón', 'cupon', 'canje')),
     ('espera', 'Lista de espera', 'bi-hourglass-split', ('lo estabas siguiendo', 'lista de espera')),
     ('rechazo', 'Cita cancelada', 'bi-x-octagon', ('rechaz', 'cancelad')),

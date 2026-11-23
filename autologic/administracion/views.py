@@ -92,17 +92,17 @@ def panel_admin(request):
         "-hora"
     )
 
+    from citas.reglas import puede_marcar_inasistencia
+    citas_activas = list(citas_activas)
+    for c in citas_activas:
+        c.puede_inasistencia = puede_marcar_inasistencia(c)
+
     historial_citas = Cita.objects.filter(
-        estado__in=["Finalizada", "Cancelada"],
+        estado__in=["Finalizada", "Cancelada", "NoAsistio"],
         historial_archivado=False
 ).order_by("-fecha", "-hora")
 
-    total_citas = Cita.objects.filter(
-    estado__in=[
-        "Pendiente",
-        "Confirmada",
-    ]
-).count()
+    total_citas = len(citas_activas)
     
     context = {
         'usuarios': usuarios,
@@ -848,6 +848,47 @@ def horarios_disponibles_editar(request):
     })
 
 @login_required
+def perdonar_penalizacion(request, id):
+    """El administrador quita la penalización y las faltas de un cliente."""
+    from clientes.models import Cliente
+    from notificaciones.utils import notificar, usuario_de_cliente
+
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('administracion:panel_admin')
+
+    cliente = get_object_or_404(Cliente, id=id)
+    cliente.inasistencias = 0
+    cliente.penalizado_hasta = None
+    cliente.save(update_fields=['inasistencias', 'penalizado_hasta'])
+    notificar(usuario_de_cliente(cliente),
+              '✅ El administrador levantó tu penalización por inasistencias. Ya puedes agendar de nuevo.')
+    messages.success(request, f'✅ Se levantó la penalización de {cliente.nombre}.')
+    return redirect('administracion:panel_admin')
+
+
+@login_required
+def marcar_inasistencia(request, id, quien):
+    """El administrador registra que el cliente o el barbero no asistió a la cita."""
+    from citas.asistencia import InasistenciaInvalida, marcar_no_asistio
+
+    if not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para realizar esta acción.')
+        return redirect('administracion:panel_admin')
+
+    cita = get_object_or_404(Cita, id=id)
+    try:
+        marcar_no_asistio(cita, quien, por=request.user)
+        if quien == 'cliente':
+            messages.success(request, f'✅ Se registró la inasistencia de {cita.cliente.nombre} y se aplicó la penalización.')
+        else:
+            messages.success(request, '✅ Se registró la inasistencia del barbero y se compensó al cliente con un cupón.')
+    except InasistenciaInvalida as e:
+        messages.error(request, f'❌ {e}')
+    return redirect('administracion:panel_admin')
+
+
+@login_required
 def eliminar_cita(request, id):
     if not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para realizar esta acción.')
@@ -1237,40 +1278,70 @@ def certificado_barbero_admin(request, id):
         canvas.rect(1.0 * _cm, 1.0 * _cm, w - 2.0 * _cm, h - 2.0 * _cm, stroke=1, fill=0)
         canvas.setStrokeColor(NEGRO); canvas.setLineWidth(0.8)
         canvas.rect(1.3 * _cm, 1.3 * _cm, w - 2.6 * _cm, h - 2.6 * _cm, stroke=1, fill=0)
+        # Franja negra superior: logo arriba y nombre de la empresa dentro de la franja
+        alto_franja = 4.0 * _cm
         canvas.setFillColor(NEGRO)
-        canvas.rect(1.3 * _cm, h - 4.6 * _cm, w - 2.6 * _cm, 3.3 * _cm, stroke=0, fill=1)
+        canvas.rect(1.3 * _cm, h - 1.3 * _cm - alto_franja, w - 2.6 * _cm, alto_franja, stroke=0, fill=1)
         logo = ruta_logo()
         if logo:
             try:
-                canvas.drawImage(logo, w / 2 - 1.2 * _cm, h - 4.3 * _cm, 2.4 * _cm, 2.4 * _cm,
+                canvas.drawImage(logo, w / 2 - 1.1 * _cm, h - 1.3 * _cm - 0.35 * _cm - 2.2 * _cm, 2.2 * _cm, 2.2 * _cm,
                                  preserveAspectRatio=True, mask='auto')
             except Exception:
                 pass
-        canvas.setFillColor(ORO); canvas.setFont('Helvetica-Bold', 11)
-        canvas.drawCentredString(w / 2, h - 4.0 * _cm + 0.1 * _cm - 0.9 * _cm, "BARBER SPRINGFIELD")
+        canvas.setFillColor(ORO); canvas.setFont('Helvetica-Bold', 12)
+        canvas.drawCentredString(w / 2, h - 1.3 * _cm - alto_franja + 0.5 * _cm, "BARBER SPRINGFIELD")
+        # Pie
+        canvas.setFillColor(TEXTO_SUAVE); canvas.setFont('Helvetica', 8)
+        canvas.drawCentredString(w / 2, 1.75 * _cm, "Documento expedido por el sistema de gestión de Barber Springfield")
         canvas.restoreState()
 
+    from reportlab.platypus import Table as _T, TableStyle as _TS, HRFlowable as _HR
+
     doc = SimpleDocTemplate(response, pagesize=_A4, leftMargin=3 * _cm, rightMargin=3 * _cm,
-                            topMargin=6 * _cm, bottomMargin=3 * _cm, title="Certificado laboral")
+                            topMargin=6.6 * _cm, bottomMargin=3 * _cm, title="Certificado laboral")
     base = getSampleStyleSheet()["Normal"]
-    titulo = _PS("t", parent=base, fontName="Helvetica-Bold", fontSize=24, alignment=_C, textColor=NEGRO, spaceAfter=6)
-    sub = _PS("s", parent=base, fontSize=11, alignment=_C, textColor=TEXTO_SUAVE, spaceAfter=22)
-    nombre = _PS("n", parent=base, fontName="Helvetica-Bold", fontSize=22, alignment=_C, textColor=ORO, spaceBefore=6, spaceAfter=14)
-    cuerpo = _PS("c", parent=base, fontSize=12, leading=19, alignment=_J, textColor=NEGRO)
+    titulo = _PS("t", parent=base, fontName="Helvetica-Bold", fontSize=26, leading=32, alignment=_C, textColor=NEGRO, spaceAfter=8)
+    sub = _PS("s", parent=base, fontSize=12, leading=16, alignment=_C, textColor=TEXTO_SUAVE, spaceBefore=10, spaceAfter=10)
+    nombre = _PS("n", parent=base, fontName="Helvetica-Bold", fontSize=24, leading=30, alignment=_C, textColor=ORO, spaceBefore=2, spaceAfter=16)
+    cuerpo = _PS("c", parent=base, fontSize=12.5, leading=21, alignment=_J, textColor=NEGRO)
     centro = _PS("ce", parent=base, fontSize=11, alignment=_C, textColor=TEXTO_SUAVE, leading=16)
+    etiqueta = _PS("e", parent=base, fontName="Helvetica-Bold", fontSize=8, leading=11, alignment=_C, textColor=TEXTO_SUAVE)
+    valor = _PS("v", parent=base, fontName="Helvetica-Bold", fontSize=11.5, leading=15, alignment=_C, textColor=NEGRO)
+
+    datos = _T(
+        [[Paragraph("CÉDULA", etiqueta), Paragraph("ESPECIALIDAD", etiqueta), Paragraph("CORREO", etiqueta)],
+         [Paragraph(str(barbero.cedula), valor), Paragraph(barbero.especialidad or "General", valor), Paragraph(barbero.email or "-", valor)]],
+        colWidths=[3.8 * _cm, 4.4 * _cm, 6.4 * _cm],
+    )
+    datos.setStyle(_TS([
+        ("BOX", (0, 0), (-1, -1), 0.8, BORDE),
+        ("LINEAFTER", (0, 0), (-2, -1), 0.5, BORDE),
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f1e6cc")),
+        ("TOPPADDING", (0, 0), (-1, -1), 7), ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+    ]))
+
+    firma = _T(
+        [[Paragraph("_______________________________<br/><b>Administrador</b><br/>Barber Springfield", centro)]],
+        colWidths=[14.6 * _cm],
+    )
 
     elementos = [
         Paragraph("CERTIFICADO LABORAL", titulo),
+        _HR(width="35%", thickness=2, color=ORO, spaceBefore=2, spaceAfter=8, hAlign="CENTER"),
         Paragraph("Barber Springfield certifica que", sub),
         Paragraph(barbero.nombre, nombre),
-        Paragraph(f"Cédula: <b>{barbero.cedula}</b> &nbsp;·&nbsp; Especialidad: <b>{barbero.especialidad}</b><br/>Correo: {barbero.email}", centro),
-        Spacer(1, 18),
+        datos,
+        Spacer(1, 26),
         Paragraph("Actualmente se encuentra vinculado laboralmente como <b>BARBERO</b> en nuestra empresa, "
                   "desempeñando sus funciones con responsabilidad y profesionalismo.", cuerpo),
-        Spacer(1, 14),
-        Paragraph(f"Fecha de expedición: {datetime.now().strftime('%d/%m/%Y')}", centro),
-        Spacer(1, 56),
-        Paragraph("_______________________________<br/><b>Administrador</b><br/>Barber Springfield", centro),
+        Spacer(1, 18),
+        Paragraph("Se expide a solicitud del interesado para los fines que estime convenientes.", cuerpo),
+        Spacer(1, 22),
+        Paragraph(f"Fecha de expedición: <b>{datetime.now().strftime('%d/%m/%Y')}</b>", centro),
+        Spacer(1, 52),
+        firma,
     ]
     doc.build(elementos, onFirstPage=marco, onLaterPages=marco)
 
@@ -1417,7 +1488,7 @@ def vaciar_historial_admin(request):
     if request.method == "POST":
 
         Cita.objects.filter(
-            estado__in=["Finalizada", "Cancelada"]
+            estado__in=["Finalizada", "Cancelada", "NoAsistio"]
         ).update(
             historial_archivado=True
         )
@@ -1535,6 +1606,7 @@ def agendar_cita_admin(request):
         return redirect("administracion:panel_admin")
 
     return render(request, "administracion/agendar_cita.html", {
+        "extras_admin": [("Arreglo de barba", "scissors"), ("Cejas", "eye"), ("Diseño y líneas", "brush")],
         # Antes esto listaba TODOS los Cliente, incluidos los que
         # ademas son barberos o administradores (alguien puede haberse
         # registrado como cliente antes de pasar a formar parte del
@@ -1549,5 +1621,5 @@ def agendar_cita_admin(request):
             user__is_superuser=True
         ).order_by("nombre"),
         "barberos": Barbero.objects.filter(activo=True, es_barbero=True).order_by("nombre"),
-        "servicios": Servicio.objects.all().order_by("id"),
+        "servicios": Servicio.objects.exclude(nombre__iexact="Adicionales").order_by("id"),
     })

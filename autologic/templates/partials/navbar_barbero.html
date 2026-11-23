@@ -29,9 +29,12 @@
     <i class="bi bi-moon-fill"></i>
 </button>
                     {% endif %}
-                    <button class="btn-logout-custom" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                    <a href="{% url 'logout' %}" class="btn-logout-custom"
+                       data-confirmar="¿Estás seguro que deseas cerrar sesión?"
+                       data-confirmar-titulo="Cerrar sesión"
+                       data-confirmar-boton="Sí, cerrar sesión">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

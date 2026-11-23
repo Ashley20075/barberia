@@ -41,8 +41,8 @@
             <h1 class="text-yellow" style="font-family:'Playfair Display',serif;">
                 <i class="bi bi-calendar-plus"></i> Agendar Cita
             </h1>
-            <a href="{% url 'administracion:panel_admin' %}" class="btn-secondary-custom btn-volver">
-                <i class="bi bi-arrow-left"></i> Volver
+            <a href="{% url 'administracion:panel_admin' %}" class="btn-volver-panel">
+                <i class="bi bi-arrow-left"></i> Volver al Panel
             </a>
         </div>
 
@@ -55,7 +55,7 @@
             {% endfor %}
         {% endif %}
 
-        <div class="card-custom">
+        <div class="card-custom admin-agenda">
             <div class="card-header-custom">
                 <span><i class="bi bi-calendar-plus"></i> Nueva cita</span>
             </div>
@@ -65,7 +65,7 @@
 
                     <!-- Paso 1: tipo de cliente -->
                     <label class="form-label-custom mb-2">👤 1. Cliente</label>
-                    <div class="d-flex gap-3 mb-3">
+                    <div class="tipo-cliente">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="tipo_cliente" id="tipoRegistrado"
                                 value="registrado" checked>
@@ -75,7 +75,7 @@
                             <input class="form-check-input" type="radio" name="tipo_cliente" id="tipoNuevo"
                                 value="nuevo">
                             <label class="form-check-label" for="tipoNuevo">
-                                Llegó sin cuenta (registrar en el momento)
+                                Sin cuenta (registrar ahora)
                             </label>
                         </div>
                     </div>
@@ -117,48 +117,48 @@
                     </div>
 
                     <!-- Paso 2: servicio y adicionales -->
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label-custom">✂️ 2. Servicio</label>
-                            <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
-                                {% for servicio in servicios %}
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input servicio-radio" type="radio" name="servicio"
-                                        value="{{ servicio.id }}" id="serv{{ servicio.id }}"
-                                        data-precio="{{ servicio.precio }}" {% if forloop.first %}checked{% endif %}>
-                                    <label class="form-check-label" for="serv{{ servicio.id }}">
-                                        ✂️ {{ servicio.nombre }}
-                                        <small class="text-yellow">${{ servicio.precio|floatformat:0 }}</small>
-                                    </label>
-                                </div>
-                                {% endfor %}
-                            </div>
+                    <h6 class="paso-titulo">✂️ 2. Servicio</h6>
+                    <div class="nc-opciones nc-opciones-cortes" role="radiogroup">
+                        {% for servicio in servicios %}
+                        <div class="nc-opcion">
+                            <input class="nc-input servicio-radio" type="radio" name="servicio"
+                                value="{{ servicio.id }}" id="serv{{ servicio.id }}"
+                                data-precio="{{ servicio.precio }}" {% if forloop.first %}checked{% endif %}>
+                            <label class="nc-card" for="serv{{ servicio.id }}">
+                                <span class="nc-icono"><i class="bi bi-scissors"></i></span>
+                                <span class="nc-texto">
+                                    <span class="nc-nombre">{{ servicio.nombre }}</span>
+                                    <span class="nc-desc">{{ servicio.descripcion }}</span>
+                                </span>
+                                <span class="nc-lado">
+                                    <span class="nc-precio">${{ servicio.precio|floatformat:"0g" }}</span>
+                                    <span class="nc-marca nc-marca-radio"><i class="bi bi-check-lg"></i></span>
+                                </span>
+                            </label>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label-custom">➕ Adicionales</label>
-                            <div class="p-3 rounded" style="background-color:var(--color-fondo-card); border:1px solid var(--color-borde);">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="adicionales"
-                                        value="Arreglo de barba" data-precio="5000" id="chkBarba">
-                                    <label class="form-check-label" for="chkBarba">
-                                        ✂️ Arreglo de barba <small class="text-yellow">$5.000</small>
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="adicionales" value="Cejas"
-                                        data-precio="5000" id="chkCejas">
-                                    <label class="form-check-label" for="chkCejas">
-                                        👁️ Cejas <small class="text-yellow">$5.000</small>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="adicionales"
-                                        value="Diseño y líneas" data-precio="5000" id="chkDiseno">
-                                    <label class="form-check-label" for="chkDiseno">
-                                        🎨 Diseño / líneas <small class="text-yellow">$5.000</small>
-                                    </label>
-                                </div>
-                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <h6 class="paso-titulo">➕ Adicionales <span class="nc-opcional">Opcional</span></h6>
+                    <div class="nc-opciones nc-opciones-extras" role="group">
+                        {% for nombre, icono in extras_admin %}
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="checkbox" name="adicionales" value="{{ nombre }}"
+                                data-precio="5000" id="chkExtra{{ forloop.counter }}">
+                            <label class="nc-extra" for="chkExtra{{ forloop.counter }}">
+                                <span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>
+                                <span class="nc-nombre">{{ nombre }}</span>
+                                <span class="nc-precio-extra">+$5.000</span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                        <div class="nc-opcion">
+                            <input class="nc-input" type="checkbox" id="chkNingunoAdmin" checked>
+                            <label class="nc-extra" for="chkNingunoAdmin">
+                                <span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>
+                                <span class="nc-nombre">Ninguno</span>
+                                <span class="nc-precio-extra nc-sin-costo">+$0</span>
+                            </label>
                         </div>
                     </div>
 
@@ -213,11 +213,23 @@
 
                     <input type="hidden" name="duracion_total" id="duracion_total" value="40">
 
-                    <div class="d-flex gap-2 justify-content-end">
-                        <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary btn-cancelar">Cancelar</a>
-                        <button type="submit" class="btn-modern">
-                            <i class="bi bi-check-circle"></i> Agendar Cita
-                        </button>
+                    <div class="nc-resumen">
+                        <dl class="nc-totales">
+                            <div>
+                                <dt>Total del servicio</dt>
+                                <dd class="nc-total" id="totalPagar">$0</dd>
+                            </div>
+                            <div>
+                                <dt>Tiempo estimado</dt>
+                                <dd id="tiempoEstimado">40 minutos</dd>
+                            </div>
+                        </dl>
+                        <div class="nc-acciones">
+                            <a href="{% url 'administracion:panel_admin' %}" class="btn btn-secondary btn-cancelar">Cancelar</a>
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="bi bi-check-circle"></i> Agendar cita
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -470,5 +482,29 @@ inicializarCalendario();
 
     </script>
     <script src="{% static 'js/ui-mejoras.js' %}"></script>
+<script>
+// Total, tiempo y "Ninguno" de los adicionales
+(function () {
+    var form = document.getElementById("formAgendarAdmin");
+    var extras = Array.prototype.slice.call(form.querySelectorAll("input[name='adicionales']"));
+    var ninguno = document.getElementById("chkNingunoAdmin");
+    function resumen() {
+        var total = 0, tiempo = 40;
+        var serv = form.querySelector(".servicio-radio:checked");
+        if (serv) { total += Number(serv.dataset.precio) || 0; }
+        extras.forEach(function (e) { if (e.checked) { total += Number(e.dataset.precio) || 0; tiempo += 5; } });
+        document.getElementById("totalPagar").textContent = "$" + total.toLocaleString("es-CO");
+        document.getElementById("tiempoEstimado").textContent = tiempo + " minutos";
+        document.getElementById("duracion_total").value = tiempo;
+        ninguno.checked = !extras.some(function (e) { return e.checked; });
+    }
+    ninguno.addEventListener("change", function () {
+        extras.forEach(function (e) { e.checked = false; });
+        ninguno.checked = true; resumen();
+    });
+    form.addEventListener("change", resumen);
+    resumen();
+})();
+</script>
 </body>
 </html>

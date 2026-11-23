@@ -45,10 +45,21 @@ class SuscripcionTurno(models.Model):
     )
     fecha = models.DateField()
     hora = models.CharField(max_length=20)
+    # Datos para agendar automáticamente al cliente si el turno se libera
+    # (lista de espera). Sin servicio, solo se le avisa.
+    servicio = models.ForeignKey(
+        "citas.Servicio",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="suscripciones_turnos",
+    )
+    duracion_total = models.PositiveIntegerField(default=40)
+    adicionales = models.CharField(max_length=200, blank=True, default="")
     creada = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["fecha", "hora"]
+        ordering = ["creada"]
         constraints = [
             models.UniqueConstraint(
                 fields=["usuario", "barbero", "fecha", "hora"],

@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '      </div>' +
         '      <div class="modal-footer">' +
         '        <button type="button" class="btn btn-secondary"' +
-        '                data-bs-dismiss="modal">Cancelar</button>' +
+        '                data-bs-dismiss="modal">No, volver</button>' +
         '        <button type="button" class="btn btn-danger"' +
         '                id="modalConfirmarAceptar">Confirmar</button>' +
         '      </div>' +
@@ -889,10 +889,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var nav = document.createElement('div');
         nav.className = 'wiz-nav';
-        nav.innerHTML = '<button type="button" class="btn btn-cancelar btn-secondary wiz-cancelar">Cancelar</button>' +
+        nav.innerHTML = '<button type="button" class="btn btn-volver btn-secondary wiz-atras"><i class="bi bi-arrow-left"></i> Atrás</button>' +
             '<span class="wiz-total" aria-live="polite"></span>' +
-            '<button type="button" class="btn btn-volver btn-secondary wiz-atras"><i class="bi bi-arrow-left"></i> Atrás</button>' +
-            '<button type="button" class="btn btn-primary-custom wiz-siguiente">Siguiente <i class="bi bi-arrow-right"></i></button>';
+            '<button type="button" class="btn btn-primary-custom wiz-siguiente">Siguiente <i class="bi bi-arrow-right"></i></button>' +
+            '<button type="button" class="wiz-cancelar-link"><i class="bi bi-x-lg"></i> Cancelar reserva</button>';
+        var cab = document.createElement('div');
+        cab.className = 'wiz-cab';
+        cab.innerHTML = '<span class="wiz-paso-txt"></span>';
+        progreso.insertBefore(cab, progreso.firstChild);
+        var pasoTxt = cab.querySelector('.wiz-paso-txt');
         form.appendChild(nav);
         var bAtras = nav.querySelector('.wiz-atras'), bSig = nav.querySelector('.wiz-siguiente');
         var totalEl = nav.querySelector('.wiz-total');
@@ -905,8 +910,12 @@ document.addEventListener('DOMContentLoaded', function () {
             Array.prototype.forEach.call(lista.children, function (li, k) {
                 li.classList.toggle('activo', k === actual); li.classList.toggle('hecho', k < actual);
             });
-            bAtras.style.display = actual === 0 ? 'none' : '';
-            bSig.style.display = actual === pasos.length - 1 ? 'none' : '';
+            // "Atrás" conserva su sitio para que "Siguiente" nunca se mueva.
+            bAtras.classList.toggle('wiz-oculto', actual === 0);
+            var ultimo = actual === pasos.length - 1;
+            bSig.innerHTML = ultimo ? '<i class="bi bi-check-lg"></i> Reservar' : 'Siguiente <i class="bi bi-arrow-right"></i>';
+            if (ultimo) { rellenarDetalle(); }
+            pasoTxt.textContent = 'Paso ' + (actual + 1) + ' de ' + pasos.length + ' · ' + nombres[actual];
             actualizarTotal();
             irAlFormulario();
         }
@@ -931,19 +940,35 @@ document.addEventListener('DOMContentLoaded', function () {
             var t = document.getElementById('totalPagar');
             avisoCupon.style.display = cuponActivo() ? '' : 'none';
             if (!t) { totalEl.textContent = ''; return; }
-            var texto = t.textContent;
-            if (cuponActivo()) {
-                var radio = form.querySelector('.servicio-radio:checked');
-                var total = parseInt((t.textContent || '').replace(/[^0-9]/g, ''), 10) || 0;
-                var precio = radio ? parseInt(radio.dataset.precio, 10) || 0 : 0;
-                texto = '$' + Math.max(0, total - precio).toLocaleString('es-CO') + ' (cupón aplicado)';
-            }
-            totalEl.textContent = 'Total: ' + texto;
+            // calcularTotal() ya descuenta el cupón: aquí solo se muestra.
+            totalEl.textContent = 'Total: ' + t.textContent;
         }
         avisoCupon.querySelector('.wiz-cupon-quitar').addEventListener('click', function () {
             if (inputCupon) { inputCupon.value = '0'; }
+            if (window.calcularTotal) { window.calcularTotal(); }
             actualizarTotal();
         });
+        var detalle = document.createElement('ul');
+        detalle.className = 'wiz-detalle';
+        var resumenBox = form.querySelector('.nc-resumen');
+        if (resumenBox) { resumenBox.insertBefore(detalle, resumenBox.firstChild); }
+        function rellenarDetalle() {
+            var serv = form.querySelector('.servicio-radio:checked');
+            var nomServ = serv ? ((form.querySelector('label[for="' + serv.id + '"] .nc-nombre') || {}).textContent || '') : '-';
+            var barb = form.querySelector('input[name="barbero"]:checked');
+            var f = (document.getElementById('fecha') || {}).value || '';
+            var fechaTxt = f ? f.split('-').reverse().join('/') : '-';
+            var extras = Array.prototype.map.call(form.querySelectorAll('input[name="adicionales"]:checked'), function (e) { return e.value; });
+            function li(icono, titulo, texto) {
+                return '<li><i class="bi ' + icono + '"></i><span><small>' + titulo + '</small>' + texto + '</span></li>';
+            }
+            detalle.innerHTML =
+                li('bi-scissors', 'Servicio', nomServ) +
+                li('bi-person-fill', 'Barbero', barb ? (barb.dataset.barberoNombre || '') : '-') +
+                li('bi-calendar-event', 'Fecha', fechaTxt) +
+                li('bi-clock', 'Hora', (document.getElementById('hora') || {}).value || '-') +
+                li('bi-plus-circle', 'Adicionales', extras.length ? extras.join(', ') : 'Ninguno');
+        }
         function avisar(msg) { if (window.mostrarToast) { window.mostrarToast(msg, 'warning'); } else { alert(msg); } }
 
         function validar() {
@@ -957,23 +982,37 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             return true;
         }
-        // Paso de adicionales: botón "Ninguno" para continuar sin extras
+        // Paso de adicionales: "Ninguno" es una opción más, igual que las demás.
         var pasoExtras = pasos[3];
-        var ninguno = document.createElement('button');
-        ninguno.type = 'button';
-        ninguno.className = 'btn btn-volver wiz-ninguno';
-        ninguno.innerHTML = '<i class="bi bi-slash-circle"></i> Ninguno, continuar sin extras';
-        ninguno.addEventListener('click', function () {
-            pasoExtras.querySelectorAll('input[type="checkbox"]').forEach(function (c) {
+        var gridExtras = pasoExtras.querySelector('.nc-opciones-extras');
+        var checksExtras = Array.prototype.slice.call(pasoExtras.querySelectorAll('input[name="adicionales"]'));
+        var optNinguno = document.createElement('div');
+        optNinguno.className = 'nc-opcion';
+        optNinguno.innerHTML = '<input class="nc-input" type="checkbox" id="chkNinguno" checked>' +
+            '<label class="nc-extra" for="chkNinguno">' +
+            '<span class="nc-marca nc-marca-check"><i class="bi bi-check-lg"></i></span>' +
+            '<span class="nc-nombre">Ninguno</span>' +
+            '<span class="nc-precio-extra nc-sin-costo">+$0</span></label>';
+        if (gridExtras) { gridExtras.appendChild(optNinguno); }
+        var chkNinguno = optNinguno.querySelector('input');
+        function sincronizarNinguno() { chkNinguno.checked = !checksExtras.some(function (c) { return c.checked; }); }
+        chkNinguno.addEventListener('change', function () {
+            checksExtras.forEach(function (c) {
                 if (c.checked) { c.checked = false; c.dispatchEvent(new Event('change', { bubbles: true })); }
             });
-            mostrar(4);
+            chkNinguno.checked = true;
         });
-        pasoExtras.appendChild(ninguno);
+        checksExtras.forEach(function (c) { c.addEventListener('change', sincronizarNinguno); });
 
-        bSig.addEventListener('click', function () { if (validar()) { mostrar(actual + 1); } });
+        bSig.addEventListener('click', function () {
+            if (actual === pasos.length - 1) {
+                if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
+                return;
+            }
+            if (validar()) { mostrar(actual + 1); }
+        });
         bAtras.addEventListener('click', function () { mostrar(actual - 1); });
-        nav.querySelector('.wiz-cancelar').addEventListener('click', function () {
+        nav.querySelector('.wiz-cancelar-link').addEventListener('click', function () {
             if (inputCupon) { inputCupon.value = '0'; }
             modoAgendando(false);
             var b = document.getElementById('btnCancelarForm'); if (b) { b.click(); }

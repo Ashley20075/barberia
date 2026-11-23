@@ -33,6 +33,8 @@ class Barbero(models.Model):
     imagen_url = models.URLField(blank=True, default='')
     calificacion = models.DecimalField(max_digits=2, decimal_places=1, default=5.0)
     numero_resenas = models.PositiveIntegerField(default=0)
+    # Citas a las que el barbero no asistió (las registra el administrador).
+    inasistencias = models.PositiveIntegerField(default=0)
     instagram = models.URLField(blank=True, default='')
     facebook = models.URLField(blank=True, default='')
     whatsapp = models.URLField(blank=True, default='')

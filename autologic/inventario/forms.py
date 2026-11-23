@@ -16,11 +16,26 @@ class ProductoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Valores por defecto: mínimo 5 y máximo 20 (si se dejan vacíos o en 0).
+        for campo in ('stock_minimo', 'stock_maximo'):
+            self.fields[campo].required = False
+        if not (self.instance and self.instance.pk):
+            self.fields['stock_minimo'].initial = 5
+            self.fields['stock_maximo'].initial = 20
         # Al editar, el stock NO se cambia aquí: se usa un Ajuste (queda en el historial).
         if self.instance and self.instance.pk:
             self.fields['stock_actual'].disabled = True
             self.fields['stock_actual'].required = False
             self.fields['stock_actual'].help_text = 'Para cambiar el stock usa "Ajustar stock".'
+
+    def clean_stock_minimo(self):
+        valor = self.cleaned_data.get('stock_minimo')
+        return 5 if valor is None else valor
+
+    def clean_stock_maximo(self):
+        valor = self.cleaned_data.get('stock_maximo')
+        return 20 if not valor else valor
+
 
 class MovimientoForm(forms.ModelForm):
     class Meta:

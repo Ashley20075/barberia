@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from barberos.models import Barbero
 from clientes.models import Cliente
 
@@ -50,6 +51,12 @@ class Cita(models.Model):
         ("Confirmada", "Confirmada"),
         ("Cancelada", "Cancelada"),
         ("Finalizada", "Finalizada"),
+        ("NoAsistio", "No asistió"),
+    ]
+
+    FALTAS = [
+        ("cliente", "El cliente no asistió"),
+        ("barbero", "El barbero no asistió"),
     ]
 
     cliente = models.ForeignKey(
@@ -109,8 +116,26 @@ class Cita(models.Model):
         default="Pendiente"
     )
 
+    # Solo se llena cuando estado == "NoAsistio": quién faltó a la cita.
+    falta_de = models.CharField(
+        max_length=10,
+        choices=FALTAS,
+        blank=True,
+        default=""
+    )
+
     # Corte gratis canjeado (programa de fidelidad: cada 10 cortes, el siguiente es gratis)
     corte_gratis = models.BooleanField(default=False)
+
+    @property
+    def inicio(self):
+        """Fecha y hora de inicio de la cita (aware), o None si la hora es inválida."""
+        from django.utils import timezone
+        try:
+            hora = datetime.strptime(self.hora, "%I:%M %p").time()
+        except (TypeError, ValueError):
+            return None
+        return timezone.make_aware(datetime.combine(self.fecha, hora))
 
     @property
     def precio_cobrado(self):
@@ -135,3 +160,33 @@ class Cita(models.Model):
             f"{self.fecha} {self.hora} - "
             f"{nombre_barbero}"
         )
+
+
+class Resena(models.Model):
+    """Calificación opcional que deja el cliente al terminar su cita."""
+
+    cita = models.OneToOneField(
+        Cita,
+        on_delete=models.CASCADE,
+        related_name="resena"
+    )
+
+    puntuacion = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+
+    comentario = models.TextField(
+        max_length=500,
+        blank=True,
+        default=""
+    )
+
+    creada = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-creada"]
+        verbose_name = "Reseña"
+        verbose_name_plural = "Reseñas"
+
+    def __str__(self):
+        return f"{self.cita.cliente.nombre}: {self.puntuacion}/5"

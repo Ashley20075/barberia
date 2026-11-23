@@ -814,39 +814,42 @@ html[data-theme="light"] .autoai-modal .alert * {
         </div>
 
         <!-- FILTROS -->
-        <div class="card-custom mb-4">
-            <div class="card-body">
-                <form method="GET" action="{% url 'barberos:panel_barbero' %}" class="row g-3">
-                    <div class="col-md-3">
-                        <label class="text-yellow">Buscar</label>
-                        <input type="search" name="q" class="form-control bg-dark-input" placeholder="Cliente o servicio" value="{{ filtro_q }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="text-yellow">Estado</label>
-                        <select name="estado" class="form-select bg-dark-input">
-                            <option value="">Todos</option>
-                            <option value="Pendiente" {% if filtro_estado == 'Pendiente' %}selected{% endif %}>⏳ Pendiente</option>
-                            <option value="Confirmada" {% if filtro_estado == 'Confirmada' %}selected{% endif %}>✅ Confirmada</option>
-                            <option value="Cancelada" {% if filtro_estado == 'Cancelada' %}selected{% endif %}>❌ Cancelada</option>
-                            <option value="Finalizada" {% if filtro_estado == 'Finalizada' %}selected{% endif %}>🏁 Finalizada</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="text-yellow">Fecha Desde</label>
-                        <input type="date" name="fecha_inicio" class="form-control bg-dark-input" value="{{ filtro_fecha_inicio }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="text-yellow">Fecha Hasta</label>
-                        <input type="date" name="fecha_fin" class="form-control bg-dark-input" value="{{ filtro_fecha_fin }}">
-                    </div>
-                    <div class="col-md-3 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-modern">
-                            <i class="bi bi-search"></i> Consultar
-                        </button>
-                        <a href="{% url 'barberos:panel_barbero' %}" class="btn btn-secondary btn-limpiar">Limpiar</a>
-                    </div>
-                </form>
+        <div class="card-custom mb-4 filtros-citas">
+            <div class="filtros-citas-cab">
+                <i class="bi bi-funnel-fill"></i> Filtrar citas
+                {% if filtro_q or filtro_estado or filtro_fecha_inicio or filtro_fecha_fin %}
+                <span class="filtros-activos">Filtros activos</span>
+                {% endif %}
             </div>
+            <form method="GET" action="{% url 'barberos:panel_barbero' %}" class="filtros-citas-form">
+                <div class="filtro-campo filtro-buscar">
+                    <label for="filtroQ"><i class="bi bi-search"></i> Buscar</label>
+                    <input id="filtroQ" type="search" name="q" class="form-control bg-dark-input" placeholder="Cliente o servicio" value="{{ filtro_q }}">
+                </div>
+                <div class="filtro-campo">
+                    <label for="filtroEstado"><i class="bi bi-flag"></i> Estado</label>
+                    <select id="filtroEstado" name="estado" class="form-select bg-dark-input">
+                        <option value="">Todos</option>
+                        <option value="Pendiente" {% if filtro_estado == 'Pendiente' %}selected{% endif %}>⏳ Pendiente</option>
+                        <option value="Confirmada" {% if filtro_estado == 'Confirmada' %}selected{% endif %}>✅ Confirmada</option>
+                        <option value="Cancelada" {% if filtro_estado == 'Cancelada' %}selected{% endif %}>❌ Cancelada</option>
+                        <option value="Finalizada" {% if filtro_estado == 'Finalizada' %}selected{% endif %}>🏁 Finalizada</option>
+                        <option value="NoAsistio" {% if filtro_estado == 'NoAsistio' %}selected{% endif %}>🚫 No asistió</option>
+                    </select>
+                </div>
+                <div class="filtro-campo">
+                    <label for="filtroDesde"><i class="bi bi-calendar-event"></i> Desde</label>
+                    <input id="filtroDesde" type="date" name="fecha_inicio" class="form-control bg-dark-input" value="{{ filtro_fecha_inicio }}">
+                </div>
+                <div class="filtro-campo">
+                    <label for="filtroHasta"><i class="bi bi-calendar-check"></i> Hasta</label>
+                    <input id="filtroHasta" type="date" name="fecha_fin" class="form-control bg-dark-input" value="{{ filtro_fecha_fin }}">
+                </div>
+                <div class="filtro-botones">
+                    <button type="submit" class="btn btn-modern"><i class="bi bi-search"></i> Consultar</button>
+                    <a href="{% url 'barberos:panel_barbero' %}" class="btn btn-limpiar"><i class="bi bi-eraser"></i> Limpiar</a>
+                </div>
+            </form>
         </div>
 
         <!-- TABLA DE CITAS -->
@@ -888,6 +891,8 @@ html[data-theme="light"] .autoai-modal .alert * {
                             <span class="badge-finalizada"><i class="bi bi-flag-fill"></i> Finalizada</span>
                         {% elif cita.estado == "Cancelada" %}
                             <span class="badge-cancelada"><i class="bi bi-x-circle"></i> Cancelada</span>
+                        {% elif cita.estado == "NoAsistio" %}
+                            <span class="badge-cancelada"><i class="bi bi-person-x"></i> No asistió</span>
                         {% endif %}
                         <div class="d-flex gap-1 flex-wrap justify-content-end">
                             {% if cita.analisis_ia %}
@@ -899,17 +904,23 @@ html[data-theme="light"] .autoai-modal .alert * {
                             <a href="{% url 'barberos:confirmar_cita' cita.id %}" class="btn btn-success btn-sm" data-confirmar="¿Confirmar esta cita?" data-confirmar-titulo="Confirmar cita" data-confirmar-boton="Sí, confirmar">
                                 <i class="bi bi-check-circle"></i> Confirmar
                             </a>
-                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
+                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="Se cancelará esta cita, el turno quedará libre y se avisará al cliente. Esta acción no se puede deshacer." data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar la cita" data-confirmar-peligro>
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
                             {% elif not es_dia_no_laboral_hoy and cita.estado == "Confirmada" %}
                             <a href="{% url 'barberos:finalizar_cita' cita.id %}" class="btn btn-info btn-sm" data-confirmar="¿Finalizar esta cita?" data-confirmar-titulo="Finalizar cita" data-confirmar-boton="Sí, finalizar">
                                 <i class="bi bi-flag-fill"></i> Finalizar
                             </a>
-                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="¿Cancelar esta cita?" data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar" data-confirmar-peligro>
+                            <a href="{% url 'barberos:cancelar_cita' cita.id %}" class="btn btn-outline-danger btn-sm" data-confirmar="Se cancelará esta cita, el turno quedará libre y se avisará al cliente. Esta acción no se puede deshacer." data-confirmar-titulo="Cancelar cita" data-confirmar-boton="Sí, cancelar la cita" data-confirmar-peligro>
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
-                            {% elif es_dia_no_laboral_hoy and cita.estado == "Pendiente" or es_dia_no_laboral_hoy and cita.estado == "Confirmada" %}
+                            {% endif %}
+                            {% if not es_dia_no_laboral_hoy and cita.puede_inasistencia and cita.estado == "Pendiente" or not es_dia_no_laboral_hoy and cita.puede_inasistencia and cita.estado == "Confirmada" %}
+                            <a href="{% url 'barberos:cliente_no_asistio' cita.id %}" class="btn btn-warning btn-sm" data-confirmar="¿El cliente no se presentó? Se le aplicará una penalización." data-confirmar-titulo="Cliente no asistió" data-confirmar-boton="Sí, no asistió" data-confirmar-peligro>
+                                <i class="bi bi-person-x"></i> No asistió
+                            </a>
+                            {% endif %}
+                            {% if es_dia_no_laboral_hoy and cita.estado == "Pendiente" or es_dia_no_laboral_hoy and cita.estado == "Confirmada" %}
                             <span class="badge bg-secondary">Acciones bloqueadas por descanso</span>
                             {% endif %}
                         </div>
@@ -1218,10 +1229,11 @@ html[data-theme="light"] .autoai-modal .alert * {
         <div class="d-flex align-items-center gap-2">
             <span class="badge-pendiente">{{ historial_citas|length }} registros</span>
             <button type="button"
-                    class="btn btn-danger btn-sm text-white"
+                    class="btn btn-vaciar-icono"
+                    title="Vaciar historial" aria-label="Vaciar historial"
                     data-bs-toggle="modal"
                     data-bs-target="#modalVaciarHistorialBarbero">
-                <i class="bi bi-trash3 text-white"></i> Vaciar historial
+                <i class="bi bi-trash3"></i>
             </button>
         </div>
     </div>
@@ -1232,6 +1244,8 @@ html[data-theme="light"] .autoai-modal .alert * {
                 <div class="cita-icono">
                     {% if cita.estado == 'Finalizada' %}
                         <i class="bi bi-check-circle"></i>
+                    {% elif cita.estado == 'NoAsistio' %}
+                        <i class="bi bi-person-x"></i>
                     {% else %}
                         <i class="bi bi-x-circle"></i>
                     {% endif %}
@@ -1246,9 +1260,16 @@ html[data-theme="light"] .autoai-modal .alert * {
                     </span>
                 </div>
 
-                <div>
+                <div class="text-end">
                     {% if cita.estado == 'Finalizada' %}
                         <span class="badge bg-success">Finalizada</span>
+                        {% if cita.resena %}
+                        <div class="resena-mia mt-1" title="Calificación del cliente">
+                            {% for n in "12345" %}<i class="bi bi-star-fill{% if forloop.counter > cita.resena.puntuacion %} apagada{% endif %}"></i>{% endfor %}
+                        </div>
+                        {% endif %}
+                    {% elif cita.estado == 'NoAsistio' %}
+                        <span class="badge bg-warning text-dark">{% if cita.falta_de == 'barbero' %}Barbero no asistió{% else %}Cliente no asistió{% endif %}</span>
                     {% else %}
                         <span class="badge bg-danger">Cancelada</span>
                     {% endif %}

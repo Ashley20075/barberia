@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from barberos.models import Barbero
+from citas.models import Servicio
 
 from .models import Notificacion, SuscripcionTurno
 
@@ -100,11 +101,31 @@ def suscribirse_turno(request):
         if minutos_desde_inicio < 0 or minutos_desde_inicio % 15 != 0 or minutos_desde_inicio + duracion > duracion_jornada:
             return JsonResponse({"ok": False, "error": "Ese horario no pertenece a un turno válido."}, status=409)
 
-        SuscripcionTurno.objects.get_or_create(
+        cliente = request.user.cliente
+        if cliente.penalizado:
+            return JsonResponse(
+                {"ok": False, "error": "Estás penalizado por inasistencias y no puedes unirte a la lista de espera todavía."},
+                status=403,
+            )
+
+        servicio = Servicio.objects.filter(id=request.POST.get("servicio")).first()
+        adicionales = ", ".join(request.POST.getlist("adicionales"))[:200]
+
+        # Dos citas el mismo día no se permiten: avisamos desde ya.
+        from citas.models import Cita
+        if Cita.objects.filter(cliente=cliente, fecha=fecha_obj,
+                               estado__in=["Pendiente", "Confirmada"]).exists():
+            return JsonResponse(
+                {"ok": False, "error": "Ya tienes una cita ese día; no puedes entrar a la lista de espera de otro turno."},
+                status=409,
+            )
+
+        SuscripcionTurno.objects.update_or_create(
             usuario=request.user,
             barbero=barbero,
             fecha=fecha_obj,
             hora=hora,
+            defaults={"servicio": servicio, "duracion_total": duracion, "adicionales": adicionales},
         )
         return JsonResponse({"ok": True, "suscrito": True})
 

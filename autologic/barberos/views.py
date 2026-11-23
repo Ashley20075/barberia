@@ -95,8 +95,13 @@ def panel_barbero(request):
         estado__in=['Pendiente', 'Confirmada']
     ).order_by('fecha', 'hora')
 
+    from citas.reglas import puede_marcar_inasistencia
+    proximas_citas = list(proximas_citas)
+    for c in proximas_citas:
+        c.puede_inasistencia = puede_marcar_inasistencia(c)
+
     historial_citas = citas_base.filter(
-        estado__in=['Finalizada', 'Cancelada'],
+        estado__in=['Finalizada', 'Cancelada', 'NoAsistio'],
         historial_archivado=False
     ).order_by('-fecha', '-hora')
 
@@ -113,13 +118,9 @@ def panel_barbero(request):
         ) if val
     })
 
-    citas_pendientes = proximas_citas.filter(
-        estado="Pendiente"
-    ).count()
+    citas_pendientes = sum(1 for c in proximas_citas if c.estado == "Pendiente")
 
-    citas_confirmadas = proximas_citas.filter(
-        estado="Confirmada"
-    ).count()
+    citas_confirmadas = sum(1 for c in proximas_citas if c.estado == "Confirmada")
 
     citas_canceladas = historial_citas.filter(
         estado="Cancelada"
@@ -277,6 +278,31 @@ def finalizar_cita(request, id):
         )
 
     return redirect('barberos:panel_barbero')
+
+@login_required(login_url='login')
+def cliente_no_asistio(request, id):
+    """El barbero registra que el cliente no se presentó (penaliza al cliente)."""
+    from citas.asistencia import InasistenciaInvalida, marcar_no_asistio
+
+    cita = get_object_or_404(Cita, id=id)
+    barbero = Barbero.objects.filter(
+        email__iexact=request.user.email, activo=True, es_barbero=True
+    ).first()
+
+    if barbero is None or cita.barbero != barbero:
+        messages.error(request, '❌ No tienes permiso para registrar la inasistencia de esta cita.')
+        return redirect('barberos:panel_barbero')
+
+    try:
+        marcar_no_asistio(cita, 'cliente', por=request.user)
+        messages.success(
+            request,
+            f'✅ Se registró que {cita.cliente.nombre} no asistió. Se aplicó la penalización correspondiente.'
+        )
+    except InasistenciaInvalida as e:
+        messages.error(request, f'❌ {e}')
+    return redirect('barberos:panel_barbero')
+
 
 @login_required
 def lista_barberos(request):
@@ -474,7 +500,7 @@ def vaciar_historial_barbero(request):
 
     cantidad = Cita.objects.filter(
         barbero=barbero,
-        estado__in=['Finalizada', 'Cancelada'],
+        estado__in=['Finalizada', 'Cancelada', 'NoAsistio'],
         historial_archivado=False
     ).update(historial_archivado=True)
 

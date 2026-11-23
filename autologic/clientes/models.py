@@ -31,6 +31,18 @@ class Cliente(models.Model):
     cortes_para_recompensa = models.PositiveIntegerField(default=0)
     recompensas_disponibles = models.PositiveIntegerField(default=0)
 
+    # Penalizaciones por no asistir a una cita.
+    inasistencias = models.PositiveIntegerField(default=0)
+    penalizado_hasta = models.DateField(
+        null=True, blank=True,
+        help_text="Mientras esta fecha no pase, el cliente no puede agendar por su cuenta."
+    )
+
+    @property
+    def penalizado(self):
+        from django.utils import timezone
+        return bool(self.penalizado_hasta and self.penalizado_hasta >= timezone.localdate())
+
     @property
     def registrado(self):
         """True si el cliente tiene cuenta propia en la página."""

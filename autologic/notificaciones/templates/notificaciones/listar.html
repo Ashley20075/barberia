@@ -24,7 +24,7 @@
                   onsubmit="return confirm('¿Seguro que deseas vaciar todas tus notificaciones? Esta acción no se puede deshacer.');">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{% url 'notificaciones:listar' %}">
-                <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> Vaciar notificaciones</button>
+                <button type="submit" class="btn btn-vaciar"><i class="bi bi-trash3"></i> Vaciar notificaciones</button>
             </form>
             {% endif %}
         </div>
@@ -34,6 +34,8 @@
             <span class="notif-chip notif-espera"><i class="bi bi-hourglass-split"></i> Lista de espera</span>
             <span class="notif-chip notif-liberado"><i class="bi bi-unlock"></i> Turno liberado</span>
             <span class="notif-chip notif-rechazo"><i class="bi bi-x-octagon"></i> Cancelada</span>
+            <span class="notif-chip notif-falta"><i class="bi bi-person-x"></i> Inasistencia</span>
+            <span class="notif-chip notif-resena"><i class="bi bi-star-fill"></i> Calificación</span>
             <span class="notif-chip notif-nueva"><i class="bi bi-calendar-plus"></i> Nueva cita</span>
             <span class="notif-chip notif-confirmada"><i class="bi bi-calendar-check"></i> Confirmada</span>
         </div>
