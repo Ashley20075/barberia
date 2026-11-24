@@ -883,7 +883,6 @@
                             <select name="tipo" id="movimientoTipo" class="form-select bg-dark-input" required>
                                 <option value="ENTRADA">📥 Entrada (Agregar stock)</option>
                                 <option value="SALIDA">📤 Salida (Quitar stock)</option>
-                                <option value="AJUSTE">⚙️ Ajuste (Corregir stock)</option>
                             </select>
                         </div>
 
@@ -893,10 +892,6 @@
                             <small class="text-light-brown" id="movimientoAyudaCantidad">Ingresa la cantidad para entrada/salida o el nuevo stock para ajuste</small>
                         </div>
 
-                        <div class="alert alert-warning py-2 small d-none" id="movimientoAyudaAjuste">
-                            <strong>¿Qué es un ajuste?</strong> Corrige el stock al número <u>real contado</u>
-                            (conteo físico, producto dañado o perdido). No es una compra ni una venta.
-                        </div>
                         <div class="small fw-bold mb-3 d-none" id="movimientoPreview"></div>
 
                         <div class="mb-3" id="movimientoBloqueProveedor">
@@ -981,19 +976,28 @@
         });
 
         // ===== MODAL MOVIMIENTO =====
-        document.getElementById('modalMovimiento').addEventListener('show.bs.modal', function (e) {
-            const btn = e.relatedTarget;
-
-            // El modal tambien puede abrirse por JS (al restaurar un
-            // formulario tras un error). En ese caso no hay boton de
-            // origen y no se debe sobrescribir lo que el usuario escribio.
-            if (!btn) { return; }
-
+        // Carga en el modal los datos del producto (nombre, stock, mínimo y máximo)
+        function llenarDatosProducto(btn) {
             document.getElementById('movimientoProductoNombre').textContent = btn.dataset.nombre || 'Producto';
             document.getElementById('movimientoStockActual').textContent = btn.dataset.stock || 0;
             document.getElementById('movimientoMin').textContent = btn.dataset.minimo || 0;
             document.getElementById('movimientoMax').textContent = btn.dataset.maximo || 0;
             movState = { stock: parseInt(btn.dataset.stock || 0, 10), max: parseInt(btn.dataset.maximo || 0, 10) };
+        }
+
+        document.getElementById('modalMovimiento').addEventListener('show.bs.modal', function (e) {
+            const btn = e.relatedTarget;
+
+            // Si el modal se reabre solo tras un error, se busca el producto
+            // por el action del formulario y no se borra lo que escribió el usuario.
+            if (!btn) {
+                const m = (document.getElementById('formMovimiento').getAttribute('action') || '').match(/movimiento\/(\d+)\//);
+                const origen = m ? document.querySelector('.btn-accion-movimiento[data-id="' + m[1] + '"]') : null;
+                if (origen) { llenarDatosProducto(origen); actualizarMovimiento(); }
+                return;
+            }
+
+            llenarDatosProducto(btn);
             document.getElementById('formMovimiento').action = `/inventario/movimiento/${btn.dataset.id}/`;
             document.getElementById('movimientoTipo').value = 'ENTRADA';
             document.getElementById('movimientoCantidad').value = '';
@@ -1013,34 +1017,38 @@
 
         // ===== Lógica del modal de movimiento (tipo, proveedor, vista previa) =====
         let movState = { stock: 0, max: 0 };
-        function actualizarMovimiento() {
+                function actualizarMovimiento() {
             const tipo = document.getElementById('movimientoTipo').value;
             const cant = document.getElementById('movimientoCantidad');
-            const nota = document.getElementById('movimientoNota');
             const prev = document.getElementById('movimientoPreview');
             const ayuda = document.getElementById('movimientoAyudaCantidad');
             document.getElementById('movimientoBloqueProveedor').classList.toggle('d-none', tipo !== 'ENTRADA');
-            document.getElementById('movimientoAyudaAjuste').classList.toggle('d-none', tipo !== 'AJUSTE');
-            document.getElementById('movimientoLabelNota').textContent = tipo === 'AJUSTE' ? 'Motivo del ajuste *' : 'Nota (opcional)';
-            nota.required = tipo === 'AJUSTE';
-            cant.min = tipo === 'AJUSTE' ? 0 : 1;
+            cant.min = tipo === 'ENTRADA' ? 5 : 1;
             // Sin atributo max: el navegador lanzaba "El valor mínimo debe ser inferior al máximo".
             // Los límites se validan abajo (mensaje) y en el servidor.
             cant.removeAttribute('max');
-            ayuda.textContent = tipo === 'AJUSTE' ? 'Escribe el NUEVO stock real (conteo físico).'
-                : tipo === 'ENTRADA' ? 'Unidades que ingresan (compra/reposición). No puede superar el máximo.'
+            ayuda.textContent = tipo === 'ENTRADA'
+                ? 'Unidades que ingresan (compra/reposición): mínimo 5 y máximo 20 por entrada.'
                 : 'Unidades vendidas o retiradas. No puede superar el stock.';
             const v = parseInt(cant.value, 10);
             if (isNaN(v)) { cant.setCustomValidity(''); prev.classList.add('d-none'); return; }
-            const nuevo = tipo === 'AJUSTE' ? v : tipo === 'ENTRADA' ? movState.stock + v : movState.stock - v;
-            const invalido = nuevo < 0 || nuevo > movState.max;
-            cant.setCustomValidity(invalido
-                ? (tipo === 'SALIDA' ? 'No puedes sacar más unidades de las que hay (' + movState.stock + ').'
-                    : 'El stock resultante debe estar entre 0 y ' + movState.max + '.')
-                : '');
+            const nuevo = tipo === 'ENTRADA' ? movState.stock + v : movState.stock - v;
+            // Si por alguna razon no se conoce el maximo (0 o vacio), no se bloquea
+            // el formulario: el servidor valida el limite de todos modos.
+            const maxConocido = movState.max > 0;
+            const invalido = nuevo < 0 || (maxConocido && nuevo > movState.max);
+            // Cada ENTRADA debe ser de minimo 5 y maximo 20 unidades.
+            const fueraRangoEntrada = tipo === 'ENTRADA' && (v < 5 || v > 20);
+            const msgEntrada = 'Una entrada debe ser de mínimo 5 y máximo 20 unidades.';
+            cant.setCustomValidity(fueraRangoEntrada ? msgEntrada
+                : invalido
+                    ? (tipo === 'SALIDA' ? 'No puedes sacar más unidades de las que hay (' + movState.stock + ').'
+                        : 'El stock resultante debe estar entre 0 y ' + movState.max + '.')
+                    : '');
             prev.classList.remove('d-none');
-            prev.textContent = 'Resultado: stock ' + movState.stock + ' → ' + nuevo + (invalido ? '  (fuera de los límites 0–' + movState.max + ')' : '');
-            prev.style.color = invalido ? '#e74c3c' : '';
+            prev.textContent = fueraRangoEntrada ? msgEntrada
+                : 'Resultado: stock ' + movState.stock + ' → ' + nuevo + (invalido ? '  (fuera de los límites 0–' + movState.max + ')' : '');
+            prev.style.color = (invalido || fueraRangoEntrada) ? '#e74c3c' : '';
         }
         document.getElementById('movimientoTipo').addEventListener('change', actualizarMovimiento);
         document.getElementById('movimientoCantidad').addEventListener('input', actualizarMovimiento);

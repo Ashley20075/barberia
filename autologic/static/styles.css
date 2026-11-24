@@ -7210,10 +7210,31 @@ body.tema-cliente #modalConfirmarAceptar:not(.btn-danger) { background: linear-g
 .wiz-nav { grid-template-columns: 130px 1fr 150px; grid-template-areas: "atras total sig" "cancel cancel cancel"; row-gap: 6px; }
 .wiz-nav .wiz-atras { grid-area: atras; } .wiz-nav .wiz-total { grid-area: total; } .wiz-nav .wiz-siguiente { grid-area: sig; }
 .wiz-cancelar-link {
-    grid-area: cancel; justify-self: center; background: none; border: none; padding: 4px 10px; font-size: .8rem;
-    font-weight: 600; opacity: .7; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+    grid-area: cancel; justify-self: center; margin-top: 4px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 18px 7px 12px; border-radius: 999px;
+    background: rgba(229, 72, 77, .08); border: 1.5px solid rgba(255, 107, 107, .45);
+    color: #ff8a8a; font-size: .85rem; font-weight: 600; letter-spacing: .01em;
+    text-decoration: none; cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease, box-shadow .2s ease;
 }
-.wiz-cancelar-link:hover { opacity: 1; color: #ff6b6b; }
+.wiz-cancelar-link i {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%; font-size: .62rem; line-height: 1;
+    background: rgba(255, 107, 107, .2); transition: background .2s ease;
+}
+.wiz-cancelar-link:hover, .wiz-cancelar-link:focus-visible {
+    background: #e5484d; border-color: #e5484d; color: #fff;
+    transform: translateY(-1px); box-shadow: 0 6px 16px rgba(229, 72, 77, .35);
+}
+.wiz-cancelar-link:hover i, .wiz-cancelar-link:focus-visible i { background: rgba(255, 255, 255, .25); }
+.wiz-cancelar-link:focus-visible { outline: 2px solid rgba(255, 107, 107, .6); outline-offset: 2px; }
+.wiz-cancelar-link:active { transform: none; box-shadow: none; }
+[data-theme="light"] .wiz-cancelar-link { background: #fdecea; border-color: #e0a09b; color: #b3261e; }
+[data-theme="light"] .wiz-cancelar-link i { background: rgba(179, 38, 30, .12); }
+[data-theme="light"] .wiz-cancelar-link:hover, [data-theme="light"] .wiz-cancelar-link:focus-visible {
+    background: #b3261e; border-color: #b3261e; color: #fff; box-shadow: 0 6px 16px rgba(179, 38, 30, .3);
+}
 .wiz-cab { margin-bottom: 8px; }
 @media (max-width: 575.98px) {
     .wiz-nav { grid-template-columns: 1fr 1fr; grid-template-areas: "total total" "atras sig" "cancel cancel"; }
@@ -7255,3 +7276,20 @@ body.tema-cliente #modalConfirmarAceptar:not(.btn-danger) { background: linear-g
 .btn-inv-eliminar:hover { background: #e5484d !important; color: #fff !important; }
 [data-theme="light"] .btn-inv-eliminar { border-color: #b3261e !important; color: #b3261e !important; }
 [data-theme="light"] .btn-inv-eliminar:hover { background: #b3261e !important; color: #fff !important; }
+.acciones-inv a.btn-inv { border-color: #8B5CF6 !important; color: #8B5CF6 !important; }
+.acciones-inv a.btn-inv:hover, .acciones-inv a.btn-inv:focus-visible { background: #8B5CF6 !important; border-color: #8B5CF6 !important; color: #fff !important; }
+
+/* ---- Encabezados de sección del panel admin: contador y botón siempre a la derecha ----
+   Computador: título a la izquierda; contador y Mostrar/Ocultar juntos a la derecha.
+   Celular: título + contador en el primer renglón y Mostrar/Ocultar abajo, a la derecha,
+   igual en todas las secciones. */
+.tema-admin .card-header-custom.justify-content-between { justify-content: flex-start !important; }
+.tema-admin .card-header-custom > .contador-seccion,
+.tema-admin .card-header-custom > div.d-flex { margin-left: auto; }
+.tema-admin .card-header-custom > .seccion-toggle { margin-left: 0; }
+@media (max-width: 576px) {
+    .tema-admin .card-header-custom.d-flex { display: grid !important; grid-template-columns: 1fr auto; }
+    .tema-admin .card-header-custom > .contador-seccion,
+    .tema-admin .card-header-custom > div.d-flex { margin-left: 0; justify-self: end; }
+    .tema-admin .card-header-custom > .seccion-toggle { grid-column: 1 / -1; justify-self: end; }
+}

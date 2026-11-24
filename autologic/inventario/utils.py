@@ -36,14 +36,15 @@ def registrar_movimiento(producto, tipo, cantidad, usuario=None,
     if tipo != 'ENTRADA':
         proveedor = None  # solo las entradas (compras) llevan proveedor
     stock_anterior = producto.stock_actual
+    stock_maximo = producto.stock_maximo or 20
 
     if tipo == 'ENTRADA':
         if cantidad <= 0:
             raise ValueError('La cantidad de entrada debe ser mayor a 0.')
         stock_nuevo = stock_anterior + cantidad
-        if validar_maximo and stock_nuevo > producto.stock_maximo:
+        if validar_maximo and stock_nuevo > stock_maximo:
             raise ValueError(
-                f'No se puede superar el stock máximo de {producto.stock_maximo} '
+                f'No se puede superar el stock máximo de {stock_maximo} '
                 f'unidades para "{producto.nombre}" (stock actual: {stock_anterior}).'
             )
 
@@ -60,9 +61,9 @@ def registrar_movimiento(producto, tipo, cantidad, usuario=None,
     elif tipo == 'AJUSTE':
         if cantidad < 0:
             raise ValueError('El stock ajustado no puede ser negativo.')
-        if cantidad > producto.stock_maximo:
+        if cantidad > stock_maximo:
             raise ValueError(
-                f'El stock ajustado no puede superar el máximo ({producto.stock_maximo}).'
+                f'El stock ajustado no puede superar el máximo ({stock_maximo}).'
             )
         if not (nota or '').strip():
             raise ValueError('El ajuste requiere un motivo.')
